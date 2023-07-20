@@ -1,0 +1,119 @@
+<form [formGroup]="data" (submit)="onSubmitForm()" class="form-container">
+    <mat-grid-list cols="12" rowHeight="fit" style="height: 250px;">
+        <!-- level -->
+        <mat-grid-tile colspan="2">
+            <mat-form-field class="margin-container">
+                <mat-label>Level</mat-label>
+                <mat-select formControlName="level">
+                    <mat-option *ngFor="let lev of level" [value]="lev.value">
+                        {{lev.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- categories report -->
+        <mat-grid-tile colspan="2">
+            <mat-form-field class="margin-container">
+                <mat-label>Category For Report</mat-label>
+                <mat-select formControlName="categories_report">
+                    <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
+                        {{cat_rep.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- responsible area -->
+        <mat-grid-tile colspan="2">
+            <mat-form-field class="margin-container">
+                <mat-label>Responsible area</mat-label>
+                <mat-select formControlName="responsible_report">
+                    <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
+                        {{res_rep.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- problem -->
+        <mat-grid-tile colspan="4">
+            <mat-form-field class="margin-container">
+                <mat-label>Problem</mat-label>
+                <input matInput type="text" formControlName="problem" />
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- effect option -->
+        <mat-grid-tile colspan="2">
+            <mat-form-field class="margin-container">
+                <mat-label>Эффект</mat-label>
+                <mat-select formControlName="effect_option">
+                    <mat-option *ngFor="let eff_rep of effect_option" [value]="eff_rep.value">
+                        {{eff_rep.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- reason -->
+        <mat-grid-tile colspan="4">
+            <mat-form-field class="margin-container">
+                <mat-label>Reason</mat-label>
+                <input matInput type="text" formControlName="reason" />
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- region -->
+        <mat-grid-tile colspan="3">
+            <mat-form-field class="margin-container">
+                <mat-label>Region</mat-label>
+                <input matInput type="text" formControlName="region" />
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- desc -->
+        <mat-grid-tile colspan="4">
+            <mat-form-field class="margin-container">
+                <mat-label>Description</mat-label>
+                <input matInput type="text" formControlName="desc" />
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- informed -->
+        <mat-grid-tile colspan="2">
+            <mat-form-field class="margin-container">
+                <mat-label>Informed</mat-label>
+                <input matInput type="text" formControlName="informed" />
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- sender -->
+        <mat-grid-tile colspan="2">
+            <mat-form-field class="margin-container">
+                <mat-label>Sender</mat-label>
+                <input matInput type="text" formControlName="sender" />
+            </mat-form-field>
+        </mat-grid-tile>
+        <!-- effect -->
+        <mat-grid-tile colspan="3">
+            <mat-form-field class="margin-container">
+                <mat-label>Effect</mat-label>
+                <input matInput type="text" formControlName="effect" />
+            </mat-form-field>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <mat-grid-list cols="12">
+        <!-- start Time -->
+        <mat-grid-tile colspan="3">
+            <div class="margin-container">
+                <p>Start Time</p>
+                <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime">
+            </div>
+        </mat-grid-tile>
+        <!-- end Time -->
+        <mat-grid-tile colspan="3">
+            <div class="margin-container">
+                <p>End Time</p>
+                <input type="datetime-local" class="dateTime" formControlName="startTime">
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <!-- button -->
+    <mat-grid-list cols="12">
+        <mat-grid-tile colspan="2">
+            <button class="form-button" mat-raised-button color="primary" type="submit">Submit</button>
+        </mat-grid-tile>
+    </mat-grid-list>
+</form>
