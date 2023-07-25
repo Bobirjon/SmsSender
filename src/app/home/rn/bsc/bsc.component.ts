@@ -132,6 +132,31 @@ export class BscComponent implements OnInit {
     this.previewResheniya = !this.previewResheniya
   }
 
+  updateData() {
+    const body = {
+      'type': 'BSC/RNC',
+      'level': this.bscForm.value.level,
+      'category': this.bscForm.value.categories_report,
+      'responsible_area': this.bscForm.value.responsible_report,
+      'problem': this.bscForm.value.problem,
+      'reason': this.bscForm.value.reason,
+      'effect': this.bscForm.value.effect_option,
+      'influence': this.bscForm.value.effect,
+      'start_time': this.bscForm.value.startTime,
+      'end_time': this.bscForm.value.endTime,
+      'region': this.bscForm.value.region,
+
+      'informed': this.bscForm.value.informed,
+      'description': this.bscForm.value.desc,
+      'sender': this.user?.username
+    }
+
+    this.authService.updateSms(this.route.snapshot.params.id, body)
+      .subscribe((result) => {
+        console.log(result);
+      })
+  }
+
   onSubmitButtonProblem(smsType: string) {
     // 1 st body
     const body = {
@@ -142,6 +167,7 @@ export class BscComponent implements OnInit {
       'problem': this.bscForm.value.problem,
       'reason': this.bscForm.value.reason,
       'effect': this.bscForm.value.effect_option,
+      'influence': this.bscForm.value.effect,
       'start_time': this.bscForm.value.startTime,
       'end_time': this.bscForm.value.endTime,
       'region': this.bscForm.value.region,
@@ -160,89 +186,70 @@ export class BscComponent implements OnInit {
     this.criteria = this.storageService.getNotification(this.bscForm.value.level)
     this.criteria_list = this.criteria?.concat(this.bscForm.value.region)
 
-
-    switch (smsType && this.bscForm.value.AddOrCor) {
-      case 'Problem' && null: {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Problema: \n' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Problem' && 'addition': {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Problema: \n' +
-          ' (Addition) ' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Problem' && 'correction': {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Problema: \n' +
-          ' (Correction) ' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Reshenie' && null: {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Reshenie: \n' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-          'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Reshenie' && 'addition': {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Reshenie: \n' +
-          ' (Addition) ' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-          'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Reshenie' && 'correction': {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Reshenie: \n' +
-          ' (Correction) ' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-          'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      default: {
-        console.log("Invalid choice");
-        break;
-      }
-
+    if (smsType == 'Problem' && this.bscForm.value.AddOrCor == (null || undefined)) {
+      this.SmsTextBody =
+        ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Problem' && this.bscForm.value.AddOrCor == 'correction') {
+      this.SmsTextBody =
+      ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
+        ' (Correction) ' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Problem' && this.bscForm.value.AddOrCor == 'addition') {
+      this.SmsTextBody =
+      ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
+        ' (Addition) ' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == (null || undefined)) {
+      this.SmsTextBody =
+        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
+        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == 'correction') {
+      this.SmsTextBody =
+        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
+        ' (Correction) ' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
+        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == 'addition') {
+      this.SmsTextBody =
+        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
+        ' (Addition) ' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
+        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
     }
 
     const body2 = {
@@ -256,122 +263,84 @@ export class BscComponent implements OnInit {
     this.authService.sendSms(body2)
       .subscribe(result => {
         console.log(result);
-        this.snackBar.open('Success', '', {duration: 10000})
+        this.snackBar.open('Success', '', { duration: 10000 })
       }, error => {
-        this.snackBar.open(error, '', {duration: 10000})
+        console.log(error);
+        this.snackBar.open(error, '', { duration: 10000 })
       })
 
   }
+
   onSubmitButtonUpdate(smsType: string) {
-
-    switch (smsType && this.bscForm.value.AddOrCor) {
-      case 'Problem' && null: {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Problema: \n' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Problem' && 'addition': {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Problema: \n' +
-          ' (Addition) ' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Problem' && 'correction': {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Problema: \n' +
-          ' (Correction) ' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Reshenie' && null: {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Reshenie: \n' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-          'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Reshenie' && 'addition': {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Reshenie: \n' +
-          ' (Addition) ' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-          'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      case 'Reshenie' && 'correction': {
-        this.SmsTextBody =
-          this.bscForm.value.level + ' Reshenie: \n' +
-          ' (Correction) ' +
-          this.bscForm.value.problem + '\n ' +
-          'Prichina: ' + this.bscForm.value.reason + '\n ' +
-          'Effect: ' + this.bscForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-          'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-          'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
-        break;
-      }
-      default: {
-        console.log("Invalid choice");
-        break;
-      }
-
-    }
 
     this.criteria = this.storageService.getNotification(this.bscForm.value.level)
     this.criteria_list = this.criteria?.concat(this.bscForm.value.region)
 
-    const body = {
-      'type': 'BSC/RNC',
-      'level': this.bscForm.value.level,
-      'category': this.bscForm.value.categories_report,
-      'responsible_area': this.bscForm.value.responsible_report,
-      'problem': this.bscForm.value.problem,
-      'reason': this.bscForm.value.reason,
-      'effect': this.bscForm.value.effect_option,
-      'start_time': this.bscForm.value.startTime,
-      'end_time': this.bscForm.value.endTime,
-      'region': this.bscForm.value.region,
-
-      'informed': this.bscForm.value.informed,
-      'description': this.bscForm.value.desc,
-      'sender': this.user?.username
+    if (smsType == 'Problem' && this.bscForm.value.AddOrCor == (null || undefined)) {
+      this.SmsTextBody =
+        ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Problem' && this.bscForm.value.AddOrCor == 'correction') {
+      this.SmsTextBody =
+      ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
+        ' (Correction) ' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Problem' && this.bscForm.value.AddOrCor == 'addition') {
+      this.SmsTextBody =
+      ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
+        ' (Addition) ' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == (null || undefined)) {
+      this.SmsTextBody =
+        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
+        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == 'correction') {
+      this.SmsTextBody =
+        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
+        ' (Correction) ' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
+        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
+    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == 'addition') {
+      this.SmsTextBody =
+        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
+        ' (Addition) ' +
+        ' ' + this.bscForm.value.problem + '\n ' +
+        'Prichina: ' + this.bscForm.value.reason + '\n ' +
+        'Effect: ' + this.bscForm.value.effect + '\n ' +
+        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
+        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+        'Otpravil: ' + this.user?.username
     }
-
-    this.authService.updateSms(this.route.snapshot.params.id, body)
-      .subscribe((result) => {
-        console.log(result);
-      })
 
     const body2 = {
       'source_addr': 'ncc-rn',
@@ -384,11 +353,9 @@ export class BscComponent implements OnInit {
     this.authService.sendSms(body2)
       .subscribe((result) => {
         console.log(result);
-        this.snackBar.open('Success', '', {duration: 10000})
-       }, error => {
-        this.snackBar.open(error, '', {duration: 10000})
+        this.snackBar.open('Success', '', { duration: 10000 })
+      }, error => {
+        this.snackBar.open(error, '', { duration: 10000 })
       })
-
-
   }
 }

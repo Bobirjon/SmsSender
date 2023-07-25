@@ -9,29 +9,30 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  isLoged: boolean
-  hide: any
+  loginStatus: any
+  IsLoggedIn$: any
 
   constructor(
     private storageService: StorageService,
-    private authService: AuthService){
+    private authService: AuthService,){
   }
 
   ngOnInit(): void {
-    
-    this.hide = this.storageService.getToken()
-    if(this.hide != null) {
-      this.isLoged = true
+    this.IsLoggedIn$ = this.storageService.isLoggedIn$
+
+    if(this.storageService.getToken() == null) {
+      this.loginStatus = false
     } else {
-      this.isLoged = false
+      this.loginStatus = true
     }
   }
 
   logout() {
     this.authService.logout()
-      .subscribe(() => {})
-      
-    this.storageService.deleteToken()  
+      .subscribe((res) => {
+        console.log(res);
+      })
+    this.storageService.deleteToken()
   }
 
 }

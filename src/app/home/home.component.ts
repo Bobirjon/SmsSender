@@ -1,7 +1,9 @@
-import { Component, OnInit, forwardRef } from '@angular/core';
+import { Component, OnInit, ViewChild,  } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../storage.service';
+import { MatSort, Sort  } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +12,7 @@ import { StorageService } from '../storage.service';
 })
 export class HomeComponent implements OnInit {
   Data: any
-  Loaded = true
+  Loaded: boolean;
   CurrentRoute = this.router.url
   isComplete: boolean
   name: any
@@ -30,17 +32,24 @@ export class HomeComponent implements OnInit {
   user: any;
   hidden: any
 
+  @ViewChild(MatSort) sort: MatSort
+   
   constructor(
     private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private storageService: StorageService) { }
+    private router: Router,) { }
 
   ngOnInit(): void {
+    
+    if(this.router.url == '/home') {
+      this.Loaded = true
+    } else {
+      this.Loaded = false
+    }
 
     this.authService.getData()
       .subscribe(res => {
         this.Data = res
+        this.Data.sort = this.sort
         console.log(res);
         
       })

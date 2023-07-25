@@ -1,26 +1,29 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
+  public isLoggedIn$: BehaviorSubject<boolean>;
 
-  constructor() {}
-
-
-
-  clean(): void {
-    window.sessionStorage.clear();
+  constructor() {
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+    this.isLoggedIn$ = new BehaviorSubject(isLoggedIn);
   }
 
   public saveToken(token: string): void {
     sessionStorage.removeItem('token')
-    sessionStorage.setItem('token', token['auth_token'])    
+    sessionStorage.setItem('token', token['auth_token'])
+    localStorage.setItem('loggedIn', 'true');
+    this.isLoggedIn$.next(true); 
   }
 
   public deleteToken() {
     sessionStorage.removeItem('token')
+    localStorage.setItem('loggedIn', 'false');
+    this.isLoggedIn$.next(false);
   }
 
   public getToken(): string {

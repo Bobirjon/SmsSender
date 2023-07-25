@@ -151,6 +151,10 @@
                 <button class="form-button" mat-raised-button color="primary" type="button"
                     (click)="previewButton()">Preview</button>
             </mat-grid-tile>
+            <mat-grid-tile colspan="1" *ngIf="newForm == false">
+                <button class="form-button" mat-raised-button color="primary" type="button"
+                    (click)="updateData()">Update</button>
+            </mat-grid-tile>
             <mat-grid-tile colspan="3">
                 <mat-chip-listbox formControlName="AddOrCor">
                     <mat-chip-option value="correction">Correction</mat-chip-option>
@@ -162,7 +166,7 @@
     </form>
     <!-- preview -->
     <div class="grid-container">
-        <div class="grid-item" *ngIf="preview == true">
+        <div class="grid-item" *ngIf="preview == true && hubForm.value.endTime == null">
             <mat-card>
                 <mat-card-header>
                     <mat-card-title>{{hubForm.value.level + ' HUB sayt: Problema: '}}</mat-card-title>
@@ -173,19 +177,19 @@
                     <p>{{hubForm.value.problem + ' saytov ne rabotayut v ' + hubForm.value.region}}</p>
                     <p>{{'Effekt: Poterya pokrytiya i kachestva svyazi v ' + hubForm.value.region}}</p>
                     <p>{{'Prichina: ' + hubForm.value.reason}}</p>
-                    <p>{{'Vremya otklyucheniya EP: ' + hubForm.value.powerOffTime}}</p>
-                    <p>{{'Vremya blokirovki sektorov: ' + hubForm.value.hubBlockTime}}</p>
+                    <p>{{'Vremya otklyucheniya EP: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
+                    <p>{{'Vremya blokirovki sektorov: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
                     <p>{{'Opoveschen: ' + hubForm.value.informed}}</p>
-                    <p>{{'Nachalo: ' + hubForm.value.startTime}}</p>
+                    <p>{{'Nachalo: ' + hubForm.value.startTime.replace("T", " ")}}</p>
                     <p>{{'Otpravil: ' + user.username}}</p>
                 </mat-card-content>
                 <mat-card-actions>
                     <button class="form-button" mat-raised-button color="primary"
                         (click)="onSubmitButtonProblem('Problem')" type="submit" *ngIf="newForm == true">Submit
                     </button>
-                    <!-- <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Problem')" type="submit" *ngIf="newForm == false">Update
-                    </button> -->
+                    <button class="form-button" mat-raised-button color="primary"
+                        (click)="onSubmitButtonUpdate('Problem')" type="submit" *ngIf="newForm == false">Send Message
+                    </button>
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -200,11 +204,11 @@
                     <p>{{hubForm.value.problem + ' saytov ne rabotayut v ' + hubForm.value.region}}</p>
                     <p>{{'Prichina: ' + hubForm.value.reason}}</p>
                     <p>{{'Opisanie: ' + hubForm.value.desc}}</p>
-                    <p>{{'Vremya otklyucheniya EP: ' + hubForm.value.powerOffTime}}</p>
-                    <p>{{'Vremya blokirovki sektorov: ' + hubForm.value.hubBlockTime}}</p>
+                    <p>{{'Vremya otklyucheniya EP: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
+                    <p>{{'Vremya blokirovki sektorov: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
                     <p>{{'Opoveschen: ' + hubForm.value.informed}}</p>
-                    <p>{{'Nachalo: ' + hubForm.value.startTime}}</p>
-                    <p>{{'Konec: ' + hubForm.value.endTime}}</p>
+                    <p>{{'Nachalo: ' + hubForm.value.startTime.replace("T", " ")}}</p>
+                    <p>{{'Konec: ' + hubForm.value.endTime.replace("T", " ")}}</p>
                     <p>{{'Otpravil: ' + user.username}}</p>
                 </mat-card-content>
                 <mat-card-actions>
@@ -212,7 +216,7 @@
                         (click)="onSubmitButtonProblem('Reshenie')" type="submit" *ngIf="newForm == true">Submit
                     </button>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Reshenie')" type="submit" *ngIf="newForm == false">Update
+                        (click)="onSubmitButtonUpdate('Reshenie')" type="submit" *ngIf="newForm == false">Send Message
                     </button>
                 </mat-card-actions>
             </mat-card>
@@ -228,11 +232,11 @@
                     <p>{{hubForm.value.problem + ' saytov ne rabotayut v ' + hubForm.value.region}}</p>
                     <p>{{'Prichina: ' + hubForm.value.reason}}</p>
                     <p>{{'Opisanie: ' + hubForm.value.desc}}</p>
-                    <p>{{'Vremya otklyucheniya EP: ' + hubForm.value.powerOffTime}}</p>
-                    <p>{{'Vremya blokirovki sektorov: ' + hubForm.value.hubBlockTime}}</p>
+                    <p>{{'Vremya otklyucheniya EP: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
+                    <p>{{'Vremya blokirovki sektorov: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
                     <p>{{'Opoveschen: ' + hubForm.value.informed}}</p>
-                    <p>{{'Nachalo: ' + hubForm.value.startTime}}</p>
-                    <p>{{'Konec: ' + hubForm.value.endTime}}</p>
+                    <p>{{'Nachalo: ' + hubForm.value.startTime.replace("T", " ")}}</p>
+                    <p>{{'Konec: ' + hubForm.value.endTime.replace("T", " ")}}</p>
                     <p>{{'Otpravil: ' + user.username}}</p>
                 </mat-card-content>
                 <mat-card-actions>
@@ -240,7 +244,7 @@
                         (click)="onSubmitButtonProblem('Informacionnoe')" type="submit" *ngIf="newForm == true">Submit
                     </button>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Informacionnoe')" type="submit" *ngIf="newForm == false">Update
+                        (click)="onSubmitButtonUpdate('Informacionnoe')" type="submit" *ngIf="newForm == false">Send Message
                     </button>
                 </mat-card-actions>
             </mat-card>

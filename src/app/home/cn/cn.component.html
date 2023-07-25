@@ -127,6 +127,10 @@
                 <button class="form-button" mat-raised-button color="primary" type="button"
                     (click)="previewButton()">Preview</button>
             </mat-grid-tile>
+            <mat-grid-tile colspan="1" *ngIf="newForm == false">
+                <button class="form-button" mat-raised-button color="primary" type="button"
+                    (click)="updateData()">Update</button>
+            </mat-grid-tile>
             <mat-grid-tile colspan="3">
                 <mat-chip-listbox formControlName="AddOrCor">
                     <mat-chip-option value="correction">Correction</mat-chip-option>
@@ -137,7 +141,7 @@
     </form>
     <!-- Form Preview -->
     <div class="grid-container">
-        <div class="grid-item" *ngIf="preview == true">
+        <div class="grid-item" *ngIf="preview == true && cnForm.value.endTime == null">
             <mat-card class="preview">
                 <mat-card-header>
                     <mat-card-title>{{cnForm.value.level + ' Problema:'}}</mat-card-title>
@@ -149,15 +153,15 @@
                     <p>{{'Prichina: ' + cnForm.value.reason}}</p>
                     <p>{{'Effect: ' + cnForm.value.effect}}</p>
                     <p>{{'Opoveschen: ' + cnForm.value.informed}}</p>
-                    <p>{{'Nachalo: ' + cnForm.value.startTime}}</p>
-                    <p>{{'Otpravil: ' + cnForm.value.sender}}</p>
+                    <p>{{'Nachalo: ' + cnForm.value.startTime.replace("T", " ")}}</p>
+                    <p>{{'Otpravil: ' + user?.username}}</p>
                 </mat-card-content>
                 <mat-card-actions>
                     <button class="form-button" mat-raised-button color="primary"
                         (click)="onSubmitButtonProblem('Problem')" type="submit" *ngIf="newForm == true">Submit
                     </button>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Problem')" type="submit" *ngIf="newForm == false">Update
+                        (click)="onSubmitButtonUpdate('Problem')" type="submit" *ngIf="newForm == false">Send Message
                     </button>
                 </mat-card-actions>
             </mat-card>
@@ -175,16 +179,16 @@
                     <p>{{'Effect: ' + cnForm.value.effect}}</p>
                     <p>{{'Opoveschen: ' + cnForm.value.informed}}</p>
                     <p>{{'Opisaniya: ' + cnForm.value.desc}}</p>
-                    <p>{{'Nachalo: ' + cnForm.value.startTime}}</p>
-                    <p>{{'Konec: ' + cnForm.value.endTime}}</p>
-                    <p>{{'Otpravil: ' + cnForm.value.sender}}</p>
+                    <p>{{'Nachalo: ' + cnForm.value.startTime.replace("T", " ")}}</p>
+                    <p>{{'Konec: ' + cnForm.value.endTime.replace("T", " ")}}</p>
+                    <p>{{'Otpravil: ' + user?.username}}</p>
                 </mat-card-content>
                 <mat-card-actions>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonProblem('Resheniya')" type="submit" *ngIf="newForm == true">Submit
+                        (click)="onSubmitButtonProblem('Reshenie')" type="submit" *ngIf="newForm == true">Submit
                     </button>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Resheniya')" type="submit" *ngIf="newForm == false">Update
+                        (click)="onSubmitButtonUpdate('Reshenie')" type="submit" *ngIf="newForm == false">Send Message
                     </button>
                 </mat-card-actions>
             </mat-card>
@@ -202,100 +206,19 @@
                     <p>{{'Effect: ' + cnForm.value.effect}}</p>
                     <p>{{'Opoveschen: ' + cnForm.value.informed}}</p>
                     <p>{{'Opisaniya: ' + cnForm.value.desc}}</p>
-                    <p>{{'Nachalo: ' + cnForm.value.startTime}}</p>
-                    <p>{{'Konec: ' + cnForm.value.endTime}}</p>
-                    <p>{{'Otpravil: ' + cnForm.value.sender}}</p>
+                    <p>{{'Nachalo: ' + cnForm.value.startTime.replace("T", " ")}}</p>
+                    <p>{{'Konec: ' + cnForm.value.endTime.replace("T", " ")}}</p>
+                    <p>{{'Otpravil: ' + user?.username}}</p>
                 </mat-card-content>
                 <mat-card-actions>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonProblem('Informacionaya')" type="submit" *ngIf="newForm == true">Submit
+                        (click)="onSubmitButtonProblem('Informacionnoe')" type="submit" *ngIf="newForm == true">Submit
                     </button>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Informacionaya')" type="submit" *ngIf="newForm == false">Update
+                        (click)="onSubmitButtonUpdate('Informacionnoe')" type="submit" *ngIf="newForm == false">Send Message
                     </button>
                 </mat-card-actions>
             </mat-card>
         </div>
     </div>
-    <!-- <mat-grid-list cols="8" rowHeight="350px">
-        <mat-grid-tile colspan="2" *ngIf="preview == true">
-            <mat-card class="preview">
-                <mat-card-header>
-                    <mat-card-title>{{cnForm.value.level + ' Problema:'}}</mat-card-title>
-                    <mat-card-title *ngIf="cnForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
-                    <mat-card-title *ngIf="cnForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <p>{{cnForm.value.problem}}</p>
-                    <p>{{'Prichina: ' + cnForm.value.reason}}</p>
-                    <p>{{'Effect: ' + cnForm.value.effect}}</p>
-                    <p>{{'Opoveschen: ' + cnForm.value.informed}}</p>
-                    <p>{{'Nachalo: ' + cnForm.value.startTime}}</p>
-                    <p>{{'Otpravil: ' + cnForm.value.sender}}</p>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonProblem('Problem')" type="submit" *ngIf="newForm == true">Submit
-                    </button>
-                    <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Problem')" type="submit" *ngIf="newForm == false">Update
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-        </mat-grid-tile>
-        <mat-grid-tile colspan="2" *ngIf="previewResheniya == true && cnForm.value.endTime != null">
-            <mat-card class="preview">
-                <mat-card-header>
-                    <mat-card-title>{{cnForm.value.level + ' Reshenie:'}}</mat-card-title>
-                    <mat-card-title *ngIf="cnForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
-                    <mat-card-title *ngIf="cnForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <p>{{cnForm.value.problem}}</p>
-                    <p>{{'Prichina: ' + cnForm.value.reason}}</p>
-                    <p>{{'Effect: ' + cnForm.value.effect}}</p>
-                    <p>{{'Opoveschen: ' + cnForm.value.informed}}</p>
-                    <p>{{'Opisaniya: ' + cnForm.value.desc}}</p>
-                    <p>{{'Nachalo: ' + cnForm.value.startTime}}</p>
-                    <p>{{'Konec: ' + cnForm.value.endTime}}</p>
-                    <p>{{'Otpravil: ' + cnForm.value.sender}}</p>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonProblem('Resheniya')" type="submit" *ngIf="newForm == true">Submit
-                    </button>
-                    <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Resheniya')" type="submit" *ngIf="newForm == false">Update
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-        </mat-grid-tile>
-        <mat-grid-tile colspan="2" *ngIf="previewResheniya == true && cnForm.value.endTime != null">
-            <mat-card class="preview">
-                <mat-card-header>
-                    <mat-card-title>{{cnForm.value.level + ' Informacionnoe:'}}</mat-card-title>
-                    <mat-card-title *ngIf="cnForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
-                    <mat-card-title *ngIf="cnForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <p>{{cnForm.value.problem}}</p>
-                    <p>{{'Prichina: ' + cnForm.value.reason}}</p>
-                    <p>{{'Effect: ' + cnForm.value.effect}}</p>
-                    <p>{{'Opoveschen: ' + cnForm.value.informed}}</p>
-                    <p>{{'Opisaniya: ' + cnForm.value.desc}}</p>
-                    <p>{{'Nachalo: ' + cnForm.value.startTime}}</p>
-                    <p>{{'Konec: ' + cnForm.value.endTime}}</p>
-                    <p>{{'Otpravil: ' + cnForm.value.sender}}</p>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonProblem('Informacionaya')" type="submit" *ngIf="newForm == true">Submit
-                    </button>
-                    <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Informacionaya')" type="submit" *ngIf="newForm == false">Update
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-        </mat-grid-tile>
-    </mat-grid-list> -->
 </div>

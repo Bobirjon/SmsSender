@@ -20,6 +20,8 @@ import {MatTableModule} from '@angular/material/table';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSortModule} from '@angular/material/sort';
+import {MatPaginatorModule} from '@angular/material/paginator'
 
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
@@ -68,7 +70,9 @@ import { StartComponent } from './home/start/start.component';
     MatTableModule,
     MatChipsModule,
     MatRadioModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSortModule,
+    MatPaginatorModule
   ],
   providers: [
     {

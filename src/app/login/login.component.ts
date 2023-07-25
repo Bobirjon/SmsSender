@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { StorageService } from '../storage.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-login',
@@ -11,7 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class LoginComponent implements OnInit {
   auth: FormGroup;
-  user: any
+  loginStatus: any 
+
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -30,17 +31,20 @@ export class LoginComponent implements OnInit {
   submit(){
     this.authService.login(this.auth.value.username, this.auth.value.password)
       .subscribe(response => {
-        console.log(response);
-        
         this.storage.saveToken(response)
         this.router.navigate(['home'])
       }, error => {
-        console.log(error);
-        
-        this.snackBar.open(error.error.non_field_errors, 'Dismiss', {duration: 5000})
+        this.snackBar.open(error.error.non_field_errors, 'Dismiss', {duration: 10000})
       }, )
-    
   }
 
-
+  login() {
+    this.authService.login(this.auth.value.username, this.auth.value.password)
+      .subscribe(response => {
+        this.storage.saveToken(response)
+        this.router.navigate(['home'])
+      }, error => {
+        this.snackBar.open(error.error.non_field_errors, 'Dismiss', {duration: 10000})
+      }, )
+  }
 }

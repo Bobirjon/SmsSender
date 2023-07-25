@@ -117,14 +117,6 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- effect -->
-            <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>Effect</mat-label>
-                    <input matInput type="text" formControlName="effect" />
-                </mat-form-field>
-            </mat-grid-tile>
-
         </mat-grid-list>
         <mat-grid-list cols="12">
             <!-- start Time -->
@@ -148,6 +140,10 @@
                 <button class="form-button" mat-raised-button color="primary" type="button"
                     (click)="previewButton()">Preview</button>
             </mat-grid-tile>
+            <mat-grid-tile colspan="1" *ngIf="newForm == false">
+                <button class="form-button" mat-raised-button color="primary" type="button"
+                    (click)="updateData()">Update</button>
+            </mat-grid-tile>
             <mat-grid-tile colspan="3">
                 <mat-chip-listbox formControlName="AddOrCor">
                     <mat-chip-option value="correction">Correction</mat-chip-option>
@@ -158,7 +154,7 @@
     </form>
     <!-- preview -->
     <div class="grid-container">
-        <div class="grid-item" *ngIf="preview == true">
+        <div class="grid-item" *ngIf="preview == true && chronicForm.value.endTime == null">
             <mat-card>
                 <mat-card-header>
                     <mat-card-title>{{chronicForm.value.level + ' Hronicheskiy sayt:' + ' Problema:'}}</mat-card-title>
@@ -167,17 +163,17 @@
                 </mat-card-header>
                 <mat-card-content>
                     <p>{{chronicForm.value.siteName + ' - sayt ne rabotaet v ' + chronicForm.value.region + ' bolee ' +
-                        chronicForm.value.time + ' chasov s ' + chronicForm.value.startTime}}</p>
+                        chronicForm.value.time + ' chasov s ' + chronicForm.value.startTime.replace('T',' ')}}</p>
                     <p>{{'Prichina: ' + chronicForm.value.reason}}</p>
                     <p>{{'Opoveschen: ' + chronicForm.value.informed}}</p>
-                    <p>{{'Otpravil: ' + chronicForm.value.sender}}</p>
+                    <p>{{'Otpravil: ' + user?.username}}</p>
                 </mat-card-content>
                 <mat-card-actions>
                     <button class="form-button" mat-raised-button color="primary"
                         (click)="onSubmitButtonProblem('Problem')" type="submit" *ngIf="newForm == true">Submit
                     </button>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Problem')" type="submit" *ngIf="newForm == false">Update
+                        (click)="onSubmitButtonUpdate('Problem')" type="submit" *ngIf="newForm == false">Send Message
                     </button>
                 </mat-card-actions>
             </mat-card>
@@ -191,19 +187,19 @@
                 </mat-card-header>
                 <mat-card-content>
                     <p>{{chronicForm.value.siteName + ' - sayt ne rabotal v ' + chronicForm.value.region + ' bolee ' +
-                        chronicForm.value.time + ' chasov s ' + chronicForm.value.startTime + ' po ' +
-                        chronicForm.value.endTime}}</p>
+                        chronicForm.value.time + ' chasov s ' + chronicForm.value.startTime.replace('T',' ') + ' po ' +
+                        chronicForm.value.endTime.replace('T', ' ')}}</p>
                     <p>{{'Prichina: ' + chronicForm.value.reason}}</p>
                     <p>{{'Opisaniya: ' + chronicForm.value.desc}}</p>
                     <p>{{'Opoveschen: ' + chronicForm.value.informed}}</p>
-                    <p>{{'Otpravil: ' + chronicForm.value.sender}}</p>
+                    <p>{{'Otpravil: ' + user?.username}}</p>
                 </mat-card-content>
                 <mat-card-actions>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonProblem('Resheniya')" type="submit" *ngIf="newForm == true">Submit
+                        (click)="onSubmitButtonProblem('Reshenie')" type="submit" *ngIf="newForm == true">Submit
                     </button>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Resheniya')" type="submit" *ngIf="newForm == false">Update
+                        (click)="onSubmitButtonUpdate('Reshenie')" type="submit" *ngIf="newForm == false">Send Message
                     </button> </mat-card-actions>
             </mat-card>
         </div>
