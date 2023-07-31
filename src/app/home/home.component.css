@@ -2,5 +2,10 @@
     margin: 20px;
 }
 .hidden {
+    background-color: brown;
     display: none;
+}
+.filter {
+    width:100%;
+    padding: 6px;
 }

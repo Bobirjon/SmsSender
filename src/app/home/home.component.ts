@@ -1,12 +1,24 @@
-import { Component, OnInit, ViewChild,  } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild,  } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { MatSort  } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
+import { MatSort, MatSortModule  } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AbstractControl, Form, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+
+export interface DataTable {
+  region: string
+  username: string
+  start_time: any
+  created_at: any;
+  level: string,
+  type: string,
+  description: string,
+  reason: string,
+  problem: string
+}
 
 @Component({
   selector: 'app-home',
@@ -19,29 +31,129 @@ export class HomeComponent implements OnInit {
   CurrentRoute = this.router.url
   isComplete: boolean
   name: any
-  displayedColumns: string[] = [
-    'Level',
-    'type',
-    'created_at',
-    'reason',
-    'description',
-    'problem',
-    'influence',
-    'region',
-    'start_time',
-    'user',
-    'actions'
-    ];
   user: any;
   hidden: any
 
-  @ViewChild(MatSort) sort: MatSort
-   
+
+  displayedColumnsNew: string[] = [
+    'level',
+    'type',
+    'created_at',
+    'start_time',
+    'description',
+    'reason',
+    'problem',
+    'region',
+    'actions'
+  ]
+
+
+  dataTable: MatTableDataSource<DataTable>
+  posts: any
+  @ViewChild(MatPaginator) paginator: MatPaginator
+
+  @ViewChild('table1sort') public table1sort: MatSort;
+  @ViewChild('table2sort') public table2sort: MatSort;
+
+  level = new FormControl()
+  type = new FormControl()
+  description = new FormControl()
+  reason = new FormControl()
+  problem = new FormControl()
+  createdAt = new FormControl()
+  startTime = new FormControl()
+  region = new FormControl()
+  username = new FormControl()
+
+  filteredValues = { 
+    level:'', 
+    type:'', 
+    description:'', 
+    reason:'', 
+    problem:'',
+    created_at:'',
+    start_time: '',
+    region: '' };
+  
   constructor(
     private authService: AuthService,
-    private router: Router,) { }
+    private router: Router) {
 
-  ngOnInit(): void {
+      this.authService.getData().subscribe((data) => {
+        this.posts = data
+
+        this.dataTable = new MatTableDataSource(this.posts)
+        this.Data = new MatTableDataSource(this.posts)
+        console.log(this.dataTable.data);
+        
+        
+        this.Data.sort = this.table1sort;
+        this.dataTable.sort = this.table2sort;
+        this.dataTable.paginator = this.paginator;
+        
+        this.level.valueChanges.subscribe((levelFilter) => {
+          this.filteredValues['level'] = levelFilter;
+          this.dataTable.filter = JSON.stringify(this.filteredValues)
+        })
+
+        this.type.valueChanges.subscribe((typeFilter) => {
+          this.filteredValues['type'] = typeFilter;
+          this.dataTable.filter = JSON.stringify(this.filteredValues)
+        })
+        
+        this.description.valueChanges.subscribe((descriptionFilter) => {
+          this.filteredValues['description'] = descriptionFilter;
+          this.dataTable.filter = JSON.stringify(this.filteredValues)
+        })
+
+        this.reason.valueChanges.subscribe((reasonFilter) => {
+          this.filteredValues['reason'] = reasonFilter;
+          this.dataTable.filter = JSON.stringify(this.filteredValues)
+        })
+        
+        this.problem.valueChanges.subscribe((problemFilter) => {
+          this.filteredValues['problem'] = problemFilter;
+          this.dataTable.filter = JSON.stringify(this.filteredValues)
+        })
+
+        this.createdAt.valueChanges.subscribe((createdAtFilter) => {
+          this.filteredValues['created_at'] = createdAtFilter;
+          this.dataTable.filter = JSON.stringify(this.filteredValues)
+        })
+
+        this.startTime.valueChanges.subscribe((startTimeFilter) => {
+          this.filteredValues['start_time'] = startTimeFilter;
+          this.dataTable.filter = JSON.stringify(this.filteredValues)
+        })
+
+        this.region.valueChanges.subscribe((regionFilter) => {
+          this.filteredValues['region'] = regionFilter;
+          this.dataTable.filter = JSON.stringify(this.filteredValues)
+        })
+
+
+        this.dataTable.filterPredicate = function(data, filter) : boolean {
+          let searchString = JSON.parse(filter);
+          let levelFound = data.level.toString().trim().toLowerCase().indexOf(searchString.level.toLowerCase()) !== -1
+          let typeFound = data.type.toString().trim().toLowerCase().indexOf(searchString.type.toLowerCase()) !== -1
+          let descriptionFound = data.description.toString().trim().toLowerCase().indexOf(searchString.description.toLowerCase()) !== -1
+          let reasonFound = data.reason.toString().trim().toLowerCase().indexOf(searchString.reason.toLowerCase()) !== -1
+          let problemFound = data.problem.toString().trim().toLowerCase().indexOf(searchString.problem.toLowerCase()) !== -1
+          let createdAtFound = data.created_at.toString().trim().toLowerCase().indexOf(searchString.created_at.toLowerCase()) !== -1
+          let startTimeFound = data.start_time.toString().trim().toLowerCase().indexOf(searchString.start_time.toLowerCase()) !== -1
+          let regionFound = data.region.toString().trim().toLowerCase().indexOf(searchString.region.toLowerCase()) !== -1
+
+          if (searchString.topFilter) {
+            return levelFound || typeFound || descriptionFound || reasonFound || problemFound || createdAtFound || startTimeFound || regionFound
+        } else {
+            return levelFound && typeFound && descriptionFound && reasonFound && problemFound && createdAtFound && startTimeFound && regionFound
+        }
+        }
+      })
+     }
+
+  
+  ngOnInit(): void {    
     
     if(this.router.url == '/home') {
       this.Loaded = true
@@ -49,22 +161,12 @@ export class HomeComponent implements OnInit {
       this.Loaded = false
     }
 
-    this.authService.getData()
-      .subscribe(res => {
-        this.Data = res
-        this.Data.sort = this.sort
-        console.log(res);
-        
-      })
-
     this.authService.getUser()
       .subscribe(result => {
         console.log(result);
         
         this.user = result
       })
-
-
   }
 
   onRN() {

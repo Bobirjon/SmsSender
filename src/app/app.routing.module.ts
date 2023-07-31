@@ -7,9 +7,10 @@ import { RnComponent } from "./home/rn/rn.component";
 import { BscComponent } from "./home/rn/bsc/bsc.component";
 import { ChronicComponent } from "./home/rn/chronic/chronic.component";
 import { HubComponent } from "./home/rn/hub/hub.component";
+import { AuthGuard } from "./auth-guard.service";
 
 const routes: Routes = [
-    {path: '', redirectTo: '/login', pathMatch: "full"},
+    {path: '', redirectTo: '/home', pathMatch: "full"},
     {path: 'login', component: LoginComponent},
     {path: 'home', component: HomeComponent, children: [
         {path: 'cn', component: CnComponent},
@@ -22,12 +23,13 @@ const routes: Routes = [
         {path: 'CORE/:id', component: CnComponent},
         {path: 'CHRONIC/:id', component: ChronicComponent},
         {path: 'BSC/RNC/:id', component: BscComponent},
-    ]}
+    ], canActivate:[AuthGuard]}
 ]
 
 @NgModule({
     imports:[RouterModule.forRoot(routes)],
-    exports:[RouterModule]
+    exports:[RouterModule],
+    providers: [AuthGuard]
 })
 export class AppRoutingModule {
 

@@ -28,7 +28,7 @@ import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { AppRoutingModule } from './app.routing.module';
-import { AuthInterceptorService } from './auth-interceptor.service';
+import { AuthInterceptorService } from './auth-interceptor.service'
 import { CnComponent } from './home/cn/cn.component';
 import { RnComponent } from './home/rn/rn.component';
 import { ChronicComponent } from './home/rn/chronic/chronic.component';
@@ -49,7 +49,7 @@ import { StartComponent } from './home/start/start.component';
     ChronicComponent,
     HubComponent,
     BscComponent,
-    StartComponent
+    StartComponent,
   ],
   imports: [
     BrowserModule,
