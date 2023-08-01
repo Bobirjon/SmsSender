@@ -12,7 +12,7 @@ import { StorageService } from 'src/app/storage.service';
   styleUrls: ['./cn.component.css']
 })
 export class CnComponent implements OnInit {
-
+  
   cnForm: FormGroup
   preview = false
   previewResheniya = false
@@ -21,6 +21,7 @@ export class CnComponent implements OnInit {
   criteria_list: any
   criteria: any
   SmsTextBody: any
+  time = new Date()
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A2', viewValue: 'A2' },

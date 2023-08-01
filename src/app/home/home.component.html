@@ -8,6 +8,18 @@
   <mat-divider></mat-divider>
 
   <h1 style="margin-left: 50px; margin-top: 40px;">The Open Cases</h1>
+
+  <mat-form-field style="margin-left: 50px;" appearance="fill" *ngFor="let selectableFilter of selectableFilters">
+    <mat-label>{{ selectableFilter.name }}</mat-label>
+    <mat-select
+      [(value)]="selectableFilter.defaultValue"
+      (selectionChange)="applySelectableFilter($event, selectableFilter)"
+    >
+      <mat-option *ngFor="let op of selectableFilter.options" [value]="op">
+        {{ op }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   
   <div class="table-style" >
     <table mat-table [dataSource] = "Data" matSort #table1 #table1sort="matSort" class="mat-elevation-z8">
@@ -23,7 +35,7 @@
       </ng-container>
 
       <ng-container matColumnDef="created_at">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created__________</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
         <td mat-cell *matCellDef="let element">{{element.created_at.replace('T', ' ').substring('0','16')}}</td>
       </ng-container>
 

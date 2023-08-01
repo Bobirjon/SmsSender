@@ -1,12 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild,  } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
+import { Data, Router } from '@angular/router';
 import { MatSort, MatSortModule  } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, Form, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 
 export interface DataTable {
   region: string
@@ -54,6 +55,13 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('table1sort') public table1sort: MatSort;
   @ViewChild('table2sort') public table2sort: MatSort;
+  levelSelect: string[]=['All','A2','A3','A4', 'A5'];
+  typeSelect: string[]=['All','CORE', 'CHRONIC', 'HUB', 'BSC/RNC']
+  selectableFilters: any[] = []
+
+  defaultValue = "All";
+
+  filterDictionary= new Map<string,string>();
 
   level = new FormControl()
   type = new FormControl()
@@ -149,11 +157,26 @@ export class HomeComponent implements OnInit {
             return levelFound && typeFound && descriptionFound && reasonFound && problemFound && createdAtFound && startTimeFound && regionFound
         }
         }
+
+        // selectable filter
+        this.selectableFilters.push({name:'level', options: this.levelSelect, defaultValue: this.defaultValue})
+        this.selectableFilters.push({name:'type', options: this.typeSelect, defaultValue: this.defaultValue})
+
+        this.Data.filterPredicate = function (selectRecord: any, selectFilter: any) {
+          var map = new Map(JSON.parse(selectFilter));
+          let isMatch = false;
+          for (let [key, value] of map) {
+            isMatch = value == 'All' || selectRecord[key as keyof Data] == value;
+            if (!isMatch) return false;
+          }
+          return isMatch;
+        };
       })
      }
 
   
   ngOnInit(): void {    
+    
     
     if(this.router.url == '/home') {
       this.Loaded = true
@@ -167,6 +190,17 @@ export class HomeComponent implements OnInit {
         
         this.user = result
       })
+  }
+  
+  applySelectableFilter(ob: MatSelectChange, data: Data) {
+    this.filterDictionary.set(data.name, ob.value)
+
+    var jsonString = JSON.stringify(
+      Array.from(this.filterDictionary.entries())
+    )
+
+    this.Data.filter = jsonString
+    
   }
 
   onRN() {
