@@ -7,38 +7,41 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
+  URLsender = 'http://10.7.119.12/api/';
 
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post('http://10.7.119.12:8000/auth/token/login/', { username, password } );
+    console.log(this.URLsender + 'auth/token/login/', { username, password });
+    
+    return this.http.post(this.URLsender + 'auth/token/login/', { username, password } );
   }
 
   logout() {
-    return this.http.get('http://10.7.119.12:8000/auth/token/logout/')
+    return this.http.get(this.URLsender + 'auth/token/logout/')
   }
 
   getData() {
-    return this.http.get('http://10.7.119.12:8000/smssender/alarmreport/')
+    return this.http.get(this.URLsender + 'smssender/alarmreport/')
   }
 
   getSms(id: number) {
-    return this.http.get(`${'http://10.7.119.12:8000/smssender/alarmreport'}/${id}`)
+    return this.http.get(`${this.URLsender + 'smssender/alarmreport'}/${id}`)
   }
 
   updateSms(id: number, data: any) {
-    return this.http.put(`${'http://10.7.119.12:8000/smssender/alarmreport'}/${id}/`, data)
+    return this.http.put(`${this.URLsender + 'smssender/alarmreport'}/${id}/`, data)
   }
 
   postData(body: any) {
-    return this.http.post('http://10.7.119.12:8000/smssender/alarmreport/', body)
+    return this.http.post(this.URLsender + 'smssender/alarmreport/', body)
   }
   
   getUser() {
-    return this.http.get('http://10.7.119.12:8000/auth/users/me ')
+    return this.http.get(this.URLsender + 'auth/users/me ')
   }
 
   sendSms(body: any) {
-    return this.http.post('http://10.7.119.12:8000/smssender/smssend/', body)
+    return this.http.post(this.URLsender + 'smssender/smssend/', body)
   }
 }

@@ -135,7 +135,7 @@
         <!-- button -->
         <mat-grid-list cols="12">
             <mat-grid-tile colspan="1">
-                <button class="form-button" mat-raised-button color="primary" type="button" [disabled]="cnForm.invalid"
+                <button class="form-button" mat-raised-button color="primary" type="button" [disabled]="cnForm.invalid && newForm"
                     (click)="previewButton()">Preview</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="1" *ngIf="newForm == false">

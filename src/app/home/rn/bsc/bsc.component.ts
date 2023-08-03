@@ -21,6 +21,7 @@ export class BscComponent implements OnInit {
   criteria_list: any
   criteria: any
   SmsTextBody: any
+  time = new Date()
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },

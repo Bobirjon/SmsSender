@@ -8,6 +8,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, Form, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { ValueFromArray, map } from 'rxjs';
 
 export interface DataTable {
   region: string
@@ -56,12 +57,13 @@ export class HomeComponent implements OnInit {
   @ViewChild('table1sort') public table1sort: MatSort;
   @ViewChild('table2sort') public table2sort: MatSort;
   levelSelect: string[]=['All','A2','A3','A4', 'A5'];
-  typeSelect: string[]=['All','CORE', 'CHRONIC', 'HUB', 'BSC/RNC']
+  // typeSelect: string[]=['All','CORE', 'CHRONIC', 'HUB', 'BSC/RNC']
+  typeSelect: string[]=['All','CORE', 'RN']
   selectableFilters: any[] = []
 
   defaultValue = "All";
 
-  filterDictionary= new Map<string,string>();
+  filterDictionary= new Map<string,string[]>();
 
   level = new FormControl()
   type = new FormControl()
@@ -164,9 +166,18 @@ export class HomeComponent implements OnInit {
 
         this.Data.filterPredicate = function (selectRecord: any, selectFilter: any) {
           var map = new Map(JSON.parse(selectFilter));
+          
+          
           let isMatch = false;
           for (let [key, value] of map) {
-            isMatch = value == 'All' || selectRecord[key as keyof Data] == value;
+        
+            isMatch = value == 'All' || 
+            (selectRecord[key as keyof Data] == value[0] || 
+              selectRecord[key as keyof Data] == value[1] || 
+              selectRecord[key as keyof Data] == value[2])
+            // isMatch = value == 'All' || selectRecord[key as keyof Data] in value[key as keyof Data]
+            
+            
             if (!isMatch) return false;
           }
           return isMatch;
@@ -193,12 +204,16 @@ export class HomeComponent implements OnInit {
   }
   
   applySelectableFilter(ob: MatSelectChange, data: Data) {
-    this.filterDictionary.set(data.name, ob.value)
+    if(ob.value == 'RN'){
+      this.filterDictionary.set(data.name, ['CHRONIC', 'BSC/RNC', 'HUB'])
+    } else {
+      this.filterDictionary.set(data.name, [ob.value])
+    }
 
     var jsonString = JSON.stringify(
       Array.from(this.filterDictionary.entries())
     )
-
+    
     this.Data.filter = jsonString
     
   }

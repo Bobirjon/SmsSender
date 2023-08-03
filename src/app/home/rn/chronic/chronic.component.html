@@ -123,14 +123,25 @@
             <mat-grid-tile colspan="3">
                 <div class="margin-container">
                     <p>Start Time</p>
-                    <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime">
+                    <input 
+                        type="datetime-local" 
+                        class="dateTime" 
+                        name="startTime" 
+                        formControlName="startTime"
+                        min="2023-01-01T00:00"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
             <mat-grid-tile colspan="3">
                 <div class="margin-container">
                     <p>End Time</p>
-                    <input type="datetime-local" class="dateTime" formControlName="endTime">
+                    <input 
+                        type="datetime-local" 
+                        class="dateTime" 
+                        formControlName="endTime"
+                        min="2023-01-01T00:00"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
         </mat-grid-list>
@@ -138,7 +149,7 @@
         <mat-grid-list cols="12">
             <mat-grid-tile colspan="1">
                 <button class="form-button" mat-raised-button color="primary" type="button"
-                    (click)="previewButton()">Preview</button>
+                    (click)="previewButton()" [disabled]="chronicForm.invalid && newForm ">Preview</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="1" *ngIf="newForm == false">
                 <button class="form-button" mat-raised-button color="primary" type="button"
