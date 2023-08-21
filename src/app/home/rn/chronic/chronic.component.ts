@@ -23,6 +23,9 @@ export class ChronicComponent implements OnInit {
   criteria: any
   SmsTextBody: any
   time = new Date()
+  requestType: any
+  tableBody: any
+  smsBody: any
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -153,9 +156,9 @@ export class ChronicComponent implements OnInit {
     this.previewResheniya = !this.previewResheniya
   }
 
-  updateData() {
-    const body = {
-      'type': 'CHRONIC',
+  tableSendBody() {
+    this.tableBody = {
+      'type': 'CORE',
       'level': this.chronicForm.value.level,
       'category': this.chronicForm.value.categories_report,
       'responsible_area': this.chronicForm.value.responsible_report,
@@ -165,111 +168,140 @@ export class ChronicComponent implements OnInit {
       'start_time': this.chronicForm.value.startTime,
       'end_time': this.chronicForm.value.endTime,
       'region': this.chronicForm.value.region,
-
-      'chronic_site': this.chronicForm.value.siteName,
-      'chronic_hours': this.chronicForm.value.time,
-      'hub_site': this.chronicForm.value.hubSite,
-      'category_for_hub': this.chronicForm.value.category,
+      'category_for_core': this.chronicForm.value.category,
       'description': this.chronicForm.value.desc,
-      'sender': this.user?.username,
       'informed': this.chronicForm.value.informed,
+      'influence': this.chronicForm.value.effect,
+      'sender': this.user?.username
+    }
+  }
+
+  smsSendBody() {
+    this.criteria = this.storageService.getNotification(this.chronicForm.value.level)
+    this.criteria_list = this.criteria?.concat(this.chronicForm.value.region)
+
+    if (this.requestType == 'Problem') {
+      if (this.chronicForm.value.categories_report == 'ПР') {
+        if (this.chronicForm.value.AddOrCor == (undefined || null)) {
+          this.SmsTextBody =
+            ' ' + this.chronicForm.value.level.replace('A', 'П') + ' ' + this.requestType + ' Hronicheskiy sayt: Problema: \n' +
+            ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region +
+            ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+            'Prichina: ' + this.chronicForm.value.reason + '\n ' +
+            'Informirovan: ' + this.chronicForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        } else {
+          this.SmsTextBody =
+            ' ' + this.chronicForm.value.level.replace('A', 'П') + ' ' + this.requestType + ' Hronicheskiy sayt: Problema: \n' +
+            ' (' + this.chronicForm.value.AddOrCor + ') \n'
+          ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region +
+            ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+            'Prichina: ' + this.chronicForm.value.reason + '\n ' +
+            'Informirovan: ' + this.chronicForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        }
+      } else {
+        if (this.chronicForm.value.AddOrCor == (undefined || null)) {
+          this.SmsTextBody =
+            ' ' + this.chronicForm.value.level + ' ' + this.requestType + ' Hronicheskiy sayt: Problema: \n' +
+            ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region +
+            ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+            'Prichina: ' + this.chronicForm.value.reason + '\n ' +
+            'Informirovan: ' + this.chronicForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        } else {
+          this.SmsTextBody =
+            ' ' + this.chronicForm.value.level + ' ' + this.requestType + ' Hronicheskiy sayt: Problema: \n' +
+            ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region +
+            ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+            'Prichina: ' + this.chronicForm.value.reason + '\n ' +
+            'Informirovan: ' + this.chronicForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        }
+      }
+    } else {
+      if (this.chronicForm.value.categories_report == 'ПР') {
+        if (this.chronicForm.value.AddOrCor == (undefined || null)) {
+          this.SmsTextBody =
+            ' ' + this.chronicForm.value.level.replace('A', 'П') + ' ' + this.requestType + ' Hronicheskiy sayt: Problema: \n' +
+            ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region +
+            ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") +
+            ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
+            'Prichina: ' + this.chronicForm.value.reason + '\n ' +
+            'Opisaniya' + this.chronicForm.value.description + ' \n'
+          'Informirovan: ' + this.chronicForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        } else {
+          this.SmsTextBody =
+            ' ' + this.chronicForm.value.level.replace('A', 'П') + ' ' + this.requestType + ' Hronicheskiy sayt: Problema: \n' +
+            ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region +
+            ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+            ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
+            'Prichina: ' + this.chronicForm.value.reason + '\n ' +
+            'Opisaniya' + this.chronicForm.value.description + ' \n'
+          'Informirovan: ' + this.chronicForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        }
+      } else {
+        if (this.chronicForm.value.AddOrCor == (null || undefined)) {
+          this.SmsTextBody =
+            ' ' + this.chronicForm.value.level + ' ' + this.requestType + ' Hronicheskiy sayt: Problema: \n' +
+            ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region +
+            ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+            ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
+            'Prichina: ' + this.chronicForm.value.reason + '\n ' +
+            'Opisaniya' + this.chronicForm.value.description + ' \n'
+          'Informirovan: ' + this.chronicForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        } else {
+          this.SmsTextBody =
+            ' ' + this.chronicForm.value.level + ' ' + this.requestType + ' Hronicheskiy sayt: Problema: \n' +
+            ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region +
+            ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+            ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
+            'Prichina: ' + this.chronicForm.value.reason + '\n ' +
+            'Opisaniya' + this.chronicForm.value.description + ' \n'
+          'Informirovan: ' + this.chronicForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        }
+      }
     }
 
-    this.authService.updateSms(this.route.snapshot.params.id, body)
+    this.smsBody = {
+      'source_addr': 'ncc-cn',
+      'network': 'CN',
+      'criteria': this.criteria_list,
+      'notification': this.chronicForm.value.category,
+      'sms_text': this.SmsTextBody
+    }
+  }
+
+  updateData() {
+    this.tableSendBody()
+
+    this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
       .subscribe((result) => {
         console.log(result);
       })
   }
 
-  onSubmitButtonProblem(smsType: string) {
-    // send SMS logic
-    const body = {
-      'type': 'CHRONIC',
-      'level': this.chronicForm.value.level,
-      'category': this.chronicForm.value.categories_report,
-      'responsible_area': this.chronicForm.value.responsible_report,
-      'problem': this.chronicForm.value.problem,
-      'reason': this.chronicForm.value.reason,
-      'effect': this.chronicForm.value.effect_option,
-      'start_time': this.chronicForm.value.startTime,
-      'end_time': this.chronicForm.value.endTime,
-      'region': this.chronicForm.value.region,
+  createData() {
+    this.tableSendBody()
 
-      'chronic_site': this.chronicForm.value.siteName,
-      'chronic_hours': this.chronicForm.value.time,
-      'hub_site': this.chronicForm.value.hubSite,
-      'category_for_hub': this.chronicForm.value.category,
-      'description': this.chronicForm.value.desc,
-      'sender': this.user?.username,
-      'informed': this.chronicForm.value.informed,
-    }
-
-    this.criteria = this.storageService.getNotification(this.chronicForm.value.level)
-    this.criteria_list = this.criteria?.concat(this.chronicForm.value.region)
-    
-    if (smsType == 'Problem' && this.chronicForm.value.AddOrCor == (null || undefined)) {
-      this.SmsTextBody =
-        ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Problema: \n' +
-        ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Problem' && this.chronicForm.value.AddOrCor == 'correction') {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Problema: \n' +
-        ' (Correction) ' +
-        ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Problem' && this.chronicForm.value.AddOrCor == 'addition') {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Problema: \n' +
-        ' (Addition) ' +
-        ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.chronicForm.value.AddOrCor == (null || undefined)) {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Reshenie: \n' +
-      ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opisaniya: ' + this.chronicForm.value.desc + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.chronicForm.value.AddOrCor == 'correction') {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Reshenie: \n' +
-      ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opisaniya: ' + this.chronicForm.value.desc + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.chronicForm.value.AddOrCor == 'addition') {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Reshenie: \n' +
-      ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opisaniya: ' + this.chronicForm.value.desc + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    }
-
-    this.authService.postData(body)
+    this.authService.postData(this.tableBody)
       .subscribe((res) => {
         console.log(res);
       })
+  }
 
-    const body2 = {
-      'source_addr': 'ncc-rn',
-      'network': 'RN',
-      'criteria': this.criteria_list,
-      'notification': 'Chronic',
-      'sms_text': this.SmsTextBody
-    }
 
-    this.authService.sendSms(body2)
+  onSubmitButtonProblem(smsType: string) {
+    this.requestType = smsType
+    // send SMS logic
+
+    this.smsSendBody()
+
+    this.authService.sendSms(this.smsBody)
       .subscribe(result => {
         console.log(result);
         this.snackBar.open('Success', '', { duration: 10000 })
@@ -280,69 +312,11 @@ export class ChronicComponent implements OnInit {
   }
 
   onSubmitButtonUpdate(smsType: string) {
+    this.requestType = smsType
 
-    this.criteria = this.storageService.getNotification(this.chronicForm.value.level)
-    this.criteria_list = this.criteria?.concat(this.chronicForm.value.region)
+    this.smsSendBody()
 
-    if (smsType == 'Problem' && this.chronicForm.value.AddOrCor == (null || undefined)) {
-      this.SmsTextBody =
-        ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Problema: \n' +
-        ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Problem' && this.chronicForm.value.AddOrCor == 'correction') {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Problema: \n' +
-        ' (Correction) ' +
-        ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Problem' && this.chronicForm.value.AddOrCor == 'addition') {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Problema: \n' +
-        ' (Addition) ' +
-        ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.chronicForm.value.AddOrCor == (null || undefined)) {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Reshenie: \n' +
-      ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opisaniya: ' + this.chronicForm.value.desc + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.chronicForm.value.AddOrCor == 'correction') {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Reshenie: \n' +
-      ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opisaniya: ' + this.chronicForm.value.desc + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.chronicForm.value.AddOrCor == 'addition') {
-      this.SmsTextBody =
-      ' ' + this.chronicForm.value.level + ' Hronicheskiy sayt: Reshenie: \n' +
-      ' ' + this.chronicForm.value.siteName + ' - sayt ne rabotaet v ' + this.chronicForm.value.region + ' bolee ' + this.chronicForm.value.time + ' chasov s ' + this.chronicForm.value.startTime.replace("T", " ") + ' po ' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-        'Prichina: ' + this.chronicForm.value.reason + '\n ' +
-        'Opisaniya: ' + this.chronicForm.value.desc + '\n ' +
-        'Opoveschen: ' + this.chronicForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username
-    }
-
-
-    const body2 = {
-      'source_addr': 'ncc-rn',
-      'network': 'RN',
-      'criteria': this.criteria_list,
-      'notification': 'Chronic',
-      'sms_text': this.SmsTextBody
-    }
-
-    this.authService.sendSms(body2)
+    this.authService.sendSms(this.smsBody)
       .subscribe(result => {
         console.log(result);
         this.snackBar.open('Success', '', { duration: 10000 })

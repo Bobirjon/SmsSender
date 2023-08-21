@@ -13,21 +13,27 @@ export class StorageService {
     this.isLoggedIn$ = new BehaviorSubject(isLoggedIn);
   }
 
+  public tokenExpired(token: string) {
+    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
+    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+  }
+
   public saveToken(token: string): void {
-    sessionStorage.removeItem('token')
-    sessionStorage.setItem('token', token['auth_token'])
+    localStorage.removeItem('token')
+    localStorage.setItem('token', token['auth_token'])
     localStorage.setItem('loggedIn', 'true');
     this.isLoggedIn$.next(true); 
   }
 
   public deleteToken() {
-    sessionStorage.removeItem('token')
+    localStorage.removeItem('token')
+    localStorage.removeItem('role')
     localStorage.setItem('loggedIn', 'false');
     this.isLoggedIn$.next(false);
   }
 
   public getToken(): string {
-    return sessionStorage.getItem('token')
+    return localStorage .getItem('token')
   }
 
   public getNotification(notif: any){

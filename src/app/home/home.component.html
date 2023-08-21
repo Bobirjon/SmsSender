@@ -3,6 +3,7 @@
     <mat-grid-tile colspan="2">
       <button mat-raised-button color="primary" (click)="onCN()">Send CN message</button>
       <button mat-raised-button color="primary" (click)="onRN()" style="margin-left: 15px;">Send RN message</button>
+      <button mat-raised-button color="primary" (click)="addNumber()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Add Phone number</button>
     </mat-grid-tile>
   </mat-grid-list>
   <mat-divider></mat-divider>
@@ -70,7 +71,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsNew"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsNew" [ngClass]="{'hidden': row.is_complete === true}"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsNew"></tr>
     </table>
 
   </div>

@@ -7,7 +7,7 @@ export class AuthInterceptorService implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
 
-        let apiKey = sessionStorage.getItem("token")
+        let apiKey = localStorage.getItem("token")
         
         // const modified = req.clone({
         //     headers: req.headers
@@ -25,8 +25,7 @@ export class AuthInterceptorService implements HttpInterceptor {
               return next.handle(modRequest);
         } else {
             const modRequest = req.clone({
-                setHeaders: {
-                  authorization: `Token ${apiKey}`
+                setHeaders: { authorization: `Token ${apiKey}`
                 }
               });
               return next.handle(modRequest);

@@ -168,9 +168,11 @@
                 <button class="form-button" mat-raised-button color="primary" type="button"
                     (click)="previewButton()" [disabled]="hubForm.invalid && newForm">Preview</button>
             </mat-grid-tile>
-            <mat-grid-tile colspan="1" *ngIf="newForm == false">
-                <button class="form-button" mat-raised-button color="primary" type="button"
+            <mat-grid-tile colspan="1">
+                <button class="form-button" mat-raised-button color="primary" type="button"  *ngIf="newForm == false"
                     (click)="updateData()">Update</button>
+                    <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                    [disabled]="hubForm.invalid && newForm" (click)="createData()">Create</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="3">
                 <mat-chip-listbox formControlName="AddOrCor">
@@ -186,7 +188,8 @@
         <div class="grid-item" *ngIf="preview == true && hubForm.value.endTime == null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title>{{hubForm.value.level + ' HUB sayt: Problema: '}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A', 'П') + ' HUB sayt: Problema:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + ' Problema:'}}</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -213,7 +216,8 @@
         <div class="grid-item" *ngIf="previewResheniya == true && hubForm.value.endTime != null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title>{{hubForm.value.level + ' HUB sayt: Reshenie:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A', 'П') + ' HUB sayt: Resheniya:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + ' Resheniya:'}}</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -241,7 +245,8 @@
         <div class="grid-item" *ngIf="previewResheniya == true && hubForm.value.endTime != null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title>{{hubForm.value.level + ' HUB sayt: Informacionnoe:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A', 'П') + ' HUB sayt: Informacionnoe:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + ' Informacionnoe:'}}</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>

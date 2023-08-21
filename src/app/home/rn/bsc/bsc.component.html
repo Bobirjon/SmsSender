@@ -126,9 +126,11 @@
                 <button class="form-button" mat-raised-button color="primary" type="button"
                     (click)="previewButton()" [disabled]="bscForm.invalid && newForm">Preview</button>
             </mat-grid-tile>
-            <mat-grid-tile colspan="1" *ngIf="newForm == false">
-                <button class="form-button" mat-raised-button color="primary" type="button"
+            <mat-grid-tile colspan="1">
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
                     (click)="updateData()">Update</button>
+                    <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                    [disabled]="bscForm.invalid && newForm" (click)="createData()">Create</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="3">
                 <mat-chip-listbox formControlName="AddOrCor">
@@ -143,7 +145,8 @@
         <div class="grid-item" *ngIf="preview == true && bscForm.value.endTime == null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title>{{bscForm.value.level + ' BSC:' + ' Problema:'}}</mat-card-title>
+                    <mat-card-title *ngIf="bscForm.value.categories_report == 'ПР'">{{bscForm.value.level.replace('A', 'П') + ' BSC:' + ' Problema:'}}</mat-card-title>
+                    <mat-card-title *ngIf="bscForm.value.categories_report != 'ПР'">{{bscForm.value.level + ' BSC:' + ' Problema:'}}</mat-card-title>
                     <mat-card-title *ngIf="bscForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="bscForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -165,10 +168,11 @@
                 </mat-card-actions>
             </mat-card>
         </div>
-        <div class="grid-item" *ngIf="previewResheniya == true && bscForm.value.endTime != null">
+        <div class="grid-item" *ngIf="preview == true && bscForm.value.endTime != null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title>{{bscForm.value.level + ' BSC:' + ' Reshenie:'}}</mat-card-title>
+                    <mat-card-title *ngIf="bscForm.value.categories_report == 'ПР'">{{bscForm.value.level.replace('A', 'П') + ' BSC:' + ' Reshenie:'}}</mat-card-title>
+                    <mat-card-title *ngIf="bscForm.value.categories_report != 'ПР'">{{bscForm.value.level + ' BSC:' + ' Reshenie:'}}</mat-card-title>
                     <mat-card-title *ngIf="bscForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="bscForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>

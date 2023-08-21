@@ -110,37 +110,30 @@
             <mat-grid-tile colspan="3">
                 <div class="margin-container">
                     <p>Start Time</p>
-                    <input 
-                        type="datetime-local" 
-                        class="dateTime" 
-                        name="startTime" 
-                        formControlName="startTime" 
-                        min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" />
+                    <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" />
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
             <mat-grid-tile colspan="3">
                 <div class="margin-container">
                     <p>End Time</p>
-                    <input 
-                        type="datetime-local" 
-                        class="dateTime" 
-                        formControlName="endTime" 
-                        min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" >
+                    <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
         </mat-grid-list>
         <!-- button -->
         <mat-grid-list cols="12">
             <mat-grid-tile colspan="1">
-                <button class="form-button" mat-raised-button color="primary" type="button" [disabled]="cnForm.invalid && newForm"
-                    (click)="previewButton()">Preview</button>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="1" *ngIf="newForm == false">
                 <button class="form-button" mat-raised-button color="primary" type="button"
+                    [disabled]="cnForm.invalid && newForm" (click)="previewButton()">Preview</button>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="1">
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
                     (click)="updateData()">Update</button>
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                    [disabled]="cnForm.invalid && newForm" (click)="createData()">Create</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="3">
                 <mat-chip-listbox formControlName="AddOrCor">
@@ -152,10 +145,13 @@
     </form>
     <!-- Form Preview -->
     <div class="grid-container">
-        <div class="grid-item" *ngIf="preview == true && cnForm.value.endTime == null">
+        <div class="grid-item" *ngIf="preview == true && cnForm.value.endTime == (null || undefined)">
             <mat-card class="preview">
                 <mat-card-header>
-                    <mat-card-title>{{cnForm.value.level + ' Problema:'}}</mat-card-title>
+                    <mat-card-title *ngIf="cnForm.value.categories_report == 'ПР'">{{cnForm.value.level.replace('A',
+                        'П') + ' Problema:'}}</mat-card-title>
+                    <mat-card-title *ngIf="cnForm.value.categories_report != 'ПР'">{{cnForm.value.level + '
+                        Problema:'}}</mat-card-title>
                     <mat-card-title *ngIf="cnForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="cnForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -177,10 +173,13 @@
                 </mat-card-actions>
             </mat-card>
         </div>
-        <div class="grid-item" *ngIf="previewResheniya == true && cnForm.value.endTime != null">
+        <div class="grid-item" *ngIf="preview == true && cnForm.value.endTime != (null || undefined)">
             <mat-card class="preview">
                 <mat-card-header>
-                    <mat-card-title>{{cnForm.value.level + ' Reshenie:'}}</mat-card-title>
+                    <mat-card-title *ngIf="cnForm.value.categories_report == 'ПР'">{{cnForm.value.level.replace('A',
+                        'П') + ' Reshenie:'}}</mat-card-title>
+                    <mat-card-title *ngIf="cnForm.value.categories_report != 'ПР'">{{cnForm.value.level + '
+                        Reshenie:'}}</mat-card-title>
                     <mat-card-title *ngIf="cnForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="cnForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -204,10 +203,13 @@
                 </mat-card-actions>
             </mat-card>
         </div>
-        <div class="grid-item" *ngIf="previewResheniya == true && cnForm.value.endTime != null">
+        <div class="grid-item" *ngIf="preview == true && cnForm.value.endTime != (null || undefined)">
             <mat-card class="preview">
                 <mat-card-header>
-                    <mat-card-title>{{cnForm.value.level + ' Informacionnoe:'}}</mat-card-title>
+                    <mat-card-title *ngIf="cnForm.value.categories_report == 'ПР'">{{cnForm.value.level.replace('A',
+                        'П') + ' Informacionnoe:'}}</mat-card-title>
+                    <mat-card-title *ngIf="cnForm.value.categories_report != 'ПР'">{{cnForm.value.level + '
+                        Informacionnoe:'}}</mat-card-title>
                     <mat-card-title *ngIf="cnForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="cnForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -226,7 +228,8 @@
                         (click)="onSubmitButtonProblem('Informacionnoe')" type="submit" *ngIf="newForm == true">Submit
                     </button>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Informacionnoe')" type="submit" *ngIf="newForm == false">Send Message
+                        (click)="onSubmitButtonUpdate('Informacionnoe')" type="submit" *ngIf="newForm == false">Send
+                        Message
                     </button>
                 </mat-card-actions>
             </mat-card>

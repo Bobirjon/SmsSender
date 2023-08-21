@@ -1,14 +1,15 @@
-import { Component, ElementRef, OnInit, ViewChild,  } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Data, Router } from '@angular/router';
-import { MatSort, MatSortModule  } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, Form, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { ValueFromArray, map } from 'rxjs';
+import { BehaviorSubject, Subscription, ValueFromArray, map } from 'rxjs';
+import { WebSocketService } from 'src/web-socket.service';
 
 export interface DataTable {
   region: string
@@ -35,6 +36,7 @@ export class HomeComponent implements OnInit {
   name: any
   user: any;
   hidden: any
+  isAdmin = localStorage.getItem('role')
 
 
   displayedColumnsNew: string[] = [
@@ -52,18 +54,35 @@ export class HomeComponent implements OnInit {
 
   dataTable: MatTableDataSource<DataTable>
   posts: any
+  posts2: any
   @ViewChild(MatPaginator) paginator: MatPaginator
 
   @ViewChild('table1sort') public table1sort: MatSort;
   @ViewChild('table2sort') public table2sort: MatSort;
-  levelSelect: string[]=['All','A2','A3','A4', 'A5'];
-  // typeSelect: string[]=['All','CORE', 'CHRONIC', 'HUB', 'BSC/RNC']
-  typeSelect: string[]=['All','CORE', 'RN']
+  levelSelect: string[] = ['All', 'A2', 'A3', 'A4', 'A5'];
+  typeSelect: string[] = ['All', 'CORE', 'RN']
   selectableFilters: any[] = []
 
   defaultValue = "All";
 
-  filterDictionary= new Map<string,string[]>();
+  filterDictionary = new Map<string, string[]>();
+
+  filteredValues = {
+    level: '',
+    type: '',
+    description: '',
+    reason: '',
+    problem: '',
+    created_at: '',
+    start_time: '',
+    region: ''
+  };
+
+  refreshUser$ = new BehaviorSubject<boolean>(true)
+  output: any[] = []
+  feedback: any
+  nameOfUser: any
+  messageDataTest: any
 
   level = new FormControl()
   type = new FormControl()
@@ -75,32 +94,20 @@ export class HomeComponent implements OnInit {
   region = new FormControl()
   username = new FormControl()
 
-  filteredValues = { 
-    level:'', 
-    type:'', 
-    description:'', 
-    reason:'', 
-    problem:'',
-    created_at:'',
-    start_time: '',
-    region: '' };
-  
+
   constructor(
     private authService: AuthService,
-    private router: Router) {
-
-      this.authService.getData().subscribe((data) => {
+    private router: Router,
+    private webSocketService: WebSocketService) {
+    // Table for all Cases
+    this.authService.getData()
+      .subscribe((data) => {
         this.posts = data
 
         this.dataTable = new MatTableDataSource(this.posts)
-        this.Data = new MatTableDataSource(this.posts)
-        console.log(this.dataTable.data);
-        
-        
-        this.Data.sort = this.table1sort;
         this.dataTable.sort = this.table2sort;
         this.dataTable.paginator = this.paginator;
-        
+
         this.level.valueChanges.subscribe((levelFilter) => {
           this.filteredValues['level'] = levelFilter;
           this.dataTable.filter = JSON.stringify(this.filteredValues)
@@ -110,7 +117,7 @@ export class HomeComponent implements OnInit {
           this.filteredValues['type'] = typeFilter;
           this.dataTable.filter = JSON.stringify(this.filteredValues)
         })
-        
+
         this.description.valueChanges.subscribe((descriptionFilter) => {
           this.filteredValues['description'] = descriptionFilter;
           this.dataTable.filter = JSON.stringify(this.filteredValues)
@@ -120,7 +127,7 @@ export class HomeComponent implements OnInit {
           this.filteredValues['reason'] = reasonFilter;
           this.dataTable.filter = JSON.stringify(this.filteredValues)
         })
-        
+
         this.problem.valueChanges.subscribe((problemFilter) => {
           this.filteredValues['problem'] = problemFilter;
           this.dataTable.filter = JSON.stringify(this.filteredValues)
@@ -142,7 +149,7 @@ export class HomeComponent implements OnInit {
         })
 
 
-        this.dataTable.filterPredicate = function(data, filter) : boolean {
+        this.dataTable.filterPredicate = function (data, filter): boolean {
           let searchString = JSON.parse(filter);
           let levelFound = data.level.toString().trim().toLowerCase().indexOf(searchString.level.toLowerCase()) !== -1
           let typeFound = data.type.toString().trim().toLowerCase().indexOf(searchString.type.toLowerCase()) !== -1
@@ -155,56 +162,95 @@ export class HomeComponent implements OnInit {
 
           if (searchString.topFilter) {
             return levelFound || typeFound || descriptionFound || reasonFound || problemFound || createdAtFound || startTimeFound || regionFound
-        } else {
+          } else {
             return levelFound && typeFound && descriptionFound && reasonFound && problemFound && createdAtFound && startTimeFound && regionFound
-        }
+          }
         }
 
-        // selectable filter
-        this.selectableFilters.push({name:'level', options: this.levelSelect, defaultValue: this.defaultValue})
-        this.selectableFilters.push({name:'type', options: this.typeSelect, defaultValue: this.defaultValue})
+      })
+    // Filtred data
+    this.authService.getFilteredData()
+      .subscribe((data) => {
+        this.posts2 = data
+
+        this.Data = new MatTableDataSource(this.posts2)
+        this.Data.sort = this.table1sort;
+
+        this.selectableFilters.push({ name: 'level', options: this.levelSelect, defaultValue: this.defaultValue })
+        this.selectableFilters.push({ name: 'type', options: this.typeSelect, defaultValue: this.defaultValue })
 
         this.Data.filterPredicate = function (selectRecord: any, selectFilter: any) {
           var map = new Map(JSON.parse(selectFilter));
-          
-          
           let isMatch = false;
           for (let [key, value] of map) {
-        
-            isMatch = value == 'All' || 
-            (selectRecord[key as keyof Data] == value[0] || 
-              selectRecord[key as keyof Data] == value[1] || 
-              selectRecord[key as keyof Data] == value[2])
-            // isMatch = value == 'All' || selectRecord[key as keyof Data] in value[key as keyof Data]
-            
-            
+            isMatch = value == 'All' ||
+              selectRecord[key as keyof Data] == value[0] ||
+              selectRecord[key as keyof Data] == value[1] ||
+              selectRecord[key as keyof Data] == value[2]
             if (!isMatch) return false;
           }
           return isMatch;
         };
-      })
-     }
 
-  
-  ngOnInit(): void {    
-    
-    
-    if(this.router.url == '/home') {
+      })
+  }
+
+  ngOnInit(): void {
+    this.webSocketService.listen().subscribe((data) => {
+      this.updateMessage(data)
+    })
+
+    if (this.router.url == '/home') {
       this.Loaded = true
     } else {
       this.Loaded = false
     }
-
-    this.authService.getUser()
-      .subscribe(result => {
-        console.log(result);
-        
-        this.user = result
-      })
   }
-  
+
+  updateMessage(data: any): void {
+    // this.authService.getData()
+    //     .subscribe((data) => {
+    //     this.posts = data
+
+    //     this.dataTable = new MatTableDataSource(this.posts)
+    //     this.dataTable.sort = this.table2sort;
+    //     this.dataTable.paginator = this.paginator;
+
+    //   })
+
+    //   this.authService.getFilteredData()
+    //   .subscribe((data) => {
+    //     this.posts2 = data
+
+    //     this.Data = new MatTableDataSource(this.posts2)
+    //     this.Data.sort = this.table1sort;
+
+    //   })  
+    let dataee = JSON.parse(data.data)
+    
+    if (!!!data) return;
+    if (dataee.is_complete == true) {
+      this.posts.push(dataee)
+      this.dataTable = new MatTableDataSource(this.posts)
+      console.log(this.posts2);
+      
+      let index = this.posts2.findIndex((item:any) => item.id == dataee.id)
+      if (index !== -1) {
+        this.posts2.splice(index, 1);
+        this.Data = new MatTableDataSource(this.posts2)
+      }
+      
+    } else {
+      this.posts.push(dataee)
+      this.posts2.push(dataee)
+      this.dataTable = new MatTableDataSource(this.posts)
+      this.Data = new MatTableDataSource(this.posts2)
+    }
+
+  }
+
   applySelectableFilter(ob: MatSelectChange, data: Data) {
-    if(ob.value == 'RN'){
+    if (ob.value == 'RN') {
       this.filterDictionary.set(data.name, ['CHRONIC', 'BSC/RNC', 'HUB'])
     } else {
       this.filterDictionary.set(data.name, [ob.value])
@@ -213,9 +259,9 @@ export class HomeComponent implements OnInit {
     var jsonString = JSON.stringify(
       Array.from(this.filterDictionary.entries())
     )
-    
+
     this.Data.filter = jsonString
-    
+
   }
 
   onRN() {
@@ -230,6 +276,10 @@ export class HomeComponent implements OnInit {
 
   onEdit() {
     this.Loaded = !this.Loaded
+  }
+
+  addNumber() {
+    this.router.navigate(['/add'])
   }
 
 }

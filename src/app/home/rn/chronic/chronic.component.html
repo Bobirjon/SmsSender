@@ -151,9 +151,11 @@
                 <button class="form-button" mat-raised-button color="primary" type="button"
                     (click)="previewButton()" [disabled]="chronicForm.invalid && newForm ">Preview</button>
             </mat-grid-tile>
-            <mat-grid-tile colspan="1" *ngIf="newForm == false">
-                <button class="form-button" mat-raised-button color="primary" type="button"
+            <mat-grid-tile colspan="1">
+                <button class="form-button" mat-raised-button color="primary" type="button"  *ngIf="newForm == false"
                     (click)="updateData()">Update</button>
+                    <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                    [disabled]="chronicForm.invalid && newForm" (click)="createData()">Create</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="3">
                 <mat-chip-listbox formControlName="AddOrCor">
@@ -168,7 +170,8 @@
         <div class="grid-item" *ngIf="preview == true && chronicForm.value.endTime == null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title>{{chronicForm.value.level + ' Hronicheskiy sayt:' + ' Problema:'}}</mat-card-title>
+                    <mat-card-title *ngIf="chronicForm.value.categories_report == 'ПР'">{{chronicForm.value.level.replace('A', 'П') + ' Hronicheskiy sayt:' + ' Problema:'}}</mat-card-title>
+                    <mat-card-title *ngIf="chronicForm.value.categories_report != 'ПР'">{{chronicForm.value.level + ' Hronicheskiy sayt:' + ' Problema:'}}</mat-card-title>
                     <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -192,7 +195,8 @@
         <div class="grid-item" *ngIf="previewResheniya == true && chronicForm.value.endTime != null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title>{{chronicForm.value.level + ' Hronicheskiy sayt:' + ' Reshenie:'}}</mat-card-title>
+                    <mat-card-title *ngIf="chronicForm.value.categories_report == 'ПР'">{{chronicForm.value.level.replace('A', 'П') + ' Hronicheskiy sayt:' + ' Reshenie:'}}</mat-card-title>
+                    <mat-card-title *ngIf="chronicForm.value.categories_report != 'ПР'">{{chronicForm.value.level + ' Hronicheskiy sayt:' + ' Reshenie:'}}</mat-card-title>
                     <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>

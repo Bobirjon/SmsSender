@@ -38,13 +38,4 @@ export class LoginComponent implements OnInit {
       }, )
   }
 
-  login() {
-    this.authService.login(this.auth.value.username, this.auth.value.password)
-      .subscribe(response => {
-        this.storage.saveToken(response)
-        this.router.navigate(['home'])
-      }, error => {
-        this.snackBar.open(error.error.non_field_errors, 'Dismiss', {duration: 10000})
-      }, )
-  }
 }

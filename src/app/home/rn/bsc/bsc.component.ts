@@ -15,13 +15,15 @@ export class BscComponent implements OnInit {
 
   bscForm: FormGroup
   preview = false;
-  previewResheniya = false
   user: any
   newForm: boolean
   criteria_list: any
   criteria: any
   SmsTextBody: any
   time = new Date()
+  requestType: any
+  tableBody: any
+  smsBody: any
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -130,11 +132,10 @@ export class BscComponent implements OnInit {
 
   previewButton() {
     this.preview = !this.preview
-    this.previewResheniya = !this.previewResheniya
   }
 
-  updateData() {
-    const body = {
+  tableSendBody() {
+    this.tableBody = {
       'type': 'BSC/RNC',
       'level': this.bscForm.value.level,
       'category': this.bscForm.value.categories_report,
@@ -151,117 +152,145 @@ export class BscComponent implements OnInit {
       'description': this.bscForm.value.desc,
       'sender': this.user?.username
     }
-
-    this.authService.updateSms(this.route.snapshot.params.id, body)
-      .subscribe((result) => {
-        console.log(result);
-      })
   }
 
-  onSubmitButtonProblem(smsType: string) {
-    // 1 st body
-    const body = {
-      'type': 'BSC/RNC',
-      'level': this.bscForm.value.level,
-      'category': this.bscForm.value.categories_report,
-      'responsible_area': this.bscForm.value.responsible_report,
-      'problem': this.bscForm.value.problem,
-      'reason': this.bscForm.value.reason,
-      'effect': this.bscForm.value.effect_option,
-      'influence': this.bscForm.value.effect,
-      'start_time': this.bscForm.value.startTime,
-      'end_time': this.bscForm.value.endTime,
-      'region': this.bscForm.value.region,
-
-      'informed': this.bscForm.value.informed,
-      'description': this.bscForm.value.desc,
-      'sender': this.user?.username
-    }
-
-    this.authService.postData(body)
-      .subscribe((res) => {
-        console.log(res);
-      })
-
-    // 2 Body
+  smsSendBody() {
     this.criteria = this.storageService.getNotification(this.bscForm.value.level)
     this.criteria_list = this.criteria?.concat(this.bscForm.value.region)
 
-    if (smsType == 'Problem' && this.bscForm.value.AddOrCor == (null || undefined)) {
-      this.SmsTextBody =
-        ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Problem' && this.bscForm.value.AddOrCor == 'correction') {
-      this.SmsTextBody =
-      ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
-        ' (Correction) ' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Problem' && this.bscForm.value.AddOrCor == 'addition') {
-      this.SmsTextBody =
-      ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
-        ' (Addition) ' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == (null || undefined)) {
-      this.SmsTextBody =
-        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == 'correction') {
-      this.SmsTextBody =
-        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
-        ' (Correction) ' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == 'addition') {
-      this.SmsTextBody =
-        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
-        ' (Addition) ' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
+    if (this.requestType == 'Problem') {
+      if (this.bscForm.value.categories_report == 'ПР') {
+        if (this.bscForm.value.AddOrCor == (undefined || null)) {
+          this.SmsTextBody =
+            ' ' + this.bscForm.value.level.replace('A', 'П') + ' BSC: ' + this.requestType + '\n' +
+            ' ' + this.bscForm.value.problem + '\n ' +
+            'Prichina: ' + this.bscForm.value.reason + '\n ' +
+            'Effect: ' + this.bscForm.value.effect + '\n ' +
+            'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+            'Informirovan: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+            'Otpravil: ' + this.user?.username
+        } else {
+          this.SmsTextBody =
+            ' ' + this.bscForm.value.level.replace('A', 'П') + ' ' + this.requestType + '\n' +
+            ' (' + this.bscForm.value.AddOrCor + ') ' +
+            ' ' + this.bscForm.value.problem + '\n ' +
+            'Prichina: ' + this.bscForm.value.reason + '\n ' +
+            'Effect: ' + this.bscForm.value.effect + '\n ' +
+            'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+            'Informirovan: ' + this.bscForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        }
+      } else {
+        if (this.bscForm.value.AddOrCor == (undefined || null)) {
+          this.SmsTextBody =
+            ' ' + this.bscForm.value.level + ' ' + this.requestType + '\n' +
+            ' ' + this.bscForm.value.problem + '\n ' +
+            'Prichina: ' + this.bscForm.value.reason + '\n ' +
+            'Effect: ' + this.bscForm.value.effect + '\n ' +
+            'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+            'Informirovan: ' + this.bscForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        } else {
+          this.SmsTextBody =
+            ' ' + this.bscForm.value.level.replace('A', 'П') + ' ' + this.requestType + '\n' +
+            ' (' + this.bscForm.value.AddOrCor + ') ' +
+            ' ' + this.bscForm.value.problem + '\n ' +
+            'Prichina: ' + this.bscForm.value.reason + '\n ' +
+            'Effect: ' + this.bscForm.value.effect + '\n ' +
+            'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+            'Informirovan: ' + this.bscForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        }
+      }
+    } else {
+      if (this.bscForm.value.categories_report == 'ПР') {
+        if (this.bscForm.value.AddOrCor == (undefined || null)) {
+          this.SmsTextBody =
+            ' ' + this.bscForm.value.level.replace('A', 'П') + ' ' + this.requestType + '\n' +
+            ' ' + this.bscForm.value.problem + '\n ' +
+            'Prichina: ' + this.bscForm.value.reason + '\n ' +
+            'Effect: ' + this.bscForm.value.effect + '\n ' +
+            'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+            'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+            'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+            'Informirovan: ' + this.bscForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        } else {
+          this.SmsTextBody =
+            ' ' + this.bscForm.value.level.replace('A', 'П') + ' ' + this.requestType + '\n' +
+            ' (' + this.bscForm.value.AddOrCor + ') ' +
+            ' ' + this.bscForm.value.problem + '\n ' +
+            'Prichina: ' + this.bscForm.value.reason + '\n ' +
+            'Effect: ' + this.bscForm.value.effect + '\n ' +
+            'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+            'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+            'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+            'Informirovan: ' + this.bscForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        }
+      } else {
+        if (this.bscForm.value.AddOrCor == (null || undefined)) {
+          this.SmsTextBody =
+            ' ' + this.bscForm.value.level + ' ' + this.requestType + '\n' +
+            ' ' + this.bscForm.value.problem + '\n ' +
+            'Prichina: ' + this.bscForm.value.reason + '\n ' +
+            'Effect: ' + this.bscForm.value.effect + '\n ' +
+            'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+            'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+            'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+            'Informirovan: ' + this.bscForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        } else {
+          this.SmsTextBody =
+            ' ' + this.bscForm.value.level + ' ' + this.requestType + '\n' +
+            ' (' + this.bscForm.value.AddOrCor + ') '
+          ' ' + this.bscForm.value.problem + '\n ' +
+            'Prichina: ' + this.bscForm.value.reason + '\n ' +
+            'Effect: ' + this.bscForm.value.effect + '\n ' +
+            'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
+            'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
+            'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
+            'Informirovan: ' + this.bscForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username
+        }
+      }
     }
 
-    const body2 = {
+    this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': 'RN',
       'criteria': this.criteria_list,
       'notification': 'BSC/RNC',
       'sms_text': this.SmsTextBody
     }
+  }
 
-    this.authService.sendSms(body2)
+  updateData() {
+    this.tableSendBody()
+
+    this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+      .subscribe((result) => {
+        console.log(result);
+      })
+  }
+
+  createData() {
+    this.tableSendBody()
+
+    this.authService.postData(this.tableBody)
+      .subscribe((res) => {
+        console.log(res);
+      })
+  }
+
+  onSubmitButtonProblem(smsType: string) {
+    this.requestType = smsType
+    // 2 Body
+    this.smsSendBody()
+    console.log(this.smsBody);
+
+
+    this.authService.sendSms(this.smsBody)
       .subscribe(result => {
         console.log(result);
         this.snackBar.open('Success', '', { duration: 10000 })
@@ -274,84 +303,9 @@ export class BscComponent implements OnInit {
 
   onSubmitButtonUpdate(smsType: string) {
 
-    this.criteria = this.storageService.getNotification(this.bscForm.value.level)
-    this.criteria_list = this.criteria?.concat(this.bscForm.value.region)
+    this.smsSendBody()
 
-    if (smsType == 'Problem' && this.bscForm.value.AddOrCor == (null || undefined)) {
-      this.SmsTextBody =
-        ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Problem' && this.bscForm.value.AddOrCor == 'correction') {
-      this.SmsTextBody =
-      ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
-        ' (Correction) ' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Problem' && this.bscForm.value.AddOrCor == 'addition') {
-      this.SmsTextBody =
-      ' ' + this.bscForm.value.level + ' BSC: Problema: \n' +
-        ' (Addition) ' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Oposveschon: ' + this.bscForm.value.informed + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == (null || undefined)) {
-      this.SmsTextBody =
-        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == 'correction') {
-      this.SmsTextBody =
-        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
-        ' (Correction) ' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    } else if (smsType == 'Reshenie' && this.bscForm.value.AddOrCor == 'addition') {
-      this.SmsTextBody =
-        ' ' + this.bscForm.value.level + ' BCS: Reshenie: \n' +
-        ' (Addition) ' +
-        ' ' + this.bscForm.value.problem + '\n ' +
-        'Prichina: ' + this.bscForm.value.reason + '\n ' +
-        'Effect: ' + this.bscForm.value.effect + '\n ' +
-        'Opoveschen: ' + this.bscForm.value.informed + '\n ' +
-        'Opisaniya: ' + this.bscForm.value.desc + '\n ' +
-        'Nachalo: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-        'Konec: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-        'Otpravil: ' + this.user?.username
-    }
-
-    const body2 = {
-      'source_addr': 'ncc-rn',
-      'network': 'RN',
-      'criteria': this.criteria_list,
-      'notification': 'BSC/RNC',
-      'sms_text': this.SmsTextBody
-    }
-
-    this.authService.sendSms(body2)
+    this.authService.sendSms(this.smsSendBody)
       .subscribe((result) => {
         console.log(result);
         this.snackBar.open('Success', '', { duration: 10000 })
