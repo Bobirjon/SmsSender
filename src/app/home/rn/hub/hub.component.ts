@@ -114,7 +114,14 @@ export class HubComponent implements OnInit {
       'informed': [null],
       'category': [null],
       'powerOffTime': [null],
-      'hubBlockTime': [null]
+      'hubBlockTime': [null],
+      'mw_link' : [null],
+      'mw_equipment': [null],
+      'mw_vendor': [null],
+      'bts_vendor': [null],
+      'battery_life_time': [null],
+      'lowBatteryTime': [null],
+      'dg_start_time': [null],
     })
   }
 
@@ -178,7 +185,16 @@ export class HubComponent implements OnInit {
       'description': this.hubForm.value.desc,
       'informed': this.hubForm.value.informed,
       'influence': this.hubForm.value.effect,
-      'sender': this.user?.username
+      'sender': this.user?.username,
+
+      'mw_link' : this.hubForm.value.mw_link,
+      'mw_equipment': this.hubForm.value.mw_equipment,
+      'mw_vendor': this.hubForm.value.mw_vendor,
+      'bts_vendor': this.hubForm.value.bts_vendor,
+      'battery_life_time': this.hubForm.value.battery_life_time,
+      'lowBatteryTime': this.hubForm.value.lowBatteryTime,
+      'dg_start_time': this.hubForm.value.dg_start_time,
+      
     }
   }
 

@@ -162,6 +162,71 @@
                 </div>
             </mat-grid-tile>
         </mat-grid-list>
+        <!-- additional information -->
+        <mat-divider style="margin: 30px;"></mat-divider>
+        <h1 style="margin: 20px 30px;">Additional Information</h1>
+        <mat-grid-list cols="12" rowHeight="fit" style="height: 250px;">
+           <!-- mw link -->
+            <mat-grid-tile colspan="2">
+                <mat-form-field class="margin-container">
+                    <mat-label>mw link</mat-label>
+                    <input matInput type="text" formControlName="mw_link" />
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- mw_equipment -->
+            <mat-grid-tile colspan="2">
+                <mat-form-field class="margin-container">
+                    <mat-label>mw_equipment</mat-label>
+                    <input matInput type="text" formControlName="mw_equipment" />
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- mw_vendor -->
+             <mat-grid-tile colspan="2">
+                <mat-form-field class="margin-container">
+                    <mat-label>mw_vendor</mat-label>
+                    <input matInput type="text" formControlName="mw_vendor" />
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- bts_vendor -->
+            <mat-grid-tile colspan="2">
+                <mat-form-field class="margin-container">
+                    <mat-label>bts_vendor</mat-label>
+                    <input matInput type="text" formControlName="bts_vendor" />
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- battery_life_time -->
+             <mat-grid-tile colspan="3">
+                <mat-form-field class="margin-container">
+                    <mat-label>battery_life_time</mat-label>
+                    <input matInput type="text" formControlName="battery_life_time" />
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- low baterry ttime -->
+             <mat-grid-tile colspan="3">
+                <div class="margin-container">
+                    <p>low baterry ttime</p>
+                    <input 
+                        type="datetime-local" 
+                        class="dateTime" 
+                        name="startTime" 
+                        formControlName="lowBatteryTime"
+                        min="2023-01-01T00:00"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                </div>
+            </mat-grid-tile>
+            <!-- DG start Time -->
+            <mat-grid-tile colspan="3">
+                <div class="margin-container">
+                    <p>DG start Time</p>
+                    <input 
+                        type="datetime-local" 
+                        class="dateTime" 
+                        formControlName="dg_start_time"
+                        min="2023-01-01T00:00"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
         <!-- button -->
         <mat-grid-list cols="12">
             <mat-grid-tile colspan="1">
