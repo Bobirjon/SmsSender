@@ -158,7 +158,7 @@ export class ChronicComponent implements OnInit {
 
   tableSendBody() {
     this.tableBody = {
-      'type': 'CORE',
+      'type': 'CHRONIC',
       'level': this.chronicForm.value.level,
       'category': this.chronicForm.value.categories_report,
       'responsible_area': this.chronicForm.value.responsible_report,
@@ -168,7 +168,7 @@ export class ChronicComponent implements OnInit {
       'start_time': this.chronicForm.value.startTime,
       'end_time': this.chronicForm.value.endTime,
       'region': this.chronicForm.value.region,
-      'category_for_core': this.chronicForm.value.category,
+      'category_for_hub': this.chronicForm.value.category,
       'description': this.chronicForm.value.desc,
       'informed': this.chronicForm.value.informed,
       'influence': this.chronicForm.value.effect,
@@ -287,7 +287,8 @@ export class ChronicComponent implements OnInit {
 
   createData() {
     this.tableSendBody()
-
+    console.log(this.tableBody);
+    
     this.authService.postData(this.tableBody)
       .subscribe((res) => {
         console.log(res);

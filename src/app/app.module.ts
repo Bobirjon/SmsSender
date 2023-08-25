@@ -23,6 +23,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
@@ -35,6 +36,7 @@ import { ChronicComponent } from './home/rn/chronic/chronic.component';
 import { HubComponent } from './home/rn/hub/hub.component';
 import { BscComponent } from './home/rn/bsc/bsc.component';
 import { StartComponent } from './home/start/start.component';
+import { AddPhoneNumbersComponent } from './add-phone-numbers/add-phone-numbers.component';
 
 
 
@@ -50,6 +52,7 @@ import { StartComponent } from './home/start/start.component';
     HubComponent,
     BscComponent,
     StartComponent,
+    AddPhoneNumbersComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +77,8 @@ import { StartComponent } from './home/start/start.component';
     MatSnackBarModule,
     MatSortModule,
     MatPaginatorModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatExpansionModule,
   ],
   providers: [
     {

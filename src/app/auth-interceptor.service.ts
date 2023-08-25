@@ -9,13 +9,6 @@ export class AuthInterceptorService implements HttpInterceptor {
 
         let apiKey = localStorage.getItem("token")
         
-        // const modified = req.clone({
-        //     headers: req.headers
-        //         .set('Content-Type', 'application/json')
-        //         .append('Authorization', `Token ${apiKey}`
-        //         )})
-        // return next.handle(modified)
-
         if(apiKey == null) {
             const modRequest = req.clone({
                 setHeaders: {

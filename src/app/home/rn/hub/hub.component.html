@@ -120,24 +120,15 @@
             <mat-grid-tile colspan="3">
                 <div class="margin-container">
                     <p>Power Off Time</p>
-                    <input 
-                        type="datetime-local" 
-                        class="dateTime" 
-                        name="startTime" 
-                        formControlName="powerOffTime"
-                        min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                    <input type="datetime-local" class="dateTime" name="startTime" formControlName="powerOffTime"
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
             <!-- HubSiteBlock Time -->
             <mat-grid-tile colspan="3">
                 <div class="margin-container">
                     <p>Hub Site Block Time</p>
-                    <input 
-                        type="datetime-local" 
-                        class="dateTime" 
-                        formControlName="hubBlockTime"
-                        min="2023-01-01T00:00"
+                    <input type="datetime-local" class="dateTime" formControlName="hubBlockTime" min="2023-01-01T00:00"
                         [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
@@ -145,13 +136,8 @@
             <mat-grid-tile colspan="3">
                 <div class="margin-container">
                     <p>Start Time</p>
-                    <input 
-                        type="datetime-local" 
-                        class="dateTime" 
-                        name="startTime" 
-                        formControlName="startTime"
-                        min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                    <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
@@ -164,79 +150,79 @@
         </mat-grid-list>
         <!-- additional information -->
         <mat-divider style="margin: 30px;"></mat-divider>
-        <h1 style="margin: 20px 30px;">Additional Information</h1>
-        <mat-grid-list cols="12" rowHeight="fit" style="height: 250px;">
-           <!-- mw link -->
-            <mat-grid-tile colspan="2">
-                <mat-form-field class="margin-container">
-                    <mat-label>mw link</mat-label>
-                    <input matInput type="text" formControlName="mw_link" />
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- mw_equipment -->
-            <mat-grid-tile colspan="2">
-                <mat-form-field class="margin-container">
-                    <mat-label>mw_equipment</mat-label>
-                    <input matInput type="text" formControlName="mw_equipment" />
-                </mat-form-field>
-            </mat-grid-tile>
-             <!-- mw_vendor -->
-             <mat-grid-tile colspan="2">
-                <mat-form-field class="margin-container">
-                    <mat-label>mw_vendor</mat-label>
-                    <input matInput type="text" formControlName="mw_vendor" />
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- bts_vendor -->
-            <mat-grid-tile colspan="2">
-                <mat-form-field class="margin-container">
-                    <mat-label>bts_vendor</mat-label>
-                    <input matInput type="text" formControlName="bts_vendor" />
-                </mat-form-field>
-            </mat-grid-tile>
-             <!-- battery_life_time -->
-             <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>battery_life_time</mat-label>
-                    <input matInput type="text" formControlName="battery_life_time" />
-                </mat-form-field>
-            </mat-grid-tile>
-             <!-- low baterry ttime -->
-             <mat-grid-tile colspan="3">
-                <div class="margin-container">
-                    <p>low baterry ttime</p>
-                    <input 
-                        type="datetime-local" 
-                        class="dateTime" 
-                        name="startTime" 
-                        formControlName="lowBatteryTime"
-                        min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
-                </div>
-            </mat-grid-tile>
-            <!-- DG start Time -->
-            <mat-grid-tile colspan="3">
-                <div class="margin-container">
-                    <p>DG start Time</p>
-                    <input 
-                        type="datetime-local" 
-                        class="dateTime" 
-                        formControlName="dg_start_time"
-                        min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
-                </div>
-            </mat-grid-tile>
-        </mat-grid-list>
+        <mat-accordion>
+            <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Additional Information
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-grid-list cols="12" rowHeight="fit" style="height: 250px;">
+                    <!-- mw link -->
+                    <mat-grid-tile colspan="2">
+                        <mat-form-field class="margin-container">
+                            <mat-label>mw link</mat-label>
+                            <input matInput type="text" formControlName="mw_link" />
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <!-- mw_equipment -->
+                    <mat-grid-tile colspan="2">
+                        <mat-form-field class="margin-container">
+                            <mat-label>mw_equipment</mat-label>
+                            <input matInput type="text" formControlName="mw_equipment" />
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <!-- mw_vendor -->
+                    <mat-grid-tile colspan="2">
+                        <mat-form-field class="margin-container">
+                            <mat-label>mw_vendor</mat-label>
+                            <input matInput type="text" formControlName="mw_vendor" />
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <!-- bts_vendor -->
+                    <mat-grid-tile colspan="2">
+                        <mat-form-field class="margin-container">
+                            <mat-label>bts_vendor</mat-label>
+                            <input matInput type="text" formControlName="bts_vendor" />
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <!-- battery_life_time -->
+                    <mat-grid-tile colspan="3">
+                        <mat-form-field class="margin-container">
+                            <mat-label>battery_life_time</mat-label>
+                            <input matInput type="text" formControlName="battery_life_time" />
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <!-- low baterry ttime -->
+                    <mat-grid-tile colspan="3">
+                        <div class="margin-container">
+                            <p>low baterry ttime</p>
+                            <input type="datetime-local" class="dateTime" name="startTime"
+                                formControlName="lowBatteryTime" min="2023-01-01T00:00"
+                                [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                        </div>
+                    </mat-grid-tile>
+                    <!-- DG start Time -->
+                    <mat-grid-tile colspan="3">
+                        <div class="margin-container">
+                            <p>DG start Time</p>
+                            <input type="datetime-local" class="dateTime" formControlName="dg_start_time"
+                                min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-expansion-panel>
+        </mat-accordion>
         <!-- button -->
         <mat-grid-list cols="12">
             <mat-grid-tile colspan="1">
-                <button class="form-button" mat-raised-button color="primary" type="button"
-                    (click)="previewButton()" [disabled]="hubForm.invalid && newForm">Preview</button>
+                <button class="form-button" mat-raised-button color="primary" type="button" (click)="previewButton()"
+                    [disabled]="hubForm.invalid && newForm">Preview</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="1">
-                <button class="form-button" mat-raised-button color="primary" type="button"  *ngIf="newForm == false"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
                     (click)="updateData()">Update</button>
-                    <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
                     [disabled]="hubForm.invalid && newForm" (click)="createData()">Create</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="3">
@@ -253,8 +239,10 @@
         <div class="grid-item" *ngIf="preview == true && hubForm.value.endTime == null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A', 'П') + ' HUB sayt: Problema:'}}</mat-card-title>
-                    <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + ' Problema:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A',
+                        'П') + ' HUB sayt: Problema:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + '
+                        Problema:'}}</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -281,8 +269,10 @@
         <div class="grid-item" *ngIf="previewResheniya == true && hubForm.value.endTime != null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A', 'П') + ' HUB sayt: Resheniya:'}}</mat-card-title>
-                    <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + ' Resheniya:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A',
+                        'П') + ' HUB sayt: Resheniya:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + '
+                        Resheniya:'}}</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -310,8 +300,10 @@
         <div class="grid-item" *ngIf="previewResheniya == true && hubForm.value.endTime != null">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A', 'П') + ' HUB sayt: Informacionnoe:'}}</mat-card-title>
-                    <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + ' Informacionnoe:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A',
+                        'П') + ' HUB sayt: Informacionnoe:'}}</mat-card-title>
+                    <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + '
+                        Informacionnoe:'}}</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
                     <mat-card-title *ngIf="hubForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
                 </mat-card-header>
@@ -331,7 +323,8 @@
                         (click)="onSubmitButtonProblem('Informacionnoe')" type="submit" *ngIf="newForm == true">Submit
                     </button>
                     <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Informacionnoe')" type="submit" *ngIf="newForm == false">Send Message
+                        (click)="onSubmitButtonUpdate('Informacionnoe')" type="submit" *ngIf="newForm == false">Send
+                        Message
                     </button>
                 </mat-card-actions>
             </mat-card>

@@ -4,6 +4,7 @@
       <button mat-raised-button color="primary" (click)="onCN()">Send CN message</button>
       <button mat-raised-button color="primary" (click)="onRN()" style="margin-left: 15px;">Send RN message</button>
       <button mat-raised-button color="primary" (click)="addNumber()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Add Phone number</button>
+      <button mat-raised-button color="primary" (click)="exportXlsx()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Export to Xlsx</button>
     </mat-grid-tile>
   </mat-grid-list>
   <mat-divider></mat-divider>
@@ -23,7 +24,7 @@
   </mat-form-field>
   
   <div class="table-style" >
-    <table mat-table [dataSource] = "Data" matSort #table1 #table1sort="matSort" class="mat-elevation-z8">
+    <table mat-table [dataSource] = "Data" matSort #table1 #table1sort="matSort" class="mat-elevation-z8" id="open-case">
 
       <ng-container matColumnDef="level">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>level</th>
@@ -73,7 +74,6 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumnsNew"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsNew"></tr>
     </table>
-
   </div>
   <hr>
 

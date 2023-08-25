@@ -171,7 +171,7 @@ export class HubComponent implements OnInit {
 
   tableSendBody() {
     this.tableBody = {
-      'type': 'CORE',
+      'type': 'HUB',
       'level': this.hubForm.value.level,
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
@@ -181,7 +181,7 @@ export class HubComponent implements OnInit {
       'start_time': this.hubForm.value.startTime,
       'end_time': this.hubForm.value.endTime,
       'region': this.hubForm.value.region,
-      'category_for_core': this.hubForm.value.category,
+      'category_for_hub': this.hubForm.value.category,
       'description': this.hubForm.value.desc,
       'informed': this.hubForm.value.informed,
       'influence': this.hubForm.value.effect,

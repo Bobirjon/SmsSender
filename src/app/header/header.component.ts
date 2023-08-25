@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+    
     this.IsLoggedIn$ = this.storageService.isLoggedIn$
 
     if(this.storageService.getToken() == null) {

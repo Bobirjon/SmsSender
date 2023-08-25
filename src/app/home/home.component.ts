@@ -10,6 +10,7 @@ import { AbstractControl, Form, FormBuilder, FormControl, FormGroup } from '@ang
 import { MatSelectChange } from '@angular/material/select';
 import { BehaviorSubject, Subscription, ValueFromArray, map } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
+import * as XLSX from 'xlsx';
 
 export interface DataTable {
   region: string
@@ -296,6 +297,16 @@ export class HomeComponent implements OnInit {
 
   addNumber() {
     this.router.navigate(['/add'])
+  }
+
+  exportXlsx() {
+    let element  = document.getElementById('open-case')
+    const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
   }
 
 }
