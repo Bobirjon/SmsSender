@@ -81,7 +81,7 @@
 
         <ng-container matColumnDef="number">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>number</th>
-            <td mat-cell *matCellDef="let row">{{row.number}}</td>
+            <td mat-cell *matCellDef="let row">{{row.tel_number}}</td>
             <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="number" search
                     [formControl]="numberFilter"></td>
         </ng-container>
@@ -117,7 +117,7 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
             <td mat-cell *matCellDef="let element"><a style="text-decoration: none"
-                (click)="onDelete()">Delete</a></td>
+                (click)="onDelete(element.id)">Delete</a></td>
             <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search
                     [formControl]="nameFilter"></td>
         </ng-container>

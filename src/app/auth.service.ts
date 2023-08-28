@@ -42,10 +42,22 @@ export class AuthService {
   }
   
   getUser() {
-    return this.http.get(this.URLsender + 'auth/users/me ')
+    return this.http.get(this.URLsender + 'auth/users/me')
   }
 
   sendSms(body: any) {
-    return this.http.post(this.URLsender + 'smssender/smssend/', body)
+    return this.http.post(this.URLsender + 'smssender/send/', body)
+  }
+
+  receiverData(body: any) {
+    return this.http.post(this.URLsender + 'smssender/receiver/', body)
+  }
+
+  getreceiverData() {
+    return this.http.get(this.URLsender + 'smssender/receiver/')
+  }
+
+  deleteReceiver(id: number) {
+    return this.http.delete((`${this.URLsender + 'smssender/receiver'}/${id}/`))
   }
 }

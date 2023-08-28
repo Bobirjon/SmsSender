@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+import { NgIf, formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,8 +25,7 @@ export class CnComponent implements OnInit {
   requestType: any
   tableBody: any
   smsBody: any
-
-
+  criteriaArray: any
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A2', viewValue: 'A2' },
@@ -93,7 +92,7 @@ export class CnComponent implements OnInit {
       'effect_option': ['С влиянием', Validators.required],
       'startTime': [null, Validators.required],
       'endTime': [null],
-      'region': [null, Validators.required],
+      'region': [null],
       'effect': [null],
       'category': [null],
       'informed': [null],
@@ -268,13 +267,16 @@ export class CnComponent implements OnInit {
       }
     }
 
-
     this.smsBody = {
       'source_addr': 'ncc-cn',
-      'network': 'CN',
-      'criteria': this.criteria_list,
-      'notification': this.cnForm.value.category,
+      'network': ['CN'],
+      'criteria': [this.cnForm.value.level],
+      'notification': [this.cnForm.value.category],
       'sms_text': this.SmsTextBody
+    }
+
+    if(this.cnForm.value.region != (null || undefined)) {
+      this.smsBody.region = [this.cnForm.value.region]
     }
   }
 

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-add-phone-numbers',
@@ -12,24 +13,8 @@ import { MatTableDataSource } from '@angular/material/table';
 export class AddPhoneNumbersComponent implements OnInit {
 
   ActivePhoneNumberList: MatTableDataSource<any>
-  data: any[] =  [
-    {name: 'test1', number: '123456', network: 'CN', criteria: 'A3', notification: 'Roaming', region: 'Tashkent'},
-    {name: 'Secondtest1', number: '456456', network: 'RN', criteria: 'A2', notification: 'Core', region: 'Andijan'},
-    {name: 'Third', number: '12345689', network: 'CN', criteria: 'A3', notification: 'Chronic', region: 'Tashkent'},
-    {name: 'test2', number: '98765431', network: 'CN', criteria: 'A2', notification: 'Report', region: 'Tashkent'},
-    {name: 'test1', number: '123456', network: 'CN', criteria: 'A3', notification: 'Roaming', region: 'Tashkent'},
-    {name: 'Secondtest1', number: '456456', network: 'RN', criteria: 'A2', notification: 'Core', region: 'Andijan'},
-    {name: 'Third', number: '12345689', network: 'CN', criteria: 'A3', notification: 'Chronic', region: 'Tashkent'},
-    {name: 'test2', number: '98765431', network: 'CN', criteria: 'A2', notification: 'Report', region: 'Tashkent'},
-    {name: 'test1', number: '123456', network: 'CN', criteria: 'A3', notification: 'Roaming', region: 'Tashkent'},
-    {name: 'Secondtest1', number: '456456', network: 'RN', criteria: 'A2', notification: 'Core', region: 'Andijan'},
-    {name: 'Third', number: '12345689', network: 'CN', criteria: 'A3', notification: 'Chronic', region: 'Tashkent'},
-    {name: 'test2', number: '98765431', network: 'CN', criteria: 'A2', notification: 'Report', region: 'Tashkent'},
-    {name: 'test1', number: '123456', network: 'CN', criteria: 'A3', notification: 'Roaming', region: 'Tashkent'},
-    {name: 'Secondtest1', number: '456456', network: 'RN', criteria: 'A2', notification: 'Core', region: 'Andijan'},
-    {name: 'Third', number: '12345689', network: 'CN', criteria: 'A3', notification: 'Chronic', region: 'Tashkent'},
-    {name: 'test2', number: '98765431', network: 'CN', criteria: 'A2', notification: 'Report', region: 'Tashkent'}
-  ]
+  dataSend: any
+  data: any
   AddPhoneNumber: FormGroup
 
   filteredValues = {
@@ -97,7 +82,7 @@ export class AddPhoneNumbersComponent implements OnInit {
     { value: 'Khorezm', viewValue: 'Khorezm' },
   ];
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
 
@@ -112,27 +97,53 @@ export class AddPhoneNumbersComponent implements OnInit {
     })
   }
 
-  constructor(private formBuilder: FormBuilder,) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService) {
     this.createForm()
   }
 
   onSubmit() {
-    console.log(this.AddPhoneNumber);
+
+    if (this.AddPhoneNumber.value.region != null || undefined) {
+      this.dataSend.region = this.AddPhoneNumber.value.region
+    };
+
+    this.dataSend = {
+      'name': this.AddPhoneNumber.value.name,
+      'tel_number': this.AddPhoneNumber.value.number,
+      'network': this.AddPhoneNumber.value.network,
+      'criteria': this.AddPhoneNumber.value.criteria,
+      'notification': this.AddPhoneNumber.value.notification,
+      // 'region' : this.AddPhoneNumber.value.region,
+    }
+
+    this.authService.receiverData(this.dataSend)
+      .subscribe(res => {
+        console.log(res);
+
+      })
   }
 
   ngOnInit(): void {
-    this.ActivePhoneNumberList = new MatTableDataSource(this.data)
-    this.ActivePhoneNumberList.paginator = this.paginator;
-    this.ActivePhoneNumberList.sort = this.sort;
-    
-    console.log(this.ActivePhoneNumberList.data);
-    console.log(this.data);
 
-    this.filterForAllCase()
+    this.authService.getreceiverData()
+      .subscribe(res => {
+        console.log(res);
+        
+        this.data = res
+
+        this.ActivePhoneNumberList = new MatTableDataSource(this.data)
+        this.ActivePhoneNumberList.paginator = this.paginator;
+        this.ActivePhoneNumberList.sort = this.sort;
+        this.filterForAllCase()
+      })
   }
 
-  onDelete() {
-    window.location.reload()
+  onDelete(event: any) {
+   this.authService.deleteReceiver(event)
+    .subscribe(res => {
+      console.log(res);
+      window.location.reload()
+    })
   }
 
   filterForAllCase() {
@@ -169,16 +180,16 @@ export class AddPhoneNumbersComponent implements OnInit {
     this.ActivePhoneNumberList.filterPredicate = function (data, filter): boolean {
       let searchString = JSON.parse(filter);
       let nameFound = data.name.toString().trim().toLowerCase().indexOf(searchString.nameFilter.toLowerCase()) !== -1
-      let numberFound = data.number.toString().trim().toLowerCase().indexOf(searchString.numberFilter.toLowerCase()) !== -1
+      let numberFound = data.tel_number.toString().trim().toLowerCase().indexOf(searchString.numberFilter.toLowerCase()) !== -1
       let networkFound = data.network.toString().trim().toLowerCase().indexOf(searchString.networkFilter.toLowerCase()) !== -1
-      
+
       let criteriaFound = data.criteria.toString().trim().toLowerCase().indexOf(searchString.criteriaFilter.toLowerCase()) !== -1
       let notificationFound = data.notification.toString().trim().toLowerCase().indexOf(searchString.notificationFilter.toLowerCase()) !== -1
       let regionFound = data.region.toString().trim().toLowerCase().indexOf(searchString.regionFilter.toLowerCase()) !== -1
-   
+
       if (searchString.topFilter) {
         console.log(networkFound);
-        
+
         return nameFound || numberFound || networkFound || criteriaFound || notificationFound || regionFound
       } else {
         console.log(networkFound);
