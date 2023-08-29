@@ -268,11 +268,15 @@ export class ChronicComponent implements OnInit {
     }
 
     this.smsBody = {
-      'source_addr': 'ncc-cn',
-      'network': 'CN',
-      'criteria': this.criteria_list,
-      'notification': this.chronicForm.value.category,
+      'source_addr': 'ncc-rn',
+      'network': ['RN'],
+      'criteria': [this.chronicForm.value.level],
+      'notification': ['Chronic'],
       'sms_text': this.SmsTextBody
+    }
+
+    if(this.chronicForm.value.region != (null || undefined)) {
+      this.smsBody.region = [this.chronicForm.value.region]
     }
   }
 

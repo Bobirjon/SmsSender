@@ -258,10 +258,14 @@ export class BscComponent implements OnInit {
 
     this.smsBody = {
       'source_addr': 'ncc-rn',
-      'network': 'RN',
-      'criteria': this.criteria_list,
-      'notification': 'BSC/RNC',
+      'network': ['RN'],
+      'criteria': [this.bscForm.value.level],
+      'notification': ['BSC/RNC'],
       'sms_text': this.SmsTextBody
+    }
+
+    if(this.bscForm.value.region != (null || undefined)) {
+      this.smsBody.region = [this.bscForm.value.region]
     }
   }
 

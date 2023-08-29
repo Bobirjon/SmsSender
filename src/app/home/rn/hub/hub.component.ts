@@ -292,12 +292,18 @@ export class HubComponent implements OnInit {
     }
 
     this.smsBody = {
-      'source_addr': 'ncc-cn',
-      'network': 'CN',
-      'criteria': this.criteria_list,
-      'notification': this.hubForm.value.category,
+      'source_addr': 'ncc-rn',
+      'network': ['RN'],
+      'criteria': [this.hubForm.value.level],
+      'notification': [this.hubForm.value.category],
       'sms_text': this.SmsTextBody
     }
+
+    if(this.hubForm.value.region != (null || undefined)) {
+      this.smsBody.region = [this.hubForm.value.region]
+    }
+
+
   }
 
 

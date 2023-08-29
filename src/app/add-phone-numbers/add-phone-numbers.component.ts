@@ -113,7 +113,6 @@ export class AddPhoneNumbersComponent implements OnInit {
       'network': this.AddPhoneNumber.value.network,
       'criteria': this.AddPhoneNumber.value.criteria,
       'notification': this.AddPhoneNumber.value.notification,
-      // 'region' : this.AddPhoneNumber.value.region,
     }
 
     this.authService.receiverData(this.dataSend)

@@ -161,7 +161,7 @@ export class CnComponent implements OnInit {
 
   updateData() {
     this.tableSendBody()
-
+    
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
       .subscribe((result) => {
         console.log(result);
