@@ -77,9 +77,8 @@ export class CnComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private storageService: StorageService,
-    private snackBar: MatSnackBar,
-    private webSocketService: WebSocketService) {
-    this.createForm()
+    private snackBar: MatSnackBar,) {
+      this.createForm()
   }
 
   createForm() {
@@ -112,12 +111,11 @@ export class CnComponent implements OnInit {
     //is it new request or update mode
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
-    } else {
-      this.newForm = false
+      
+    } else { 
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          console.log(result['end_time']);
-
+         
           this.cnForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -128,14 +126,15 @@ export class CnComponent implements OnInit {
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [(result['end_time'], 'yyyy-MM-ddTHH:mm', '')],
-            'region': [result['region'], Validators.required],
+            'region': [result['region']],
             'effect': [result['influence']],
             'category': [result['category_for_core']],
             'informed': [result['informed']],
             'desc': [result['description']],
             'sender': [result['sender']]
-          })
+          }) 
         })
+       this.storageService.isNewForm(this.newForm)
     }
   }
 
@@ -340,9 +339,15 @@ export class CnComponent implements OnInit {
   }
 
   onSubmitButtonProblem(smsType: string) {
+    console.log(this.newForm);
+    
+    if(this.newForm == false) {
+      this.updateData()
+    } else {
+      this.onSubmit()
+    }
 
     this.requestType = smsType
-
     this.smsSendBody()
 
     this.authService.sendSms(this.smsBody)

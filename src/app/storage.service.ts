@@ -59,4 +59,8 @@ export class StorageService {
     return notification
   }
 
+  public isNewForm(isNew: any) {
+    return false
+  }
+
 }
