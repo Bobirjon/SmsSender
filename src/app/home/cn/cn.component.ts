@@ -111,11 +111,15 @@ export class CnComponent implements OnInit {
     //is it new request or update mode
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
-      
     } else { 
+      this.newForm = false
+      this.isNewForm(this.newForm)
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-         
+          if(this.cnForm.value.category == 'Core') {
+            console.log('disable region');
+          
+          }
           this.cnForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -134,8 +138,13 @@ export class CnComponent implements OnInit {
             'sender': [result['sender']]
           }) 
         })
-       this.storageService.isNewForm(this.newForm)
+        
     }
+  }
+
+  isNewForm(isNew: boolean) {
+    this.newForm = isNew
+    return this.newForm
   }
 
   tableSendBody() {
@@ -200,8 +209,6 @@ export class CnComponent implements OnInit {
 
   updateData() {
 
-    console.log(this.cnForm.value.endTime);
-
     this.tableSendBody()
 
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
@@ -213,6 +220,8 @@ export class CnComponent implements OnInit {
 
       })
   }
+
+
 
   smsSendBody() {
 
@@ -339,7 +348,9 @@ export class CnComponent implements OnInit {
   }
 
   onSubmitButtonProblem(smsType: string) {
+
     console.log(this.newForm);
+    
     
     if(this.newForm == false) {
       this.updateData()
