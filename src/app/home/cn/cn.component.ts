@@ -142,7 +142,7 @@ export class CnComponent implements OnInit {
   tableSendBody() {
 
     if (this.cnForm.value.endTime == '') {
-     this.tableBody = {
+      this.tableBody = {
         'type': 'CORE',
         'level': this.cnForm.value.level,
         'category': this.cnForm.value.categories_report,
@@ -216,8 +216,6 @@ export class CnComponent implements OnInit {
   }
 
   smsSendBody() {
-    this.criteria = this.storageService.getNotification(this.cnForm.value.level)
-    this.criteria_list = this.criteria?.concat(this.cnForm.value.region)
 
     if (this.requestType == 'Problem') {
       if (this.cnForm.value.categories_report == 'ПР') {
@@ -233,7 +231,7 @@ export class CnComponent implements OnInit {
         } else {
           this.SmsTextBody =
             ' ' + this.cnForm.value.level.replace('A', 'П') + ' Проблема: ' + '\n' +
-            ' (' + this.cnForm.value.AddOrCor + ') ' +'\n' +
+            ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
             ' ' + this.cnForm.value.problem + '\n ' +
             'Причина: ' + this.cnForm.value.reason + '\n ' +
             'Эффект: ' + this.cnForm.value.effect + '\n ' +
@@ -254,7 +252,7 @@ export class CnComponent implements OnInit {
         } else {
           this.SmsTextBody =
             ' ' + this.cnForm.value.level + ' Проблема: ' + '\n' +
-            ' (' + this.cnForm.value.AddOrCor + ') ' +'\n' +
+            ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
             ' ' + this.cnForm.value.problem + '\n ' +
             'Причина: ' + this.cnForm.value.reason + '\n ' +
             'Эффект: ' + this.cnForm.value.effect + '\n ' +
@@ -278,7 +276,7 @@ export class CnComponent implements OnInit {
         } else {
           this.SmsTextBody =
             ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' + this.requestType + '\n' +
-            ' (' + this.cnForm.value.AddOrCor + ') ' +'\n' +
+            ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
             ' ' + this.cnForm.value.problem + '\n ' +
             'Причина: ' + this.cnForm.value.reason + '\n ' +
             'Эффект: ' + this.cnForm.value.effect + '\n ' +
@@ -301,7 +299,7 @@ export class CnComponent implements OnInit {
         } else {
           this.SmsTextBody =
             ' ' + this.cnForm.value.level + ' ' + this.requestType + '\n' +
-            ' (' + this.cnForm.value.AddOrCor + ') ' +'\n' +
+            ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
             ' ' + this.cnForm.value.problem + '\n ' + '\n' +
             'Причина: ' + this.cnForm.value.reason + '\n ' +
             'Эффект: ' + this.cnForm.value.effect + '\n ' +
@@ -317,14 +315,18 @@ export class CnComponent implements OnInit {
       'source_addr': 'ncc-cn',
       'network': ['CN'],
       'criteria': [this.cnForm.value.level],
-      'notification': [this.cnForm.value.category],
       'sms_text': this.SmsTextBody
+    }
+
+    if (this.cnForm.value.category == ('Power' ) || this.cnForm.value.category == ('High Temp')) {
+      this.smsBody.notification = ['Power/HighTemp']
+    }  
+    else {
+      this.smsBody.notification = [this.cnForm.value.category]
     }
 
     if (this.cnForm.value.region != (null || undefined || '')) {
       this.smsBody.region = [this.cnForm.value.region]
-    } else if (this.cnForm.value.region != '') {
-
     }
   }
 
