@@ -104,7 +104,7 @@ export class AddPhoneNumbersComponent implements OnInit {
   onSubmit() {
 
     if (this.AddPhoneNumber.value.region != null || undefined) {
-      this.dataSend.region = this.AddPhoneNumber.value.region
+      this.dataSend?.push(this.AddPhoneNumber.value.region)
     };
 
     this.dataSend = {
@@ -115,10 +115,10 @@ export class AddPhoneNumbersComponent implements OnInit {
       'notification': this.AddPhoneNumber.value.notification,
     }
 
-    this.authService.receiverData(this.dataSend)
+    this.authService.postReceiverData(this.dataSend)
       .subscribe(res => {
         console.log(res);
-
+        console.log(res + ' data');
       })
   }
 
@@ -126,8 +126,6 @@ export class AddPhoneNumbersComponent implements OnInit {
 
     this.authService.getreceiverData()
       .subscribe(res => {
-        console.log(res);
-        
         this.data = res
 
         this.ActivePhoneNumberList = new MatTableDataSource(this.data)

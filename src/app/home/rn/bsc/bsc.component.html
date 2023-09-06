@@ -1,23 +1,23 @@
 <div>
-    <h1 style="margin: 30px;">BSC/RNC SMS Form</h1>
     <form [formGroup]="bscForm" class="form-container">
-        <mat-grid-list cols="12" rowHeight="fit" style="height: 200px;">
-            <!-- level -->
-            <mat-grid-tile colspan="2">
+        <mat-grid-list cols="20" rowHeight="85px">
+             <!-- level -->
+             <mat-grid-tile colspan="2">
                 <mat-form-field class="margin-container">
                     <mat-label>Level</mat-label>
-                    <mat-select formControlName="level">
+                    <mat-select formControlName="level" [(ngModel)]="bscForm.value.level">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
+            
             <!-- categories report -->
-            <mat-grid-tile colspan="2">
+            <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Category For Report</mat-label>
-                    <mat-select formControlName="categories_report">
+                    <mat-select formControlName="categories_report" [(ngModel)]="bscForm.value.categories_report">
                         <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
                             {{cat_rep.viewValue}}
                         </mat-option>
@@ -25,108 +25,162 @@
                 </mat-form-field>
             </mat-grid-tile>
             <!-- responsible area -->
-            <mat-grid-tile colspan="2">
+            <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Responsible area</mat-label>
-                    <mat-select formControlName="responsible_report">
+                    <mat-select formControlName="responsible_report" [(ngModel)]="bscForm.value.responsible_report">
                         <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
                             {{res_rep.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- problem -->
-            <mat-grid-tile colspan="4">
-                <mat-form-field class="margin-container">
-                    <mat-label>Problem</mat-label>
-                    <input matInput type="text" formControlName="problem" />
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- effect option -->
-            <mat-grid-tile colspan="2">
+             <!-- effect option -->
+             <mat-grid-tile colspan="2">
                 <mat-form-field class="margin-container">
                     <mat-label>Эффект</mat-label>
-                    <mat-select formControlName="effect_option">
+                    <mat-select formControlName="effect_option" [(ngModel)]="bscForm.value.effect_option">
                         <mat-option *ngFor="let eff_rep of effect_option" [value]="eff_rep.value">
                             {{eff_rep.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- reason -->
-            <mat-grid-tile colspan="4">
+            <!-- preview problem -->
+            <mat-grid-tile colspan="5" rowspan="5">
+                <div class="grid-container">
+                    <mat-card class="preview">
+                        <mat-card-header>
+                            <mat-card-title *ngIf="bscForm.value.categories_report == 'ПР'">
+                                {{bscForm.value.level.replace('A', 'П') + ' BSC:' + ' Problema:'}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="bscForm.value.categories_report != 'ПР'">
+                                {{bscForm.value.level + ' BSC:' + ' Problema:'}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="bscForm.value.AddOrCor == 'addition'">
+                                (Additional)
+                            </mat-card-title>
+                            <mat-card-title *ngIf="bscForm.value.AddOrCor == 'correction'">
+                                (Correction)
+                            </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{bscForm.value.problem}}</p>
+                            <p>{{'Prichina: ' + bscForm.value.reason}}</p>
+                            <p>{{'Effect: ' + bscForm.value.effect}}</p>
+                            <p>{{'Opoveschen: ' + bscForm.value.informed}}</p>
+                            <p>{{'Nachalo: ' + bscForm.value.startTime.replace('T',' ')}}</p>
+                            <p>{{'Otpravil: ' + user?.username}}</p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Problem')" type="submit" 
+                                [disabled]="bscForm.value.startTime == '' || bscForm.value.endTime != ''">
+                                Submit
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </mat-grid-tile>
+            <!-- preview resheniya-->
+            <mat-grid-tile colspan="5" rowspan="5">
+                <div class="grid-container">
+                    <mat-card class="preview">
+                        <mat-card-header>
+                            <mat-card-title *ngIf="bscForm.value.categories_report == 'ПР'">{{bscForm.value.level.replace('A', 'П') + ' BSC:' + ' Reshenie:'}}</mat-card-title>
+                            <mat-card-title *ngIf="bscForm.value.categories_report != 'ПР'">{{bscForm.value.level + ' BSC:' + ' Reshenie:'}}</mat-card-title>
+                            <mat-card-title *ngIf="bscForm.value.AddOrCor == 'addition'">(Additional)</mat-card-title>
+                            <mat-card-title *ngIf="bscForm.value.AddOrCor == 'correction'">(Correction)</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{bscForm.value.problem}}</p>
+                            <p>{{'Prichina: ' + bscForm.value.reason}}</p>
+                            <p>{{'Effect: ' + bscForm.value.effect}}</p>
+                            <p>{{'Opisaniya: ' + bscForm.value.desc}}</p>
+                            <p>{{'Nachalo: ' + bscForm.value.startTime.replace("T", " ")}}</p>
+                            <p>{{'Konec: ' + bscForm.value.endTime.replace("T", " ")}}</p>
+                            <p>{{'Opoveschen: ' + bscForm.value.informed}}</p>
+                            <p>{{'Otpravil: ' + user?.username}}</p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Reshenie')" type="submit" 
+                                [disabled]="bscForm.value.startTime == '' || bscForm.value.endTime == ''">
+                                Submit
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </mat-grid-tile>
+            <!-- problem -->
+            <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
-                    <mat-label>Reason</mat-label>
-                    <input matInput type="text" formControlName="reason" />
+                    <mat-label>Проблема</mat-label>
+                    <textarea matInput type="text" formControlName="problem"
+                        [(ngModel)]="bscForm.value.problem"></textarea>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- reason -->
+            <mat-grid-tile colspan="5" rowspan="1">
+                <mat-form-field class="margin-container">
+                    <mat-label>Причина</mat-label>
+                    <textarea matInput type="text" formControlName="reason"
+                        [(ngModel)]="bscForm.value.reason"></textarea>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- effect -->
+            <mat-grid-tile colspan="5" rowspan="1">
+                <mat-form-field class="margin-container">
+                    <mat-label>Эффект</mat-label>
+                    <textarea matInput type="text" formControlName="effect"
+                        [(ngModel)]="bscForm.value.effect"></textarea>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- Description -->
+            <mat-grid-tile colspan="5" rowspan="1">
+                <mat-form-field class="margin-container">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput type="text" formControlName="desc" 
+                    [(ngModel)]="bscForm.value.desc"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- region -->
-            <mat-grid-tile colspan="2">
+            <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
-                    <mat-label>Region</mat-label>
-                    <mat-select formControlName="region">
+                    <mat-label>Регион</mat-label>
+                    <mat-select formControlName="region" [(ngModel)]="bscForm.value.region">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
                             {{reg.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- effect -->
-            <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>Effect</mat-label>
-                    <input matInput type="text" formControlName="effect" />
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- Informed -->
-            <mat-grid-tile colspan="3">
+            <!-- informed -->
+            <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Informed</mat-label>
-                    <input matInput type="text" formControlName="informed" />
+                    <input matInput type="text" formControlName="informed" [(ngModel)]="bscForm.value.informed" />
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- Description -->
-            <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>Description</mat-label>
-                    <input matInput type="text" formControlName="desc" />
-                </mat-form-field>
-            </mat-grid-tile>
-        </mat-grid-list>
-        <mat-grid-list cols="12">
-            <!-- start Time -->
-            <mat-grid-tile colspan="3">
+             <!-- start Time -->
+             <mat-grid-tile colspan="5" rowspan="1">
                 <div class="margin-container">
                     <p>Start Time</p>
-                    <input 
-                        type="datetime-local" 
-                        class="dateTime" 
-                        name="startTime" 
-                        formControlName="startTime"
-                        min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                    <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
+                        [(ngModel)]="bscForm.value.startTime" />
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
-            <mat-grid-tile colspan="3">
+            <mat-grid-tile colspan="5" rowspan="1">
                 <div class="margin-container">
                     <p>End Time</p>
-                    <input 
-                        type="datetime-local" 
-                        class="dateTime" 
-                        formControlName="endTime"
-                        min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                    <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="bscForm.value.endTime">
                 </div>
             </mat-grid-tile>
-        </mat-grid-list>
-        <!-- button -->
-        <mat-grid-list cols="12">
-            <mat-grid-tile colspan="1">
-                <button class="form-button" mat-raised-button color="primary" type="button"
-                    (click)="previewButton()" [disabled]="bscForm.invalid && newForm">Preview</button>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="1">
+            <!-- buttons -->
+            <mat-grid-tile colspan="2">
                 <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
                     (click)="updateData()">Update</button>
                     <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
@@ -162,9 +216,6 @@
                     <button class="form-button" mat-raised-button color="primary"
                         (click)="onSubmitButtonProblem('Problem')" type="submit" *ngIf="newForm == true">Submit
                     </button>
-                    <button class="form-button" mat-raised-button color="primary"
-                        (click)="onSubmitButtonUpdate('Problem')" type="submit" *ngIf="newForm == false">Send Message
-                    </button>
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -190,9 +241,9 @@
                     <button class="form-button" mat-raised-button color="primary"
                         (click)="onSubmitButtonProblem('Reshenie')" type="submit" *ngIf="newForm == true">Submit
                     </button>
-                    <button class="form-button" mat-raised-button color="primary"
+                    <!-- <button class="form-button" mat-raised-button color="primary"
                         (click)="onSubmitButtonUpdate('Reshenie')" type="submit" *ngIf="newForm == false">Send Message
-                    </button>
+                    </button> -->
                 </mat-card-actions>
             </mat-card>
         </div>

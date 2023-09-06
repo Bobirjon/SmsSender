@@ -13,6 +13,7 @@ import { StorageService } from 'src/app/storage.service';
 })
 export class BscComponent implements OnInit {
 
+
   bscForm: FormGroup
   preview = false;
   user: any
@@ -81,19 +82,19 @@ export class BscComponent implements OnInit {
   createForm() {
     this.bscForm = this.formBuilder.group({
       'AddOrCor': [null],
-      'level': [null, Validators.required],
-      'categories_report': [null, Validators.required],
-      'responsible_report': [null, Validators.required],
-      'problem': [null, Validators.required],
-      'reason': [null, Validators.required],
+      'level': ['', Validators.required],
+      'categories_report': ['', Validators.required],
+      'responsible_report': ['', Validators.required],
+      'problem': ['', Validators.required],
+      'reason': ['', Validators.required],
       'effect_option': ['C Влиянием', Validators.required],
-      'startTime': [null, Validators.required],
-      'endTime': [null],
-      'region': [null, Validators.required],
-      'effect': [null],
-      'informed': [null],
-      'desc': [null],
-      'sender': [null],
+      'startTime': ['', Validators.required],
+      'endTime': [''],
+      'region': ['', Validators.required],
+      'effect': ['', Validators.required],
+      'informed': ['', Validators.required],
+      'desc': ['', Validators.required],
+      'sender': [''],
     })
   }
 
@@ -119,7 +120,7 @@ export class BscComponent implements OnInit {
             'reason': [result['reason'], Validators.required],
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            'endTime': [null, Validators.required],
+            'endTime': [formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'region': [result['region'], Validators.required],
             'effect': [result['influence']],
             'informed': [result['informed']],
@@ -130,11 +131,11 @@ export class BscComponent implements OnInit {
     }
   }
 
-  previewButton() {
-    this.preview = !this.preview
-  }
-
   tableSendBody() {
+    if(this.bscForm.value.endTime != '') {
+      this.tableBody.push({'end_time': this.bscForm.value.endTime})
+    }
+
     this.tableBody = {
       'type': 'BSC/RNC',
       'level': this.bscForm.value.level,
@@ -145,7 +146,6 @@ export class BscComponent implements OnInit {
       'effect': this.bscForm.value.effect_option,
       'influence': this.bscForm.value.effect,
       'start_time': this.bscForm.value.startTime,
-      'end_time': this.bscForm.value.endTime,
       'region': this.bscForm.value.region,
 
       'informed': this.bscForm.value.informed,
@@ -303,18 +303,5 @@ export class BscComponent implements OnInit {
         this.snackBar.open(error, '', { duration: 10000 })
       })
 
-  }
-
-  onSubmitButtonUpdate(smsType: string) {
-
-    this.smsSendBody()
-
-    this.authService.sendSms(this.smsSendBody)
-      .subscribe((result) => {
-        console.log(result);
-        this.snackBar.open('Success', '', { duration: 10000 })
-      }, error => {
-        this.snackBar.open(error, '', { duration: 10000 })
-      })
   }
 }

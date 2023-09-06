@@ -5,16 +5,57 @@
 
 .form-container {
     margin: 20px;
-    border: 5px solid  #e6e6e6;
+    border: 5px solid #e6e6e6;
     border-radius: 10px;
     padding: 15px 15px;
 }
+
 
 .table-style {
     margin: 20px;
 }
 
 .filter {
-    width:100%;
+    width: 100%;
     padding: 6px;
+}
+
+.mat-column-name {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    word-break: break-word;
+}
+.mat-column-number {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    word-break: break-word;
+}
+
+.mat-column-notification {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    word-break: break-word;
+}
+
+.mat-column-criteria {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    word-break: break-word;
+}
+
+.mat-column-network {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    word-break: break-word;
+}
+.mat-column-actions {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    word-break: break-word;
+}
+
+.mat-column-region {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    word-break: break-word
 }

@@ -49,7 +49,7 @@ export class AuthService {
     return this.http.post(this.URLsender + 'smssender/send/', body)
   }
 
-  receiverData(body: any) {
+  postReceiverData(body: any) {
     return this.http.post(this.URLsender + 'smssender/receiver/', body)
   }
 

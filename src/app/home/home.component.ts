@@ -206,6 +206,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.webSocketService.listen().subscribe((data) => {
+      console.log(data.data);
+      
       this.updateMessage(data)
     })
 

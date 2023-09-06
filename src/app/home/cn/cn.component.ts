@@ -43,7 +43,8 @@ export class CnComponent implements OnInit {
     { value: 'Core', viewValue: 'Core' },
     { value: 'GPRS', viewValue: 'GPRS' },
     { value: 'Roaming', viewValue: 'Roaming' },
-    { value: 'Power/HighTemp', viewValue: 'Power/HighTemp' },
+    { value: 'Power', viewValue: 'Power' },
+    { value: 'High Temp', viewValue: 'High Temp' },
   ];
   responsible_report: { value: string; viewValue: string }[] = [
     { value: 'Другие ЗО', viewValue: 'Другие ЗО' },
@@ -84,24 +85,25 @@ export class CnComponent implements OnInit {
   createForm() {
     this.cnForm = this.formBuilder.group({
       'AddOrCor': [null],
-      'level': [null, Validators.required],
-      'categories_report': [null, Validators.required],
-      'responsible_report': [null, Validators.required],
-      'problem': [null, Validators.required],
-      'reason': [null, Validators.required],
+      'level': ['', Validators.required],
+      'categories_report': ['', Validators.required],
+      'responsible_report': ['', Validators.required],
+      'problem': ['', Validators.required],
+      'reason': ['', Validators.required],
       'effect_option': ['С влиянием', Validators.required],
-      'startTime': [null, Validators.required],
-      'endTime': [null],
-      'region': [null],
-      'effect': [null],
-      'category': [null],
-      'informed': [null],
-      'desc': [null],
-      'sender': [null]
+      'startTime': ['', Validators.required],
+      'endTime': [''],
+      'region': [''],
+      'effect': ['', Validators.required],
+      'category': ['', Validators.required],
+      'informed': ['', Validators.required],
+      'desc': ['', Validators.required],
+      'sender': ['']
     })
   }
 
   ngOnInit(): void {
+
     // get Current user
     this.authService.getUser()
       .subscribe(result => {
@@ -114,6 +116,8 @@ export class CnComponent implements OnInit {
       this.newForm = false
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
+          console.log(result['end_time']);
+
           this.cnForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -123,7 +127,7 @@ export class CnComponent implements OnInit {
             'reason': [result['reason'], Validators.required],
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            'endTime': [result['end_time'], Validators.required],
+            'endTime': [(result['end_time'], 'yyyy-MM-ddTHH:mm', '')],
             'region': [result['region'], Validators.required],
             'effect': [result['influence']],
             'category': [result['category_for_core']],
@@ -135,37 +139,79 @@ export class CnComponent implements OnInit {
     }
   }
 
-  previewButton() {
-    this.preview = !this.preview
-  }
-
   tableSendBody() {
-    this.tableBody = {
-      'type': 'CORE',
-      'level': this.cnForm.value.level,
-      'category': this.cnForm.value.categories_report,
-      'responsible_area': this.cnForm.value.responsible_report,
-      'problem': this.cnForm.value.problem,
-      'reason': this.cnForm.value.reason,
-      'effect': this.cnForm.value.effect_option,
-      'start_time': this.cnForm.value.startTime,
-      'end_time': this.cnForm.value.endTime,
-      'region': this.cnForm.value.region,
-      'category_for_core': this.cnForm.value.category,
-      'description': this.cnForm.value.desc,
-      'informed': this.cnForm.value.informed,
-      'influence': this.cnForm.value.effect,
-      'sender': this.user?.username
+
+    if (this.cnForm.value.endTime == '') {
+     this.tableBody = {
+        'type': 'CORE',
+        'level': this.cnForm.value.level,
+        'category': this.cnForm.value.categories_report,
+        'responsible_area': this.cnForm.value.responsible_report,
+        'problem': this.cnForm.value.problem,
+        'reason': this.cnForm.value.reason,
+        'effect': this.cnForm.value.effect_option,
+        'start_time': this.cnForm.value.startTime,
+        'region': this.cnForm.value.region,
+        'category_for_core': this.cnForm.value.category,
+        'description': this.cnForm.value.desc,
+        'informed': this.cnForm.value.informed,
+        'influence': this.cnForm.value.effect,
+        'sender': this.user?.username
+      }
+    } else if (this.cnForm.value.endTime == null) {
+      this.tableBody = {
+        'type': 'CORE',
+        'level': this.cnForm.value.level,
+        'category': this.cnForm.value.categories_report,
+        'responsible_area': this.cnForm.value.responsible_report,
+        'problem': this.cnForm.value.problem,
+        'reason': this.cnForm.value.reason,
+        'effect': this.cnForm.value.effect_option,
+        'start_time': this.cnForm.value.startTime,
+        'region': this.cnForm.value.region,
+        'category_for_core': this.cnForm.value.category,
+        'description': this.cnForm.value.desc,
+        'informed': this.cnForm.value.informed,
+        'influence': this.cnForm.value.effect,
+        'sender': this.user?.username
+      }
+    }
+    else {
+      console.log('yes time');
+
+      this.tableBody = {
+        'type': 'CORE',
+        'level': this.cnForm.value.level,
+        'category': this.cnForm.value.categories_report,
+        'responsible_area': this.cnForm.value.responsible_report,
+        'problem': this.cnForm.value.problem,
+        'reason': this.cnForm.value.reason,
+        'effect': this.cnForm.value.effect_option,
+        'start_time': this.cnForm.value.startTime,
+        'end_time': this.cnForm.value.endTime,
+        'region': this.cnForm.value.region,
+        'category_for_core': this.cnForm.value.category,
+        'description': this.cnForm.value.desc,
+        'informed': this.cnForm.value.informed,
+        'influence': this.cnForm.value.effect,
+        'sender': this.user?.username
+      }
     }
   }
 
   updateData() {
+
+    console.log(this.cnForm.value.endTime);
+
     this.tableSendBody()
-    
+
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
       .subscribe((result) => {
         console.log(result);
         this.snackBar.open('Updated', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+
       })
   }
 
@@ -173,96 +219,96 @@ export class CnComponent implements OnInit {
     this.criteria = this.storageService.getNotification(this.cnForm.value.level)
     this.criteria_list = this.criteria?.concat(this.cnForm.value.region)
 
-    if(this.requestType == 'Problem') {
-      if(this.cnForm.value.categories_report == 'ПР') {
-        if(this.cnForm.value.AddOrCor == (undefined || null)) {
+    if (this.requestType == 'Problem') {
+      if (this.cnForm.value.categories_report == 'ПР') {
+        if (this.cnForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-          ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' + this.requestType + ': ' + '\n' +
-          ' ' + this.cnForm.value.problem + '\n ' +
-          'Prichina: ' + this.cnForm.value.reason + '\n ' +
-          'Effect: ' + this.cnForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.cnForm.value.informed + '\n ' +
-          'Nachalo: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
+            ' ' + this.cnForm.value.level.replace('A', 'П') + ' Проблема: ' + '\n' +
+            ' ' + this.cnForm.value.problem + '\n ' +
+            'Причина: ' + this.cnForm.value.reason + '\n ' +
+            'Эффект: ' + this.cnForm.value.effect + '\n ' +
+            'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+            'Отправил: ' + this.user?.username
         } else {
           this.SmsTextBody =
-          ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' +this.requestType + ': ' + '\n' +
-          ' (' + this.cnForm.value.AddOrCor + ') ' +
-          ' ' + this.cnForm.value.problem + '\n ' +
-          'Prichina: ' + this.cnForm.value.reason + '\n ' +
-          'Effect: ' + this.cnForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.cnForm.value.informed + '\n ' +
-          'Nachalo: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
+            ' ' + this.cnForm.value.level.replace('A', 'П') + ' Проблема: ' + '\n' +
+            ' (' + this.cnForm.value.AddOrCor + ') ' +'\n' +
+            ' ' + this.cnForm.value.problem + '\n ' +
+            'Причина: ' + this.cnForm.value.reason + '\n ' +
+            'Эффект: ' + this.cnForm.value.effect + '\n ' +
+            'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+            'Отправил: ' + this.user?.username
         }
       } else {
-        if(this.cnForm.value.AddOrCor == (undefined || null)) {
+        if (this.cnForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-          ' ' + this.cnForm.value.level + ' ' +this.requestType + ': ' + '\n' +
-          ' ' + this.cnForm.value.problem + '\n ' +
-          'Prichina: ' + this.cnForm.value.reason + '\n ' +
-          'Effect: ' + this.cnForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.cnForm.value.informed + '\n ' +
-          'Nachalo: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
+            ' ' + this.cnForm.value.level + ' Проблема: ' + '\n' +
+            ' ' + this.cnForm.value.problem + '\n ' +
+            'Причина: ' + this.cnForm.value.reason + '\n ' +
+            'Эффект: ' + this.cnForm.value.effect + '\n ' +
+            'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+            'Отправил: ' + this.user?.username
         } else {
           this.SmsTextBody =
-          ' ' + this.cnForm.value.level + ' ' +this.requestType + ': ' + '\n' +
-          ' (' + this.cnForm.value.AddOrCor + ') ' +
-          ' ' + this.cnForm.value.problem + '\n ' +
-          'Prichina: ' + this.cnForm.value.reason + '\n ' +
-          'Effect: ' + this.cnForm.value.effect + '\n ' +
-          'Opoveschen: ' + this.cnForm.value.informed + '\n ' +
-          'Nachalo: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
+            ' ' + this.cnForm.value.level + ' Проблема: ' + '\n' +
+            ' (' + this.cnForm.value.AddOrCor + ') ' +'\n' +
+            ' ' + this.cnForm.value.problem + '\n ' +
+            'Причина: ' + this.cnForm.value.reason + '\n ' +
+            'Эффект: ' + this.cnForm.value.effect + '\n ' +
+            'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+            'Отправил: ' + this.user?.username
         }
       }
     } else {
-      if(this.cnForm.value.categories_report == 'ПР') {
-        if(this.cnForm.value.AddOrCor == (undefined || null)) {
+      if (this.cnForm.value.categories_report == 'ПР') {
+        if (this.cnForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-          ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' +this.requestType + '\n' +
-          ' ' + this.cnForm.value.problem + '\n ' +
-          'Prichina: ' + this.cnForm.value.reason + '\n ' +
-          'Effect: ' + this.cnForm.value.effect + '\n ' +
-          'Opisaniya: ' + this.cnForm.value.desc + '\n ' +
-          'Nachalo: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
+            ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' + this.requestType + ": " + '\n' +
+            ' ' + this.cnForm.value.problem + '\n ' +
+            'Причина: ' + this.cnForm.value.reason + '\n ' +
+            'Эффект: ' + this.cnForm.value.effect + '\n ' +
+            'Описание: ' + this.cnForm.value.desc + '\n ' +
+            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+            'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+            'Отправил: ' + this.user?.username
         } else {
           this.SmsTextBody =
-          ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' +this.requestType + '\n' +
-          ' (' + this.cnForm.value.AddOrCor + ') ' +
-          ' ' + this.cnForm.value.problem + '\n ' +
-          'Prichina: ' + this.cnForm.value.reason + '\n ' +
-          'Effect: ' + this.cnForm.value.effect + '\n ' +
-          'Opisaniya: ' + this.cnForm.value.desc + '\n ' +
-          'Nachalo: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
+            ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' + this.requestType + '\n' +
+            ' (' + this.cnForm.value.AddOrCor + ') ' +'\n' +
+            ' ' + this.cnForm.value.problem + '\n ' +
+            'Причина: ' + this.cnForm.value.reason + '\n ' +
+            'Эффект: ' + this.cnForm.value.effect + '\n ' +
+            'Описание: ' + this.cnForm.value.desc + '\n ' +
+            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+            'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+            'Отправил: ' + this.user?.username
         }
       } else {
-        if(this.cnForm.value.AddOrCor == (null || undefined)) {
+        if (this.cnForm.value.AddOrCor == (null || undefined)) {
           this.SmsTextBody =
-          ' ' + this.cnForm.value.level + ' ' +this.requestType + '\n' +
-          ' ' + this.cnForm.value.problem + '\n ' +
-          'Prichina: ' + this.cnForm.value.reason + '\n ' +
-          'Effect: ' + this.cnForm.value.effect + '\n ' +
-          'Opisaniya: ' + this.cnForm.value.desc + '\n ' +
-          'Nachalo: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
+            ' ' + this.cnForm.value.level + ' ' + this.requestType + '\n' +
+            ' ' + this.cnForm.value.problem + '\n ' +
+            'Причина: ' + this.cnForm.value.reason + '\n ' +
+            'Эффект: ' + this.cnForm.value.effect + '\n ' +
+            'Описание: ' + this.cnForm.value.desc + '\n ' +
+            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+            'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+            'Отправил: ' + this.user?.username
         } else {
           this.SmsTextBody =
-          ' ' + this.cnForm.value.level + ' ' +this.requestType + '\n' +
-          ' (' + this.cnForm.value.AddOrCor + ') '
-          ' ' + this.cnForm.value.problem + '\n ' +
-          'Prichina: ' + this.cnForm.value.reason + '\n ' +
-          'Effect: ' + this.cnForm.value.effect + '\n ' +
-          'Opisaniya: ' + this.cnForm.value.desc + '\n ' +
-          'Nachalo: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-          'Konec: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-          'Otpravil: ' + this.user?.username
+            ' ' + this.cnForm.value.level + ' ' + this.requestType + '\n' +
+            ' (' + this.cnForm.value.AddOrCor + ') ' +'\n' +
+            ' ' + this.cnForm.value.problem + '\n ' + '\n' +
+            'Причина: ' + this.cnForm.value.reason + '\n ' +
+            'Эффект: ' + this.cnForm.value.effect + '\n ' +
+            'Описание: ' + this.cnForm.value.desc + '\n ' +
+            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+            'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+            'Отправил: ' + this.user?.username
         }
       }
     }
@@ -275,12 +321,14 @@ export class CnComponent implements OnInit {
       'sms_text': this.SmsTextBody
     }
 
-    if(this.cnForm.value.region != (null || undefined)) {
+    if (this.cnForm.value.region != (null || undefined || '')) {
       this.smsBody.region = [this.cnForm.value.region]
+    } else if (this.cnForm.value.region != '') {
+
     }
   }
 
-  createData() {
+  onSubmit() {
     this.tableSendBody()
 
     this.authService.postData(this.tableBody)
@@ -290,21 +338,7 @@ export class CnComponent implements OnInit {
   }
 
   onSubmitButtonProblem(smsType: string) {
-    this.requestType = smsType
 
-    this.smsSendBody()
-    
-    this.authService.sendSms(this.smsBody)
-      .subscribe(res => {
-        console.log(res);
-        this.snackBar.open('Success', '', { duration: 10000 })
-      }, error => {
-        console.log(error);
-        this.snackBar.open(error, '', { duration: 10000 })
-      })
-  }
-
-  onSubmitButtonUpdate(smsType: string) {
     this.requestType = smsType
 
     this.smsSendBody()

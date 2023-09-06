@@ -1,22 +1,21 @@
 <div class="container" *ngIf="Loaded == true">
-  <mat-grid-list cols="4" rowHeight="100px">
-    <mat-grid-tile colspan="2">
-      <button mat-raised-button color="primary" (click)="onCN()">Send CN message</button>
-      <button mat-raised-button color="primary" (click)="onRN()" style="margin-left: 15px;">Send RN message</button>
-      <button mat-raised-button color="primary" (click)="addNumber()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Add Phone number</button>
-      <button mat-raised-button color="primary" (click)="exportXlsx()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Export to Xlsx</button>
+  <mat-grid-list cols="10" rowHeight="100px">
+    <mat-grid-tile colspan="6">
+      <button mat-raised-button color="primary" (click)="onCN()">Создать CN шаблон</button>
+      <button mat-raised-button color="primary" (click)="onRN()" style="margin-left: 15px;">Создать RN шаблон</button>
+      <button mat-raised-button color="primary" (click)="addNumber()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Добавить получателя</button>
+      <button mat-raised-button color="primary" (click)="exportXlsx()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Экспорт таблицы</button>
     </mat-grid-tile>
   </mat-grid-list>
   <mat-divider></mat-divider>
 
-  <h1 style="margin-left: 50px; margin-top: 40px;">The Open Cases</h1>
+  <h1 style="margin-left: 50px; margin-top: 40px;">Открытые сообщения</h1>
 
   <mat-form-field style="margin-left: 50px;" appearance="fill" *ngFor="let selectableFilter of selectableFilters">
     <mat-label>{{ selectableFilter.name }}</mat-label>
     <mat-select
       [(value)]="selectableFilter.defaultValue"
-      (selectionChange)="applySelectableFilter($event, selectableFilter)"
-    >
+      (selectionChange)="applySelectableFilter($event, selectableFilter)">
       <mat-option *ngFor="let op of selectableFilter.options" [value]="op">
         {{ op }}
       </mat-option>

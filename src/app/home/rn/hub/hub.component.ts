@@ -115,7 +115,7 @@ export class HubComponent implements OnInit {
       'category': [null],
       'powerOffTime': [null],
       'hubBlockTime': [null],
-      'mw_link' : [null],
+      'mw_link': [null],
       'mw_equipment': [null],
       'mw_vendor': [null],
       'bts_vendor': [null],
@@ -158,7 +158,16 @@ export class HubComponent implements OnInit {
             'informed': [result['informed']],
             'category': [result['category_for_hub']],
             'powerOffTime': [formatDate(result['power_off_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            'hubBlockTime': [formatDate(result['sector_block_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required]
+            'hubBlockTime': [formatDate(result['sector_block_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
+
+            'mw_link': [result['mw_link']],
+            'mw_equipment': [result['mw_equipment']],
+            'mw_vendor': [result['mw_vendor']],
+            'bts_vendor': [result['bts_vendor']],
+            // 'battery_life_time': [result['battery_life_time']],
+            'lowBatteryTime': [[formatDate(result['power_off_time'], 'yyyy-MM-ddTHH:mm', 'en')]],
+            'dg_start_time': [[formatDate(result['dg_start_time'], 'yyyy-MM-ddTHH:mm', 'en')]],
+
           })
         })
     }
@@ -187,14 +196,14 @@ export class HubComponent implements OnInit {
       'influence': this.hubForm.value.effect,
       'sender': this.user?.username,
 
-      'mw_link' : this.hubForm.value.mw_link,
+      'mw_link': this.hubForm.value.mw_link,
       'mw_equipment': this.hubForm.value.mw_equipment,
       'mw_vendor': this.hubForm.value.mw_vendor,
       'bts_vendor': this.hubForm.value.bts_vendor,
-      'battery_life_time': this.hubForm.value.battery_life_time,
+      // 'battery_life_time': this.hubForm.value.battery_life_time,
       'lowBatteryTime': this.hubForm.value.lowBatteryTime,
       'dg_start_time': this.hubForm.value.dg_start_time,
-      
+
     }
   }
 
@@ -202,91 +211,91 @@ export class HubComponent implements OnInit {
     this.criteria = this.storageService.getNotification(this.hubForm.value.level)
     this.criteria_list = this.criteria?.concat(this.hubForm.value.region)
 
-    if(this.requestType == 'Problem') {
-      if(this.hubForm.value.categories_report == 'ПР') {
-        if(this.hubForm.value.AddOrCor == (undefined || null)) {
+    if (this.requestType == 'Problem') {
+      if (this.hubForm.value.categories_report == 'ПР') {
+        if (this.hubForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-        ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-        ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
-        'Prichina: ' + this.hubForm.value.reason + '\n ' +
-        'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
-        'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-        'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-        'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-        'Informirovan: ' + this.hubForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username;
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            'Prichina: ' + this.hubForm.value.reason + '\n ' +
+            'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
+            'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+            'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+            'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+            'Informirovan: ' + this.hubForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username;
         } else {
           this.SmsTextBody =
-        ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-        ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
-        'Prichina: ' + this.hubForm.value.reason + '\n ' +
-        'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
-        'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-        'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-        'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-        'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username;
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            'Prichina: ' + this.hubForm.value.reason + '\n ' +
+            'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
+            'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+            'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+            'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+            'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username;
         }
       } else {
         this.SmsTextBody =
-        ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-        ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
-        'Prichina: ' + this.hubForm.value.reason + '\n ' +
-        'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
-        'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-        'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-        'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-        'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username;
+          ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
+          ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+          'Prichina: ' + this.hubForm.value.reason + '\n ' +
+          'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
+          'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+          'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+          'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+          'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
+          'Otpravil: ' + this.user?.username;
       }
     } else {
-      if(this.hubForm.value.categories_report == 'ПР') {
-        if(this.hubForm.value.AddOrCor == (undefined || null)) {
+      if (this.hubForm.value.categories_report == 'ПР') {
+        if (this.hubForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-        ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-        ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
-        'Prichina: ' + this.hubForm.value.reason + '\n ' +
-        'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
-        'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-        'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-        'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-        'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username;
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            'Prichina: ' + this.hubForm.value.reason + '\n ' +
+            'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
+            'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+            'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+            'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+            'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username;
         } else {
           this.SmsTextBody =
-        ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-        ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
-        'Prichina: ' + this.hubForm.value.reason + '\n ' +
-        'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
-        'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-        'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-        'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-        'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username;
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            'Prichina: ' + this.hubForm.value.reason + '\n ' +
+            'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
+            'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+            'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+            'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+            'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username;
         }
       } else {
-        if(this.hubForm.value.AddOrCor == (null || undefined)) {
+        if (this.hubForm.value.AddOrCor == (null || undefined)) {
           this.SmsTextBody =
-        ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-        ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
-        'Prichina: ' + this.hubForm.value.reason + '\n ' +
-        'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
-        'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-        'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-        'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-        'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username;
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            'Prichina: ' + this.hubForm.value.reason + '\n ' +
+            'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
+            'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+            'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+            'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+            'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username;
         } else {
           this.SmsTextBody =
-        ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-        ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
-        'Prichina: ' + this.hubForm.value.reason + '\n ' +
-        'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
-        'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-        'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-        'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-        'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
-        'Otpravil: ' + this.user?.username;
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            'Prichina: ' + this.hubForm.value.reason + '\n ' +
+            'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
+            'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+            'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+            'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+            'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
+            'Otpravil: ' + this.user?.username;
         }
       }
     }
@@ -299,7 +308,7 @@ export class HubComponent implements OnInit {
       'sms_text': this.SmsTextBody
     }
 
-    if(this.hubForm.value.region != (null || undefined)) {
+    if (this.hubForm.value.region != (null || undefined)) {
       this.smsBody.region = [this.hubForm.value.region]
     }
 
@@ -313,6 +322,8 @@ export class HubComponent implements OnInit {
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
       .subscribe((res) => {
         alert('Updated')
+        console.log(res);
+        
       })
   }
 
@@ -327,7 +338,7 @@ export class HubComponent implements OnInit {
 
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
-  
+
     // 2 Body
     this.smsSendBody()
 
