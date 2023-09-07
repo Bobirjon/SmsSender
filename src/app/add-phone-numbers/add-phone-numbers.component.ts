@@ -103,10 +103,6 @@ export class AddPhoneNumbersComponent implements OnInit {
 
   onSubmit() {
 
-    if (this.AddPhoneNumber.value.region != null || undefined) {
-      this.dataSend?.push(this.AddPhoneNumber.value.region)
-    };
-
     this.dataSend = {
       'name': this.AddPhoneNumber.value.name,
       'tel_number': this.AddPhoneNumber.value.number,
@@ -115,10 +111,14 @@ export class AddPhoneNumbersComponent implements OnInit {
       'notification': this.AddPhoneNumber.value.notification,
     }
 
+    if(this.AddPhoneNumber.value.region != null || this.AddPhoneNumber.value.region != undefined) {
+      this.dataSend.region = this.AddPhoneNumber.value.region
+    }
+
     this.authService.postReceiverData(this.dataSend)
       .subscribe(res => {
         console.log(res);
-        console.log(res + ' data');
+        window.location.reload()
       })
   }
 

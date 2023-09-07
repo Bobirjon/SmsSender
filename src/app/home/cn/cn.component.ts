@@ -111,15 +111,19 @@ export class CnComponent implements OnInit {
     //is it new request or update mode
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
-    } else { 
+    } else {
+      let isDisabled : any
       this.newForm = false
       this.isNewForm(this.newForm)
+      
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          if(this.cnForm.value.category == 'Core') {
-            console.log('disable region');
-          
+          if(result['category_for_core'] == 'Core') {
+            isDisabled = true
+          } else {
+            isDisabled = false
           }
+          console.log();
           this.cnForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -130,7 +134,7 @@ export class CnComponent implements OnInit {
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [(result['end_time'], 'yyyy-MM-ddTHH:mm', '')],
-            'region': [result['region']],
+            'region': [{value: result['region'], disabled: isDisabled}],
             'effect': [result['influence']],
             'category': [result['category_for_core']],
             'informed': [result['informed']],
@@ -349,9 +353,6 @@ export class CnComponent implements OnInit {
 
   onSubmitButtonProblem(smsType: string) {
 
-    console.log(this.newForm);
-    
-    
     if(this.newForm == false) {
       this.updateData()
     } else {
