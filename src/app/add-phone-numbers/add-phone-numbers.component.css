@@ -20,6 +20,10 @@
     padding: 6px;
 }
 
+.forNotification {
+    display: none;
+}
+
 .mat-column-name {
     flex: 0 0 auto !important;
     width: auto !important;

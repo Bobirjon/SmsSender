@@ -85,7 +85,6 @@ export class AddPhoneNumbersComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-
   createForm() {
     this.AddPhoneNumber = this.formBuilder.group({
       'name': [null],

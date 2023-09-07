@@ -71,7 +71,6 @@ export class CnComponent implements OnInit {
     { value: 'Khorezm', viewValue: 'Khorezm' },
   ];
 
-
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -96,13 +95,12 @@ export class CnComponent implements OnInit {
       'effect': ['', Validators.required],
       'category': ['', Validators.required],
       'informed': ['', Validators.required],
-      'desc': ['', Validators.required],
+      'desc': [''],
       'sender': ['']
     })
   }
 
   ngOnInit(): void {
-
     // get Current user
     this.authService.getUser()
       .subscribe(result => {
@@ -113,17 +111,25 @@ export class CnComponent implements OnInit {
       this.newForm = true
     } else {
       let isDisabled : any
+      let endTimeForUpdate: any
       this.newForm = false
       this.isNewForm(this.newForm)
       
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          if(result['category_for_core'] == 'Core') {
+          if(result['category_for_core'] == 'Core' || result['category_for_core'] == 'Roaming' || result['category_for_core'] == 'GPRS') {
             isDisabled = true
           } else {
             isDisabled = false
           }
-          console.log();
+          if(result['end_time'] == null){
+            endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
+          } else {
+            endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
+          }
+          console.log(result['end_time']);
+          
+          
           this.cnForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -133,8 +139,9 @@ export class CnComponent implements OnInit {
             'reason': [result['reason'], Validators.required],
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            'endTime': [(result['end_time'], 'yyyy-MM-ddTHH:mm', '')],
-            'region': [{value: result['region'], disabled: isDisabled}],
+            // 'endTime': [(result['end_time'], 'yyyy-MM-ddTHH:mm', '')],
+             'endTime': [endTimeForUpdate],
+            'region': [{value: result['region'], disabled: isDisabled}, Validators.required],
             'effect': [result['influence']],
             'category': [result['category_for_core']],
             'informed': [result['informed']],
@@ -152,69 +159,37 @@ export class CnComponent implements OnInit {
   }
 
   tableSendBody() {
-
-    if (this.cnForm.value.endTime == '') {
-      this.tableBody = {
-        'type': 'CORE',
-        'level': this.cnForm.value.level,
-        'category': this.cnForm.value.categories_report,
-        'responsible_area': this.cnForm.value.responsible_report,
-        'problem': this.cnForm.value.problem,
-        'reason': this.cnForm.value.reason,
-        'effect': this.cnForm.value.effect_option,
-        'start_time': this.cnForm.value.startTime,
-        'region': this.cnForm.value.region,
-        'category_for_core': this.cnForm.value.category,
-        'description': this.cnForm.value.desc,
-        'informed': this.cnForm.value.informed,
-        'influence': this.cnForm.value.effect,
-        'sender': this.user?.username
-      }
-    } else if (this.cnForm.value.endTime == null) {
-      this.tableBody = {
-        'type': 'CORE',
-        'level': this.cnForm.value.level,
-        'category': this.cnForm.value.categories_report,
-        'responsible_area': this.cnForm.value.responsible_report,
-        'problem': this.cnForm.value.problem,
-        'reason': this.cnForm.value.reason,
-        'effect': this.cnForm.value.effect_option,
-        'start_time': this.cnForm.value.startTime,
-        'region': this.cnForm.value.region,
-        'category_for_core': this.cnForm.value.category,
-        'description': this.cnForm.value.desc,
-        'informed': this.cnForm.value.informed,
-        'influence': this.cnForm.value.effect,
-        'sender': this.user?.username
-      }
+    this.tableBody = {
+      'type': 'CORE',
+      'level': this.cnForm.value.level,
+      'category': this.cnForm.value.categories_report,
+      'responsible_area': this.cnForm.value.responsible_report,
+      'problem': this.cnForm.value.problem,
+      'reason': this.cnForm.value.reason,
+      'effect': this.cnForm.value.effect_option,
+      'start_time': this.cnForm.value.startTime,
+      // 'end_time': this.cnForm.value.endTime,
+      // 'region': this.cnForm.value.region,
+      'category_for_core': this.cnForm.value.category,
+      'description': this.cnForm.value.desc,
+      'informed': this.cnForm.value.informed,
+      'influence': this.cnForm.value.effect,
+      'sender': this.user?.first_name + ' ' + this.user?.last_name
     }
-    else {
-      console.log('yes time');
 
-      this.tableBody = {
-        'type': 'CORE',
-        'level': this.cnForm.value.level,
-        'category': this.cnForm.value.categories_report,
-        'responsible_area': this.cnForm.value.responsible_report,
-        'problem': this.cnForm.value.problem,
-        'reason': this.cnForm.value.reason,
-        'effect': this.cnForm.value.effect_option,
-        'start_time': this.cnForm.value.startTime,
-        'end_time': this.cnForm.value.endTime,
-        'region': this.cnForm.value.region,
-        'category_for_core': this.cnForm.value.category,
-        'description': this.cnForm.value.desc,
-        'informed': this.cnForm.value.informed,
-        'influence': this.cnForm.value.effect,
-        'sender': this.user?.username
-      }
-    }
+    if(this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp') ){
+      console.log('reigon is not empty');
+      this.tableBody.region = this.cnForm.value.region
+    } 
+    if (this.cnForm.value.endTime !== '') {
+      this.tableBody.end_time = this.cnForm.value.endTime
+    } 
   }
 
   updateData() {
 
     this.tableSendBody()
-
+    
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
       .subscribe((result) => {
         console.log(result);
@@ -239,7 +214,7 @@ export class CnComponent implements OnInit {
             'Эффект: ' + this.cnForm.value.effect + '\n ' +
             'Оповещен: ' + this.cnForm.value.informed + '\n ' +
             'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.username
+            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         } else {
           this.SmsTextBody =
             ' ' + this.cnForm.value.level.replace('A', 'П') + ' Проблема: ' + '\n' +
@@ -249,7 +224,7 @@ export class CnComponent implements OnInit {
             'Эффект: ' + this.cnForm.value.effect + '\n ' +
             'Оповещен: ' + this.cnForm.value.informed + '\n ' +
             'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.username
+            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         }
       } else {
         if (this.cnForm.value.AddOrCor == (undefined || null)) {
@@ -260,7 +235,7 @@ export class CnComponent implements OnInit {
             'Эффект: ' + this.cnForm.value.effect + '\n ' +
             'Оповещен: ' + this.cnForm.value.informed + '\n ' +
             'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.username
+            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         } else {
           this.SmsTextBody =
             ' ' + this.cnForm.value.level + ' Проблема: ' + '\n' +
@@ -270,7 +245,7 @@ export class CnComponent implements OnInit {
             'Эффект: ' + this.cnForm.value.effect + '\n ' +
             'Оповещен: ' + this.cnForm.value.informed + '\n ' +
             'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.username
+            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         }
       }
     } else {
@@ -284,7 +259,7 @@ export class CnComponent implements OnInit {
             'Описание: ' + this.cnForm.value.desc + '\n ' +
             'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
             'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.username
+            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         } else {
           this.SmsTextBody =
             ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' + this.requestType + '\n' +
@@ -295,7 +270,7 @@ export class CnComponent implements OnInit {
             'Описание: ' + this.cnForm.value.desc + '\n ' +
             'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
             'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.username
+            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         }
       } else {
         if (this.cnForm.value.AddOrCor == (null || undefined)) {
@@ -307,7 +282,7 @@ export class CnComponent implements OnInit {
             'Описание: ' + this.cnForm.value.desc + '\n ' +
             'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
             'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.username
+            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         } else {
           this.SmsTextBody =
             ' ' + this.cnForm.value.level + ' ' + this.requestType + '\n' +
@@ -318,7 +293,7 @@ export class CnComponent implements OnInit {
             'Описание: ' + this.cnForm.value.desc + '\n ' +
             'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
             'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.username
+            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         }
       }
     }
@@ -343,6 +318,7 @@ export class CnComponent implements OnInit {
   }
 
   onSubmit() {
+    
     this.tableSendBody()
 
     this.authService.postData(this.tableBody)

@@ -60,7 +60,7 @@
                             <p>{{'Эффект: ' + cnForm.value.effect}}</p>
                             <p>{{'Оповещен: ' + cnForm.value.informed}}</p>
                             <p>{{'Начало: ' + cnForm.value.startTime.replace('T', ' ')}}</p>
-                            <p>{{'Отправил: ' + user?.username}}</p>
+                            <p>{{'Отправил: ' + user?.first_name + ' ' + user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
@@ -93,7 +93,7 @@
                             <p>{{'Описание: ' + cnForm.value.desc}}</p>
                             <p>{{'Начало: ' + cnForm.value.startTime.replace("T", " ")}}</p>
                             <p>{{'Конец: ' + cnForm.value.endTime.replace("T", " ")}}</p>
-                            <p>{{'Отправил: ' + user?.username}}</p>
+                            <p>{{'Отправил: ' + user?.first_name + ' ' + user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
@@ -126,7 +126,7 @@
                             <p>{{'Описание: ' + cnForm.value.desc}}</p>
                             <p>{{'Начало: ' + cnForm.value.startTime.replace("T", " ")}}</p>
                             <p>{{'Конец: ' + cnForm.value.endTime.replace("T", " ")}}</p>
-                            <p>{{'Отправил: ' + user?.username}}</p>
+                            <p>{{'Отправил: ' + user?.first_name + ' ' + user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
