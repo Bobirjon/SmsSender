@@ -305,14 +305,21 @@ export class CnComponent implements OnInit {
 
     if (this.cnForm.value.category == ('Power' ) || this.cnForm.value.category == ('High Temp')) {
       this.smsBody.notification = ['Power/HighTemp']
+      this.smsBody.region = [this.cnForm.value.region]
     }  
     else {
       this.smsBody.notification = [this.cnForm.value.category]
     }
 
-    if(this.cnForm.value.region != '') {
-      this.smsBody.region = [this.cnForm.value.region]
-    }
+    // if(this.cnForm.value.region != '') {
+    //   console.log('region not empty');
+      
+    //   this.smsBody.region = [this.cnForm.value.region]
+    // } else if (this.cnForm.value.region == undefined) {
+    //   console.log('region not undefined');
+    // } else if (this.cnForm.value.region == null) {
+    //   console.log('region not null');
+    // }
 
 
   }
@@ -346,5 +353,8 @@ export class CnComponent implements OnInit {
         console.log(error);
         this.snackBar.open(error, '', { duration: 10000 })
       })
+
+    console.log(this.smsBody);
+    
   }
 }
