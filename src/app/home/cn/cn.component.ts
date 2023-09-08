@@ -127,10 +127,7 @@ export class CnComponent implements OnInit {
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
           }
-          console.log(result['end_time']);
-          
-          
-          this.cnForm = this.formBuilder.group({
+         this.cnForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
             'categories_report': [result['category'], Validators.required],
@@ -178,9 +175,10 @@ export class CnComponent implements OnInit {
     }
 
     if(this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp') ){
-      console.log('reigon is not empty');
       this.tableBody.region = this.cnForm.value.region
-    } 
+    } else {
+      this.tableBody.region = ''
+    }
     if (this.cnForm.value.endTime !== '') {
       this.tableBody.end_time = this.cnForm.value.endTime
     } 
@@ -199,8 +197,6 @@ export class CnComponent implements OnInit {
 
       })
   }
-
-
 
   smsSendBody() {
 
@@ -303,6 +299,8 @@ export class CnComponent implements OnInit {
       'network': ['CN'],
       'criteria': [this.cnForm.value.level],
       'sms_text': this.SmsTextBody
+      // 'region'
+      // 'notification'
     }
 
     if (this.cnForm.value.category == ('Power' ) || this.cnForm.value.category == ('High Temp')) {
@@ -312,9 +310,11 @@ export class CnComponent implements OnInit {
       this.smsBody.notification = [this.cnForm.value.category]
     }
 
-    if (this.cnForm.value.region != (null || undefined || '')) {
+    if(this.cnForm.value.region != '') {
       this.smsBody.region = [this.cnForm.value.region]
     }
+
+
   }
 
   onSubmit() {
