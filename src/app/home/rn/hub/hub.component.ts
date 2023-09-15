@@ -45,10 +45,6 @@ export class HubComponent implements OnInit {
     { value: 'Эксплуатация', viewValue: 'Эксплуатация' },
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
-  effect_option: { value: string; viewValue: string }[] = [
-    { value: 'С влиянием', viewValue: 'С влиянием' },
-    { value: 'Без влияния', viewValue: 'Без влияния' }
-  ];
   generator: { value: string; viewValue: string }[] = [
     { value: 'FG', viewValue: 'FG' },
     { value: '', viewValue: 'Empty' }
@@ -98,27 +94,27 @@ export class HubComponent implements OnInit {
   createForm() {
     this.hubForm = this.formBuilder.group({
       'AddOrCor': [null],
-      'level': [null, Validators.required],
-      'categories_report': [null, Validators.required],
-      'responsible_report': [null, Validators.required],
-      'problem': [null, Validators.required],
-      'reason': [null, Validators.required],
-      'effect_option': ['С влиянием', Validators.required],
-      'startTime': [null, Validators.required],
-      'endTime': [null],
-      'region': [null, Validators.required],
-      'hubSite': [null],
-      'generator': [null],
-      'desc': [null],
-      'sender': [null],
-      'informed': [null],
-      'category': [null],
-      'powerOffTime': [null],
-      'hubBlockTime': [null],
-      'mw_link': [null],
-      'mw_equipment': [null],
-      'mw_vendor': [null],
-      'bts_vendor': [null],
+      'level': ['', Validators.required],
+      'categories_report': ['', Validators.required],
+      'responsible_report': ['', Validators.required],
+      'problem': ['', Validators.required],
+      'reason': ['', Validators.required],
+      'startTime': ['', Validators.required],
+      'endTime': [''],
+      'region': ['', Validators.required],
+      'hubSite': [''],
+      'effectedSites': [''],
+      'generator': [''],
+      'desc': [''],
+      'sender': [''],
+      'informed': [''],
+      'category': [''],
+      'powerOffTime': [''],
+      'hubBlockTime': [''],
+      'mw_link': [''],
+      'mw_equipment': [''],
+      'mw_vendor': [''],
+      'bts_vendor': [''],
       'battery_life_time': [null],
       'lowBatteryTime': [null],
       'dg_start_time': [null],
@@ -131,7 +127,6 @@ export class HubComponent implements OnInit {
       .subscribe(result => {
         this.user = result
       })
-
 
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
@@ -146,7 +141,6 @@ export class HubComponent implements OnInit {
             'responsible_report': [result['responsible_area'], Validators.required],
             'problem': [result['problem'], Validators.required],
             'reason': [result['reason'], Validators.required],
-            'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [result['end_time'], Validators.required],
             'region': [result['region'], Validators.required],
@@ -173,11 +167,6 @@ export class HubComponent implements OnInit {
     }
   }
 
-  previewButton() {
-    this.preview = !this.preview
-    this.previewResheniya = !this.previewResheniya
-  }
-
   tableSendBody() {
     this.tableBody = {
       'type': 'HUB',
@@ -186,9 +175,9 @@ export class HubComponent implements OnInit {
       'responsible_area': this.hubForm.value.responsible_report,
       'problem': this.hubForm.value.problem,
       'reason': this.hubForm.value.reason,
-      'effect': this.hubForm.value.effect_option,
+      'effect': 'С влиянием',
       'start_time': this.hubForm.value.startTime,
-      'end_time': this.hubForm.value.endTime,
+      // 'end_time': this.hubForm.value.endTime,
       'region': this.hubForm.value.region,
       'category_for_hub': this.hubForm.value.category,
       'description': this.hubForm.value.desc,
@@ -200,23 +189,25 @@ export class HubComponent implements OnInit {
       'mw_equipment': this.hubForm.value.mw_equipment,
       'mw_vendor': this.hubForm.value.mw_vendor,
       'bts_vendor': this.hubForm.value.bts_vendor,
-      // 'battery_life_time': this.hubForm.value.battery_life_time,
+      'battery_life_time': this.hubForm.value.battery_life_time,
       'lowBatteryTime': this.hubForm.value.lowBatteryTime,
       'dg_start_time': this.hubForm.value.dg_start_time,
 
     }
+
+    if (this.hubForm.value.endTime !== '') {
+      this.tableBody.end_time = this.hubForm.value.endTime
+    } 
   }
 
   smsSendBody() {
-    this.criteria = this.storageService.getNotification(this.hubForm.value.level)
-    this.criteria_list = this.criteria?.concat(this.hubForm.value.region)
-
+   
     if (this.requestType == 'Problem') {
       if (this.hubForm.value.categories_report == 'ПР') {
         if (this.hubForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
             'Prichina: ' + this.hubForm.value.reason + '\n ' +
             'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
             'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -226,8 +217,8 @@ export class HubComponent implements OnInit {
             'Otpravil: ' + this.user?.username;
         } else {
           this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
             'Prichina: ' + this.hubForm.value.reason + '\n ' +
             'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
             'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -237,9 +228,10 @@ export class HubComponent implements OnInit {
             'Otpravil: ' + this.user?.username;
         }
       } else {
-        this.SmsTextBody =
-          ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-          ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+        if(this.hubForm.value.AddOrCor == (undefined || null)) {
+          this.SmsTextBody =
+          ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт: \n' + this.requestType +
+          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
           'Prichina: ' + this.hubForm.value.reason + '\n ' +
           'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
           'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -247,13 +239,25 @@ export class HubComponent implements OnInit {
           'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
           'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
           'Otpravil: ' + this.user?.username;
+        } else {
+          this.SmsTextBody =
+          ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт: \n' + this.requestType +
+          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
+          'Prichina: ' + this.hubForm.value.reason + '\n ' +
+          'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
+          'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+          'Vremya blokirovki sektorov: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+          'Nachalo: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+          'Opoveschen: ' + this.hubForm.value.informed + '\n ' +
+          'Otpravil: ' + this.user?.username;
+        }
       }
     } else {
       if (this.hubForm.value.categories_report == 'ПР') {
         if (this.hubForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
             'Prichina: ' + this.hubForm.value.reason + '\n ' +
             'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
             'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -263,8 +267,8 @@ export class HubComponent implements OnInit {
             'Otpravil: ' + this.user?.username;
         } else {
           this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
             'Prichina: ' + this.hubForm.value.reason + '\n ' +
             'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
             'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -276,8 +280,8 @@ export class HubComponent implements OnInit {
       } else {
         if (this.hubForm.value.AddOrCor == (null || undefined)) {
           this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
             'Prichina: ' + this.hubForm.value.reason + '\n ' +
             'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
             'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -287,8 +291,8 @@ export class HubComponent implements OnInit {
             'Otpravil: ' + this.user?.username;
         } else {
           this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' HUB sayt: \n' + this.requestType +
-            ' ' + this.hubForm.value.problem + ' saytov ne rabotayut v ' + this.hubForm.value.region + '\n ' +
+            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт: \n' + this.requestType +
+            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
             'Prichina: ' + this.hubForm.value.reason + '\n ' +
             'Effekt: Poterya pokrytiya i kachestva svyazi v ' + this.hubForm.value.region + '\n ' +
             'Vremya otklyucheniya EP: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -305,13 +309,9 @@ export class HubComponent implements OnInit {
       'network': ['RN'],
       'criteria': [this.hubForm.value.level],
       'notification': [this.hubForm.value.category],
-      'sms_text': this.SmsTextBody
+      'sms_text': this.SmsTextBody,
+      'region' : [this.hubForm.value.region]
     }
-
-    if (this.hubForm.value.region != (null || undefined)) {
-      this.smsBody.region = [this.hubForm.value.region]
-    }
-
 
   }
 
@@ -337,23 +337,13 @@ export class HubComponent implements OnInit {
   }
 
   onSubmitButtonProblem(smsType: string) {
+    if(this.newForm == false) {
+      this.updateData()
+    } else {
+      this.createData()
+    }
+
     this.requestType = smsType
-
-    // 2 Body
-    this.smsSendBody()
-
-    this.authService.sendSms(this.smsBody)
-      .subscribe(result => {
-        console.log(result);
-        this.snackBar.open('SMS Sended Successfully', '', { duration: 10000 })
-      }, error => {
-        this.snackBar.open(error.message, '', { duration: 10000 })
-      })
-  }
-
-  onSubmitButtonUpdate(smsType: string) {
-    this.requestType = smsType
-
     this.smsSendBody()
 
     this.authService.sendSms(this.smsBody)

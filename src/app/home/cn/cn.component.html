@@ -65,7 +65,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Problem')" type="submit"
-                                [disabled]="cnForm.value.startTime == '' || cnForm.value.endTime != ''">
+                                [disabled]="cnForm.invalid">
                                 Отправить SMS
                             </button>
                         </mat-card-actions>
@@ -98,7 +98,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решения')" type="submit"
-                                [disabled]="cnForm.value.startTime == '' || cnForm.value.endTime == ''">
+                                [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
                                 Отправить SMS
                             </button>
                         </mat-card-actions>
@@ -131,7 +131,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
-                                [disabled]="cnForm.value.startTime == '' || cnForm.value.endTime == ''">
+                                [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
                                 Отправить SMS
                             </button>
                         </mat-card-actions>

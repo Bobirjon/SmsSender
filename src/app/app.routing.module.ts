@@ -12,26 +12,40 @@ import { AddPhoneNumbersComponent } from "./add-phone-numbers/add-phone-numbers.
 import { RoleGuardGuard } from "./role-guard.guard";
 
 const routes: Routes = [
-    {path: '', redirectTo: '/home', pathMatch: "full"},
-    {path: 'login', component: LoginComponent},
-    {path: 'home', component: HomeComponent, 
-    children: [
-        {path: 'cn', component: CnComponent},
-        {path: 'rn', component: RnComponent, children: [
-            {path: 'bsc', component: BscComponent},
-            {path: 'chronic', component: ChronicComponent},
-            {path: 'hub', component: HubComponent}
-        ]},
-        {path: 'HUB/:id', component: HubComponent},
-        {path: 'CORE/:id', component: CnComponent},
-        {path: 'CHRONIC/:id', component: ChronicComponent},
-        {path: 'BSC/RNC/:id', component: BscComponent},], 
-    canActivate:[AuthGuard],
-    },
+    { path: '', redirectTo: '/home', pathMatch: "full" },
+    { path: 'login', component: LoginComponent },
+    // {path: 'home', component: HomeComponent, 
+    // children: [
+    //     {path: 'cn', component: CnComponent},
+    //     {path: 'rn', component: RnComponent, children: [
+    //         {path: 'bsc', component: BscComponent},
+    //         {path: 'chronic', component: ChronicComponent},
+    //         {path: 'hub', component: HubComponent}
+    //     ]},
+    //     {path: 'HUB/:id', component: HubComponent},
+    //     {path: 'CORE/:id', component: CnComponent},
+    //     {path: 'CHRONIC/:id', component: ChronicComponent},
+    //     {path: 'BSC/RNC/:id', component: BscComponent},], 
+    // canActivate:[AuthGuard],
+    // },
+    { path: 'home', component: HomeComponent },
+    { path: 'home/cn', component: CnComponent },
     {
-        path: 'add', 
-        component: AddPhoneNumbersComponent, 
-        canActivate:[AuthGuard, RoleGuardGuard],
+        path: 'home/rn', component: RnComponent, children: [
+            { path: 'bsc', component: BscComponent },
+            { path: 'chronic', component: ChronicComponent },
+            { path: 'hub', component: HubComponent }
+        ]
+    },
+    { path: 'home/HUB/:id', component: HubComponent },
+    { path: 'home/CORE/:id', component: CnComponent },
+    { path: 'home/CHRONIC/:id', component: ChronicComponent },
+    { path: 'home/BSC/RNC/:id', component: BscComponent },
+
+    {
+        path: 'add',
+        component: AddPhoneNumbersComponent,
+        canActivate: [AuthGuard, RoleGuardGuard],
         data: {
             expectedRoles: ['admin']
         }
@@ -39,8 +53,8 @@ const routes: Routes = [
 ]
 
 @NgModule({
-    imports:[RouterModule.forRoot(routes)],
-    exports:[RouterModule],
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule],
     providers: [AuthGuard]
 })
 export class AppRoutingModule {
