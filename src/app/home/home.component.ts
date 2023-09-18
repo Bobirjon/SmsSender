@@ -38,6 +38,8 @@ export class HomeComponent implements OnInit {
   user: any;
   hidden: any
   isAdmin = localStorage.getItem('role')
+  isRegister: any;
+  UserActive: boolean
 
 
   displayedColumnsNew: string[] = [
@@ -60,7 +62,7 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('table1sort') public table1sort: MatSort;
   @ViewChild('table2sort') public table2sort: MatSort;
-  levelSelect: string[] = ['All', 'A2', 'A3', 'A4', 'A5'];
+  levelSelect: string[] = ['All', 'A1', 'A2', 'A3', 'A4', 'A5'];
   typeSelect: string[] = ['All', 'CORE', 'RN']
   selectableFilters: any[] = []
 
@@ -111,6 +113,11 @@ export class HomeComponent implements OnInit {
 
         this.filterForAllCase()
 
+      }, error => {
+        this.isRegister = error.statusText
+        if(this.isRegister == 'Unauthorized'){
+          this.isRegisteredUser(false)
+        }
       })
     // Filtred data
     this.authService.getFilteredData()
@@ -125,6 +132,16 @@ export class HomeComponent implements OnInit {
 
         this.filterForOpenCase()
       })
+  }
+
+  isRegisteredUser(isRegistered: any) {
+    this.UserActive = isRegistered
+    console.log(this.UserActive);
+  }
+
+  isActiveUser() {
+    console.log(this.UserActive);
+    
   }
 
   filterForAllCase() {
@@ -216,6 +233,9 @@ export class HomeComponent implements OnInit {
     } else {
       this.Loaded = false
     }
+
+    console.log(this.isActiveUser());
+    
   }
 
   updateMessage(data: any): void {

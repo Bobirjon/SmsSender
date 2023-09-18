@@ -1,5 +1,4 @@
 import {HttpInterceptor, HttpRequest, HttpHandler} from '@angular/common/http';
-import { StorageService } from './storage.service';
 
 export class AuthInterceptorService implements HttpInterceptor {
 

@@ -63,7 +63,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit" 
-                                [disabled]="bscForm.value.startTime == '' || bscForm.value.endTime != ''">
+                                [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
                                 Отправить Сообщения 
                             </button>
                         </mat-card-actions>
@@ -93,7 +93,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit" 
-                                [disabled]="bscForm.value.startTime == '' || bscForm.value.endTime == ''">
+                                [disabled]="(bscForm.invalid) || bscForm.value.endTime==''">
                                 Отправить Сообщения
                             </button>
                         </mat-card-actions>

@@ -28,19 +28,19 @@ const routes: Routes = [
     //     {path: 'BSC/RNC/:id', component: BscComponent},], 
     // canActivate:[AuthGuard],
     // },
-    { path: 'home', component: HomeComponent },
-    { path: 'home/cn', component: CnComponent },
+    { path: 'home', component: HomeComponent, canActivate:[AuthGuard]  },
+    { path: 'home/cn', component: CnComponent , canActivate:[AuthGuard]},
     {
         path: 'home/rn', component: RnComponent, children: [
             { path: 'bsc', component: BscComponent },
             { path: 'chronic', component: ChronicComponent },
             { path: 'hub', component: HubComponent }
-        ]
+        ] , canActivate:[AuthGuard]
     },
-    { path: 'home/HUB/:id', component: HubComponent },
-    { path: 'home/CORE/:id', component: CnComponent },
-    { path: 'home/CHRONIC/:id', component: ChronicComponent },
-    { path: 'home/BSC/RNC/:id', component: BscComponent },
+    { path: 'home/HUB/:id', component: HubComponent, canActivate:[AuthGuard]  },
+    { path: 'home/CORE/:id', component: CnComponent  , canActivate:[AuthGuard]},
+    { path: 'home/CHRONIC/:id', component: ChronicComponent , canActivate:[AuthGuard] },
+    { path: 'home/BSC/RNC/:id', component: BscComponent , canActivate:[AuthGuard] },
 
     {
         path: 'add',

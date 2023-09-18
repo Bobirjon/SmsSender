@@ -28,6 +28,7 @@ export class CnComponent implements OnInit {
   criteriaArray: any
 
   level: { value: string; viewValue: string }[] = [
+    { value: 'A1', viewValue: 'A1' },
     { value: 'A2', viewValue: 'A2' },
     { value: 'A3', viewValue: 'A3' },
     { value: 'A4', viewValue: 'A4' },

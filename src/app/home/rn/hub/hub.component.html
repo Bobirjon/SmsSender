@@ -54,11 +54,13 @@
                             <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
                             <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
                             <p>{{'Начало: ' + hubForm.value.startTime.replace("T", " ")}}</p>
-                            <p>{{'Отправил: ' + user?.username}}</p>
+                            <p>{{ 'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Problem')" type="submit">Отправить Сообщения
+                                (click)="onSubmitButtonProblem('Проблема')" type="submit"
+                                [disabled]="hubForm.invalid || hubForm.value.endTime !==''">Отправить Сообщения
+
                             </button>
                         </mat-card-actions>
                     </mat-card>
@@ -69,7 +71,7 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A',
+                            <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level?.replace('A',
                                 'П') + ' Хаб сайт Решение:'}}</mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + '
                                 Хаб сайт Решение:'}}</mat-card-title>
@@ -80,16 +82,17 @@
                             <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
-                            <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
-                            <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
+                            <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime?.replace("T", " ")}}</p>
+                            <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime?.replace("T", " ")}}</p>
                             <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
-                            <p>{{'Начало: ' + hubForm.value.startTime.replace("T", " ")}}</p>
-                            <p>{{'Конец: ' + hubForm.value.endTime.replace("T", " ")}}</p>
-                            <p>{{'Отправил: ' + user?.username}}</p>
+                            <p>{{'Начало: ' + hubForm.value.startTime?.replace("T", " ")}}</p>
+                            <p>{{'Конец: ' + hubForm.value.endTime?.replace("T", " ")}}</p>
+                            <p>{{ 'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Reshenie')" type="submit">Отправить Сообщения
+                                (click)="onSubmitButtonProblem('Решение')" type="submit"
+                                [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">Отправить Сообщения
                             </button>
                         </mat-card-actions>
                     </mat-card>  
@@ -101,7 +104,7 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A',
+                            <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level?.replace('A',
                                 'П') + ' Хаб сайт Информационное:'}}</mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + '
                                 Хаб сайт Информационное::'}}</mat-card-title>
@@ -112,16 +115,17 @@
                             <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
-                            <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
-                            <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
+                            <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime?.replace("T", " ")}}</p>
+                            <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime?.replace("T", " ")}}</p>
                             <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
-                            <p>{{'Начало: ' + hubForm.value.startTime.replace("T", " ")}}</p>
-                            <p>{{'Конец: ' + hubForm.value.endTime.replace("T", " ")}}</p>
-                            <p>{{'Отправил: ' + user?.username}}</p>
+                            <p>{{'Начало: ' + hubForm.value.startTime?.replace("T", " ")}}</p>
+                            <p>{{'Конец: ' + hubForm.value.endTime?.replace("T", " ")}}</p>
+                            <p>{{ 'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Informacionnoe')" type="submit">
+                                (click)="onSubmitButtonProblem('Информационное')" type="submit"
+                                [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">
                                 Отправить Сообщения
                             </button>
                         </mat-card-actions>
@@ -175,7 +179,7 @@
              <!-- desc -->
              <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
-                    <mat-label>Причина</mat-label>
+                    <mat-label>Описание</mat-label>
                     <textarea matInput type="text" formControlName="desc"></textarea>
                 </mat-form-field>
             </mat-grid-tile>   
@@ -208,7 +212,7 @@
               <mat-grid-tile colspan="5">
                 <div class="margin-container">
                     <p>Время отключения ЭП</p>
-                    <input type="datetime-local" class="dateTime" name="startTime" formControlName="powerOffTime"
+                    <input type="datetime-local" class="dateTime" formControlName="powerOffTime"
                         min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
@@ -240,7 +244,7 @@
                 <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
                     (click)="updateData()">Обновить</button>
                 <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
-                    [disabled]="hubForm.invalid && newForm" (click)="createData()">Создать</button>
+                    [disabled]="hubForm.invalid" (click)="createData()">Создать</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="6">
                 <mat-chip-listbox formControlName="AddOrCor">
@@ -298,7 +302,7 @@
                     <mat-grid-tile colspan="3">
                         <div class="margin-container">
                             <p>low baterry ttime</p>
-                            <input type="datetime-local" class="dateTime" name="startTime"
+                            <input type="datetime-local" class="dateTime"
                                 formControlName="lowBatteryTime" min="2023-01-01T00:00"
                                 [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                         </div>

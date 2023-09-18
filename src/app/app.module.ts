@@ -37,6 +37,7 @@ import { HubComponent } from './home/rn/hub/hub.component';
 import { BscComponent } from './home/rn/bsc/bsc.component';
 import { StartComponent } from './home/start/start.component';
 import { AddPhoneNumbersComponent } from './add-phone-numbers/add-phone-numbers.component';
+import { AuthGuard } from './auth-guard.service';
 
 
 
@@ -80,7 +81,7 @@ import { AddPhoneNumbersComponent } from './add-phone-numbers/add-phone-numbers.
     MatProgressBarModule,
     MatExpansionModule,
   ],
-  providers: [
+  providers: [ AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
