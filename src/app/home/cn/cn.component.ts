@@ -37,6 +37,7 @@ export class CnComponent implements OnInit {
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
     { value: 'ЭС и Клим', viewValue: 'ЭС и Клим' },
+    { value: 'Провайдер', viewValue: 'Провайдер' },
     { value: 'ПР', viewValue: 'ПР' },
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];

@@ -65,7 +65,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Problem')" type="submit"
-                                [disabled]="cnForm.invalid">
+                                [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
                                 Отправить SMS
                             </button>
                         </mat-card-actions>
