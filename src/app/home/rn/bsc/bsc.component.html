@@ -66,6 +66,11 @@
                                 [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
                                 Отправить Сообщения 
                             </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="forSmsTesting()" type="submit" 
+                                [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
+                                TEST SMS 
+                            </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>
@@ -95,6 +100,11 @@
                                 (click)="onSubmitButtonProblem('Решение')" type="submit" 
                                 [disabled]="(bscForm.invalid) || bscForm.value.endTime==''">
                                 Отправить Сообщения
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="forSmsTesting()" type="submit" 
+                                [disabled]="bscForm.invalid || bscForm.value.endTime ==''">
+                                TEST SMS 
                             </button>
                         </mat-card-actions>
                     </mat-card>

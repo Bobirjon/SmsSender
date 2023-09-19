@@ -60,4 +60,8 @@ export class AuthService {
   deleteReceiver(id: number) {
     return this.http.delete((`${this.URLsender + 'smssender/receiver'}/${id}/`))
   }
+
+  sendTestSMS(body: any) {
+    return this.http.post(this.URLsender + 'smssender/smssend/', body) 
+  }
 }

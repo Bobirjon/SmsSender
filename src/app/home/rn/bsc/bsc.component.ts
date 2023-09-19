@@ -313,4 +313,17 @@ export class BscComponent implements OnInit {
       })
 
   }
+
+  forSmsTesting() {
+    this.smsSendBody()
+
+    this.authService.sendTestSMS(this.smsBody)
+      .subscribe(result => {
+        console.log(result);
+        this.snackBar.open('Success', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+        this.snackBar.open(error, '', { duration: 10000 })
+      })
+  }
 }

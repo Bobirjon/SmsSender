@@ -355,8 +355,19 @@ export class CnComponent implements OnInit {
         console.log(error);
         this.snackBar.open(error, '', { duration: 10000 })
       })
+  }
 
-    console.log(this.smsBody);
-    
+
+  forTestSms() {
+    this.smsSendBody()
+
+    this.authService.sendTestSMS(this.smsBody)
+      .subscribe(res => {
+        console.log(res);
+        this.snackBar.open('Success', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+        this.snackBar.open(error, '', { duration: 10000 })
+      })
   }
 }

@@ -68,6 +68,10 @@
                                 [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
                                 Отправить SMS
                             </button>
+                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms()"
+                                type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
+                                TEST SMS
+                            </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>
@@ -101,6 +105,10 @@
                                 [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
                                 Отправить SMS
                             </button>
+                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms()"
+                                type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
+                                TEST SMS
+                            </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>
@@ -133,6 +141,10 @@
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
                                 [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
                                 Отправить SMS
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms()"
+                                type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
+                                TEST SMS
                             </button>
                         </mat-card-actions>
                     </mat-card>
@@ -171,8 +183,7 @@
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
-                    <mat-select formControlName="region" [(ngModel)]="cnForm.value.region" 
-                    [disabled]="cnForm.value.category == ('Roaming') || 
+                    <mat-select formControlName="region" [(ngModel)]="cnForm.value.region" [disabled]="cnForm.value.category == ('Roaming') || 
                     cnForm.value.category == ('Core') || cnForm.value.category == ('GPRS')">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
                             {{reg.viewValue}}

@@ -390,4 +390,17 @@ export class HubComponent implements OnInit {
         this.snackBar.open(error.message, '', { duration: 10000 })
       })
   }
+
+  forSmsTesting() {
+    this.smsSendBody()
+
+    this.authService.sendTestSMS(this.smsBody)
+      .subscribe(result => {
+        console.log(result);
+        this.snackBar.open('Success', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+        this.snackBar.open(error, '', { duration: 10000 })
+      })
+  }
 }

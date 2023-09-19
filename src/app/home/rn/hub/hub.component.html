@@ -60,8 +60,12 @@
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
                                 [disabled]="hubForm.invalid || hubForm.value.endTime !==''">Отправить Сообщения
-
                             </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                            (click)="forSmsTesting()" type="submit" 
+                            [disabled]="hubForm.invalid || hubForm.value.endTime !==''">
+                            TEST SMS 
+                        </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>
@@ -94,6 +98,11 @@
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">Отправить Сообщения
                             </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                            (click)="forSmsTesting()" type="submit" 
+                            [disabled]="hubForm.invalid || hubForm.value.endTime ==''">
+                            TEST SMS 
+                        </button>
                         </mat-card-actions>
                     </mat-card>  
                 </div>
@@ -128,6 +137,11 @@
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">
                                 Отправить Сообщения
                             </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                            (click)="forSmsTesting()" type="submit" 
+                            [disabled]="hubForm.invalid || hubForm.value.endTime ==''">
+                            TEST SMS 
+                        </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>
