@@ -50,20 +50,22 @@ export class HubComponent implements OnInit {
     { value: '', viewValue: 'Empty' }
   ];
   region: { value: string; viewValue: string }[] = [
-    { value: 'Andijan', viewValue: 'Andijan' },
-    { value: 'Bukhara', viewValue: 'Bukhara' },
-    { value: 'Djizzakh', viewValue: 'Djizzakh' },
-    { value: 'Fergana', viewValue: 'Fergana' },
-    { value: 'Sirdarya', viewValue: 'Sirdarya' },
-    { value: 'Kashkadarya', viewValue: 'Kashkadarya' },
-    { value: 'Namangan', viewValue: 'Namangan' },
-    { value: 'Navoi', viewValue: 'Navoi' },
-    { value: 'Karakalpakstan', viewValue: 'Karakalpakstan' },
-    { value: 'Samarkand', viewValue: 'Samarkand' },
-    { value: 'Tashkent', viewValue: 'Tashkent' },
-    { value: 'Surkhandarya', viewValue: 'Surkhandarya' },
-    { value: 'Khorezm', viewValue: 'Khorezm' },
+    { value: 'Андижан', viewValue: 'Андижан' },
+    { value: 'Бухара', viewValue: 'Бухара' },
+    { value: 'Джизак', viewValue: 'Джизак' },
+    { value: 'Фергана', viewValue: 'Фергана' },
+    { value: 'Сырдарья', viewValue: 'Сырдарья' },
+    { value: 'Кашкадарья', viewValue: 'Кашкадарья' },
+    { value: 'Наманган', viewValue: 'Наманган' },
+    { value: 'Навои', viewValue: 'Навои' },
+    { value: 'Каракалпакстан', viewValue: 'Каракалпакстан' },
+    { value: 'Самарканд', viewValue: 'Самарканд' },
+    { value: 'г.Ташкент', viewValue: 'г.Ташкент' },
+    { value: 'Ташкент.обл', viewValue: 'Ташкент.обл' },
+    { value: 'Сурхандарья', viewValue: 'Сурхандарья' },
+    { value: 'Хорезм', viewValue: 'Хорезм' },
   ];
+  
   category: { value: string; viewValue: string }[] = [
     { value: 'AC/DC breaker', viewValue: 'AC/DC breaker' },
     { value: 'Bad RX level', viewValue: 'Bad RX level' },
