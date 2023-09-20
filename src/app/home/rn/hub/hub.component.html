@@ -62,7 +62,7 @@
                                 [disabled]="hubForm.invalid || hubForm.value.endTime !==''">Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                            (click)="forSmsTesting()" type="submit" 
+                            (click)="forSmsTesting('Проблема')" type="submit" 
                             [disabled]="hubForm.invalid || hubForm.value.endTime !==''">
                             TEST SMS 
                         </button>
@@ -99,7 +99,7 @@
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                            (click)="forSmsTesting()" type="submit" 
+                            (click)="forSmsTesting('Решение')" type="submit" 
                             [disabled]="hubForm.invalid || hubForm.value.endTime ==''">
                             TEST SMS 
                         </button>
@@ -138,7 +138,7 @@
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                            (click)="forSmsTesting()" type="submit" 
+                            (click)="forSmsTesting('Информационное')" type="submit" 
                             [disabled]="hubForm.invalid || hubForm.value.endTime ==''">
                             TEST SMS 
                         </button>

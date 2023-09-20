@@ -67,7 +67,7 @@
                                 Отправить Сообщения 
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting()" type="submit" 
+                                (click)="forSmsTesting('Проблема')" type="submit" 
                                 [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
                                 TEST SMS 
                             </button>
@@ -102,7 +102,7 @@
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting()" type="submit" 
+                                (click)="forSmsTesting('Решение')" type="submit" 
                                 [disabled]="bscForm.invalid || bscForm.value.endTime ==''">
                                 TEST SMS 
                             </button>
@@ -191,9 +191,9 @@
             <!-- buttons -->
             <mat-grid-tile colspan="2">
                 <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
-                    (click)="updateData()">Обновить </button>
+                    (click)="updateData()" [disabled]="bscForm.invalid">Обновить </button>
                     <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
-                    [disabled]="bscForm.invalid && newForm" (click)="createData()">Создать</button>
+                    [disabled]="bscForm.invalid" (click)="createData()">Создать</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="4">
                 <mat-chip-listbox formControlName="AddOrCor">

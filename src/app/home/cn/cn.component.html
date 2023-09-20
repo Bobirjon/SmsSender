@@ -68,7 +68,7 @@
                                 [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
                                 Отправить SMS
                             </button>
-                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms()"
+                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Problem')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
                                 TEST SMS
                             </button>
@@ -105,7 +105,7 @@
                                 [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
                                 Отправить SMS
                             </button>
-                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms()"
+                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Решения')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
                                 TEST SMS
                             </button>
@@ -142,7 +142,7 @@
                                 [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
                                 Отправить SMS
                             </button>
-                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms()"
+                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Информационное')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
                                 TEST SMS
                             </button>

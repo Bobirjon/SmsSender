@@ -285,7 +285,7 @@ export class CnComponent implements OnInit {
           this.SmsTextBody =
             ' ' + this.cnForm.value.level + ' ' + this.requestType + '\n' +
             ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
-            ' ' + this.cnForm.value.problem + '\n ' + '\n' +
+            ' ' + this.cnForm.value.problem + '\n ' +
             'Причина: ' + this.cnForm.value.reason + '\n ' +
             'Эффект: ' + this.cnForm.value.effect + '\n ' +
             'Описание: ' + this.cnForm.value.desc + '\n ' +
@@ -358,7 +358,8 @@ export class CnComponent implements OnInit {
   }
 
 
-  forTestSms() {
+  forTestSms(smsType: string) {
+    this.requestType = smsType
     this.smsSendBody()
 
     this.authService.sendTestSMS(this.smsBody)

@@ -321,7 +321,8 @@ export class ChronicComponent implements OnInit {
 
   }
 
-  forSmsTesting() {
+  forSmsTesting(smsType: string) {
+    this.requestType = smsType
     this.smsSendBody()
 
     this.authService.sendTestSMS(this.smsBody)

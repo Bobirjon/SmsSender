@@ -58,7 +58,7 @@
                                     Отправить Сообщения
                                 </button>
                                 <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting()" type="submit" 
+                                (click)="forSmsTesting('Проблема')" type="submit" 
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
                                 TEST SMS 
                             </button>
@@ -92,7 +92,7 @@
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                            (click)="forSmsTesting()" type="submit" 
+                            (click)="forSmsTesting('Решение')" type="submit" 
                             [disabled]="chronicForm.invalid || chronicForm.value.endTime ==''">
                             TEST SMS 
                         </button>

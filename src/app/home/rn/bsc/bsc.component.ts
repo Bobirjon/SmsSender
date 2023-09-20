@@ -132,7 +132,7 @@ export class BscComponent implements OnInit {
             'effect': [result['influence'], Validators.required],
             'informed': [result['informed'], Validators.required],
             'desc': [result['description'], Validators.required],
-            'sender': [result['sender'], Validators.required],
+            'sender': [result['sender']],
           })
         })
     }
@@ -224,7 +224,7 @@ export class BscComponent implements OnInit {
         } else {
           this.SmsTextBody =
             ' ' + this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + '\n' +
-            ' (' + this.bscForm.value.AddOrCor + ') ' +
+            ' (' + this.bscForm.value.AddOrCor + ') ' + '\n' +
             ' ' + this.bscForm.value.problem + '\n ' +
             'Причина: ' + this.bscForm.value.reason + '\n ' +
             'Эффект: ' + this.bscForm.value.effect + '\n ' +
@@ -249,11 +249,11 @@ export class BscComponent implements OnInit {
         } else {
           this.SmsTextBody =
             ' ' + this.bscForm.value.level + ' BSC ' + this.requestType + '\n' +
-            ' (' + this.bscForm.value.AddOrCor + ') '
+            ' (' + this.bscForm.value.AddOrCor + ') ' + '\n' +
           ' ' + this.bscForm.value.problem + '\n ' +
             'Причина: ' + this.bscForm.value.reason + '\n ' +
             'Эффект: ' + this.bscForm.value.effect + '\n ' +
-            'Описание: ' + this.bscForm.value.desc + '\n ' +
+            'Описание: ' + this.bscForm.value.desc + '\n ' + 
             'Конец: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
             'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
             'Оповещен: ' + this.bscForm.value.informed + '\n ' +
@@ -314,7 +314,8 @@ export class BscComponent implements OnInit {
 
   }
 
-  forSmsTesting() {
+  forSmsTesting(smsType: string) {
+    this.requestType = smsType
     this.smsSendBody()
 
     this.authService.sendTestSMS(this.smsBody)
