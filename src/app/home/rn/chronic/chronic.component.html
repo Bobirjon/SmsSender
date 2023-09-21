@@ -46,7 +46,7 @@
                         </mat-card-header>
                         <mat-card-content>
                             <p>{{chronicForm.value.siteName + ' - сайт не работает в ' + chronicForm.value.region.replace('A', 'П') + ' более ' +
-                                chronicForm.value.time + ' часов с ' + chronicForm.value.startTime}}</p>
+                                chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T', ' ')}}</p>
                             <p>{{'Причина: ' + chronicForm.value.reason}}</p>
                             <p>{{'Оповещен: ' + chronicForm.value.informed}}</p>
                             <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>

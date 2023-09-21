@@ -58,7 +58,7 @@
                             <p>{{'Эффект: ' + bscForm.value.effect}}</p>
                             <p>{{'Оповещен: ' + bscForm.value.informed}}</p>
                             <p>{{'Начало: ' + bscForm.value.startTime.replace('T',' ')}}</p>
-                            <p>{{'Конец: ' + user?.username}}</p>
+                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
@@ -89,11 +89,11 @@
                             <p>{{bscForm.value.problem}}</p>
                             <p>{{'Причина: ' + bscForm.value.reason}}</p>
                             <p>{{'Эффект: ' + bscForm.value.effect}}</p>
-                            <p>{{'Opisaniya: ' + bscForm.value.desc}}</p>
+                            <p>{{'Описание: ' + bscForm.value.desc}}</p>
                             <p>{{'Начало: ' + bscForm.value.startTime.replace("T", " ")}}</p>
                             <p>{{'Конец: ' + bscForm.value.endTime.replace("T", " ")}}</p>
                             <p>{{'Оповещен: ' + bscForm.value.informed}}</p>
-                            <p>{{'Отправил: ' + user?.username}}</p>
+                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"

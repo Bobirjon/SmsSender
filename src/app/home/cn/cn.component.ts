@@ -80,7 +80,7 @@ export class CnComponent implements OnInit {
     private route: ActivatedRoute,
     private storageService: StorageService,
     private snackBar: MatSnackBar,) {
-      this.createForm()
+    this.createForm()
   }
 
   createForm() {
@@ -113,24 +113,24 @@ export class CnComponent implements OnInit {
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
     } else {
-      let isDisabled : any
+      let isDisabled: any
       let endTimeForUpdate: any
       this.newForm = false
       this.isNewForm(this.newForm)
-      
+
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          if(result['category_for_core'] == 'Core' || result['category_for_core'] == 'Roaming' || result['category_for_core'] == 'GPRS') {
+          if (result['category_for_core'] == 'Core' || result['category_for_core'] == 'Roaming' || result['category_for_core'] == 'GPRS') {
             isDisabled = true
           } else {
             isDisabled = false
           }
-          if(result['end_time'] == null){
+          if (result['end_time'] == null) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
           }
-         this.cnForm = this.formBuilder.group({
+          this.cnForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
             'categories_report': [result['category'], Validators.required],
@@ -140,16 +140,16 @@ export class CnComponent implements OnInit {
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             // 'endTime': [(result['end_time'], 'yyyy-MM-ddTHH:mm', '')],
-             'endTime': [endTimeForUpdate],
-            'region': [{value: result['region'], disabled: isDisabled}, Validators.required],
+            'endTime': [endTimeForUpdate],
+            'region': [{ value: result['region'], disabled: isDisabled }, Validators.required],
             'effect': [result['influence']],
             'category': [result['category_for_core']],
             'informed': [result['informed']],
             'desc': [result['description']],
             'sender': [result['sender']]
-          }) 
+          })
         })
-        
+
     }
   }
 
@@ -177,20 +177,20 @@ export class CnComponent implements OnInit {
       'sender': this.user?.first_name + ' ' + this.user?.last_name
     }
 
-    if(this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp') ){
+    if (this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp')) {
       this.tableBody.region = this.cnForm.value.region
     } else {
       this.tableBody.region = ''
     }
     if (this.cnForm.value.endTime !== '') {
       this.tableBody.end_time = this.cnForm.value.endTime
-    } 
+    }
   }
 
   updateData() {
 
     this.tableSendBody()
-    
+
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
       .subscribe((result) => {
         console.log(result);
@@ -306,17 +306,17 @@ export class CnComponent implements OnInit {
       // 'notification'
     }
 
-    if (this.cnForm.value.category == ('Power' ) || this.cnForm.value.category == ('High Temp')) {
+    if (this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp')) {
       this.smsBody.notification = ['Power/HighTemp']
       this.smsBody.region = [this.cnForm.value.region]
-    }  
+    }
     else {
       this.smsBody.notification = [this.cnForm.value.category]
     }
 
     // if(this.cnForm.value.region != '') {
     //   console.log('region not empty');
-      
+
     //   this.smsBody.region = [this.cnForm.value.region]
     // } else if (this.cnForm.value.region == undefined) {
     //   console.log('region not undefined');
@@ -328,7 +328,7 @@ export class CnComponent implements OnInit {
   }
 
   onSubmit() {
-    
+
     this.tableSendBody()
 
     this.authService.postData(this.tableBody)
@@ -339,7 +339,7 @@ export class CnComponent implements OnInit {
 
   onSubmitButtonProblem(smsType: string) {
 
-    if(this.newForm == false) {
+    if (this.newForm == false) {
       this.updateData()
     } else {
       this.onSubmit()
