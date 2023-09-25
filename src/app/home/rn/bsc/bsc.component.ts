@@ -15,11 +15,8 @@ export class BscComponent implements OnInit {
 
 
   bscForm: FormGroup
-  preview = false;
   user: any
   newForm: boolean
-  criteria_list: any
-  criteria: any
   SmsTextBody: any
   time = new Date()
   requestType: any
@@ -31,12 +28,12 @@ export class BscComponent implements OnInit {
     { value: 'A2', viewValue: 'A2' },
     { value: 'A3', viewValue: 'A3' },
     { value: 'A4', viewValue: 'A4' },
-    { value: 'A5', viewValue: 'A5' },
-    { value: 'ПР', viewValue: 'ПР' }
+    { value: 'A5', viewValue: 'A5' }
   ];
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
     { value: 'ЭС и Клим', viewValue: 'ЭС и Клим' },
+    { value: 'Провайдер', viewValue: 'Провайдер' },
     { value: 'ПР', viewValue: 'ПР' },
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
@@ -105,8 +102,8 @@ export class BscComponent implements OnInit {
       .subscribe(result => {
         this.user = result
       })
-
-    if (this.route.snapshot.params.id == null) {
+    // is user in edit mode
+    if (this.route.snapshot.params.id == (null || undefined)) {
       this.newForm = true
     } else {
       this.newForm = false
@@ -127,7 +124,6 @@ export class BscComponent implements OnInit {
             'reason': [result['reason'], Validators.required],
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            // 'endTime': [formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [endTimeForUpdate],
             'region': [result['region'], Validators.required],
             'effect': [result['influence'], Validators.required],
@@ -169,43 +165,43 @@ export class BscComponent implements OnInit {
       if (this.bscForm.value.categories_report == 'ПР') {
         if (this.bscForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-            ' ' + this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + '\n' +
-            ' ' + this.bscForm.value.problem + '\n ' +
-            'Причина: ' + this.bscForm.value.reason + '\n ' +
-            'Эффект: ' + this.bscForm.value.effect + '\n ' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n ' +
+            this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + ':\n' +
+            this.bscForm.value.problem + '\n' +
+            'Причина: ' + this.bscForm.value.reason + '\n' +
+            'Эффект: ' + this.bscForm.value.effect + '\n' +
+            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+            'Оповещен: ' + this.bscForm.value.informed + '\n' +
             'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         } else {
           this.SmsTextBody =
-            ' ' + this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + '\n' +
-            ' ' + this.bscForm.value.AddOrCor + '\n ' +
-            ' ' + this.bscForm.value.problem + '\n ' +
-            'Причина: ' + this.bscForm.value.reason + '\n ' +
-            'Эффект: ' + this.bscForm.value.effect + '\n ' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n ' +
+            this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + ':\n' +
+            '(' + this.bscForm.value.AddOrCor + ')\n' +
+            this.bscForm.value.problem + '\n' +
+            'Причина: ' + this.bscForm.value.reason + '\n' +
+            'Эффект: ' + this.bscForm.value.effect + '\n' +
+            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+            'Оповещен: ' + this.bscForm.value.informed + '\n' +
             'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         }
       } else {
         if (this.bscForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-            ' ' + this.bscForm.value.level + ' BSC ' + this.requestType + '\n' +
-            ' ' + this.bscForm.value.problem + '\n ' +
-            'Причина: ' + this.bscForm.value.reason + '\n ' +
-            'Эффект: ' + this.bscForm.value.effect + '\n ' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n ' +
+            this.bscForm.value.level + ' BSC ' + this.requestType + ':\n' +
+            this.bscForm.value.problem + '\n' +
+            'Причина: ' + this.bscForm.value.reason + '\n' +
+            'Эффект: ' + this.bscForm.value.effect + '\n' +
+            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+            'Оповещен: ' + this.bscForm.value.informed + '\n' +
             'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         } else {
           this.SmsTextBody =
-            ' ' + this.bscForm.value.level + ' BSC ' + this.requestType + '\n' +
-            ' ' + this.bscForm.value.AddOrCor + '\n ' +
-            ' ' + this.bscForm.value.problem + '\n ' +
-            'Причина: ' + this.bscForm.value.reason + '\n ' +
-            'Эффект: ' + this.bscForm.value.effect + '\n ' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n ' +
+            this.bscForm.value.level + ' BSC ' + this.requestType + ':\n' +
+            '(' + this.bscForm.value.AddOrCor + ')\n' +
+            this.bscForm.value.problem + '\n' +
+            'Причина: ' + this.bscForm.value.reason + '\n' +
+            'Эффект: ' + this.bscForm.value.effect + '\n' +
+            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+            'Оповещен: ' + this.bscForm.value.informed + '\n' +
             'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         }
       }
@@ -213,51 +209,51 @@ export class BscComponent implements OnInit {
       if (this.bscForm.value.categories_report == 'ПР') {
         if (this.bscForm.value.AddOrCor == (undefined || null)) {
           this.SmsTextBody =
-            ' ' + this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + '\n' +
-            ' ' + this.bscForm.value.problem + '\n ' +
-            'Причина: ' + this.bscForm.value.reason + '\n ' +
-            'Эффект: ' + this.bscForm.value.effect + '\n ' +
-            'Описание: ' + this.bscForm.value.desc + '\n ' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n ' +
+            this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + ':\n' +
+            this.bscForm.value.problem + '\n' +
+            'Причина: ' + this.bscForm.value.reason + '\n' +
+            'Эффект: ' + this.bscForm.value.effect + '\n' +
+            'Описание: ' + this.bscForm.value.desc + '\n' +
+            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
+            'Оповещен: ' + this.bscForm.value.informed + '\n' +
             'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         } else {
           this.SmsTextBody =
-            ' ' + this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + '\n' +
-            ' (' + this.bscForm.value.AddOrCor + ') ' + '\n' +
-            ' ' + this.bscForm.value.problem + '\n ' +
-            'Причина: ' + this.bscForm.value.reason + '\n ' +
-            'Эффект: ' + this.bscForm.value.effect + '\n ' +
-            'Описание: ' + this.bscForm.value.desc + '\n ' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n ' +
+            this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + ':\n' +
+            '(' + this.bscForm.value.AddOrCor + ')\n' +
+            this.bscForm.value.problem + '\n' +
+            'Причина: ' + this.bscForm.value.reason + '\n' +
+            'Эффект: ' + this.bscForm.value.effect + '\n' +
+            'Описание: ' + this.bscForm.value.desc + '\n' +
+            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
+            'Оповещен: ' + this.bscForm.value.informed + '\n' +
             'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         }
       } else {
         if (this.bscForm.value.AddOrCor == (null || undefined)) {
           this.SmsTextBody =
-            ' ' + this.bscForm.value.level + ' BSC ' + this.requestType + '\n' +
-            ' ' + this.bscForm.value.problem + '\n ' +
-            'Причина: ' + this.bscForm.value.reason + '\n ' +
-            'Эффект: ' + this.bscForm.value.effect + '\n ' +
-            'Описание: ' + this.bscForm.value.desc + '\n ' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n ' +
+            this.bscForm.value.level + ' BSC ' + this.requestType + ':\n' +
+            this.bscForm.value.problem + '\n' +
+            'Причина: ' + this.bscForm.value.reason + '\n' +
+            'Эффект: ' + this.bscForm.value.effect + '\n' +
+            'Описание: ' + this.bscForm.value.desc + '\n' +
+            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
+            'Оповещен: ' + this.bscForm.value.informed + '\n' +
             'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         } else {
           this.SmsTextBody =
-            ' ' + this.bscForm.value.level + ' BSC ' + this.requestType + '\n' +
-            ' (' + this.bscForm.value.AddOrCor + ') ' + '\n' +
-            ' ' + this.bscForm.value.problem + '\n ' +
-            'Причина: ' + this.bscForm.value.reason + '\n ' +
-            'Эффект: ' + this.bscForm.value.effect + '\n ' +
-            'Описание: ' + this.bscForm.value.desc + '\n ' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n ' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n ' +
+            this.bscForm.value.level + ' BSC ' + this.requestType + ':\n' +
+            '(' + this.bscForm.value.AddOrCor + ')\n' +
+            this.bscForm.value.problem + '\n' +
+            'Причина: ' + this.bscForm.value.reason + '\n' +
+            'Эффект: ' + this.bscForm.value.effect + '\n' +
+            'Описание: ' + this.bscForm.value.desc + '\n' +
+            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
+            'Оповещен: ' + this.bscForm.value.informed + '\n' +
             'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
         }
       }
@@ -280,8 +276,8 @@ export class BscComponent implements OnInit {
     this.tableSendBody()
 
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-      .subscribe((result) => {
-        console.log(result);
+      .subscribe((res) => {
+        console.log(res);
       })
   }
 

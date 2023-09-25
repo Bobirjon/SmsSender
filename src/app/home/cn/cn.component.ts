@@ -33,6 +33,11 @@ export class CnComponent implements OnInit {
     { value: 'A3', viewValue: 'A3' },
     { value: 'A4', viewValue: 'A4' },
     { value: 'A5', viewValue: 'A5' },
+    { value: 'P1', viewValue: 'П1' },
+    { value: 'P2', viewValue: 'П2' },
+    { value: 'P3', viewValue: 'П3' },
+    { value: 'P4', viewValue: 'П4' },
+    { value: 'P5', viewValue: 'П5' },
   ];
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
@@ -81,6 +86,15 @@ export class CnComponent implements OnInit {
     private storageService: StorageService,
     private snackBar: MatSnackBar,) {
     this.createForm()
+  }
+
+  setDefault() {
+    if(this.cnForm.value.level == 'P1' || this.cnForm.value.level == 'P2' || 
+      this.cnForm.value.level == 'P3' || this.cnForm.value.level == 'P4' || this.cnForm.value.level == 'P5') {
+      this.cnForm.value.categories_report = 'ПР'
+    } else {
+      this.cnForm.value.categories_report = ''
+    }
   }
 
   createForm() {
@@ -203,97 +217,155 @@ export class CnComponent implements OnInit {
 
   smsSendBody() {
 
+    // if (this.requestType == 'Problem') {
+    //   if (this.cnForm.value.categories_report == 'ПР') {
+    //     if (this.cnForm.value.AddOrCor == (undefined || null)) {
+    //       this.SmsTextBody =
+    //         ' ' + this.cnForm.value.level.replace('A', 'П') + ' Проблема: ' + '\n' +
+    //         ' ' + this.cnForm.value.problem + '\n ' +
+    //         'Причина: ' + this.cnForm.value.reason + '\n ' +
+    //         'Эффект: ' + this.cnForm.value.effect + '\n ' +
+    //         'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+    //         'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+    //         'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+    //     } else {
+    //       this.SmsTextBody =
+    //         ' ' + this.cnForm.value.level.replace('A', 'П') + ' Проблема: ' + '\n' +
+    //         ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
+    //         ' ' + this.cnForm.value.problem + '\n ' +
+    //         'Причина: ' + this.cnForm.value.reason + '\n ' +
+    //         'Эффект: ' + this.cnForm.value.effect + '\n ' +
+    //         'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+    //         'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+    //         'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+    //     }
+    //   } else {
+    //     if (this.cnForm.value.AddOrCor == (undefined || null)) {
+    //       this.SmsTextBody =
+    //         ' ' + this.cnForm.value.level + ' Проблема: ' + '\n' +
+    //         ' ' + this.cnForm.value.problem + '\n ' +
+    //         'Причина: ' + this.cnForm.value.reason + '\n ' +
+    //         'Эффект: ' + this.cnForm.value.effect + '\n ' +
+    //         'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+    //         'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+    //         'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+    //     } else {
+    //       this.SmsTextBody =
+    //         ' ' + this.cnForm.value.level + ' Проблема: ' + '\n' +
+    //         ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
+    //         ' ' + this.cnForm.value.problem + '\n ' +
+    //         'Причина: ' + this.cnForm.value.reason + '\n ' +
+    //         'Эффект: ' + this.cnForm.value.effect + '\n ' +
+    //         'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+    //         'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+    //         'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+    //     }
+    //   }
+    // } else {
+    //   if (this.cnForm.value.categories_report == 'ПР') {
+    //     if (this.cnForm.value.AddOrCor == (undefined || null)) {
+    //       this.SmsTextBody =
+    //         ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' + this.requestType + ": " + '\n' +
+    //         ' ' + this.cnForm.value.problem + '\n ' +
+    //         'Причина: ' + this.cnForm.value.reason + '\n ' +
+    //         'Эффект: ' + this.cnForm.value.effect + '\n ' +
+    //         'Описание: ' + this.cnForm.value.desc + '\n ' +
+    //         'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+    //         'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+    //         'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+    //         'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+    //     } else {
+    //       this.SmsTextBody =
+    //         ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' + this.requestType + '\n' +
+    //         ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
+    //         ' ' + this.cnForm.value.problem + '\n ' +
+    //         'Причина: ' + this.cnForm.value.reason + '\n ' +
+    //         'Эффект: ' + this.cnForm.value.effect + '\n ' +
+    //         'Описание: ' + this.cnForm.value.desc + '\n ' +
+    //         'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+    //         'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+    //         'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+    //         'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+    //     }
+    //   } else {
+    //     if (this.cnForm.value.AddOrCor == (null || undefined)) {
+    //       this.SmsTextBody =
+    //         ' ' + this.cnForm.value.level + ' ' + this.requestType + '\n' +
+    //         ' ' + this.cnForm.value.problem + '\n ' +
+    //         'Причина: ' + this.cnForm.value.reason + '\n ' +
+    //         'Эффект: ' + this.cnForm.value.effect + '\n ' +
+    //         'Описание: ' + this.cnForm.value.desc + '\n ' +
+    //         'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+    //         'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+    //         'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+    //         'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+    //     } else {
+    //       this.SmsTextBody =
+    //         ' ' + this.cnForm.value.level + ' ' + this.requestType + '\n' +
+    //         ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
+    //         ' ' + this.cnForm.value.problem + '\n ' +
+    //         'Причина: ' + this.cnForm.value.reason + '\n ' +
+    //         'Эффект: ' + this.cnForm.value.effect + '\n ' +
+    //         'Описание: ' + this.cnForm.value.desc + '\n ' +
+    //         'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+    //         'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+    //         'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+    //         'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+    //     }
+    //   }
+    // }
+
+    // new one
+
     if (this.requestType == 'Problem') {
-      if (this.cnForm.value.categories_report == 'ПР') {
-        if (this.cnForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            ' ' + this.cnForm.value.level.replace('A', 'П') + ' Проблема: ' + '\n' +
-            ' ' + this.cnForm.value.problem + '\n ' +
-            'Причина: ' + this.cnForm.value.reason + '\n ' +
-            'Эффект: ' + this.cnForm.value.effect + '\n ' +
-            'Оповещен: ' + this.cnForm.value.informed + '\n ' +
-            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            ' ' + this.cnForm.value.level.replace('A', 'П') + ' Проблема: ' + '\n' +
-            ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
-            ' ' + this.cnForm.value.problem + '\n ' +
-            'Причина: ' + this.cnForm.value.reason + '\n ' +
-            'Эффект: ' + this.cnForm.value.effect + '\n ' +
-            'Оповещен: ' + this.cnForm.value.informed + '\n ' +
-            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+      if (this.cnForm.value.AddOrCor == (null || undefined)) {
+        this.SmsTextBody =
+          ' ' + this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
+          ' ' + this.cnForm.value.problem + '\n ' +
+          'Причина: ' + this.cnForm.value.reason + '\n ' +
+          'Эффект: ' + this.cnForm.value.effect + '\n ' +
+          'Описание: ' + this.cnForm.value.desc + '\n ' +
+          'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+          'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+          'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       } else {
-        if (this.cnForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            ' ' + this.cnForm.value.level + ' Проблема: ' + '\n' +
-            ' ' + this.cnForm.value.problem + '\n ' +
-            'Причина: ' + this.cnForm.value.reason + '\n ' +
-            'Эффект: ' + this.cnForm.value.effect + '\n ' +
-            'Оповещен: ' + this.cnForm.value.informed + '\n ' +
-            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            ' ' + this.cnForm.value.level + ' Проблема: ' + '\n' +
-            ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
-            ' ' + this.cnForm.value.problem + '\n ' +
-            'Причина: ' + this.cnForm.value.reason + '\n ' +
-            'Эффект: ' + this.cnForm.value.effect + '\n ' +
-            'Оповещен: ' + this.cnForm.value.informed + '\n ' +
-            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+        this.SmsTextBody =
+          ' ' + this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
+          ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
+          ' ' + this.cnForm.value.problem + '\n ' +
+          'Причина: ' + this.cnForm.value.reason + '\n ' +
+          'Эффект: ' + this.cnForm.value.effect + '\n ' +
+          'Описание: ' + this.cnForm.value.desc + '\n ' +
+          'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+          'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+          'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       }
     } else {
-      if (this.cnForm.value.categories_report == 'ПР') {
-        if (this.cnForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' + this.requestType + ": " + '\n' +
-            ' ' + this.cnForm.value.problem + '\n ' +
-            'Причина: ' + this.cnForm.value.reason + '\n ' +
-            'Эффект: ' + this.cnForm.value.effect + '\n ' +
-            'Описание: ' + this.cnForm.value.desc + '\n ' +
-            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            ' ' + this.cnForm.value.level.replace('A', 'П') + ' ' + this.requestType + '\n' +
-            ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
-            ' ' + this.cnForm.value.problem + '\n ' +
-            'Причина: ' + this.cnForm.value.reason + '\n ' +
-            'Эффект: ' + this.cnForm.value.effect + '\n ' +
-            'Описание: ' + this.cnForm.value.desc + '\n ' +
-            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+      if (this.cnForm.value.AddOrCor == (null || undefined)) {
+        this.SmsTextBody =
+          ' ' + this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
+          ' ' + this.cnForm.value.problem + '\n ' +
+          'Причина: ' + this.cnForm.value.reason + '\n ' +
+          'Эффект: ' + this.cnForm.value.effect + '\n ' +
+          'Описание: ' + this.cnForm.value.desc + '\n ' +
+          'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+          'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+          'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       } else {
-        if (this.cnForm.value.AddOrCor == (null || undefined)) {
-          this.SmsTextBody =
-            ' ' + this.cnForm.value.level + ' ' + this.requestType + '\n' +
-            ' ' + this.cnForm.value.problem + '\n ' +
-            'Причина: ' + this.cnForm.value.reason + '\n ' +
-            'Эффект: ' + this.cnForm.value.effect + '\n ' +
-            'Описание: ' + this.cnForm.value.desc + '\n ' +
-            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            ' ' + this.cnForm.value.level + ' ' + this.requestType + '\n' +
-            ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
-            ' ' + this.cnForm.value.problem + '\n ' +
-            'Причина: ' + this.cnForm.value.reason + '\n ' +
-            'Эффект: ' + this.cnForm.value.effect + '\n ' +
-            'Описание: ' + this.cnForm.value.desc + '\n ' +
-            'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+        this.SmsTextBody =
+          ' ' + this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
+          ' (' + this.cnForm.value.AddOrCor + ') ' + '\n' +
+          ' ' + this.cnForm.value.problem + '\n ' +
+          'Причина: ' + this.cnForm.value.reason + '\n ' +
+          'Эффект: ' + this.cnForm.value.effect + '\n ' +
+          'Описание: ' + this.cnForm.value.desc + '\n ' +
+          'Оповещен: ' + this.cnForm.value.informed + '\n ' +
+          'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n ' +
+          'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       }
     }
 
@@ -334,6 +406,10 @@ export class CnComponent implements OnInit {
     this.authService.postData(this.tableBody)
       .subscribe((res) => {
         console.log(res);
+        this.snackBar.open('Success', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+        this.snackBar.open("Error", '', { duration: 10000 })
       })
   }
 
@@ -354,7 +430,7 @@ export class CnComponent implements OnInit {
         this.snackBar.open('Success', '', { duration: 10000 })
       }, error => {
         console.log(error);
-        this.snackBar.open(error, '', { duration: 10000 })
+        this.snackBar.open("Error", '', { duration: 10000 })
       })
   }
 
@@ -369,7 +445,7 @@ export class CnComponent implements OnInit {
         this.snackBar.open('Success', '', { duration: 10000 })
       }, error => {
         console.log(error);
-        this.snackBar.open(error, '', { duration: 10000 })
+        this.snackBar.open("Error", '', { duration: 10000 })
       })
   }
 }

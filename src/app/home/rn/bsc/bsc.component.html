@@ -1,8 +1,8 @@
 <div>
     <form [formGroup]="bscForm" class="form-container">
         <mat-grid-list cols="20" rowHeight="85px">
-             <!-- level -->
-             <mat-grid-tile colspan="3">
+            <!-- level -->
+            <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
                     <mat-select formControlName="level" [(ngModel)]="bscForm.value.level">
@@ -40,10 +40,10 @@
                     <mat-card class="preview">
                         <mat-card-header>
                             <mat-card-title *ngIf="bscForm.value.categories_report == 'ПР'">
-                                {{bscForm.value.level.replace('A', 'П') + ' BSC:' + ' Проблема:'}}
+                                {{bscForm.value.level.replace('A', 'П') + ' BSC Проблема:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.categories_report != 'ПР'">
-                                {{bscForm.value.level + ' BSC:' + ' Проблема:'}}
+                                {{bscForm.value.level + ' BSC Проблема:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнения'">
                                 (Дополнения)
@@ -62,14 +62,14 @@
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Проблема')" type="submit" 
+                                (click)="onSubmitButtonProblem('Проблема')" type="submit"
                                 [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
-                                Отправить Сообщения 
+                                Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting('Проблема')" type="submit" 
+                                (click)="forSmsTesting('Проблема')" type="submit"
                                 [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
-                                TEST SMS 
+                                TEST SMS
                             </button>
                         </mat-card-actions>
                     </mat-card>
@@ -80,8 +80,11 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="bscForm.value.categories_report == 'ПР'">{{bscForm.value.level.replace('A', 'П') + ' BSC:' + ' Решение:'}}</mat-card-title>
-                            <mat-card-title *ngIf="bscForm.value.categories_report != 'ПР'">{{bscForm.value.level + ' BSC:' + ' Решение:'}}</mat-card-title>
+                            <mat-card-title
+                                *ngIf="bscForm.value.categories_report == 'ПР'">{{bscForm.value.level.replace('A', 'П')
+                                + ' BSC Решение:'}}</mat-card-title>
+                            <mat-card-title *ngIf="bscForm.value.categories_report != 'ПР'">{{bscForm.value.level + '
+                                BSC Решение:'}}</mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -97,14 +100,14 @@
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Решение')" type="submit" 
+                                (click)="onSubmitButtonProblem('Решение')" type="submit"
                                 [disabled]="(bscForm.invalid) || bscForm.value.endTime==''">
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting('Решение')" type="submit" 
+                                (click)="forSmsTesting('Решение')" type="submit"
                                 [disabled]="bscForm.invalid || bscForm.value.endTime ==''">
-                                TEST SMS 
+                                TEST SMS
                             </button>
                         </mat-card-actions>
                     </mat-card>
@@ -138,8 +141,7 @@
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" 
-                    [(ngModel)]="bscForm.value.desc"></textarea>
+                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="bscForm.value.desc"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- effect option -->
@@ -171,8 +173,8 @@
                     <input matInput type="text" formControlName="informed" [(ngModel)]="bscForm.value.informed" />
                 </mat-form-field>
             </mat-grid-tile>
-             <!-- start Time -->
-             <mat-grid-tile colspan="5" rowspan="1">
+            <!-- start Time -->
+            <mat-grid-tile colspan="5" rowspan="1">
                 <div class="margin-container">
                     <p>Начало</p>
                     <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
@@ -192,7 +194,7 @@
             <mat-grid-tile colspan="2">
                 <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
                     (click)="updateData()" [disabled]="bscForm.invalid">Обновить </button>
-                    <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
                     [disabled]="bscForm.invalid" (click)="createData()">Создать</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="4">

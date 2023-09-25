@@ -39,6 +39,8 @@ export class StartComponent implements OnInit {
     {value: 'Empty', viewValue: 'Empty'}
   ];
 
+  
+
 
   constructor(private route: ActivatedRoute, private authService: AuthService, private formBuilder: FormBuilder) {
     this.data = this.formBuilder.group({
@@ -60,6 +62,8 @@ export class StartComponent implements OnInit {
    }
 
   ngOnInit(): void {
+
+   
 
     // this.authService.getSms(this.route.snapshot.params.id)
     //   .subscribe(result => {

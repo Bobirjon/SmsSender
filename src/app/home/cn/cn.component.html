@@ -7,7 +7,7 @@
             <mat-grid-tile colspan="3" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level">
+                    <mat-select formControlName="level" [(ngModel)]="cnForm.value.level" (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
@@ -41,11 +41,8 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="cnForm.value.categories_report == 'ПР'">
-                                {{cnForm.value.level.replace('A','П') + ' Проблема:'}}
-                            </mat-card-title>
-                            <mat-card-title *ngIf="cnForm.value.categories_report != 'ПР'">
-                                {{cnForm.value.level + ' Проблема:'}}
+                            <mat-card-title>
+                                {{cnForm.value.level.replace('P', 'П') + ' Проблема:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнения'">
                                 (Дополнения)
@@ -81,11 +78,9 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title
-                                *ngIf="cnForm.value.categories_report == 'ПР'">{{cnForm.value.level.replace('A',
-                                'П') + ' Решение:'}}</mat-card-title>
-                            <mat-card-title *ngIf="cnForm.value.categories_report != 'ПР'">{{cnForm.value.level + '
-                                Решение:'}}</mat-card-title>
+                            <mat-card-title>
+                                {{cnForm.value.level.replace('P', 'П') + ' Решение:'}}
+                            </mat-card-title>
                             <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -118,11 +113,9 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title
-                                *ngIf="cnForm.value.categories_report == 'ПР'">{{cnForm.value.level.replace('A',
-                                'П') + ' Информационное:'}}</mat-card-title>
-                            <mat-card-title *ngIf="cnForm.value.categories_report != 'ПР'">{{cnForm.value.level + '
-                                Информационное:'}}</mat-card-title>
+                            <mat-card-title>
+                                {{cnForm.value.level.replace('P', 'П') + ' Информационное:'}}
+                            </mat-card-title>
                             <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>

@@ -39,8 +39,7 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="chronicForm.value.categories_report == 'ПР'">{{chronicForm.value.level.replace('A', 'П') + ' Хронический сайт:' + ' Проблема: '}}</mat-card-title>
-                            <mat-card-title *ngIf="chronicForm.value.categories_report != 'ПР'">{{chronicForm.value.level + ' Хронический сайт:' + ' Проблема: '}}</mat-card-title>
+                            <mat-card-title>{{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт:' + ' Проблема: '}}</mat-card-title>
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -71,8 +70,7 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="chronicForm.value.categories_report == 'ПР'">{{chronicForm.value.level.replace('A', 'П') + ' Хронический сайт Решение:'}}</mat-card-title>
-                            <mat-card-title *ngIf="chronicForm.value.categories_report != 'ПР'">{{chronicForm.value.level + ' Хронический сайт Решение:'}}</mat-card-title>
+                            <mat-card-title >{{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт Решение:'}}</mat-card-title>
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
