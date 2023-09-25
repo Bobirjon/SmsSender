@@ -327,7 +327,6 @@ export class CnComponent implements OnInit {
           'Описание: ' + this.cnForm.value.desc + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       } else {
         this.SmsTextBody =
@@ -339,7 +338,6 @@ export class CnComponent implements OnInit {
           'Описание: ' + this.cnForm.value.desc + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       }
     } else {
