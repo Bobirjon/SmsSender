@@ -324,7 +324,6 @@ export class CnComponent implements OnInit {
           this.cnForm.value.problem + '\n' +
           'Причина: ' + this.cnForm.value.reason + '\n' +
           'Эффект: ' + this.cnForm.value.effect + '\n' +
-          'Описание: ' + this.cnForm.value.desc + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
@@ -335,7 +334,6 @@ export class CnComponent implements OnInit {
           this.cnForm.value.problem + '\n' +
           'Причина: ' + this.cnForm.value.reason + '\n' +
           'Эффект: ' + this.cnForm.value.effect + '\n' +
-          'Описание: ' + this.cnForm.value.desc + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
