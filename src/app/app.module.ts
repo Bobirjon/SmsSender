@@ -24,6 +24,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatDialogModule} from '@angular/material/dialog';
 
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
@@ -80,6 +81,7 @@ import { AuthGuard } from './auth-guard.service';
     MatPaginatorModule,
     MatProgressBarModule,
     MatExpansionModule,
+    MatDialogModule
   ],
   providers: [ AuthGuard,
     {
