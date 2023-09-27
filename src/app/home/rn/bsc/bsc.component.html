@@ -1,11 +1,12 @@
 <div>
+
     <form [formGroup]="bscForm" class="form-container">
         <mat-grid-list cols="20" rowHeight="85px">
             <!-- level -->
             <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="bscForm.value.level">
+                    <mat-select formControlName="level" [(ngModel)]="bscForm.value.level" (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
@@ -39,11 +40,8 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="bscForm.value.categories_report == 'ПР'">
-                                {{bscForm.value.level.replace('A', 'П') + ' BSC Проблема:'}}
-                            </mat-card-title>
-                            <mat-card-title *ngIf="bscForm.value.categories_report != 'ПР'">
-                                {{bscForm.value.level + ' BSC Проблема:'}}
+                            <mat-card-title>
+                                {{bscForm.value.level.replace('P', 'П') + ' BSC Проблема:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнения'">
                                 (Дополнения)
@@ -80,11 +78,9 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title
-                                *ngIf="bscForm.value.categories_report == 'ПР'">{{bscForm.value.level.replace('A', 'П')
-                                + ' BSC Решение:'}}</mat-card-title>
-                            <mat-card-title *ngIf="bscForm.value.categories_report != 'ПР'">{{bscForm.value.level + '
-                                BSC Решение:'}}</mat-card-title>
+                            <mat-card-title>
+                                {{bscForm.value.level.replace('P', 'П') + ' BSC Решение:'}}
+                            </mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -118,7 +114,7 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
                     <textarea matInput type="text" formControlName="problem"
-                        [(ngModel)]="bscForm.value.problem"></textarea>
+                        [(ngModel)]="bscForm.value.problem" ></textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- reason -->

@@ -1,6 +1,8 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
@@ -28,7 +30,12 @@ export class BscComponent implements OnInit {
     { value: 'A2', viewValue: 'A2' },
     { value: 'A3', viewValue: 'A3' },
     { value: 'A4', viewValue: 'A4' },
-    { value: 'A5', viewValue: 'A5' }
+    { value: 'A5', viewValue: 'A5' },
+    { value: 'P1', viewValue: 'П1' },
+    { value: 'P2', viewValue: 'П2' },
+    { value: 'P3', viewValue: 'П3' },
+    { value: 'P4', viewValue: 'П4' },
+    { value: 'P5', viewValue: 'П5' },
   ];
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
@@ -73,8 +80,18 @@ export class BscComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private storageService: StorageService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog) {
     this.createForm()
+  }
+
+  setDefault() {
+    if (this.bscForm.value.level == 'P1' || this.bscForm.value.level == 'P2' ||
+      this.bscForm.value.level == 'P3' || this.bscForm.value.level == 'P4' || this.bscForm.value.level == 'P5') {
+      this.bscForm.value.categories_report = 'ПР'
+    } else {
+      this.bscForm.value.categories_report = ''
+    }
   }
 
   createForm() {
@@ -136,7 +153,6 @@ export class BscComponent implements OnInit {
   }
 
   tableSendBody() {
-
     this.tableBody = {
       'type': 'BSC/RNC',
       'level': this.bscForm.value.level,
@@ -162,100 +178,51 @@ export class BscComponent implements OnInit {
   smsSendBody() {
 
     if (this.requestType == 'Проблема') {
-      if (this.bscForm.value.categories_report == 'ПР') {
-        if (this.bscForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + ':\n' +
-            this.bscForm.value.problem + '\n' +
-            'Причина: ' + this.bscForm.value.reason + '\n' +
-            'Эффект: ' + this.bscForm.value.effect + '\n' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + ':\n' +
-            '(' + this.bscForm.value.AddOrCor + ')\n' +
-            this.bscForm.value.problem + '\n' +
-            'Причина: ' + this.bscForm.value.reason + '\n' +
-            'Эффект: ' + this.bscForm.value.effect + '\n' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+      if (this.bscForm.value.AddOrCor == (undefined || null)) {
+        this.SmsTextBody =
+          this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
+          this.bscForm.value.problem + '\n' +
+          'Причина: ' + this.bscForm.value.reason + '\n' +
+          'Эффект: ' + this.bscForm.value.effect + '\n' +
+          'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.bscForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       } else {
-        if (this.bscForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            this.bscForm.value.level + ' BSC ' + this.requestType + ':\n' +
-            this.bscForm.value.problem + '\n' +
-            'Причина: ' + this.bscForm.value.reason + '\n' +
-            'Эффект: ' + this.bscForm.value.effect + '\n' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            this.bscForm.value.level + ' BSC ' + this.requestType + ':\n' +
-            '(' + this.bscForm.value.AddOrCor + ')\n' +
-            this.bscForm.value.problem + '\n' +
-            'Причина: ' + this.bscForm.value.reason + '\n' +
-            'Эффект: ' + this.bscForm.value.effect + '\n' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+        this.SmsTextBody =
+          this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
+          '(' + this.bscForm.value.AddOrCor + ')\n' +
+          this.bscForm.value.problem + '\n' +
+          'Причина: ' + this.bscForm.value.reason + '\n' +
+          'Эффект: ' + this.bscForm.value.effect + '\n' +
+          'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.bscForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       }
-    } else {
-      if (this.bscForm.value.categories_report == 'ПР') {
-        if (this.bscForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + ':\n' +
-            this.bscForm.value.problem + '\n' +
-            'Причина: ' + this.bscForm.value.reason + '\n' +
-            'Эффект: ' + this.bscForm.value.effect + '\n' +
-            'Описание: ' + this.bscForm.value.desc + '\n' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            this.bscForm.value.level.replace('A', 'П') + ' BSC ' + this.requestType + ':\n' +
-            '(' + this.bscForm.value.AddOrCor + ')\n' +
-            this.bscForm.value.problem + '\n' +
-            'Причина: ' + this.bscForm.value.reason + '\n' +
-            'Эффект: ' + this.bscForm.value.effect + '\n' +
-            'Описание: ' + this.bscForm.value.desc + '\n' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+    } 
+    else {
+      if (this.bscForm.value.AddOrCor == (null || undefined)) {
+        this.SmsTextBody =
+          this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
+          this.bscForm.value.problem + '\n' +
+          'Причина: ' + this.bscForm.value.reason + '\n' +
+          'Эффект: ' + this.bscForm.value.effect + '\n' +
+          'Описание: ' + this.bscForm.value.desc + '\n' +
+          'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+          'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.bscForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       } else {
-        if (this.bscForm.value.AddOrCor == (null || undefined)) {
-          this.SmsTextBody =
-            this.bscForm.value.level + ' BSC ' + this.requestType + ':\n' +
-            this.bscForm.value.problem + '\n' +
-            'Причина: ' + this.bscForm.value.reason + '\n' +
-            'Эффект: ' + this.bscForm.value.effect + '\n' +
-            'Описание: ' + this.bscForm.value.desc + '\n' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            this.bscForm.value.level + ' BSC ' + this.requestType + ':\n' +
-            '(' + this.bscForm.value.AddOrCor + ')\n' +
-            this.bscForm.value.problem + '\n' +
-            'Причина: ' + this.bscForm.value.reason + '\n' +
-            'Эффект: ' + this.bscForm.value.effect + '\n' +
-            'Описание: ' + this.bscForm.value.desc + '\n' +
-            'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-            'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
-            'Оповещен: ' + this.bscForm.value.informed + '\n' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+        this.SmsTextBody =
+          this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
+          '(' + this.bscForm.value.AddOrCor + ')\n' +
+          this.bscForm.value.problem + '\n' +
+          'Причина: ' + this.bscForm.value.reason + '\n' +
+          'Эффект: ' + this.bscForm.value.effect + '\n' +
+          'Описание: ' + this.bscForm.value.desc + '\n' +
+          'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
+          'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.bscForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       }
     }
 
@@ -300,28 +267,43 @@ export class BscComponent implements OnInit {
     this.requestType = smsType
     this.smsSendBody()
 
-    this.authService.sendSms(this.smsBody)
-      .subscribe(result => {
-        console.log(result);
-        this.snackBar.open('Success', '', { duration: 10000 })
-      }, error => {
-        console.log(error);
-        this.snackBar.open(error, '', { duration: 10000 })
-      })
+    const dialogRef = this.dialog.open(areYouSure);
 
+    dialogRef.afterClosed().subscribe(result => {
+      this.authService.sendSms(this.smsBody)
+        .subscribe(res => {
+          console.log(res);
+          this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+        }, error => {
+          console.log(error);
+          this.snackBar.open("Ошибка", '', { duration: 10000 })
+        })
+    })
   }
 
   forSmsTesting(smsType: string) {
     this.requestType = smsType
     this.smsSendBody()
 
-    this.authService.sendTestSMS(this.smsBody)
-      .subscribe(result => {
-        console.log(result);
-        this.snackBar.open('Success', '', { duration: 10000 })
-      }, error => {
-        console.log(error);
-        this.snackBar.open(error, '', { duration: 10000 })
-      })
+    const dialogRef = this.dialog.open(areYouSure);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.authService.sendTestSMS(this.smsBody)
+        .subscribe(res => {
+          console.log(res);
+          this.snackBar.open('Success', '', { duration: 10000 })
+        }, error => {
+          console.log(error);
+          this.snackBar.open("Error", '', { duration: 10000 })
+        })
+    })
   }
 }
+
+@Component({
+  selector: 'areYouSure',
+  templateUrl: 'areYouSure.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+})
+export class areYouSure { }

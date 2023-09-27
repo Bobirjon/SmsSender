@@ -1,6 +1,8 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
@@ -33,7 +35,11 @@ export class ChronicComponent implements OnInit {
     { value: 'A3', viewValue: 'A3' },
     { value: 'A4', viewValue: 'A4' },
     { value: 'A5', viewValue: 'A5' },
-    { value: 'ПР', viewValue: 'ПР' }
+    { value: 'P1', viewValue: 'П1' },
+    { value: 'P2', viewValue: 'П2' },
+    { value: 'P3', viewValue: 'П3' },
+    { value: 'P4', viewValue: 'П4' },
+    { value: 'P5', viewValue: 'П5' },
   ];
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
@@ -86,8 +92,18 @@ export class ChronicComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private storageService: StorageService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog) {
     this.createForm()
+  }
+
+  setDefault() {
+    if(this.chronicForm.value.level == 'P1' || this.chronicForm.value.level == 'P2' || 
+      this.chronicForm.value.level == 'P3' || this.chronicForm.value.level == 'P4' || this.chronicForm.value.level == 'P5') {
+      this.chronicForm.value.categories_report = 'ПР'
+    } else {
+      this.chronicForm.value.categories_report = ''
+    }
   }
 
 
@@ -185,92 +201,47 @@ export class ChronicComponent implements OnInit {
   smsSendBody() {
 
     if (this.requestType == 'Проблема') {
-      if (this.chronicForm.value.categories_report == 'ПР') {
-        if (this.chronicForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            ' ' + this.chronicForm.value.level.replace('A', 'П') + ' Хронический сайт Проблема: \n' +
-            ' ' + this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region +
-            ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-            'Причина: ' + this.chronicForm.value.reason + '\n ' +
-            'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            ' ' + this.chronicForm.value.level.replace('A', 'П') + ' Хронический сайт Проблема: \n' +
-            ' (' + this.chronicForm.value.AddOrCor + ') \n' +
+      if (this.chronicForm.value.AddOrCor == (undefined || null)) {
+        this.SmsTextBody =
+          ' ' + this.chronicForm.value.level + ' ' + ' Хронический сайт Проблема: \n' +
           ' ' + this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region + 
-            ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-            'Причина: ' + this.chronicForm.value.reason + '\n ' +
-            'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+          'Причина: ' + this.chronicForm.value.reason + '\n ' +
+          'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       } else {
-        if (this.chronicForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            ' ' + this.chronicForm.value.level + ' ' + ' Хронический сайт Проблема: \n' +
-            ' ' + this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region + 
-            ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-            'Причина: ' + this.chronicForm.value.reason + '\n ' +
-            'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            ' ' + this.chronicForm.value.level + ' ' + ' Хронический сайт Проблема: \n' +
-            ' (' + this.chronicForm.value.AddOrCor + ') \n' + 
-            ' ' + this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region +
-            ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-            'Причина: ' + this.chronicForm.value.reason + '\n ' +
-            'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+        this.SmsTextBody =
+          ' ' + this.chronicForm.value.level + ' ' + ' Хронический сайт Проблема: \n' +
+          ' (' + this.chronicForm.value.AddOrCor + ') \n' + 
+          ' ' + this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region +
+          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+          'Причина: ' + this.chronicForm.value.reason + '\n ' +
+          'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       }
-    } else {
-      if (this.chronicForm.value.categories_report == 'ПР') {
-        if (this.chronicForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            ' ' + this.chronicForm.value.level.replace('A', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
-            ' ' + this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region + 
-            ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") +
-            'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-            'Причина: ' + this.chronicForm.value.reason + '\n ' +
-            'Описание: ' + this.chronicForm.value.desc + ' \n' +
-          'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            ' ' + this.chronicForm.value.level.replace('A', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
-            ' (' + this.chronicForm.value.AddOrCor + ') \n' +
-            ' ' + this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region +
-            ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-            'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-            'Причина: ' + this.chronicForm.value.reason + '\n ' +
-            'Описание: ' + this.chronicForm.value.desc + ' \n' +
-          'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+    } 
+    else {
+      if (this.chronicForm.value.AddOrCor == (null || undefined)) {
+        this.SmsTextBody =
+          ' ' + this.chronicForm.value.level + ' Хронический сайт ' + this.requestType + '\n' +
+          ' ' + this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region +
+          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+          'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
+          'Причина: ' + this.chronicForm.value.reason + '\n ' +
+          'Описание: ' + this.chronicForm.value.desc + ' \n' +
+        'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       } else {
-        if (this.chronicForm.value.AddOrCor == (null || undefined)) {
-          this.SmsTextBody =
-            ' ' + this.chronicForm.value.level + ' Хронический сайт ' + this.requestType + '\n' +
-            ' ' + this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region +
-            ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-            'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-            'Причина: ' + this.chronicForm.value.reason + '\n ' +
-            'Описание: ' + this.chronicForm.value.desc + ' \n' +
-          'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        } else {
-          this.SmsTextBody =
-            ' ' + this.chronicForm.value.level + ' Хронический сайт ' + this.requestType + '\n' +
-            ' (' + this.chronicForm.value.AddOrCor + ') \n' +
-            ' ' + this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region +
-            ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-            'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-            'Причина: ' + this.chronicForm.value.reason + '\n ' +
-            'Описание: ' + this.chronicForm.value.desc + ' \n' +
-          'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
-        }
+        this.SmsTextBody =
+          ' ' + this.chronicForm.value.level + ' Хронический сайт ' + this.requestType + '\n' +
+          ' (' + this.chronicForm.value.AddOrCor + ') \n' +
+          ' ' + this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region +
+          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
+          'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
+          'Причина: ' + this.chronicForm.value.reason + '\n ' +
+          'Описание: ' + this.chronicForm.value.desc + ' \n' +
+        'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
       }
     }
 
@@ -315,13 +286,18 @@ export class ChronicComponent implements OnInit {
     this.requestType = smsType
     this.smsSendBody()
 
-    this.authService.sendSms(this.smsBody)
-      .subscribe(result => {
-        console.log(result);
-        this.snackBar.open('Success', '', { duration: 10000 })
+    const dialogRef = this.dialog.open(areYouSure);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.authService.sendSms(this.smsBody)
+      .subscribe(res => {
+        console.log(res);
+        this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
       }, error => {
-        this.snackBar.open(error, '', { duration: 10000 })
+        console.log(error);
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
       })
+    })
 
   }
 
@@ -329,13 +305,25 @@ export class ChronicComponent implements OnInit {
     this.requestType = smsType
     this.smsSendBody()
 
-    this.authService.sendTestSMS(this.smsBody)
-      .subscribe(result => {
-        console.log(result);
+    const dialogRef = this.dialog.open(areYouSure);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.authService.sendTestSMS(this.smsBody)
+      .subscribe(res => {
+        console.log(res);
         this.snackBar.open('Success', '', { duration: 10000 })
       }, error => {
         console.log(error);
-        this.snackBar.open(error, '', { duration: 10000 })
+        this.snackBar.open("Error", '', { duration: 10000 })
       })
+    })
   }
 }
+
+@Component({
+  selector: 'areYouSure',
+  templateUrl: 'areYouSure.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+})
+export class areYouSure {}

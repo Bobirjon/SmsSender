@@ -1,6 +1,8 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit, } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
@@ -32,7 +34,11 @@ export class HubComponent implements OnInit {
     { value: 'A3', viewValue: 'A3' },
     { value: 'A4', viewValue: 'A4' },
     { value: 'A5', viewValue: 'A5' },
-    { value: 'ПР', viewValue: 'ПР' }
+    { value: 'P1', viewValue: 'П1' },
+    { value: 'P2', viewValue: 'П2' },
+    { value: 'P3', viewValue: 'П3' },
+    { value: 'P4', viewValue: 'П4' },
+    { value: 'P5', viewValue: 'П5' },
   ];
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
@@ -88,7 +94,8 @@ export class HubComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private storageService: StorageService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog) {
     this.createForm()
   }
 
@@ -119,6 +126,15 @@ export class HubComponent implements OnInit {
       'lowBatteryTime': [''],
       'dg_start_time': [''],
     })
+  }
+
+  setDefault() {
+    if(this.hubForm.value.level == 'P1' || this.hubForm.value.level == 'P2' || 
+      this.hubForm.value.level == 'P3' || this.hubForm.value.level == 'P4' || this.hubForm.value.level == 'P5') {
+      this.hubForm.value.categories_report = 'ПР'
+    } else {
+      this.hubForm.value.categories_report = ''
+    }
   }
 
   ngOnInit(): void {
@@ -230,112 +246,57 @@ export class HubComponent implements OnInit {
   smsSendBody() {
 
     if (this.requestType == 'Проблема') {
-      if (this.hubForm.value.categories_report == 'ПР') {
-        if (this.hubForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт ' + this.requestType + '\n ' +
-            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
-            'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
-            'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
-            'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-            'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-            'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-            'Информирован: ' + this.hubForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
-        } else {
-          this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт ' + this.requestType + '\n ' +
-            this.hubForm.value.AddOrCor + '\n ' +
-            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
-            'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
-            'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
-            'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-            'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-            'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-            'Информирован: ' + this.hubForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
-        }
+      if (this.hubForm.value.AddOrCor == (undefined || null)) {
+        this.SmsTextBody =
+          ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
+          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
+          'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
+          'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
+          'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+          'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+          'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+          'Информирован: ' + this.hubForm.value.informed + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
       } else {
-        if (this.hubForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
-            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
-            'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
-            'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
-            'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-            'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-            'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-            'Информирован: ' + this.hubForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
-        } else {
-          this.SmsTextBody =
-            ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
-            this.hubForm.value.AddOrCor + '\n ' +
-            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
-            'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
-            'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
-            'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-            'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-            'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-            'Информирован: ' + this.hubForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
-        }
+        this.SmsTextBody =
+          ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
+          this.hubForm.value.AddOrCor + '\n ' +
+          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
+          'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
+          'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
+          'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+          'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+          'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+          'Информирован: ' + this.hubForm.value.informed + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
       }
+
     } else {
-      if (this.hubForm.value.categories_report == 'ПР') {
-        if (this.hubForm.value.AddOrCor == (undefined || null)) {
-          this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт ' + this.requestType + '\n ' +
-            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
-            'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
-            'Описание: ' + this.hubForm.value.desc + '\n ' +
-            'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-            'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-            'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n ' +
-            'Информирован: ' + this.hubForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
-        } else {
-          this.SmsTextBody =
-            ' ' + this.hubForm.value.level.replace('A', 'П') + ' Хаб сайт ' + this.requestType + '\n ' +
-            this.hubForm.value.AddOrCor + '\n ' +
-            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
-            'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
-            'Описание: ' + this.hubForm.value.desc + '\n ' +
-            'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-            'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-            'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n ' +
-            'Информирован: ' + this.hubForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
-        }
+      if (this.hubForm.value.AddOrCor == (null || undefined)) {
+        this.SmsTextBody =
+          ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
+          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
+          'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
+          'Описание: ' + this.hubForm.value.desc + '\n ' +
+          'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+          'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+          'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+          'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n ' +
+          'Информирован: ' + this.hubForm.value.informed + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
       } else {
-        if (this.hubForm.value.AddOrCor == (null || undefined)) {
-          this.SmsTextBody =
-            ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
-            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
-            'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
-            'Описание: ' + this.hubForm.value.desc + '\n ' +
-            'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-            'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-            'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n ' +
-            'Информирован: ' + this.hubForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
-        } else {
-          this.SmsTextBody =
-            ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
-            this.hubForm.value.AddOrCor + '\n ' +
-            ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
-            'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
-            'Описание: ' + this.hubForm.value.desc + '\n ' +
-            'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
-            'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
-            'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
-            'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n ' +
-            'Информирован: ' + this.hubForm.value.informed + '\n ' +
-            'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
-        }
+        this.SmsTextBody =
+          ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
+          this.hubForm.value.AddOrCor + '\n ' +
+          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
+          'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
+          'Описание: ' + this.hubForm.value.desc + '\n ' +
+          'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
+          'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
+          'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
+          'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n ' +
+          'Информирован: ' + this.hubForm.value.informed + '\n ' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
       }
     }
 
@@ -347,7 +308,6 @@ export class HubComponent implements OnInit {
       'sms_text': this.SmsTextBody,
       'region': [this.hubForm.value.region]
     }
-
   }
 
 
@@ -381,28 +341,43 @@ export class HubComponent implements OnInit {
     this.requestType = smsType
     this.smsSendBody()
 
-    this.authService.sendSms(this.smsBody)
-      .subscribe(result => {
-        console.log(result);
-        console.log(result);
+    const dialogRef = this.dialog.open(areYouSure);
 
-        this.snackBar.open('SMS Sended Successfully', '', { duration: 10000 })
+    dialogRef.afterClosed().subscribe(result => {
+      this.authService.sendSms(this.smsBody)
+      .subscribe(res => {
+        console.log(res);
+        this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
       }, error => {
-        this.snackBar.open(error.message, '', { duration: 10000 })
+        console.log(error);
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
       })
+    })
   }
 
   forSmsTesting(smsType: string) {
     this.requestType = smsType
     this.smsSendBody()
 
-    this.authService.sendTestSMS(this.smsBody)
-      .subscribe(result => {
-        console.log(result);
+    const dialogRef = this.dialog.open(areYouSure);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.authService.sendTestSMS(this.smsBody)
+      .subscribe(res => {
+        console.log(res);
         this.snackBar.open('Success', '', { duration: 10000 })
       }, error => {
         console.log(error);
-        this.snackBar.open(error, '', { duration: 10000 })
+        this.snackBar.open("Error", '', { duration: 10000 })
       })
+    })
   }
 }
+
+@Component({
+  selector: 'areYouSure',
+  templateUrl: 'areYouSure.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+})
+export class areYouSure {}

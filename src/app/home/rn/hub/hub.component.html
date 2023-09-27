@@ -5,7 +5,7 @@
              <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level">
+                    <mat-select formControlName="level" [(ngModel)]="hubForm.value.level" (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
@@ -16,7 +16,7 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория для отчета</mat-label>
-                    <mat-select formControlName="categories_report">
+                    <mat-select formControlName="categories_report" [(ngModel)]="hubForm.value.categories_report">
                         <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
                             {{cat_rep.viewValue}}
                         </mat-option>
@@ -27,7 +27,7 @@
             <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Ответственная Зона</mat-label>
-                    <mat-select formControlName="responsible_report">
+                    <mat-select formControlName="responsible_report" [(ngModel)]="hubForm.value.responsible_report">
                         <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
                             {{res_rep.viewValue}}
                         </mat-option>
@@ -39,10 +39,9 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level.replace('A',
-                                'П') + ' Хаб сайт Проблема:'}}</mat-card-title>
-                            <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + '
-                                Хаб сайт Проблема:'}}</mat-card-title>
+                            <mat-card-title>
+                                {{hubForm.value.level.replace('P','П') + ' Хаб сайт Проблема:'}}
+                            </mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -75,10 +74,9 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level?.replace('A',
-                                'П') + ' Хаб сайт Решение:'}}</mat-card-title>
-                            <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + '
-                                Хаб сайт Решение:'}}</mat-card-title>
+                            <mat-card-title>
+                                {{hubForm.value.level?.replace('P', 'П') + ' Хаб сайт Решение:'}}
+                            </mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -108,15 +106,13 @@
                 </div>
             </mat-grid-tile>
             <!-- preview infromacionoe-->
-
             <mat-grid-tile colspan="5" rowspan="8">
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title *ngIf="hubForm.value.categories_report == 'ПР'">{{hubForm.value.level?.replace('A',
-                                'П') + ' Хаб сайт Информационное:'}}</mat-card-title>
-                            <mat-card-title *ngIf="hubForm.value.categories_report != 'ПР'">{{hubForm.value.level + '
-                                Хаб сайт Информационное::'}}</mat-card-title>
+                            <mat-card-title>
+                                {{hubForm.value.level?.replace('P','П') + ' Хаб сайт Информационное:'}}
+                            </mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -146,19 +142,18 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-            
              <!-- Hub site -->
              <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Хаб Сайт</mat-label>
-                    <input matInput type="text" formControlName="hubSite" />
+                    <input matInput type="text" formControlName="hubSite" [(ngModel)]="hubForm.value.hubSite"/>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- Type of Generator -->
             <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Тип Генератора</mat-label>
-                    <mat-select formControlName="generator">
+                    <mat-select formControlName="generator" [(ngModel)]="hubForm.value.generator">
                         <mat-option *ngFor="let gen of generator" [value]="gen.value">
                             {{gen.viewValue}}
                         </mat-option>
@@ -169,7 +164,7 @@
              <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
-                    <mat-select formControlName="region">
+                    <mat-select formControlName="region" [(ngModel)]="hubForm.value.region">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
                             {{reg.viewValue}}
                         </mat-option>
@@ -180,43 +175,43 @@
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
-                    <textarea matInput type="text" formControlName="problem"> </textarea>
+                    <textarea matInput type="text" formControlName="problem" [(ngModel)]="hubForm.value.problem"> </textarea>
                 </mat-form-field>
             </mat-grid-tile>
               <!-- reason -->
               <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
-                    <textarea matInput type="text" formControlName="reason"></textarea>
+                    <textarea matInput type="text" formControlName="reason" [(ngModel)]="hubForm.value.reason"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
              <!-- desc -->
              <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc"></textarea>
+                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="hubForm.value.desc"></textarea>
                 </mat-form-field>
             </mat-grid-tile>   
              <!-- effected sites -->
              <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Затронутые сайты</mat-label>
-                    <textarea matInput type="text" formControlName="effectedSites"></textarea>
+                    <textarea matInput type="text" formControlName="effectedSites" [(ngModel)]="hubForm.value.effectedSites"></textarea>
                 </mat-form-field>
             </mat-grid-tile> 
              <!-- informed -->
              <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Оповещен</mat-label>
-                    <input matInput type="text" formControlName="informed" />
+                    <input matInput type="text" formControlName="informed" [(ngModel)]="hubForm.value.informed"/>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- category -->
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория</mat-label>
-                    <mat-select formControlName="category">
-                        <mat-option *ngFor="let cat of category" [value]="cat.value">
+                    <mat-select formControlName="category" [(ngModel)]="hubForm.value.category">
+                        <mat-option *ngFor="let cat of category" [value]="cat.value" >
                             {{cat.viewValue}}
                         </mat-option>
                     </mat-select>
@@ -227,7 +222,7 @@
                 <div class="margin-container">
                     <p>Время отключения ЭП</p>
                     <input type="datetime-local" class="dateTime" formControlName="powerOffTime"
-                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="hubForm.value.powerOffTime">
                 </div>
             </mat-grid-tile>
             <!-- HubSiteBlock Time -->
@@ -235,7 +230,7 @@
                 <div class="margin-container">
                     <p>Время блокировки секторов</p>
                     <input type="datetime-local" class="dateTime" formControlName="hubBlockTime" min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="hubForm.value.hubBlockTime">
                 </div>
             </mat-grid-tile>
             <!-- start Time -->
@@ -243,14 +238,14 @@
                 <div class="margin-container">
                     <p>Начало</p>
                     <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
-                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="hubForm.value.startTime">
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
             <mat-grid-tile colspan="5">
                 <div class="margin-container">
                     <p>Конец</p>
-                    <input type="datetime-local" class="dateTime" formControlName="endTime">
+                    <input type="datetime-local" class="dateTime" formControlName="endTime" [(ngModel)]="hubForm.value.endTime">
                 </div>
             </mat-grid-tile>
             <!-- buttons -->

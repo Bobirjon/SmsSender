@@ -14,6 +14,7 @@ import { WebSocketService } from 'src/web-socket.service';
   templateUrl: './cn.component.html',
   styleUrls: ['./cn.component.css']
 })
+
 export class CnComponent implements OnInit {
 
   cnForm: FormGroup
@@ -228,7 +229,8 @@ export class CnComponent implements OnInit {
           'Эффект: ' + this.cnForm.value.effect + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          'http://www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -238,7 +240,8 @@ export class CnComponent implements OnInit {
           'Эффект: ' + this.cnForm.value.effect + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          'http://www.ucell.uz/lead'
       }
     } else {
       if (this.cnForm.value.AddOrCor == (null || undefined)) {
@@ -251,7 +254,8 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          'http://www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -263,7 +267,8 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          'http://www.ucell.uz/lead'
       }
     }
 
@@ -292,10 +297,10 @@ export class CnComponent implements OnInit {
     this.authService.postData(this.tableBody)
       .subscribe((res) => {
         console.log(res);
-        this.snackBar.open('Success', '', { duration: 10000 })
+        this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
       }, error => {
         console.log(error);
-        this.snackBar.open("Error", '', { duration: 10000 })
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
       })
   }
 
@@ -316,10 +321,10 @@ export class CnComponent implements OnInit {
       this.authService.sendSms(this.smsBody)
       .subscribe(res => {
         console.log(res);
-        this.snackBar.open('Success', '', { duration: 10000 })
+        this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
       }, error => {
         console.log(error);
-        this.snackBar.open("Error", '', { duration: 10000 })
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
       })
     })
   }
