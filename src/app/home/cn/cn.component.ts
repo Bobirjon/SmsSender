@@ -313,7 +313,6 @@ export class CnComponent implements OnInit {
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       this.authService.sendSms(this.smsBody)
       .subscribe(res => {
         console.log(res);
