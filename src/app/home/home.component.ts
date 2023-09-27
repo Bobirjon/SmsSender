@@ -321,6 +321,7 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/add'])
   }
 
+  
   exportXlsx() {
     let element  = document.getElementById('open-case')
     const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);

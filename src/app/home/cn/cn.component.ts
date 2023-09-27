@@ -314,7 +314,7 @@ export class CnComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
-      this.authService.sendTestSMS(this.smsBody)
+      this.authService.sendSms(this.smsBody)
       .subscribe(res => {
         console.log(res);
         this.snackBar.open('Success', '', { duration: 10000 })
@@ -324,7 +324,6 @@ export class CnComponent implements OnInit {
       })
     })
   }
-
 
   forTestSms(smsType: string) {
     this.requestType = smsType
