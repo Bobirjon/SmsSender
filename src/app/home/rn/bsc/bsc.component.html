@@ -1,5 +1,4 @@
 <div>
-
     <form [formGroup]="bscForm" class="form-container">
         <mat-grid-list cols="20" rowHeight="85px">
             <!-- level -->
@@ -54,8 +53,8 @@
                             <p>{{bscForm.value.problem}}</p>
                             <p>{{'Причина: ' + bscForm.value.reason}}</p>
                             <p>{{'Эффект: ' + bscForm.value.effect}}</p>
-                            <p>{{'Оповещен: ' + bscForm.value.informed}}</p>
                             <p>{{'Начало: ' + bscForm.value.startTime.replace('T',' ')}}</p>
+                            <p>{{'Оповещен: ' + bscForm.value.informed}}</p>
                             <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>

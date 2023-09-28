@@ -56,20 +56,20 @@ export class HubComponent implements OnInit {
     { value: '', viewValue: 'Empty' }
   ];
   region: { value: string; viewValue: string }[] = [
-    { value: 'Андижан', viewValue: 'Андижан' },
-    { value: 'Бухара', viewValue: 'Бухара' },
-    { value: 'Джизак', viewValue: 'Джизак' },
-    { value: 'Фергана', viewValue: 'Фергана' },
-    { value: 'Сырдарья', viewValue: 'Сырдарья' },
-    { value: 'Кашкадарья', viewValue: 'Кашкадарья' },
-    { value: 'Наманган', viewValue: 'Наманган' },
+    { value: 'Андижан', viewValue: 'Андижане' },
+    { value: 'Бухара', viewValue: 'Бухаре' },
+    { value: 'Джизак', viewValue: 'Джизаке' },
+    { value: 'Фергана', viewValue: 'Фергане' },
+    { value: 'Сырдарья', viewValue: 'Сырдарье' },
+    { value: 'Кашкадарья', viewValue: 'Кашкадарье' },
+    { value: 'Наманган', viewValue: 'Намангане' },
     { value: 'Навои', viewValue: 'Навои' },
-    { value: 'Каракалпакстан', viewValue: 'Каракалпакстан' },
-    { value: 'Самарканд', viewValue: 'Самарканд' },
-    { value: 'г.Ташкент', viewValue: 'г.Ташкент' },
-    { value: 'Ташкент.обл', viewValue: 'Ташкент.обл' },
-    { value: 'Сурхандарья', viewValue: 'Сурхандарья' },
-    { value: 'Хорезм', viewValue: 'Хорезм' },
+    { value: 'Каракалпакстан', viewValue: 'Каракалпакстане' },
+    { value: 'Самарканд', viewValue: 'Самарканде' },
+    { value: 'г.Ташкент', viewValue: 'г.Ташкенте' },
+    { value: 'Ташкент.обл', viewValue: 'Ташкентской области' },
+    { value: 'Сурхандарья', viewValue: 'Сурхандарье' },
+    { value: 'Хорезм', viewValue: 'Хорезме' },
   ];
   category: { value: string; viewValue: string }[] = [
     { value: 'AC/DC breaker', viewValue: 'AC/DC breaker' },
@@ -232,6 +232,11 @@ export class HubComponent implements OnInit {
       'informed': this.hubForm.value.informed,
       'influence': this.hubForm.value.effect,
       'sender': this.user?.username,
+      'effected_sites': this.hubForm.value.effectedSites.split('\n'),
+      'hub_site' : this.hubForm.value.effectedSites.hubSite,
+      'generetor': this.hubForm.value.generator,
+      'power_off_time': this.hubForm.value.powerOffTime,
+      'sector_block_time': this.hubForm.value.hubBlockTime,
 
       'mw_link': this.hubForm.value.mw_link,
       'mw_equipment': this.hubForm.value.mw_equipment,
@@ -248,34 +253,36 @@ export class HubComponent implements OnInit {
     if (this.requestType == 'Проблема') {
       if (this.hubForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
-          ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
-          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
+          this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region.viewValue + '\n ' +
           'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
           'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
           'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
           'Информирован: ' + this.hubForm.value.informed + '\n ' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
-          ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
+          this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
           this.hubForm.value.AddOrCor + '\n ' +
-          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region.viewValue + '\n ' +
           'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
           'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
           'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
           'Информирован: ' + this.hubForm.value.informed + '\n ' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
 
     } else {
       if (this.hubForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
-          ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
-          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
+          this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region.viewValue + '\n ' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
           'Описание: ' + this.hubForm.value.desc + '\n ' +
           'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -283,12 +290,13 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n ' +
           'Информирован: ' + this.hubForm.value.informed + '\n ' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name+ '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
-          ' ' + this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
+          this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
           this.hubForm.value.AddOrCor + '\n ' +
-          ' ' + this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region + '\n ' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region.viewValue + '\n ' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
           'Описание: ' + this.hubForm.value.desc + '\n ' +
           'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -296,7 +304,8 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n ' +
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n ' +
           'Информирован: ' + this.hubForm.value.informed + '\n ' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name;
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name+ '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
 
@@ -323,6 +332,10 @@ export class HubComponent implements OnInit {
   }
 
   createData() {
+    let aray = this.hubForm.value.effectedSites.split('\n')
+
+    console.log(aray);
+    
     this.tableSendBody()
 
     this.authService.postData(this.tableBody)

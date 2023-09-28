@@ -46,13 +46,13 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region}}</p>
-                            <p>{{'Эффект: Потеря покрытия и качество связи в ' + hubForm.value.region}}</p>
-                            <p>{{'Причина: ' + hubForm.value.reason}}</p>
+                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region.viewValue}}</p>
+                            <p>{{'Эффект: Потеря покрытия и качество связи в ' + hubForm.value.region.viewValue}}</p>
+                            <p>{{'Причина: ' + hubForm.value.reason + ' ' + hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
                             <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
-                            <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
                             <p>{{'Начало: ' + hubForm.value.startTime.replace("T", " ")}}</p>
+                            <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
                             <p>{{ 'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
@@ -81,15 +81,15 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region}}</p>
-                            <p>{{'Причина: ' + hubForm.value.reason}}</p>
+                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region.viewValue}}</p>
+                            <p>{{'Причина: ' + hubForm.value.reason + ' ' + hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
-                            <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime?.replace("T", " ")}}</p>
-                            <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime?.replace("T", " ")}}</p>
-                            <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
-                            <p>{{'Начало: ' + hubForm.value.startTime?.replace("T", " ")}}</p>
+                            <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
+                            <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
+                            <p>{{'Начало: ' + hubForm.value.startTime.replace("T", " ")}}</p>
                             <p>{{'Конец: ' + hubForm.value.endTime?.replace("T", " ")}}</p>
-                            <p>{{ 'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
+                            <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
+                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                            <button class="form-button" mat-raised-button color="primary"
@@ -117,15 +117,15 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region}}</p>
-                            <p>{{'Причина: ' + hubForm.value.reason}}</p>
+                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region.viewValue}}</p>
+                            <p>{{'Причина: ' + hubForm.value.reason + ' ' + hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
-                            <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime?.replace("T", " ")}}</p>
-                            <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime?.replace("T", " ")}}</p>
-                            <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
-                            <p>{{'Начало: ' + hubForm.value.startTime?.replace("T", " ")}}</p>
+                            <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
+                            <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
+                            <p>{{'Начало: ' + hubForm.value.startTime.replace("T", " ")}}</p>
                             <p>{{'Конец: ' + hubForm.value.endTime?.replace("T", " ")}}</p>
-                            <p>{{ 'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
+                            <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
+                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
@@ -166,7 +166,7 @@
                     <mat-label>Регион</mat-label>
                     <mat-select formControlName="region" [(ngModel)]="hubForm.value.region">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
-                            {{reg.viewValue}}
+                            {{reg.value}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -192,6 +192,7 @@
                     <textarea matInput type="text" formControlName="desc" [(ngModel)]="hubForm.value.desc"></textarea>
                 </mat-form-field>
             </mat-grid-tile>   
+
              <!-- effected sites -->
              <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
@@ -199,6 +200,7 @@
                     <textarea matInput type="text" formControlName="effectedSites" [(ngModel)]="hubForm.value.effectedSites"></textarea>
                 </mat-form-field>
             </mat-grid-tile> 
+            
              <!-- informed -->
              <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">

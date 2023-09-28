@@ -40,12 +40,12 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title>{{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт:' + ' Проблема: '}}</mat-card-title>
+                            <mat-card-title>{{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + ' Проблема: '}}</mat-card-title>
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{chronicForm.value.siteName + ' - сайт не работает в ' + chronicForm.value.region.replace('A', 'П') + ' более ' +
+                            <p>{{chronicForm.value.siteName + ' - сайт не работает в ' + chronicForm.value.region.viewValue + 'е' + ' более ' +
                                 chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T', ' ')}}</p>
                             <p>{{'Причина: ' + chronicForm.value.reason}}</p>
                             <p>{{'Оповещен: ' + chronicForm.value.informed}}</p>
@@ -76,7 +76,7 @@
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{chronicForm.value.siteName + ' - сайт не работал в ' + chronicForm.value.region + ' более ' +
+                            <p>{{chronicForm.value.siteName + ' - сайт не работал в ' + chronicForm.value.region.viewValue + 'е' + ' более ' +
                                 chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T',' ') + ' по ' +
                                 chronicForm.value.endTime.replace('T', ' ')}}</p>
                             <p>{{'Причина: ' + chronicForm.value.reason}}</p>
@@ -165,7 +165,7 @@
                     <mat-label>Регион</mat-label>
                     <mat-select formControlName="region" [(ngModel)]="chronicForm.value.region">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
-                            {{reg.viewValue}}
+                            {{reg.value}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

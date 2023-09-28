@@ -71,20 +71,20 @@ export class ChronicComponent implements OnInit {
     { value: 'Выясняется', viewValue: 'Выясняется ' },
   ];
   region: { value: string; viewValue: string }[] = [
-    { value: 'Андижан', viewValue: 'Андижан' },
-    { value: 'Бухара', viewValue: 'Бухара' },
-    { value: 'Джизак', viewValue: 'Джизак' },
-    { value: 'Фергана', viewValue: 'Фергана' },
-    { value: 'Сырдарья', viewValue: 'Сырдарья' },
-    { value: 'Кашкадарья', viewValue: 'Кашкадарья' },
-    { value: 'Наманган', viewValue: 'Наманган' },
+    { value: 'Андижан', viewValue: 'Андижане' },
+    { value: 'Бухара', viewValue: 'Бухаре' },
+    { value: 'Джизак', viewValue: 'Джизаке' },
+    { value: 'Фергана', viewValue: 'Фергане' },
+    { value: 'Сырдарья', viewValue: 'Сырдарье' },
+    { value: 'Кашкадарья', viewValue: 'Кашкадарье' },
+    { value: 'Наманган', viewValue: 'Намангане' },
     { value: 'Навои', viewValue: 'Навои' },
-    { value: 'Каракалпакстан', viewValue: 'Каракалпакстан' },
-    { value: 'Самарканд', viewValue: 'Самарканд' },
-    { value: 'г.Ташкент', viewValue: 'г.Ташкент' },
-    { value: 'Ташкент.обл', viewValue: 'Ташкент.обл' },
-    { value: 'Сурхандарья', viewValue: 'Сурхандарья' },
-    { value: 'Хорезм', viewValue: 'Хорезм' },
+    { value: 'Каракалпакстан', viewValue: 'Каракалпакстане' },
+    { value: 'Самарканд', viewValue: 'Самарканде' },
+    { value: 'г.Ташкент', viewValue: 'г.Ташкенте' },
+    { value: 'Ташкент.обл', viewValue: 'Ташкентской области' },
+    { value: 'Сурхандарья', viewValue: 'Сурхандарье' },
+    { value: 'Хорезм', viewValue: 'Хорезме' },
   ];
 
   constructor(
@@ -98,7 +98,7 @@ export class ChronicComponent implements OnInit {
   }
 
   setDefault() {
-    if(this.chronicForm.value.level == 'P1' || this.chronicForm.value.level == 'P2' || 
+    if (this.chronicForm.value.level == 'P1' || this.chronicForm.value.level == 'P2' ||
       this.chronicForm.value.level == 'P3' || this.chronicForm.value.level == 'P4' || this.chronicForm.value.level == 'P5') {
       this.chronicForm.value.categories_report = 'ПР'
     } else {
@@ -203,45 +203,49 @@ export class ChronicComponent implements OnInit {
     if (this.requestType == 'Проблема') {
       if (this.chronicForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
-          ' ' + this.chronicForm.value.level + ' ' + ' Хронический сайт Проблема: \n' +
-          ' ' + this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region + 
-          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-          'Причина: ' + this.chronicForm.value.reason + '\n ' +
-          'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
+          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region.viewValue +
+          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + '\n' +
+          'Оповещен: ' + this.chronicForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
-          ' ' + this.chronicForm.value.level + ' ' + ' Хронический сайт Проблема: \n' +
-          ' (' + this.chronicForm.value.AddOrCor + ') \n' + 
-          ' ' + this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region +
-          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-          'Причина: ' + this.chronicForm.value.reason + '\n ' +
-          'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
+          '(' + this.chronicForm.value.AddOrCor + ') \n' +
+          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region.viewValue +
+          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + '\n' +
+          'Оповещен: ' + this.chronicForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
-    } 
+    }
     else {
       if (this.chronicForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
-          ' ' + this.chronicForm.value.level + ' Хронический сайт ' + this.requestType + '\n' +
-          ' ' + this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region +
-          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-          'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-          'Причина: ' + this.chronicForm.value.reason + '\n ' +
+          this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
+          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region.viewValue +
+          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
-        'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Оповещен: ' + this.chronicForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
-          ' ' + this.chronicForm.value.level + ' Хронический сайт ' + this.requestType + '\n' +
-          ' (' + this.chronicForm.value.AddOrCor + ') \n' +
-          ' ' + this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region +
-          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n ' +
-          'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n ' +
-          'Причина: ' + this.chronicForm.value.reason + '\n ' +
+          this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
+          '(' + this.chronicForm.value.AddOrCor + ') \n' +
+          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region.viewValue +
+          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
-        'Оповещен: ' + this.chronicForm.value.informed + '\n ' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Оповещен: ' + this.chronicForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
 
@@ -290,13 +294,13 @@ export class ChronicComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.authService.sendSms(this.smsBody)
-      .subscribe(res => {
-        console.log(res);
-        this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-      }, error => {
-        console.log(error);
-        this.snackBar.open("Ошибка", '', { duration: 10000 })
-      })
+        .subscribe(res => {
+          console.log(res);
+          this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+        }, error => {
+          console.log(error);
+          this.snackBar.open("Ошибка", '', { duration: 10000 })
+        })
     })
 
   }
@@ -309,13 +313,13 @@ export class ChronicComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.authService.sendTestSMS(this.smsBody)
-      .subscribe(res => {
-        console.log(res);
-        this.snackBar.open('Success', '', { duration: 10000 })
-      }, error => {
-        console.log(error);
-        this.snackBar.open("Error", '', { duration: 10000 })
-      })
+        .subscribe(res => {
+          console.log(res);
+          this.snackBar.open('Success', '', { duration: 10000 })
+        }, error => {
+          console.log(error);
+          this.snackBar.open("Error", '', { duration: 10000 })
+        })
     })
   }
 }
@@ -326,4 +330,4 @@ export class ChronicComponent implements OnInit {
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
 })
-export class areYouSure {}
+export class areYouSure { }

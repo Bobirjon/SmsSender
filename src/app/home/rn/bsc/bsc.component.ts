@@ -176,7 +176,6 @@ export class BscComponent implements OnInit {
   }
 
   smsSendBody() {
-
     if (this.requestType == 'Проблема') {
       if (this.bscForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
@@ -186,7 +185,8 @@ export class BscComponent implements OnInit {
           'Эффект: ' + this.bscForm.value.effect + '\n' +
           'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
           'Оповещен: ' + this.bscForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
@@ -196,7 +196,8 @@ export class BscComponent implements OnInit {
           'Эффект: ' + this.bscForm.value.effect + '\n' +
           'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
           'Оповещен: ' + this.bscForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     } 
     else {
@@ -210,7 +211,8 @@ export class BscComponent implements OnInit {
           'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
           'Оповещен: ' + this.bscForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
@@ -222,7 +224,8 @@ export class BscComponent implements OnInit {
           'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
           'Оповещен: ' + this.bscForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
 
