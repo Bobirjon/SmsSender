@@ -230,7 +230,7 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'http://www.ucell.uz/lead'
+          'Скачайте приложение Ucell по ссылке www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -241,7 +241,7 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'http://www.ucell.uz/lead'
+          'Скачайте приложение Ucell по ссылке www.ucell.uz/lead'
       }
     } else {
       if (this.cnForm.value.AddOrCor == (null || undefined)) {
@@ -255,7 +255,7 @@ export class CnComponent implements OnInit {
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'http://www.ucell.uz/lead'
+          'Скачайте приложение Ucell по ссылке www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -268,7 +268,7 @@ export class CnComponent implements OnInit {
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'http://www.ucell.uz/lead'
+          'Скачайте приложение Ucell по ссылке www.ucell.uz/lead'
       }
     }
 
