@@ -4,12 +4,16 @@
       <button mat-raised-button color="primary" (click)="onCN()">Создать CN шаблон</button>
       <button mat-raised-button color="primary" (click)="onRN()" style="margin-left: 15px;">Создать RN шаблон</button>
       <button mat-raised-button color="primary" (click)="addNumber()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Добавить получателя</button>
-      <button mat-raised-button color="primary" (click)="exportXlsx()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Экспорт таблицы</button>
+      <button mat-raised-button color="primary" 
+        (click)="exportXlsx()" 
+        style="margin-left: 15px;" 
+        *ngIf="isAdmin == 'admin'">   Экспорт таблицы
+      </button>
     </mat-grid-tile>
   </mat-grid-list>
   <mat-divider></mat-divider>
 
-  <h1 style="margin-left: 50px; margin-top: 40px;">Открытые сообщения</h1>
+  <h1 style="margin-left: 50px; margin-top: 40px;">Открытые Инциденты</h1>
 
   <mat-form-field style="margin-left: 50px;" appearance="fill" *ngFor="let selectableFilter of selectableFilters">
     <mat-label>{{ selectableFilter.name }}</mat-label>
@@ -76,7 +80,7 @@
   </div>
   <hr>
 
-  <h1 style="margin-left: 50px; margin-top: 40px;">The All Cases</h1>
+  <h1 style="margin-left: 50px; margin-top: 40px;">Все Инциденты</h1>
   
   <div class="table-style" >
     <table mat-table [dataSource] = "dataTable" matSort #table2 #table2sort="matSort" class="mat-elevation-z8">

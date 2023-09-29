@@ -177,7 +177,9 @@ export class ChronicComponent implements OnInit {
       'level': this.chronicForm.value.level,
       'category': this.chronicForm.value.categories_report,
       'responsible_area': this.chronicForm.value.responsible_report,
-      'problem': this.chronicForm.value.problem,
+      'problem': this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region.viewValue +
+      ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " "),
+
       'reason': this.chronicForm.value.reason,
       'effect': 'С влиянием',
       'start_time': this.chronicForm.value.startTime,

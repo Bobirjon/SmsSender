@@ -237,6 +237,7 @@ export class HubComponent implements OnInit {
       'generetor': this.hubForm.value.generator,
       'power_off_time': this.hubForm.value.powerOffTime,
       'sector_block_time': this.hubForm.value.hubBlockTime,
+      'hub_problem': this.hubForm.value.level + ' Хаб сайт ' + this.requestType,
 
       'mw_link': this.hubForm.value.mw_link,
       'mw_equipment': this.hubForm.value.mw_equipment,

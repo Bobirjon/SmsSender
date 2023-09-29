@@ -11,6 +11,9 @@ import { MatSelectChange } from '@angular/material/select';
 import { BehaviorSubject, Subscription, ValueFromArray, map } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
 import * as XLSX from 'xlsx';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface DataTable {
   region: string
@@ -101,7 +104,9 @@ export class HomeComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private webSocketService: WebSocketService) {
+    private webSocketService: WebSocketService,
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog) {
     // Table for all Cases
     this.authService.getData()
       .subscribe((data) => {
@@ -319,17 +324,29 @@ export class HomeComponent implements OnInit {
 
   addNumber() {
     this.router.navigate(['/add'])
-  }
-
-  
+  }  
   exportXlsx() {
-    let element  = document.getElementById('open-case')
-    const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+    const dialogRef = this.dialog.open(areYouSure);
 
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      
+    })
+    // let element  = document.getElementById('open-case')
+    // const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
 
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    // const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    // XLSX.writeFile(wb, 'ExcelSheet.xlsx');
   }
+}
 
+@Component({
+  selector: 'areYouSure',
+  templateUrl: 'areYouSure.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+})
+export class areYouSure { 
 }

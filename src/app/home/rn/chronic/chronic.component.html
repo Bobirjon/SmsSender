@@ -99,22 +99,15 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-            <!-- problem -->
-            <mat-grid-tile colspan="4">
-                <mat-form-field class="margin-container">
-                    <mat-label>Проблема</mat-label>
-                    <textarea matInput type="text" formControlName="problem" [(ngModel)]="chronicForm.value.problem"> </textarea>
-                </mat-form-field>
-            </mat-grid-tile>
             <!-- Description -->
-            <mat-grid-tile colspan="4">
+            <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
                     <textarea matInput type="text" formControlName="desc" [(ngModel)]="chronicForm.value.desc"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- reason -->
-            <mat-grid-tile colspan="4">
+            <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
                     <textarea matInput type="text" formControlName="reason" [(ngModel)]="chronicForm.value.reason"></textarea>
@@ -176,6 +169,7 @@
                     <p>Начало</p>
                     <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
                         min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="chronicForm.value.startTime">
+                        
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
@@ -200,5 +194,6 @@
                 </mat-chip-listbox>
             </mat-grid-tile>
         </mat-grid-list>
+
     </form>
 </div>
