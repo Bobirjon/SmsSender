@@ -4,9 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
-import { StorageService } from 'src/app/storage.service';
 
 @Component({
   selector: 'app-hub',
@@ -71,6 +70,24 @@ export class HubComponent implements OnInit {
     { value: 'Сурхандарья', viewValue: 'Сурхандарье' },
     { value: 'Хорезм', viewValue: 'Хорезме' },
   ];
+
+  regions =  {  'Андижан' :  'Андижане'   , 
+    'Бухара' :  'Бухаре',    
+    'Джизак' :  'Джизаке',    
+    'Фергана' :  'Фергане',     
+    'Сырдарья' :  'Сырдарье',    
+    'Кашкадарья' :  'Кашкадарье',    
+    'Наманган' :  'Намангане',    
+    'Навои' :  'Навои',    
+    'Каракалпакстан' :  'Каракалпакстане',    
+    'Самарканд' :  'Самарканде'    ,
+    'г.Ташкент' :  'городе Ташкент'    ,
+    'Ташкент.обл' :  'Ташкентской области',    
+    'Сурхандарья' :  'Сурхандарье'    ,
+    'Хорезм' :  'Хорезме' ,
+    '': ''   }
+
+  
   category: { value: string; viewValue: string }[] = [
     { value: 'AC/DC breaker', viewValue: 'AC/DC breaker' },
     { value: 'Bad RX level', viewValue: 'Bad RX level' },
@@ -93,12 +110,12 @@ export class HubComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private storageService: StorageService,
+    private router: Router,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
     this.createForm()
+    
   }
-
   createForm() {
     this.hubForm = this.formBuilder.group({
       'AddOrCor': [null],
@@ -237,7 +254,7 @@ export class HubComponent implements OnInit {
       'generetor': this.hubForm.value.generator,
       'power_off_time': this.hubForm.value.powerOffTime,
       'sector_block_time': this.hubForm.value.hubBlockTime,
-      'hub_problem': this.hubForm.value.level + ' Хаб сайт ' + this.requestType,
+      'hub_problem': this.hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region],
 
       'mw_link': this.hubForm.value.mw_link,
       'mw_equipment': this.hubForm.value.mw_equipment,
@@ -255,8 +272,8 @@ export class HubComponent implements OnInit {
       if (this.hubForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
           this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region.viewValue + '\n ' +
-          'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + '\n ' +
+          'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n ' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
           'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
           'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
@@ -268,8 +285,8 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
           this.hubForm.value.AddOrCor + '\n ' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region.viewValue + '\n ' +
-          'Эффект: Потеря покрытия и качество связи в ' + this.hubForm.value.region + '\n ' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + '\n ' +
+          'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n ' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
           'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
           'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n ' +
@@ -283,7 +300,7 @@ export class HubComponent implements OnInit {
       if (this.hubForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
           this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region.viewValue + '\n ' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + '\n ' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
           'Описание: ' + this.hubForm.value.desc + '\n ' +
           'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -297,7 +314,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
           this.hubForm.value.AddOrCor + '\n ' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.hubForm.value.region.viewValue + '\n ' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + '\n ' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n ' +
           'Описание: ' + this.hubForm.value.desc + '\n ' +
           'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n ' +
@@ -313,7 +330,7 @@ export class HubComponent implements OnInit {
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
-      'criteria': [this.hubForm.value.level],
+      'criteria': [this.hubForm.value.level.replace('P','A')],
       'notification': ['Hub'],
       'sms_text': this.SmsTextBody,
       'region': [this.hubForm.value.region]
@@ -335,8 +352,6 @@ export class HubComponent implements OnInit {
   createData() {
     let aray = this.hubForm.value.effectedSites.split('\n')
 
-    console.log(aray);
-    
     this.tableSendBody()
 
     this.authService.postData(this.tableBody)
@@ -357,14 +372,17 @@ export class HubComponent implements OnInit {
 
     const dialogRef = this.dialog.open(areYouSure);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       this.authService.sendSms(this.smsBody)
       .subscribe(res => {
         console.log(res);
         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+        this.router.navigate(['/home'])
+       
       }, error => {
         console.log(error);
         this.snackBar.open("Ошибка", '', { duration: 10000 })
+        this.router.navigate(['/home'])
       })
     })
   }
@@ -375,11 +393,13 @@ export class HubComponent implements OnInit {
 
     const dialogRef = this.dialog.open(areYouSure);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       this.authService.sendTestSMS(this.smsBody)
       .subscribe(res => {
         console.log(res);
         this.snackBar.open('Success', '', { duration: 10000 })
+        this.router.navigate(['/home'])
+
       }, error => {
         console.log(error);
         this.snackBar.open("Error", '', { duration: 10000 })

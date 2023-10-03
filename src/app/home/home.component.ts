@@ -144,11 +144,6 @@ export class HomeComponent implements OnInit {
     console.log(this.UserActive);
   }
 
-  isActiveUser() {
-    console.log(this.UserActive);
-    
-  }
-
   filterForAllCase() {
     this.level.valueChanges.subscribe((levelFilter) => {
       this.filteredValues['level'] = levelFilter;
@@ -238,9 +233,6 @@ export class HomeComponent implements OnInit {
     } else {
       this.Loaded = false
     }
-
-    console.log(this.isActiveUser());
-    
   }
 
   updateMessage(data: any): void {

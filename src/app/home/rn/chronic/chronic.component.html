@@ -45,7 +45,7 @@
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{chronicForm.value.siteName + ' - сайт не работает в ' + chronicForm.value.region.viewValue + 'е' + ' более ' +
+                            <p>{{chronicForm.value.siteName + ' - сайт не работает в ' + regions[chronicForm.value.region] + ' более ' +
                                 chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T', ' ')}}</p>
                             <p>{{'Причина: ' + chronicForm.value.reason}}</p>
                             <p>{{'Оповещен: ' + chronicForm.value.informed}}</p>
@@ -76,7 +76,7 @@
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{chronicForm.value.siteName + ' - сайт не работал в ' + chronicForm.value.region.viewValue + 'е' + ' более ' +
+                            <p>{{chronicForm.value.siteName + ' - сайт не работал в ' + regions[chronicForm.value.region] + 'е' + ' более ' +
                                 chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T',' ') + ' по ' +
                                 chronicForm.value.endTime.replace('T', ' ')}}</p>
                             <p>{{'Причина: ' + chronicForm.value.reason}}</p>
@@ -169,7 +169,7 @@
                     <p>Начало</p>
                     <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
                         min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="chronicForm.value.startTime">
-                        
+
                 </div>
             </mat-grid-tile>
             <!-- end Time -->

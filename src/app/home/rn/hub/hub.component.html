@@ -46,8 +46,8 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region.viewValue}}</p>
-                            <p>{{'Эффект: Потеря покрытия и качество связи в ' + hubForm.value.region.viewValue}}</p>
+                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + regions[hubForm.value.region]}}</p>
+                            <p>{{'Эффект: Потеря покрытия и качество связи в ' + hubForm.value.region}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason + ' ' + hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
                             <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
@@ -81,7 +81,7 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region.viewValue}}</p>
+                            <p>{{hubForm.value.problem + ' сайтов не работают в регионе ' + hubForm.value.region}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason + ' ' + hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
@@ -117,7 +117,7 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + hubForm.value.region.viewValue}}</p>
+                            <p>{{hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region]}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason + ' ' + hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>

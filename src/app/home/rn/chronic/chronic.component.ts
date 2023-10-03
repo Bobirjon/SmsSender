@@ -87,6 +87,22 @@ export class ChronicComponent implements OnInit {
     { value: 'Хорезм', viewValue: 'Хорезме' },
   ];
 
+  regions =  {  'Андижан' :  'Андижане'   , 
+    'Бухара' :  'Бухаре',    
+    'Джизак' :  'Джизаке',    
+    'Фергана' :  'Фергане',     
+    'Сырдарья' :  'Сырдарье',    
+    'Кашкадарья' :  'Кашкадарье',    
+    'Наманган' :  'Намангане',    
+    'Навои' :  'Навои',    
+    'Каракалпакстан' :  'Каракалпакстане',    
+    'Самарканд' :  'Самарканде'    ,
+    'г.Ташкент' :  'городе Ташкент'    ,
+    'Ташкент.обл' :  'Ташкентской области',    
+    'Сурхандарья' :  'Сурхандарье'    ,
+    'Хорезм' :  'Хорезме' ,
+    '': ''   }
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -142,7 +158,6 @@ export class ChronicComponent implements OnInit {
       let endTimeForUpdate: any
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          console.log(result);
 
           if (result['end_time'] == null) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
@@ -177,7 +192,7 @@ export class ChronicComponent implements OnInit {
       'level': this.chronicForm.value.level,
       'category': this.chronicForm.value.categories_report,
       'responsible_area': this.chronicForm.value.responsible_report,
-      'problem': this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region.viewValue +
+      'problem': this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] +
       ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " "),
 
       'reason': this.chronicForm.value.reason,
@@ -206,7 +221,7 @@ export class ChronicComponent implements OnInit {
       if (this.chronicForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
-          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region.viewValue +
+          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] +
           ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
@@ -216,7 +231,7 @@ export class ChronicComponent implements OnInit {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
           '(' + this.chronicForm.value.AddOrCor + ') \n' +
-          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.chronicForm.value.region.viewValue +
+          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] +
           ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
@@ -228,7 +243,7 @@ export class ChronicComponent implements OnInit {
       if (this.chronicForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
-          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region.viewValue +
+          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] +
           ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + '\n' +
@@ -240,7 +255,7 @@ export class ChronicComponent implements OnInit {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
           '(' + this.chronicForm.value.AddOrCor + ') \n' +
-          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.chronicForm.value.region.viewValue +
+          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] +
           ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + '\n' +
@@ -254,7 +269,7 @@ export class ChronicComponent implements OnInit {
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
-      'criteria': [this.chronicForm.value.level],
+      'criteria': [this.chronicForm.value.level.replace('P', 'A')],
       'notification': ['Chronic'],
       'sms_text': this.SmsTextBody,
       'region': [this.chronicForm.value.region]
