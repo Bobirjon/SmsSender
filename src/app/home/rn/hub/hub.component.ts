@@ -401,7 +401,6 @@ export class HubComponent implements OnInit {
         }, error => {
           console.log(error);
           this.snackBar.open("Ошибка", '', { duration: 10000 })
-          this.router.navigate(['/home'])
         })
     })
   }

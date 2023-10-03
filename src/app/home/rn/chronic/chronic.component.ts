@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
 import { StorageService } from 'src/app/storage.service';
 
@@ -112,6 +112,7 @@ export class ChronicComponent implements OnInit {
     private route: ActivatedRoute,
     private storageService: StorageService,
     private snackBar: MatSnackBar,
+    private router: Router,
     public dialog: MatDialog) {
     this.createForm()
   }
@@ -316,6 +317,7 @@ export class ChronicComponent implements OnInit {
         .subscribe(res => {
           console.log(res);
           this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+          this.router.navigate(['/home'])
         }, error => {
           console.log(error);
           this.snackBar.open("Ошибка", '', { duration: 10000 })
@@ -335,6 +337,7 @@ export class ChronicComponent implements OnInit {
         .subscribe(res => {
           console.log(res);
           this.snackBar.open('Success', '', { duration: 10000 })
+          this.router.navigate(['/home'])
         }, error => {
           console.log(error);
           this.snackBar.open("Error", '', { duration: 10000 })
