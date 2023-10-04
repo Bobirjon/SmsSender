@@ -12,41 +12,37 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- categories report -->
+            <!-- Hub site -->
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
-                    <mat-label>Категория для отчета</mat-label>
-                    <mat-select formControlName="categories_report" [(ngModel)]="hubForm.value.categories_report">
-                        <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
-                            {{cat_rep.viewValue}}
+                    <mat-label>Хаб Сайт</mat-label>
+                    <input matInput type="text" formControlName="hubSite" [(ngModel)]="hubForm.value.hubSite"/>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- Type of Generator -->
+            <mat-grid-tile colspan="3">
+                <mat-form-field class="margin-container">
+                    <mat-label>Тип Генератора</mat-label>
+                    <mat-select formControlName="generator" [(ngModel)]="hubForm.value.generator">
+                        <mat-option *ngFor="let gen of generator" [value]="gen.value">
+                            {{gen.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- responsible area -->
-            <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>Ответственная Зона</mat-label>
-                    <mat-select formControlName="responsible_report" [(ngModel)]="hubForm.value.responsible_report">
-                        <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
-                            {{res_rep.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile> 
             <!-- preview problem -->
             <mat-grid-tile colspan="5" rowspan="8">
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
                             <mat-card-title>
-                                {{hubForm.value.level.replace('P','П') + ' Хаб сайт Проблема:'}}
+                                {{hubForm.value.level.replace('P','П') + ' Проблема на узловом сайте:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + regions[hubForm.value.region]}}</p>
+                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + regions[this.hubForm.value.region] + ' ' +  dist[this.hubForm.value.district]}}</p>
                             <p>{{'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region]}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason + ' ' + hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
@@ -75,13 +71,13 @@
                     <mat-card class="preview">
                         <mat-card-header>
                             <mat-card-title>
-                                {{hubForm.value.level?.replace('P', 'П') + ' Хаб сайт Решение:'}}
+                                {{hubForm.value.level?.replace('P', 'П') + ' Решение на узловом сайте:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region]}}</p>
+                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + regions[this.hubForm.value.region] + ' ' +  dist[this.hubForm.value.district]}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason + ' ' + hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
@@ -111,13 +107,13 @@
                     <mat-card class="preview">
                         <mat-card-header>
                             <mat-card-title>
-                                {{hubForm.value.level?.replace('P','П') + ' Хаб сайт Информационное:'}}
+                                {{hubForm.value.level?.replace('P','П') + ' Информационное на узловом сайте:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают ' + this.regions[this.hubForm.value.region]}}</p>
+                            <p>{{hubForm.value.problem + ' сайтов не работают ' + regions[this.hubForm.value.region] + ' ' +  dist[this.hubForm.value.district]}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason + ' ' + hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
@@ -142,31 +138,46 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-             <!-- Hub site -->
-             <mat-grid-tile colspan="3">
+            <!-- categories report -->
+            <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
-                    <mat-label>Хаб Сайт</mat-label>
-                    <input matInput type="text" formControlName="hubSite" [(ngModel)]="hubForm.value.hubSite"/>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- Type of Generator -->
-            <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>Тип Генератора</mat-label>
-                    <mat-select formControlName="generator" [(ngModel)]="hubForm.value.generator">
-                        <mat-option *ngFor="let gen of generator" [value]="gen.value">
-                            {{gen.viewValue}}
+                    <mat-label>Категория для отчета</mat-label>
+                    <mat-select formControlName="categories_report" [(ngModel)]="hubForm.value.categories_report">
+                        <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
+                            {{cat_rep.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
+            <!-- responsible area -->
+            <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Ответственная Зона</mat-label>
+                    <mat-select formControlName="responsible_report" [(ngModel)]="hubForm.value.responsible_report">
+                        <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
+                            {{res_rep.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile> 
              <!-- region -->
-             <mat-grid-tile colspan="4">
+             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
                     <mat-select formControlName="region" [(ngModel)]="hubForm.value.region">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
                             {{reg.value}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- district -->
+             <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Район</mat-label>
+                    <mat-select formControlName="district" [(ngModel)]="hubForm.value.district" [disabled]="this.hubForm.value.region.value == 'Ташкент.обл'">
+                        <mat-option *ngFor="let dis of district" [value]="dis.value">
+                            {{dis.value}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

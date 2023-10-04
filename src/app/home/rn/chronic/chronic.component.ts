@@ -65,6 +65,7 @@ export class ChronicComponent implements OnInit {
     { value: 'TI_ESO', viewValue: 'TI_ESO' },
     { value: 'TI_MW', viewValue: 'TI_MW' },
     { value: 'TI_SAQ', viewValue: 'TI_SAQ' },
+    { value: 'TI_FLM', viewValue: 'TI_FLM' },
     { value: 'TI_SDH', viewValue: 'TI_SDH' },
     { value: 'Unplanned work', viewValue: 'Unplanned work' },
     { value: 'WB', viewValue: 'WB' },
@@ -105,6 +106,55 @@ export class ChronicComponent implements OnInit {
     '': ''
   }
 
+  district: { value: string; viewValue: string }[] = [
+    { value:'Аккурган', viewValue: 'Аккурган'},
+    { value:'Ахангаран', viewValue: 'Ахангаран'},
+    { value:'Бекабад', viewValue: 'Бекабад'},
+    { value:'Бустанлик', viewValue: 'Бустанлик'},
+    { value:'Бука', viewValue: 'Бука'},
+    { value:'Зангиота', viewValue: 'Зангиота'},
+    { value:'Кибрай', viewValue: 'Кибрай'},
+    { value:'Куйичирчик', viewValue: 'Куйичирчик'},
+    { value:'Паркент', viewValue: 'Паркент'},
+    { value:'Пскент', viewValue: 'Пскент'},
+    { value:'Ташкент', viewValue: 'Ташкент'},
+    { value:'Уртачирчик', viewValue: 'Уртачирчик'},
+    { value:'Чиназ', viewValue: 'Чиназ'},
+    { value:'Юкоричирчик', viewValue: 'Юкоричирчик'},
+    { value:'Янгиюль', viewValue: 'Янгиюль'},
+    { value:'Алмалик', viewValue: 'Алмалик'},
+    { value:'Чирчик', viewValue: 'Чирчик'},
+    { value:'Ангрен', viewValue: 'Ангрен'},
+    { value:'Нурафшон', viewValue: 'Нурафшон'},
+    { value:'Чимбай', viewValue: 'Чимбай'},
+    { value: '', viewValue: ''}
+   
+  ]
+
+  dist = {
+    'Аккурган': 'Аккурганском районе',
+    'Ахангаран': 'Ахангаранском районе',
+    'Бекабад': 'Бекабадском районе',
+    'Бустанлик': 'Бустанликском районе',
+    'Бука': 'Букинском районе',
+    'Зангиота': 'Зангиотинском районе',
+    'Кибрай': 'Кибрайском районе',
+    'Куйичирчик': 'Куйичирчикском районе',
+    'Паркент': 'Паркентском районе',
+    'Пскент': 'Пскентском районе',
+    'Ташкент': 'Ташкентском районе',
+    'Уртачирчик': 'Уртачирчикском районе',
+    'Чиназ': 'Чиназском районе',
+    'Юкоричирчик': 'Юкоричирчикском районе',
+    'Янгиюль': 'Янгиюльском районе',
+    'Алмалик': 'Алмаликском районе',
+    'Чирчик': 'город Чирчик',
+    'Ангрен': 'Ангренском районе',
+    'Нурафшон': 'город Нурафшон',
+    'Чимбай': 'Чимбайском районе',
+    '':''
+  }
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -126,7 +176,6 @@ export class ChronicComponent implements OnInit {
     }
   }
 
-
   createForm() {
     this.chronicForm = this.formBuilder.group({
       'AddOrCor': [null],
@@ -143,7 +192,8 @@ export class ChronicComponent implements OnInit {
       'informed': [''],
       'desc': [''],
       'category': [''],
-      'sender': ['']
+      'sender': [''],
+      'district': ['']
     })
   }
 
@@ -195,7 +245,7 @@ export class ChronicComponent implements OnInit {
       'level': this.chronicForm.value.level,
       'category': this.chronicForm.value.categories_report,
       'responsible_area': this.chronicForm.value.responsible_report,
-      'problem': this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] +
+      'problem': this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + this.dist[this.chronicForm.value.district] +
       ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " "),
 
       'reason': this.chronicForm.value.reason,
@@ -224,8 +274,8 @@ export class ChronicComponent implements OnInit {
       if (this.chronicForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
-          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] +
-          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + ' ' +
+          this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
@@ -234,8 +284,8 @@ export class ChronicComponent implements OnInit {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
           '(' + this.chronicForm.value.AddOrCor + ') \n' +
-          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] +
-          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + ' ' +
+          this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
@@ -246,8 +296,8 @@ export class ChronicComponent implements OnInit {
       if (this.chronicForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
-          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] +
-          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
+          this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
@@ -258,8 +308,8 @@ export class ChronicComponent implements OnInit {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
           '(' + this.chronicForm.value.AddOrCor + ') \n' +
-          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] +
-          ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
+          this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +

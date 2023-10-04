@@ -45,7 +45,8 @@
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{chronicForm.value.siteName + ' - сайт не работает в ' + regions[chronicForm.value.region] + ' более ' +
+                            <p>{{chronicForm.value.siteName + ' - сайт не работает в ' + regions[chronicForm.value.region] + ' ' +
+                                dist[chronicForm.value.district] + ' более ' +
                                 chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T', ' ')}}</p>
                             <p>{{'Причина: ' + chronicForm.value.reason}}</p>
                             <p>{{'Оповещен: ' + chronicForm.value.informed}}</p>
@@ -76,7 +77,8 @@
                             <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{chronicForm.value.siteName + ' - сайт не работал в ' + regions[chronicForm.value.region] + 'е' + ' более ' +
+                            <p>{{chronicForm.value.siteName + ' - сайт не работал в ' + regions[chronicForm.value.region] + ' ' +
+                                dist[chronicForm.value.district] + ' более ' +
                                 chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T',' ') + ' по ' +
                                 chronicForm.value.endTime.replace('T', ' ')}}</p>
                             <p>{{'Причина: ' + chronicForm.value.reason}}</p>
@@ -146,19 +148,30 @@
                 </mat-form-field>
             </mat-grid-tile>
             <!-- informed -->
-            <mat-grid-tile colspan="5">
+            <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Оповещен</mat-label>
                     <input matInput type="text" formControlName="informed" [(ngModel)]="chronicForm.value.informed"/>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- region -->
-            <mat-grid-tile colspan="5">
+            <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
                     <mat-select formControlName="region" [(ngModel)]="chronicForm.value.region">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
                             {{reg.value}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- district -->
+            <mat-grid-tile colspan="4">
+                <mat-form-field class="margin-container">
+                    <mat-label>Район</mat-label>
+                    <mat-select formControlName="district" [(ngModel)]="chronicForm.value.district" [disabled]="this.chronicForm.value.region.value == 'Ташкент.обл'">
+                        <mat-option *ngFor="let dis of district" [value]="dis.value">
+                            {{dis.value}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

@@ -89,6 +89,55 @@ export class HubComponent implements OnInit {
     '': ''
   }
 
+  district: { value: string; viewValue: string }[] = [
+    { value:'Аккурган', viewValue: 'Аккурган'},
+    { value:'Ахангаран', viewValue: 'Ахангаран'},
+    { value:'Бекабад', viewValue: 'Бекабад'},
+    { value:'Бустанлик', viewValue: 'Бустанлик'},
+    { value:'Бука', viewValue: 'Бука'},
+    { value:'Зангиота', viewValue: 'Зангиота'},
+    { value:'Кибрай', viewValue: 'Кибрай'},
+    { value:'Куйичирчик', viewValue: 'Куйичирчик'},
+    { value:'Паркент', viewValue: 'Паркент'},
+    { value:'Пскент', viewValue: 'Пскент'},
+    { value:'Ташкент', viewValue: 'Ташкент'},
+    { value:'Уртачирчик', viewValue: 'Уртачирчик'},
+    { value:'Чиназ', viewValue: 'Чиназ'},
+    { value:'Юкоричирчик', viewValue: 'Юкоричирчик'},
+    { value:'Янгиюль', viewValue: 'Янгиюль'},
+    { value:'Алмалик', viewValue: 'Алмалик'},
+    { value:'Чирчик', viewValue: 'Чирчик'},
+    { value:'Ангрен', viewValue: 'Ангрен'},
+    { value:'Нурафшон', viewValue: 'Нурафшон'},
+    { value:'Чимбай', viewValue: 'Чимбай'},
+    { value: '', viewValue: ''}
+   
+  ]
+
+  dist = {
+    'Аккурган': 'Аккурганском районе',
+    'Ахангаран': 'Ахангаранском районе',
+    'Бекабад': 'Бекабадском районе',
+    'Бустанлик': 'Бустанликском районе',
+    'Бука': 'Букинском районе',
+    'Зангиота': 'Зангиотинском районе',
+    'Кибрай': 'Кибрайском районе',
+    'Куйичирчик': 'Куйичирчикском районе',
+    'Паркент': 'Паркентском районе',
+    'Пскент': 'Пскентском районе',
+    'Ташкент': 'Ташкентском районе',
+    'Уртачирчик': 'Уртачирчикском районе',
+    'Чиназ': 'Чиназском районе',
+    'Юкоричирчик': 'Юкоричирчикском районе',
+    'Янгиюль': 'Янгиюльском районе',
+    'Алмалик': 'Алмаликском районе',
+    'Чирчик': 'город Чирчик',
+    'Ангрен': 'Ангренском районе',
+    'Нурафшон': 'город Нурафшон',
+    'Чимбай': 'Чимбайском районе',
+    '':''
+  }
+
 
   category: { value: string; viewValue: string }[] = [
     { value: 'AC/DC breaker', viewValue: 'AC/DC breaker' },
@@ -101,8 +150,9 @@ export class HubComponent implements OnInit {
     { value: 'TI_DNO', viewValue: 'TI_DNO' },
     { value: 'TI_ESO', viewValue: 'TI_ESO' },
     { value: 'TI_MW', viewValue: 'TI_MW' },
+    { value: 'TI_FLM', viewValue: 'TI_FLM' },
     { value: 'TI_SAQ', viewValue: 'TI_SAQ' },
-    { value: 'TI_SDH', viewValue: 'TI_SDH' },
+    { value: 'TI_SDH', viewValue: 'TI_SDH' }, 
     { value: 'Unplanned work', viewValue: 'Unplanned work' },
     { value: 'WB', viewValue: 'WB' },
     { value: 'Выясняется', viewValue: 'Выясняется ' },
@@ -132,7 +182,7 @@ export class HubComponent implements OnInit {
       'hubSite': ['', Validators.required],
       'effectedSites': [''],
       'generator': [''],
-      'desc': ['', Validators.required],
+      'desc': [''],
       'informed': ['', Validators.required],
       'category': ['', Validators.required],
       'powerOffTime': [''],
@@ -144,6 +194,7 @@ export class HubComponent implements OnInit {
       'battery_life_time': [''],
       'lowBatteryTime': [''],
       'dg_start_time': [''],
+      'district': ['']
     })
   }
 
@@ -157,6 +208,7 @@ export class HubComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     // get Current user
     this.authService.getUser()
       .subscribe(result => {
@@ -172,6 +224,7 @@ export class HubComponent implements OnInit {
       let dg_start_time: any
       let power_off_time: any
       let block_time: any
+      let effected_sites: any
 
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
@@ -200,6 +253,11 @@ export class HubComponent implements OnInit {
           } else {
             power_off_time = formatDate(result['power_off_time'], 'yyyy-MM-ddTHH:mm', 'en')
           }
+          if(result['effected_sites'] == null) {
+            effected_sites = ''
+          } else {
+            effected_sites = result['effected_sites'].split('\n')
+          }
           this.hubForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -210,7 +268,7 @@ export class HubComponent implements OnInit {
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [endTimeForUpdate],
             'region': [result['region'], Validators.required],
-            'effectedSites': [result['effected_sites']],
+            'effectedSites': [effected_sites],
             'hubSite': [result['hub_site']],
             'generator': [result['fg_avb']],
             'desc': [result['description']],
@@ -241,7 +299,7 @@ export class HubComponent implements OnInit {
       'level': this.hubForm.value.level,
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
-      'problem': this.hubForm.value.problem,
+      'problem': this.hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region] + this.dist[this.hubForm.value.district],
       'reason': this.hubForm.value.reason,
       'effect': 'С влиянием',
       'start_time': this.hubForm.value.startTime,
@@ -253,7 +311,7 @@ export class HubComponent implements OnInit {
       'sender': this.user?.username,
       'hub_site': this.hubForm.value.hubSite,
       'fg_avb': this.hubForm.value.generator,
-      'hub_problem': this.hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region],
+      'hub_problem': this.hubForm.value.problem,
 
       'mw_link': this.hubForm.value.mw_link,
       'mw_equipment': this.hubForm.value.mw_equipment,
@@ -288,29 +346,41 @@ export class HubComponent implements OnInit {
   }
 
   smsSendBody() {
+    let power_off_time
+    let block_time
+    if(this.hubForm.value.powerOffTime == '') {
+      power_off_time = 'Н/Д'
+    } else {
+      power_off_time = this.hubForm.value.powerOffTime.replace("T", " ")
+    }
+    if(this.hubForm.value.hubBlockTime == '') {
+      block_time = 'Н/Д'
+    } else {
+      block_time = this.hubForm.value.hubBlockTime.replace("T", " ")
+    }
 
     if (this.requestType == 'Проблема') {
       if (this.hubForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
-          this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + '\n' +
+          this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
-          'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n' +
-          'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n' +
+          'Время отключения ЭП: ' + power_off_time + '\n' +
+          'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
           'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
-          this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n ' +
+          this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           this.hubForm.value.AddOrCor + '\n ' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + '\n' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' '+ this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
-          'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n' +
-          'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n' +
+          'Время отключения ЭП: ' + power_off_time + '\n' +
+          'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
@@ -320,12 +390,12 @@ export class HubComponent implements OnInit {
     } else {
       if (this.hubForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
-          this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + '\n' +
+          this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' '+ this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
-          'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n' +
-          'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n' +
+          'Время отключения ЭП: ' + power_off_time + '\n' +
+          'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
@@ -333,13 +403,13 @@ export class HubComponent implements OnInit {
           'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
-          this.hubForm.value.level + ' Хаб сайт ' + this.requestType + '\n' +
+          this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           this.hubForm.value.AddOrCor + '\n' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + '\n' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' '+ this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
-          'Время отключения ЭП: ' + this.hubForm.value.powerOffTime.replace("T", " ") + '\n' +
-          'Время блокировки секторов: ' + this.hubForm.value.hubBlockTime.replace("T", " ") + '\n' +
+          'Время отключения ЭП: ' + power_off_time + '\n' +
+          'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
