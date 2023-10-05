@@ -93,7 +93,7 @@ export class CnComponent implements OnInit {
   }
 
   setDefault() {
-    if(this.cnForm.value.level == 'P1' || this.cnForm.value.level == 'P2' || 
+    if (this.cnForm.value.level == 'P1' || this.cnForm.value.level == 'P2' ||
       this.cnForm.value.level == 'P3' || this.cnForm.value.level == 'P4' || this.cnForm.value.level == 'P5') {
       this.cnForm.value.categories_report = 'ПР'
     } else {
@@ -319,15 +319,18 @@ export class CnComponent implements OnInit {
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
-      this.authService.sendSms(this.smsBody)
-      .subscribe(res => {
-        console.log(res);
-        this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-        this.router.navigate(['/home'])
-      }, error => {
-        console.log(error);
-        this.snackBar.open("Ошибка", '', { duration: 10000 })
-      })
+      if (result == true) {
+        this.authService.sendSms(this.smsBody)
+          .subscribe(res => {
+            console.log(res);
+            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+            this.router.navigate(['/home'])
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+      }
+
     })
   }
 
@@ -338,15 +341,17 @@ export class CnComponent implements OnInit {
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
-      this.authService.sendTestSMS(this.smsBody)
-      .subscribe(res => {
-        console.log(res);
-        this.snackBar.open('Success', '', { duration: 10000 })
-        this.router.navigate(['/home'])
-      }, error => {
-        console.log(error);
-        this.snackBar.open("Error", '', { duration: 10000 })
-      })
+      if(result == true) {
+         this.authService.sendTestSMS(this.smsBody)
+        .subscribe(res => {
+          console.log(res);
+          this.snackBar.open('Success', '', { duration: 10000 })
+          this.router.navigate(['/home'])
+        }, error => {
+          console.log(error);
+          this.snackBar.open("Error", '', { duration: 10000 })
+        })
+      }
     })
   }
 }
@@ -357,4 +362,4 @@ export class CnComponent implements OnInit {
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
 })
-export class areYouSure {}
+export class areYouSure { }

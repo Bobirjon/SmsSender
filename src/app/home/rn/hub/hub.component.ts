@@ -110,7 +110,6 @@ export class HubComponent implements OnInit {
     { value:'Ангрен', viewValue: 'Ангрен'},
     { value:'Нурафшон', viewValue: 'Нурафшон'},
     { value:'Чимбай', viewValue: 'Чимбай'},
-    { value: '', viewValue: ''}
    
   ]
 
@@ -263,8 +262,8 @@ export class HubComponent implements OnInit {
             'level': [result['level'], Validators.required],
             'categories_report': [result['category'], Validators.required],
             'responsible_report': [result['responsible_area'], Validators.required],
-            'problem': [result['problem'], Validators.required],
-            'reason': [result['reason'], Validators.required],
+            'problem': [result['hub_problem'], Validators.required],
+            'reason': [result['hub_reason'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [endTimeForUpdate],
             'region': [result['region'], Validators.required],
@@ -277,6 +276,7 @@ export class HubComponent implements OnInit {
             'category': [result['category_for_hub']],
             'powerOffTime': [power_off_time],
             'hubBlockTime': [block_time],
+            'district': [result['district']],
 
             'mw_link': [result['mw_link']],
             'mw_equipment': [result['mw_equipment']],
@@ -300,7 +300,7 @@ export class HubComponent implements OnInit {
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
       'problem': this.hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region] + this.dist[this.hubForm.value.district],
-      'reason': this.hubForm.value.reason,
+      'reason': 'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator ,
       'effect': 'С влиянием',
       'start_time': this.hubForm.value.startTime,
       'region': this.hubForm.value.region,
@@ -312,6 +312,9 @@ export class HubComponent implements OnInit {
       'hub_site': this.hubForm.value.hubSite,
       'fg_avb': this.hubForm.value.generator,
       'hub_problem': this.hubForm.value.problem,
+      'district': this.hubForm.value.district,
+      'hub_reason': this.hubForm.value.reason,
+
 
       'mw_link': this.hubForm.value.mw_link,
       'mw_equipment': this.hubForm.value.mw_equipment,
@@ -342,7 +345,6 @@ export class HubComponent implements OnInit {
     if(this.hubForm.value.effectedSites !== '') {
       this.tableBody.effected_sites = this.hubForm.value.effectedSites.split('\n')
     }
-
   }
 
   smsSendBody() {
@@ -376,7 +378,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           this.hubForm.value.AddOrCor + '\n ' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' '+ this.dist[this.hubForm.value.district] + '\n' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -455,14 +457,14 @@ export class HubComponent implements OnInit {
     } else {
       this.createData()
     }
-
     this.requestType = smsType
     this.smsSendBody()
 
     const dialogRef = this.dialog.open(areYouSure);
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.authService.sendSms(this.smsBody)
+    dialogRef.afterClosed().subscribe(res => {
+      if(res == true) {
+        this.authService.sendSms(this.smsBody)
         .subscribe(res => {
           console.log(res);
           this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
@@ -472,6 +474,7 @@ export class HubComponent implements OnInit {
           console.log(error);
           this.snackBar.open("Ошибка", '', { duration: 10000 })
         })
+      }
     })
   }
 
@@ -481,17 +484,15 @@ export class HubComponent implements OnInit {
 
     const dialogRef = this.dialog.open(areYouSure);
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.authService.sendTestSMS(this.smsBody)
+    dialogRef.afterClosed().subscribe(res => {
+      if(res === true) {
+         this.authService.sendTestSMS(this.smsBody)
         .subscribe(res => {
+          this.router.navigate(['/home'])
           console.log(res);
           this.snackBar.open('Success', '', { duration: 10000 })
-          this.router.navigate(['/home'])
-
-        }, error => {
-          console.log(error);
-          this.snackBar.open("Error", '', { duration: 10000 })
         })
+      }
     })
   }
 }

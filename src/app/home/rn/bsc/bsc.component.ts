@@ -200,7 +200,7 @@ export class BscComponent implements OnInit {
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
           'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
-    } 
+    }
     else {
       if (this.bscForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
@@ -233,7 +233,7 @@ export class BscComponent implements OnInit {
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
-      'criteria': [this.bscForm.value.level.replace('P','A')],
+      'criteria': [this.bscForm.value.level.replace('P', 'A')],
       'notification': ['BSC/RNC'],
       'sms_text': this.SmsTextBody
     }
@@ -274,16 +274,18 @@ export class BscComponent implements OnInit {
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
-      this.authService.sendSms(this.smsBody)
-        .subscribe(res => {
-          console.log(res);
-          this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-          this.router.navigate(['/home'])
+      if (result == true) {
+        this.authService.sendSms(this.smsBody)
+          .subscribe(res => {
+            console.log(res);
+            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+            this.router.navigate(['/home'])
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+      }
 
-        }, error => {
-          console.log(error);
-          this.snackBar.open("Ошибка", '', { duration: 10000 })
-        })
     })
   }
 
@@ -294,7 +296,8 @@ export class BscComponent implements OnInit {
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
-      this.authService.sendTestSMS(this.smsBody)
+      if(result == true) {
+        this.authService.sendTestSMS(this.smsBody)
         .subscribe(res => {
           console.log(res);
           this.snackBar.open('Success', '', { duration: 10000 })
@@ -304,6 +307,7 @@ export class BscComponent implements OnInit {
           console.log(error);
           this.snackBar.open("Error", '', { duration: 10000 })
         })
+      }
     })
   }
 }

@@ -248,7 +248,8 @@ export class ChronicComponent implements OnInit {
       'problem': this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + this.dist[this.chronicForm.value.district] +
       ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " "),
 
-      'reason': this.chronicForm.value.reason,
+      'reason': this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite,
+      'hub_reason': this.chronicForm.value.reason,
       'effect': 'С влиянием',
       'start_time': this.chronicForm.value.startTime,
       // 'end_time': this.chronicForm.value.endTime,
@@ -276,7 +277,7 @@ export class ChronicComponent implements OnInit {
           this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
           this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
-          'Причина: ' + this.chronicForm.value.reason + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
           'Скачайте приложение Ucell: www.ucell.uz/lead'
@@ -286,7 +287,7 @@ export class ChronicComponent implements OnInit {
           '(' + this.chronicForm.value.AddOrCor + ') \n' +
           this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
-          'Причина: ' + this.chronicForm.value.reason + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
           'Скачайте приложение Ucell: www.ucell.uz/lead'
@@ -299,7 +300,7 @@ export class ChronicComponent implements OnInit {
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
-          'Причина: ' + this.chronicForm.value.reason + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
@@ -311,7 +312,7 @@ export class ChronicComponent implements OnInit {
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
-          'Причина: ' + this.chronicForm.value.reason + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
@@ -363,7 +364,8 @@ export class ChronicComponent implements OnInit {
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
-      this.authService.sendSms(this.smsBody)
+      if (result == true) {
+        this.authService.sendSms(this.smsBody)
         .subscribe(res => {
           console.log(res);
           this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
@@ -372,6 +374,7 @@ export class ChronicComponent implements OnInit {
           console.log(error);
           this.snackBar.open("Ошибка", '', { duration: 10000 })
         })
+      }
     })
 
   }
@@ -383,7 +386,8 @@ export class ChronicComponent implements OnInit {
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
-      this.authService.sendTestSMS(this.smsBody)
+      if (result == true) {
+        this.authService.sendTestSMS(this.smsBody)
         .subscribe(res => {
           console.log(res);
           this.snackBar.open('Success', '', { duration: 10000 })
@@ -391,7 +395,8 @@ export class ChronicComponent implements OnInit {
         }, error => {
           console.log(error);
           this.snackBar.open("Error", '', { duration: 10000 })
-        })
+        }) 
+      }
     })
   }
 }
