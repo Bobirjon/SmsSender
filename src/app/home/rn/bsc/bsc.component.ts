@@ -90,8 +90,6 @@ export class BscComponent implements OnInit {
     if (this.bscForm.value.level == 'P1' || this.bscForm.value.level == 'P2' ||
       this.bscForm.value.level == 'P3' || this.bscForm.value.level == 'P4' || this.bscForm.value.level == 'P5') {
       this.bscForm.value.categories_report = 'ПР'
-    } else {
-      this.bscForm.value.categories_report = ''
     }
   }
 

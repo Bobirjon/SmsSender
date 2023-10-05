@@ -96,8 +96,6 @@ export class CnComponent implements OnInit {
     if (this.cnForm.value.level == 'P1' || this.cnForm.value.level == 'P2' ||
       this.cnForm.value.level == 'P3' || this.cnForm.value.level == 'P4' || this.cnForm.value.level == 'P5') {
       this.cnForm.value.categories_report = 'ПР'
-    } else {
-      this.cnForm.value.categories_report = ''
     }
   }
 

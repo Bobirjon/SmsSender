@@ -113,7 +113,7 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
                     <textarea matInput type="text" formControlName="problem"
-                        [(ngModel)]="bscForm.value.problem" ></textarea>
+                        [(ngModel)]="bscForm.value.problem" spellcheck="true"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- reason -->
@@ -121,7 +121,7 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
                     <textarea matInput type="text" formControlName="reason"
-                        [(ngModel)]="bscForm.value.reason"></textarea>
+                        [(ngModel)]="bscForm.value.reason" spellcheck="true"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- effect -->
@@ -129,14 +129,14 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Эффект</mat-label>
                     <textarea matInput type="text" formControlName="effect"
-                        [(ngModel)]="bscForm.value.effect"></textarea>
+                        [(ngModel)]="bscForm.value.effect" spellcheck="true"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- Description -->
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="bscForm.value.desc"></textarea>
+                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="bscForm.value.desc" spellcheck="true"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- effect option -->

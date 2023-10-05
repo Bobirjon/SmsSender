@@ -171,8 +171,6 @@ export class ChronicComponent implements OnInit {
     if (this.chronicForm.value.level == 'P1' || this.chronicForm.value.level == 'P2' ||
       this.chronicForm.value.level == 'P3' || this.chronicForm.value.level == 'P4' || this.chronicForm.value.level == 'P5') {
       this.chronicForm.value.categories_report = 'ПР'
-    } else {
-      this.chronicForm.value.categories_report = ''
     }
   }
 
@@ -209,6 +207,7 @@ export class ChronicComponent implements OnInit {
     } else {
       this.newForm = false
       let endTimeForUpdate: any
+      let district: any
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
 
@@ -216,6 +215,11 @@ export class ChronicComponent implements OnInit {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
+          }
+          if (result['district'] == null || result['district'] == undefined) {
+            district = ''
+          } else {
+            district = result['district']
           }
           this.chronicForm = this.formBuilder.group({
             'AddOrCor': [null],
@@ -228,6 +232,7 @@ export class ChronicComponent implements OnInit {
             'endTime': [endTimeForUpdate],
             'region': [result['region'], Validators.required],
             'siteName': [result['chronic_site']],
+            'district': [district],
             'time': [result['chronic_hours']],
             'hubSite': [result['hub_site']],
             'informed': [result['informed']],
@@ -254,6 +259,7 @@ export class ChronicComponent implements OnInit {
       'start_time': this.chronicForm.value.startTime,
       // 'end_time': this.chronicForm.value.endTime,
       'region': this.chronicForm.value.region,
+      'district': this.chronicForm.value.district,
       'chronic_hours': this.chronicForm.value.time,
       'hub_site': this.chronicForm.value.hubSite,
       'chronic_site': this.chronicForm.value.siteName,
@@ -336,6 +342,7 @@ export class ChronicComponent implements OnInit {
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
       .subscribe((result) => {
         console.log(result);
+        alert('Updated')
       })
   }
 

@@ -178,7 +178,7 @@ export class HubComponent implements OnInit {
       'startTime': ['', Validators.required],
       'endTime': [''],
       'region': ['', Validators.required],
-      'hubSite': ['', Validators.required],
+      'hubSite': [''],
       'effectedSites': [''],
       'generator': [''],
       'desc': [''],
@@ -201,8 +201,6 @@ export class HubComponent implements OnInit {
     if (this.hubForm.value.level == 'P1' || this.hubForm.value.level == 'P2' ||
       this.hubForm.value.level == 'P3' || this.hubForm.value.level == 'P4' || this.hubForm.value.level == 'P5') {
       this.hubForm.value.categories_report = 'ПР'
-    } else {
-      this.hubForm.value.categories_report = ''
     }
   }
 
@@ -224,6 +222,7 @@ export class HubComponent implements OnInit {
       let power_off_time: any
       let block_time: any
       let effected_sites: any
+      let district: any
 
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
@@ -255,7 +254,12 @@ export class HubComponent implements OnInit {
           if(result['effected_sites'] == null) {
             effected_sites = ''
           } else {
-            effected_sites = result['effected_sites'].split('\n')
+            effected_sites = result['effected_sites']
+          }
+          if (result['district'] == null || result['district'] == undefined) {
+            district = ''
+          } else {
+            district = result['district']
           }
           this.hubForm = this.formBuilder.group({
             'AddOrCor': [null],
@@ -276,7 +280,7 @@ export class HubComponent implements OnInit {
             'category': [result['category_for_hub']],
             'powerOffTime': [power_off_time],
             'hubBlockTime': [block_time],
-            'district': [result['district']],
+            'district': [district],
 
             'mw_link': [result['mw_link']],
             'mw_equipment': [result['mw_equipment']],
@@ -343,7 +347,9 @@ export class HubComponent implements OnInit {
     }
 
     if(this.hubForm.value.effectedSites !== '') {
-      this.tableBody.effected_sites = this.hubForm.value.effectedSites.split('\n')
+      let splited: string[] = []
+      splited = this.hubForm.value.effectedSites.split('\n')
+      this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
     }
   }
 
