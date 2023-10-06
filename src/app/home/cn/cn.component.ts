@@ -1,13 +1,16 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { NgIf, formatDate } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
 import { WebSocketService } from 'src/web-socket.service';
+import {FormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-cn',
@@ -336,22 +339,17 @@ export class CnComponent implements OnInit {
     this.requestType = smsType
     this.smsSendBody()
 
-    const dialogRef = this.dialog.open(areYouSure);
+    const dialogRef = this.dialog.open(fortesting, {
+      data: {text: this.SmsTextBody}
+      });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result == true) {
-         this.authService.sendTestSMS(this.smsBody)
-        .subscribe(res => {
-          console.log(res);
-          this.snackBar.open('Success', '', { duration: 10000 })
-          this.router.navigate(['/home'])
-        }, error => {
-          console.log(error);
-          this.snackBar.open("Error", '', { duration: 10000 })
-        })
+
       }
     })
   }
+
 }
 
 @Component({
@@ -361,3 +359,35 @@ export class CnComponent implements OnInit {
   imports: [MatDialogModule, MatButtonModule],
 })
 export class areYouSure { }
+
+
+@Component({
+  selector: 'fortesting',
+  templateUrl: 'fortesting.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule, FormsModule],
+})
+export class fortesting {
+  constructor(
+    private authService: AuthService,
+    public dialogRef: MatDialogRef<fortesting>,
+    @Inject(MAT_DIALOG_DATA) public smsbody: any,
+    ) {}
+
+  onSubmit(form: NgForm) {
+    let tel_list = form.value.field.split('\n')
+    console.log(this.smsbody.text);
+    
+    let smsTXTBody = {
+      'source_addr': 'ncc-cn',
+      'sms_text': this.smsbody.text,
+      'tel_number_list': tel_list,
+    }
+    
+    this.authService.sendTestSMS(smsTXTBody)
+      .subscribe(res => {console.log(res);
+      })
+    console.log(this.smsbody);
+    
+  }
+ }

@@ -305,7 +305,7 @@ export class ChronicComponent implements OnInit {
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
-          'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
+          'по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
@@ -317,7 +317,7 @@ export class ChronicComponent implements OnInit {
           '(' + this.chronicForm.value.AddOrCor + ') \n' +
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
-          'по' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
+          'по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +

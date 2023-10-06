@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Укажите Интервал Экспорта данных </h2>
+<div mat-dialog-content>
+    <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+        <input type="datetime-local" class="dateTime" name="startTime" 
+            min="2023-01-01T00:00" ngModel style="padding: 10px;
+            border: none;
+            border-bottom: 2px solid #999999;
+            background-color: #f2f2f2;
+            margin-right: 20px;">
+        <input type="datetime-local" class="dateTime" name="endTime" 
+            min="2023-01-01T00:00" ngModel style="padding: 10px;
+            border: none;
+            border-bottom: 2px solid #999999;
+            background-color: #f2f2f2;">
+
+        <mat-dialog-actions align="end">
+            <button mat-button [mat-dialog-close]="true" cdkFocusInitial type="submit">Скачать Excel</button>
+        </mat-dialog-actions>
+    </form>
+
+</div>

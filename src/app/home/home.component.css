@@ -9,3 +9,12 @@
     width:100%;
     padding: 6px;
 }
+
+.success {
+    background-color: yellow;
+    font-weight: bold;
+}
+
+.fail {
+    background-color: transparent;
+}

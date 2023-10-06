@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AbstractControl, Form, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, Form, FormBuilder, FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { BehaviorSubject, Subscription, ValueFromArray, map } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
   isAdmin = localStorage.getItem('role')
   isRegister: any;
   UserActive: boolean
-
+  isColor: any
 
   displayedColumnsNew: string[] = [
     'level',
@@ -113,6 +113,7 @@ export class HomeComponent implements OnInit {
         this.posts = data
 
         this.dataTable = new MatTableDataSource(this.posts)
+        this.getRows(this.dataTable)
         this.dataTable.sort = this.table2sort;
         this.dataTable.paginator = this.paginator;
 
@@ -120,7 +121,7 @@ export class HomeComponent implements OnInit {
 
       }, error => {
         this.isRegister = error.statusText
-        if(this.isRegister == 'Unauthorized'){
+        if (this.isRegister == 'Unauthorized') {
           this.isRegisteredUser(false)
         }
       })
@@ -142,6 +143,18 @@ export class HomeComponent implements OnInit {
   isRegisteredUser(isRegistered: any) {
     this.UserActive = isRegistered
     console.log(this.UserActive);
+  }
+
+  getRows(value: any) {
+    this.isColor = value
+    console.log(this.isColor.filteredData);
+
+    if (this.isColor.filteredData.indexOf("Выясняется")) {
+      console.log('Heellow orld ');
+    } else {
+      console.log('no viyasnyaetsa ');
+    }
+
   }
 
   filterForAllCase() {
@@ -222,9 +235,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.webSocketService.listen().subscribe((data) => {
-      console.log(data.data);
-      
       this.updateMessage(data)
     })
 
@@ -316,13 +328,13 @@ export class HomeComponent implements OnInit {
 
   addNumber() {
     this.router.navigate(['/add'])
-  }  
+  }
   exportXlsx() {
-    const dialogRef = this.dialog.open(areYouSure);
+    const dialogRef = this.dialog.open(exportExcel);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
-      
+
     })
     // let element  = document.getElementById('open-case')
     // const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
@@ -335,10 +347,41 @@ export class HomeComponent implements OnInit {
 }
 
 @Component({
-  selector: 'areYouSure',
-  templateUrl: 'areYouSure.html',
+  selector: 'exportExcel',
+  templateUrl: 'exportExcel.html',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, FormsModule],
 })
-export class areYouSure { 
+export class exportExcel {
+  constructor(
+    private authService: AuthService,
+  ) { }
+  onSubmit(form: NgForm) {
+    this.authService.exportExcel(form.value.startTime, form.value.endTime)
+      .subscribe(res => {
+        this.convertToXLSX(res, 'data')
+      })
+  }
+
+  convertToXLSX(data: any, filename: string): void {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, filename);
+  }
+
+  saveAsExcelFile(buffer: any, filename: string): void {
+    const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url: string = window.URL.createObjectURL(data);
+    const link: HTMLAnchorElement = document.createElement('a');
+    link.href = url;
+    link.download = filename + '.xlsx';
+    link.click();
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+      link.remove();
+    }, 100);
+  }
 }
+

@@ -93,7 +93,7 @@ export class HubComponent implements OnInit {
     { value:'Аккурган', viewValue: 'Аккурган'},
     { value:'Ахангаран', viewValue: 'Ахангаран'},
     { value:'Бекабад', viewValue: 'Бекабад'},
-    { value:'Бустанлик', viewValue: 'Бустанлик'},
+    { value:'Бустонлик', viewValue: 'Бустонлик'},
     { value:'Бука', viewValue: 'Бука'},
     { value:'Зангиота', viewValue: 'Зангиота'},
     { value:'Кибрай', viewValue: 'Кибрай'},
@@ -105,7 +105,7 @@ export class HubComponent implements OnInit {
     { value:'Чиназ', viewValue: 'Чиназ'},
     { value:'Юкоричирчик', viewValue: 'Юкоричирчик'},
     { value:'Янгиюль', viewValue: 'Янгиюль'},
-    { value:'Алмалик', viewValue: 'Алмалик'},
+    { value:'Алмалык', viewValue: 'Алмалык'},
     { value:'Чирчик', viewValue: 'Чирчик'},
     { value:'Ангрен', viewValue: 'Ангрен'},
     { value:'Нурафшон', viewValue: 'Нурафшон'},
@@ -117,7 +117,7 @@ export class HubComponent implements OnInit {
     'Аккурган': 'Аккурганском районе',
     'Ахангаран': 'Ахангаранском районе',
     'Бекабад': 'Бекабадском районе',
-    'Бустанлик': 'Бустанликском районе',
+    'Бустонлик': 'Бустанликском районе',
     'Бука': 'Букинском районе',
     'Зангиота': 'Зангиотинском районе',
     'Кибрай': 'Кибрайском районе',
@@ -129,7 +129,7 @@ export class HubComponent implements OnInit {
     'Чиназ': 'Чиназском районе',
     'Юкоричирчик': 'Юкоричирчикском районе',
     'Янгиюль': 'Янгиюльском районе',
-    'Алмалик': 'Алмаликском районе',
+    'Алмалык': 'Алмалыкском районе',
     'Чирчик': 'город Чирчик',
     'Ангрен': 'Ангренском районе',
     'Нурафшон': 'город Нурафшон',
@@ -383,7 +383,7 @@ export class HubComponent implements OnInit {
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
-          this.hubForm.value.AddOrCor + '\n ' +
+          '(' + this.hubForm.value.AddOrCor + ')\n ' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
@@ -412,7 +412,7 @@ export class HubComponent implements OnInit {
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
-          this.hubForm.value.AddOrCor + '\n' +
+          '(' + this.hubForm.value.AddOrCor + ')\n' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' '+ this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +

@@ -3,11 +3,9 @@
     <mat-grid-tile colspan="6">
       <button mat-raised-button color="primary" (click)="onCN()">Создать CN шаблон</button>
       <button mat-raised-button color="primary" (click)="onRN()" style="margin-left: 15px;">Создать RN шаблон</button>
-      <button mat-raised-button color="primary" (click)="addNumber()" style="margin-left: 15px;" *ngIf="isAdmin == 'admin'">Добавить получателя</button>
-      <button mat-raised-button color="primary" 
-        (click)="exportXlsx()" 
-        style="margin-left: 15px;" 
-        *ngIf="isAdmin == 'admin'">   Экспорт таблицы
+      <button mat-raised-button color="primary" (click)="addNumber()" style="margin-left: 15px;"
+        *ngIf="isAdmin == 'admin'">Добавить получателя</button>
+      <button mat-raised-button color="primary" (click)="exportXlsx()" style="margin-left: 15px;"> Экспорт таблицы
       </button>
     </mat-grid-tile>
   </mat-grid-list>
@@ -17,17 +15,16 @@
 
   <mat-form-field style="margin-left: 50px;" appearance="fill" *ngFor="let selectableFilter of selectableFilters">
     <mat-label>{{ selectableFilter.name }}</mat-label>
-    <mat-select
-      [(value)]="selectableFilter.defaultValue"
+    <mat-select [(value)]="selectableFilter.defaultValue"
       (selectionChange)="applySelectableFilter($event, selectableFilter)">
       <mat-option *ngFor="let op of selectableFilter.options" [value]="op">
         {{ op.replace('P','П') }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  
-  <div class="table-style" >
-    <table mat-table [dataSource] = "Data" matSort #table1 #table1sort="matSort" class="mat-elevation-z8" id="open-case">
+
+  <div class="table-style">
+    <table mat-table [dataSource]="Data" matSort #table1 #table1sort="matSort" class="mat-elevation-z8" id="open-case">
 
       <ng-container matColumnDef="level">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>level</th>
@@ -65,83 +62,94 @@
       </ng-container>
 
       <ng-container matColumnDef="region">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>  
-        <td mat-cell *matCellDef="let element" >{{element.region}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>
+        <td mat-cell *matCellDef="let element">{{element.region}} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
-        <td mat-cell *matCellDef="let element" ><a style="text-decoration: none" routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a></td>
+        <td mat-cell *matCellDef="let element"><a style="text-decoration: none"
+            routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsNew"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsNew"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsNew"></tr>
     </table>
   </div>
   <hr>
 
   <h1 style="margin-left: 50px; margin-top: 40px;">Все Инциденты</h1>
-  
-  <div class="table-style" >
-    <table mat-table [dataSource] = "dataTable" matSort #table2 #table2sort="matSort" class="mat-elevation-z8">
+
+  <div class="table-style">
+    <table mat-table [dataSource]="dataTable" matSort #table2 #table2sort="matSort" class="mat-elevation-z8">
 
       <ng-container matColumnDef="level">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>level</th>
-        <td mat-cell *matCellDef="let row">{{row.level}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="level" search [formControl]="level"></td>
+        <td mat-cell *matCellDef="let row">{{row.level.replace('P','П')}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="level" search
+            [formControl]="level"></td>
       </ng-container>
 
       <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
         <td mat-cell *matCellDef="let row">{{row.type}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="type" search [formControl]="type"></td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="type" search
+            [formControl]="type"></td>
       </ng-container>
 
       <ng-container matColumnDef="created_at">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Created Time</th>
         <td mat-cell *matCellDef="let element">{{element.created_at.replace('T', ' ').substring('0','16')}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="created_at" search [formControl]="createdAt"></td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="created_at" search
+            [formControl]="createdAt"></td>
       </ng-container>
 
       <ng-container matColumnDef="start_time">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Time</th>
         <td mat-cell *matCellDef="let element">{{element.start_time.replace('T', ' ').substring('0','16')}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="start_time" search [formControl]="startTime"></td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="start_time" search
+            [formControl]="startTime"></td>
       </ng-container>
 
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
         <td mat-cell *matCellDef="let row">{{row.description}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="description" search [formControl]="description"></td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="description" search
+            [formControl]="description"></td>
       </ng-container>
 
       <ng-container matColumnDef="reason">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Reason</th>
         <td mat-cell *matCellDef="let row">{{row.reason}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="reason" search [formControl]="reason"></td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="reason" search
+            [formControl]="reason"></td>
       </ng-container>
 
       <ng-container matColumnDef="problem">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Problem</th>
-        <td mat-cell *matCellDef="let row">{{row.problem}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search [formControl]="problem"></td>
+        <td mat-cell *matCellDef="let row" >{{row.problem}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search
+            [formControl]="problem"></td>
       </ng-container>
 
       <ng-container matColumnDef="region">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>  
-        <td mat-cell *matCellDef="let element" >{{element.region}} </td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search [formControl]="region"></td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>
+        <td mat-cell *matCellDef="let element">{{element.region}} </td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search
+            [formControl]="region"></td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
-        <td mat-cell *matCellDef="let element" ><a style="text-decoration: none" routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a></td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search [formControl]="username"></td>
+        <td mat-cell *matCellDef="let element"><a style="text-decoration: none"
+            routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a></td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search
+            [formControl]="username"></td>
       </ng-container>
 
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsNew"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsNew" ></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsNew" [ngClass]="(row.reason =='Выясняется') ? 'success' : 'fail'"></tr>
       <tr mat-footer-row *matFooterRowDef="displayedColumnsNew" class="example-first-footer-row"></tr>
 
       <tr *matNoDataRow>

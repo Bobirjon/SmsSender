@@ -62,6 +62,10 @@ export class AuthService {
   }
 
   sendTestSMS(body: any) {
-    return this.http.post(this.URLsender + 'smssender/smssend/', body) 
+    return this.http.post(this.URLsender + 'smssender/sendsms/', body) 
+  }
+
+  exportExcel(startTime: any, endTime: any) {
+    return this.http.get((`${this.URLsender + 'smssender/alarmreport'}/?starttime=${startTime}&endtime=${endTime}`))
   }
 }
