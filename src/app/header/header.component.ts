@@ -9,8 +9,10 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
+  userName: any
   loginStatus: any
   IsLoggedIn$: any
+
 
   constructor(
     private storageService: StorageService,
@@ -18,6 +20,12 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.getUser().subscribe(res=> {
+      let fullName: any
+      fullName = res
+      this.userName = fullName.first_name + ' ' + fullName.last_name
+      
+    })
     
     this.IsLoggedIn$ = this.storageService.isLoggedIn$
 

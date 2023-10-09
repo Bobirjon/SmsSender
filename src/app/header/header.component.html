@@ -1,7 +1,11 @@
 <mat-toolbar color="primary">
     <a href="/home" style="text-decoration: none; color: white;"><span>Домой</span></a>
     <span class="example-spacer"></span>
-    <span>V-06.10.23.16.15</span>
+    <span>V-09.10.23.11.00</span>
     <span class="example-spacer"></span>
-    <a href="/login" style="text-decoration: none; color: white;" (click)="logout()" *ngIf='(IsLoggedIn$ | async)'>Выход</a>
+    <a href="/login" style="text-decoration: none; text-align: center;
+                     color: white; font-size: medium;" (click)="logout()" 
+                     *ngIf='(IsLoggedIn$ | async)' >
+        <p>{{userName}}</p>Выход
+    </a>
 </mat-toolbar>

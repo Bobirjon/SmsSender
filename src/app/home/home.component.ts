@@ -8,7 +8,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, Form, FormBuilder, FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { BehaviorSubject, Subscription, ValueFromArray, map } from 'rxjs';
+import { BehaviorSubject, Subscription, ValueFromArray, map, windowWhen } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
 import * as XLSX from 'xlsx';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -19,6 +19,7 @@ export interface DataTable {
   region: string
   username: string
   start_time: any
+  end_time: any
   created_at: any;
   level: string,
   type: string,
@@ -46,13 +47,26 @@ export class HomeComponent implements OnInit {
   isColor: any
 
   displayedColumnsNew: string[] = [
-    'level',
     'type',
+    'level',
     'created_at',
     'start_time',
-    'description',
-    'reason',
     'problem',
+    'reason',
+    'description',
+    'region',
+    'actions'
+  ]
+
+  displayedColumnsForAllCases: string[] = [
+    'type',
+    'level',
+    'created_at',
+    'start_time',
+    'end_time',
+    'problem',
+    'reason',
+    'description',
     'region',
     'actions'
   ]
@@ -74,14 +88,15 @@ export class HomeComponent implements OnInit {
   filterDictionary = new Map<string, string[]>();
 
   filteredValues = {
-    level: '',
     type: '',
-    description: '',
-    reason: '',
-    problem: '',
+    level: '',
     created_at: '',
     start_time: '',
-    region: ''
+    end_time: '',
+    problem: '',
+    reason: '',
+    description: '',
+    region: '',
   };
 
   refreshUser$ = new BehaviorSubject<boolean>(true)
@@ -97,6 +112,7 @@ export class HomeComponent implements OnInit {
   problem = new FormControl()
   createdAt = new FormControl()
   startTime = new FormControl()
+  endTime = new FormControl()
   region = new FormControl()
   username = new FormControl()
 
@@ -113,12 +129,10 @@ export class HomeComponent implements OnInit {
         this.posts = data
 
         this.dataTable = new MatTableDataSource(this.posts)
-        this.getRows(this.dataTable)
         this.dataTable.sort = this.table2sort;
         this.dataTable.paginator = this.paginator;
 
         this.filterForAllCase()
-
       }, error => {
         this.isRegister = error.statusText
         if (this.isRegister == 'Unauthorized') {
@@ -145,41 +159,32 @@ export class HomeComponent implements OnInit {
     console.log(this.UserActive);
   }
 
-  getRows(value: any) {
-    this.isColor = value
-    console.log(this.isColor.filteredData);
+  getRows(time: any) {
+    let classNames = {}
 
-    if (this.isColor.filteredData.indexOf("Выясняется")) {
-      console.log('Heellow orld ');
-    } else {
-      console.log('no viyasnyaetsa ');
+    if((time.chronic_hours >= '48') == true) {
+      classNames['successChronicMax'] =true
+      
     }
+    if(( (time.chronic_hours >= '12') && (time.chronic_hours < '48')) == true) {
+      classNames['successChronicMin'] = true
+    }
+    
+    if(time.reason.includes('Выясняется') == true) {
+      classNames['success'] = true
+    }
+    return classNames;
 
   }
 
   filterForAllCase() {
-    this.level.valueChanges.subscribe((levelFilter) => {
-      this.filteredValues['level'] = levelFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-    })
-
     this.type.valueChanges.subscribe((typeFilter) => {
       this.filteredValues['type'] = typeFilter;
       this.dataTable.filter = JSON.stringify(this.filteredValues)
     })
 
-    this.description.valueChanges.subscribe((descriptionFilter) => {
-      this.filteredValues['description'] = descriptionFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-    })
-
-    this.reason.valueChanges.subscribe((reasonFilter) => {
-      this.filteredValues['reason'] = reasonFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-    })
-
-    this.problem.valueChanges.subscribe((problemFilter) => {
-      this.filteredValues['problem'] = problemFilter;
+    this.level.valueChanges.subscribe((levelFilter) => {
+      this.filteredValues['level'] = levelFilter;
       this.dataTable.filter = JSON.stringify(this.filteredValues)
     })
 
@@ -191,6 +196,30 @@ export class HomeComponent implements OnInit {
     this.startTime.valueChanges.subscribe((startTimeFilter) => {
       this.filteredValues['start_time'] = startTimeFilter;
       this.dataTable.filter = JSON.stringify(this.filteredValues)
+      console.log(this.filteredValues);
+      
+    })
+
+    this.endTime.valueChanges.subscribe((endTimeFilter) => {
+      this.filteredValues['end_time'] = endTimeFilter;
+      this.dataTable.filter = JSON.stringify(this.filteredValues)
+      console.log(this.filteredValues);
+    })
+
+    this.problem.valueChanges.subscribe((problemFilter) => {
+      this.filteredValues['problem'] = problemFilter;
+      this.dataTable.filter = JSON.stringify(this.filteredValues)
+      console.log(this.filteredValues);
+    })
+
+    this.reason.valueChanges.subscribe((reasonFilter) => {
+      this.filteredValues['reason'] = reasonFilter;
+      this.dataTable.filter = JSON.stringify(this.filteredValues)
+    })
+
+    this.description.valueChanges.subscribe((descriptionFilter) => {
+      this.filteredValues['description'] = descriptionFilter;
+      this.dataTable.filter = JSON.stringify(this.filteredValues)
     })
 
     this.region.valueChanges.subscribe((regionFilter) => {
@@ -201,19 +230,20 @@ export class HomeComponent implements OnInit {
 
     this.dataTable.filterPredicate = function (data, filter): boolean {
       let searchString = JSON.parse(filter);
-      let levelFound = data.level.toString().trim().toLowerCase().indexOf(searchString.level.toLowerCase()) !== -1
-      let typeFound = data.type.toString().trim().toLowerCase().indexOf(searchString.type.toLowerCase()) !== -1
-      let descriptionFound = data.description.toString().trim().toLowerCase().indexOf(searchString.description.toLowerCase()) !== -1
-      let reasonFound = data.reason.toString().trim().toLowerCase().indexOf(searchString.reason.toLowerCase()) !== -1
-      let problemFound = data.problem.toString().trim().toLowerCase().indexOf(searchString.problem.toLowerCase()) !== -1
-      let createdAtFound = data.created_at.toString().trim().toLowerCase().indexOf(searchString.created_at.toLowerCase()) !== -1
-      let startTimeFound = data.start_time.toString().trim().toLowerCase().indexOf(searchString.start_time.toLowerCase()) !== -1
-      let regionFound = data.region.toString().trim().toLowerCase().indexOf(searchString.region.toLowerCase()) !== -1
+      let typeFound = (data.type || '').toString().trim().toLowerCase().indexOf(searchString.type.toLowerCase()) !== -1
+      let levelFound = (data.level || '').toString().trim().toLowerCase().indexOf(searchString.level.toLowerCase()) !== -1
+      let createdAtFound = (data.created_at || '').toString().trim().toLowerCase().indexOf(searchString.created_at.toLowerCase()) !== -1
+      let startTimeFound = (data.start_time || '').toString().trim().toLowerCase().indexOf(searchString.start_time.toLowerCase()) !== -1
+      let endTimeFound = (data.end_time || '').toString().trim().toLowerCase().indexOf(searchString.end_time.toLowerCase()) !== -1
+      let problemFound = (data.problem || '').toString().trim().toLowerCase().indexOf(searchString.problem.toLowerCase()) !== -1
+      let descriptionFound = (data.description || '').toString().trim().toLowerCase().indexOf(searchString.description.toLowerCase()) !== -1
+      let reasonFound = (data.reason || '').toString().trim().toLowerCase().indexOf(searchString.reason.toLowerCase()) !== -1
+      let regionFound = (data.region || '').toString().trim().toLowerCase().indexOf(searchString.region.toLowerCase()) !== -1
 
       if (searchString.topFilter) {
-        return levelFound || typeFound || descriptionFound || reasonFound || problemFound || createdAtFound || startTimeFound || regionFound
+        return typeFound || levelFound || createdAtFound || startTimeFound || endTimeFound  || problemFound || reasonFound || descriptionFound || regionFound
       } else {
-        return levelFound && typeFound && descriptionFound && reasonFound && problemFound && createdAtFound && startTimeFound && regionFound
+        return typeFound && levelFound && createdAtFound && startTimeFound && endTimeFound  && problemFound && reasonFound && descriptionFound && regionFound
       }
     }
   }
@@ -329,6 +359,7 @@ export class HomeComponent implements OnInit {
   addNumber() {
     this.router.navigate(['/add'])
   }
+
   exportXlsx() {
     const dialogRef = this.dialog.open(exportExcel);
 
@@ -336,13 +367,20 @@ export class HomeComponent implements OnInit {
       console.log(result);
 
     })
-    // let element  = document.getElementById('open-case')
-    // const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+  }
 
-    // const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  onDelete(id: number) {
+    const dialogRef = this.dialog.open(areYouSure);
 
-    // XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    dialogRef.afterClosed().subscribe(res => {
+      if(res == true) {
+        this.authService.deleteData(id).subscribe(res =>{
+          console.log(res);
+          this.snackBar.open('Удалено', '', { duration: 10000 })
+          window.location.reload()
+        })
+      }
+    })
   }
 }
 
@@ -357,7 +395,7 @@ export class exportExcel {
     private authService: AuthService,
   ) { }
   onSubmit(form: NgForm) {
-    this.authService.exportExcel(form.value.startTime, form.value.endTime)
+    this.authService.exportExcel(form.value.starttime, form.value.endtime)
       .subscribe(res => {
         this.convertToXLSX(res, 'data')
       })
@@ -384,4 +422,12 @@ export class exportExcel {
     }, 100);
   }
 }
+
+@Component({
+  selector: 'areYouSure',
+  templateUrl: 'areYouSure.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+})
+export class areYouSure { }
 

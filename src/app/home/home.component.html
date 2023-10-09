@@ -24,52 +24,60 @@
   </mat-form-field>
 
   <div class="table-style">
-    <table mat-table [dataSource]="Data" matSort #table1 #table1sort="matSort" class="mat-elevation-z8" id="open-case">
+    <table mat-table [dataSource]="Data" matSort #table1 #table1sort="matSort" class="mat-elevation-z8 full-width-table" id="open-case">
 
       <ng-container matColumnDef="level">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>level</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Уровень</th>
         <td mat-cell *matCellDef="let row">{{row.level.replace('P','П')}}</td>
       </ng-container>
 
       <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Тип</th>
         <td mat-cell *matCellDef="let row">{{row.type}}</td>
       </ng-container>
 
       <ng-container matColumnDef="created_at">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created Time</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Создания</th>
         <td mat-cell *matCellDef="let element">{{element.created_at.replace('T', ' ').substring('0','16')}}</td>
       </ng-container>
 
       <ng-container matColumnDef="start_time">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Time</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Начало</th>
         <td mat-cell *matCellDef="let element">{{element.start_time.replace('T', ' ').substring('0','16')}}</td>
       </ng-container>
 
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-        <td mat-cell *matCellDef="let row">{{row.description}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="reason">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reason</th>
-        <td mat-cell *matCellDef="let row">{{row.reason}}</td>
-      </ng-container>
-
       <ng-container matColumnDef="problem">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Problem</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Проблема</th>
         <td mat-cell *matCellDef="let row">{{row.problem}}</td>
       </ng-container>
 
+      <ng-container matColumnDef="reason">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Причина</th>
+        <td mat-cell *matCellDef="let row">{{row.reason}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Описания</th>
+        <td mat-cell *matCellDef="let row">{{row.description}}</td>
+      </ng-container>
+
       <ng-container matColumnDef="region">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Регион</th>
         <td mat-cell *matCellDef="let element">{{element.region}} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
-        <td mat-cell *matCellDef="let element"><a style="text-decoration: none"
-            routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a></td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Действия</th>
+        <td mat-cell *matCellDef="let element">
+          <!-- <a style="text-decoration: none"
+            routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a></td> -->
+            <a routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()" style="color: black;">
+              <mat-icon aria-hidden="false" fontIcon="edit" style="margin-right: 10px;"></mat-icon>
+            </a>
+            <button style="background-color: transparent; border: none; cursor: pointer;" (click)="onDelete(element.id)">
+              <mat-icon aria-hidden="false" fontIcon="delete"></mat-icon>
+            </button>
+            
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsNew"></tr>
@@ -81,76 +89,101 @@
   <h1 style="margin-left: 50px; margin-top: 40px;">Все Инциденты</h1>
 
   <div class="table-style">
-    <table mat-table [dataSource]="dataTable" matSort #table2 #table2sort="matSort" class="mat-elevation-z8">
-
-      <ng-container matColumnDef="level">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>level</th>
-        <td mat-cell *matCellDef="let row">{{row.level.replace('P','П')}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="level" search
-            [formControl]="level"></td>
-      </ng-container>
+    <table mat-table [dataSource]="dataTable" matSort #table2 #table2sort="matSort" class="mat-elevation-z8 full-width-table">
 
       <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Тип</th>
         <td mat-cell *matCellDef="let row">{{row.type}}</td>
         <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="type" search
             [formControl]="type"></td>
       </ng-container>
 
+      <ng-container matColumnDef="level">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Уровень</th>
+        <td mat-cell *matCellDef="let row">{{row.level.replace('P','П')}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="level" search
+            [formControl]="level"></td>
+
+
+      </ng-container>
+
       <ng-container matColumnDef="created_at">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created Time</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Создания</th>
         <td mat-cell *matCellDef="let element">{{element.created_at.replace('T', ' ').substring('0','16')}}</td>
         <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="created_at" search
             [formControl]="createdAt"></td>
       </ng-container>
 
       <ng-container matColumnDef="start_time">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Time</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Начало</th>
         <td mat-cell *matCellDef="let element">{{element.start_time.replace('T', ' ').substring('0','16')}}</td>
         <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="start_time" search
             [formControl]="startTime"></td>
       </ng-container>
 
+      <ng-container matColumnDef="end_time">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Окончания</th>
+        <td mat-cell *matCellDef="let element">{{element.end_time?.replace('T', ' ').substring('0','16')}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="end_time" search
+            [formControl]="endTime"></td>
+      </ng-container>
+
+      <ng-container matColumnDef="problem">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Проблема</th>
+        <td mat-cell *matCellDef="let row">{{row.problem}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search
+            [formControl]="problem"></td>
+      </ng-container>
+
+      <ng-container matColumnDef="reason">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Причина</th>
+        <td mat-cell *matCellDef="let row">{{row?.reason}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="reason" search
+            [formControl]="reason"></td>
+      </ng-container>
+
       <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Описания</th>
         <td mat-cell *matCellDef="let row">{{row.description}}</td>
         <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="description" search
             [formControl]="description"></td>
       </ng-container>
 
-      <ng-container matColumnDef="reason">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reason</th>
-        <td mat-cell *matCellDef="let row">{{row.reason}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="reason" search
-            [formControl]="reason"></td>
-      </ng-container>
-
-      <ng-container matColumnDef="problem">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Problem</th>
-        <td mat-cell *matCellDef="let row" >{{row.problem}}</td>
-        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search
-            [formControl]="problem"></td>
-      </ng-container>
-
       <ng-container matColumnDef="region">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Регион</th>
         <td mat-cell *matCellDef="let element">{{element.region}} </td>
         <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search
             [formControl]="region"></td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
-        <td mat-cell *matCellDef="let element"><a style="text-decoration: none"
-            routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a></td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Действия</th>
+        <td mat-cell *matCellDef="let element">
+          <!-- <a style="text-decoration: none"
+            routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a> 
+            <a href="">Delete</a> -->
+
+          <a routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()" style="color: black;">
+            <mat-icon aria-hidden="false" fontIcon="edit" style="margin-right: 10px;"></mat-icon>
+          </a>
+          <button style="background-color: transparent; border: none; cursor: pointer;" (click)="onDelete(element.id)">
+            <mat-icon aria-hidden="false" fontIcon="delete"></mat-icon>
+          </button>
+
+        </td>
         <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search
             [formControl]="username"></td>
       </ng-container>
 
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumnsNew"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumnsNew" [ngClass]="(row.reason =='Выясняется') ? 'success' : 'fail'"></tr>
-      <tr mat-footer-row *matFooterRowDef="displayedColumnsNew" class="example-first-footer-row"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsForAllCases"></tr>
+      <!-- <tr mat-row *matRowDef="let row; columns: displayedColumnsForAllCases"
+        [ngClass]="((row.reason.includes('Выясняется')) ? 'success' : 'fail') || (row.chronic_hours > 12 ? 'successChronic' : 'failChronic')">
+      </tr> -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsForAllCases" 
+        [ngClass]="getRows(row)">
+      </tr>
+      <tr mat-footer-row *matFooterRowDef="displayedColumnsForAllCases" class="example-first-footer-row"></tr>
 
       <tr *matNoDataRow>
         <td class="mat-cell" colspan="4">The filter does not match any item in the data for this text</td>

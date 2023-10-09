@@ -10,11 +10,15 @@
     padding: 6px;
 }
 
-.success {
+.success, .success:hover {
     background-color: yellow;
     font-weight: bold;
 }
 
-.fail {
-    background-color: transparent;
+.successChronicMax, .successChronicMax:hover {
+    background-color: red;
+}
+
+.successChronicMin, .successChronicMin:hover {
+    background-color: blue;
 }

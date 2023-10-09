@@ -245,8 +245,11 @@ export class BscComponent implements OnInit {
     this.tableSendBody()
 
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-      .subscribe((res) => {
-        console.log(res);
+      .subscribe((result) => {
+        console.log(result);
+        this.snackBar.open('Обновлено', '', { duration: 10000 })
+      }, error => {
+        this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
       })
   }
 
@@ -256,17 +259,16 @@ export class BscComponent implements OnInit {
     this.authService.postData(this.tableBody)
       .subscribe((res) => {
         console.log(res);
+        this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
       })
   }
 
   onSubmitButtonProblem(smsType: string) {
-    if (this.newForm == false) {
-      this.updateData()
-    } else {
-      this.createData()
-    }
-
     this.requestType = smsType
+    
     this.smsSendBody()
 
     const dialogRef = this.dialog.open(areYouSure);
@@ -278,6 +280,12 @@ export class BscComponent implements OnInit {
             console.log(res);
             this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
             this.router.navigate(['/home'])
+            if (this.newForm == false) {
+              this.updateData()
+            } else {
+              this.createData()
+            }
+
           }, error => {
             console.log(error);
             this.snackBar.open("Ошибка", '', { duration: 10000 })

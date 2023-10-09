@@ -68,4 +68,8 @@ export class AuthService {
   exportExcel(startTime: any, endTime: any) {
     return this.http.get((`${this.URLsender + 'smssender/alarmreport'}/?starttime=${startTime}&endtime=${endTime}`))
   }
+
+  deleteData(id: number) {
+    return this.http.delete(`${this.URLsender + 'smssender/alarmreport'}/${id}/`)
+  }
 }

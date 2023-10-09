@@ -304,7 +304,7 @@ export class ChronicComponent implements OnInit {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
-          this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          this.dist[this.chronicForm.value.district] + ' с  ' + this.chronicForm.value.startTime.replace("T", " ") +
           'по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
@@ -316,7 +316,7 @@ export class ChronicComponent implements OnInit {
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
           '(' + this.chronicForm.value.AddOrCor + ') \n' +
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
-          this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
+          this.dist[this.chronicForm.value.district] + ' с  ' + this.chronicForm.value.startTime.replace("T", " ") +
           'по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
@@ -342,28 +342,27 @@ export class ChronicComponent implements OnInit {
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
       .subscribe((result) => {
         console.log(result);
-        alert('Updated')
+        this.snackBar.open('Обновлено', '', { duration: 10000 })
+      }, error => {
+        this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
       })
   }
 
   createData() {
     this.tableSendBody()
-    console.log(this.tableBody);
 
     this.authService.postData(this.tableBody)
       .subscribe((res) => {
         console.log(res);
+        this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
       })
   }
 
 
   onSubmitButtonProblem(smsType: string) {
-
-    if (this.newForm == false) {
-      this.updateData()
-    } else {
-      this.createData()
-    }
 
     this.requestType = smsType
     this.smsSendBody()
@@ -377,6 +376,11 @@ export class ChronicComponent implements OnInit {
           console.log(res);
           this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
           this.router.navigate(['/home'])
+          if (this.newForm == false) {
+            this.updateData()
+          } else {
+            this.createData()
+          }
         }, error => {
           console.log(error);
           this.snackBar.open("Ошибка", '', { duration: 10000 })

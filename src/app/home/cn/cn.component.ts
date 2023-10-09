@@ -213,10 +213,9 @@ export class CnComponent implements OnInit {
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
       .subscribe((result) => {
         console.log(result);
-        this.snackBar.open('Updated', '', { duration: 10000 })
+        this.snackBar.open('Обновлено', '', { duration: 10000 })
       }, error => {
-        console.log(error);
-
+        this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
       })
   }
 
@@ -307,14 +306,9 @@ export class CnComponent implements OnInit {
   }
 
   onSubmitButtonProblem(smsType: string) {
-
-    if (this.newForm == false) {
-      this.updateData()
-    } else {
-      this.onSubmit()
-    }
-
     this.requestType = smsType
+
+   
     this.smsSendBody()
 
     const dialogRef = this.dialog.open(areYouSure);
@@ -326,6 +320,11 @@ export class CnComponent implements OnInit {
             console.log(res);
             this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
             this.router.navigate(['/home'])
+            if (this.newForm == false) {
+              this.updateData()
+            } else {
+              this.onSubmit()
+            }
           }, error => {
             console.log(error);
             this.snackBar.open("Ошибка", '', { duration: 10000 })
