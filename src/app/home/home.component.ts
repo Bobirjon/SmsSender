@@ -169,10 +169,6 @@ export class HomeComponent implements OnInit {
     if(( (time.chronic_hours >= '12') && (time.chronic_hours < '48')) == true) {
       classNames['successChronicMin'] = true
     }
-    
-    if(time.reason.includes('Выясняется') == true) {
-      classNames['success'] = true
-    }
     return classNames;
 
   }

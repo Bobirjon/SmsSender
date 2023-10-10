@@ -81,14 +81,14 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsNew"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumnsNew"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsNew" [ngClass]="getRows(row)"></tr>
     </table>
   </div>
   <hr>
 
   <h1 style="margin-left: 50px; margin-top: 40px;">Все Инциденты</h1>
 
-  <div class="table-style">
+  <div class="table-style"> 
     <table mat-table [dataSource]="dataTable" matSort #table2 #table2sort="matSort" class="mat-elevation-z8 full-width-table">
 
       <ng-container matColumnDef="type">
@@ -177,12 +177,10 @@
 
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsForAllCases"></tr>
-      <!-- <tr mat-row *matRowDef="let row; columns: displayedColumnsForAllCases"
-        [ngClass]="((row.reason.includes('Выясняется')) ? 'success' : 'fail') || (row.chronic_hours > 12 ? 'successChronic' : 'failChronic')">
-      </tr> -->
-      <tr mat-row *matRowDef="let row; columns: displayedColumnsForAllCases" 
-        [ngClass]="getRows(row)">
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsForAllCases"
+        [ngClass]="((row.reason.includes('Выясняется')) ? 'success' : 'fail')">
       </tr>
+ 
       <tr mat-footer-row *matFooterRowDef="displayedColumnsForAllCases" class="example-first-footer-row"></tr>
 
       <tr *matNoDataRow>

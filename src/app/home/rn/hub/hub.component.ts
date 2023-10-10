@@ -1,8 +1,8 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit, } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormsModule, NgForm } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
@@ -90,27 +90,27 @@ export class HubComponent implements OnInit {
   }
 
   district: { value: string; viewValue: string }[] = [
-    { value:'Аккурган', viewValue: 'Аккурган'},
-    { value:'Ахангаран', viewValue: 'Ахангаран'},
-    { value:'Бекабад', viewValue: 'Бекабад'},
-    { value:'Бустонлик', viewValue: 'Бустонлик'},
-    { value:'Бука', viewValue: 'Бука'},
-    { value:'Зангиота', viewValue: 'Зангиота'},
-    { value:'Кибрай', viewValue: 'Кибрай'},
-    { value:'Куйичирчик', viewValue: 'Куйичирчик'},
-    { value:'Паркент', viewValue: 'Паркент'},
-    { value:'Пскент', viewValue: 'Пскент'},
-    { value:'Ташкент', viewValue: 'Ташкент'},
-    { value:'Уртачирчик', viewValue: 'Уртачирчик'},
-    { value:'Чиназ', viewValue: 'Чиназ'},
-    { value:'Юкоричирчик', viewValue: 'Юкоричирчик'},
-    { value:'Янгиюль', viewValue: 'Янгиюль'},
-    { value:'Алмалык', viewValue: 'Алмалык'},
-    { value:'Чирчик', viewValue: 'Чирчик'},
-    { value:'Ангрен', viewValue: 'Ангрен'},
-    { value:'Нурафшон', viewValue: 'Нурафшон'},
-    { value:'Чимбай', viewValue: 'Чимбай'},
-   
+    { value: 'Аккурган', viewValue: 'Аккурган' },
+    { value: 'Ахангаран', viewValue: 'Ахангаран' },
+    { value: 'Бекабад', viewValue: 'Бекабад' },
+    { value: 'Бустонлик', viewValue: 'Бустонлик' },
+    { value: 'Бука', viewValue: 'Бука' },
+    { value: 'Зангиота', viewValue: 'Зангиота' },
+    { value: 'Кибрай', viewValue: 'Кибрай' },
+    { value: 'Куйичирчик', viewValue: 'Куйичирчик' },
+    { value: 'Паркент', viewValue: 'Паркент' },
+    { value: 'Пскент', viewValue: 'Пскент' },
+    { value: 'Ташкент', viewValue: 'Ташкент' },
+    { value: 'Уртачирчик', viewValue: 'Уртачирчик' },
+    { value: 'Чиназ', viewValue: 'Чиназ' },
+    { value: 'Юкоричирчик', viewValue: 'Юкоричирчик' },
+    { value: 'Янгиюль', viewValue: 'Янгиюль' },
+    { value: 'Алмалык', viewValue: 'Алмалык' },
+    { value: 'Чирчик', viewValue: 'Чирчик' },
+    { value: 'Ангрен', viewValue: 'Ангрен' },
+    { value: 'Нурафшон', viewValue: 'Нурафшон' },
+    { value: 'Чимбай', viewValue: 'Чимбай' },
+
   ]
 
   dist = {
@@ -134,7 +134,7 @@ export class HubComponent implements OnInit {
     'Ангрен': 'Ангренском районе',
     'Нурафшон': 'город Нурафшон',
     'Чимбай': 'Чимбайском районе',
-    '':''
+    '': ''
   }
 
 
@@ -151,7 +151,7 @@ export class HubComponent implements OnInit {
     { value: 'TI_MW', viewValue: 'TI_MW' },
     { value: 'TI_FLM', viewValue: 'TI_FLM' },
     { value: 'TI_SAQ', viewValue: 'TI_SAQ' },
-    { value: 'TI_SDH', viewValue: 'TI_SDH' }, 
+    { value: 'TI_SDH', viewValue: 'TI_SDH' },
     { value: 'Unplanned work', viewValue: 'Unplanned work' },
     { value: 'WB', viewValue: 'WB' },
     { value: 'Выясняется', viewValue: 'Выясняется ' },
@@ -205,7 +205,7 @@ export class HubComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     // get Current user
     this.authService.getUser()
       .subscribe(result => {
@@ -251,7 +251,7 @@ export class HubComponent implements OnInit {
           } else {
             power_off_time = formatDate(result['power_off_time'], 'yyyy-MM-ddTHH:mm', 'en')
           }
-          if(result['effected_sites'] == null) {
+          if (result['effected_sites'] == null) {
             effected_sites = ''
           } else {
             effected_sites = result['effected_sites']
@@ -304,7 +304,7 @@ export class HubComponent implements OnInit {
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
       'problem': this.hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region] + this.dist[this.hubForm.value.district],
-      'reason': 'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator ,
+      'reason': 'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator,
       'effect': 'С влиянием',
       'start_time': this.hubForm.value.startTime,
       'region': this.hubForm.value.region,
@@ -346,7 +346,7 @@ export class HubComponent implements OnInit {
       this.tableBody.sector_block_time = this.hubForm.value.hubBlockTime
     }
 
-    if(this.hubForm.value.effectedSites !== '') {
+    if (this.hubForm.value.effectedSites !== '') {
       let splited: string[] = []
       splited = this.hubForm.value.effectedSites.split('\n')
       this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
@@ -356,12 +356,12 @@ export class HubComponent implements OnInit {
   smsSendBody() {
     let power_off_time
     let block_time
-    if(this.hubForm.value.powerOffTime == '') {
+    if (this.hubForm.value.powerOffTime == '') {
       power_off_time = 'Н/Д'
     } else {
       power_off_time = this.hubForm.value.powerOffTime.replace("T", " ")
     }
-    if(this.hubForm.value.hubBlockTime == '') {
+    if (this.hubForm.value.hubBlockTime == '') {
       block_time = 'Н/Д'
     } else {
       block_time = this.hubForm.value.hubBlockTime.replace("T", " ")
@@ -399,7 +399,7 @@ export class HubComponent implements OnInit {
       if (this.hubForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' '+ this.dist[this.hubForm.value.district] + '\n' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -413,7 +413,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' '+ this.dist[this.hubForm.value.district] + '\n' +
+          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -438,7 +438,7 @@ export class HubComponent implements OnInit {
 
 
   updateData() {
-  
+
     this.tableSendBody()
 
     this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
@@ -470,21 +470,22 @@ export class HubComponent implements OnInit {
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(res => {
-      if(res == true) {
+      if (res == true) {
         this.authService.sendSms(this.smsBody)
-        .subscribe(res => {
-          console.log(res);
-          this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-          this.router.navigate(['/home'])
-          if (this.newForm == false) {
-            this.updateData()
-          } else {
-            this.createData()
-          }
-        }, error => {
-          console.log(error);
-          this.snackBar.open("Ошибка", '', { duration: 10000 })
-        })
+          .subscribe(res => {
+            console.log(res);
+            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+            this.router.navigate(['/home'])
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+
+        if (this.newForm == false) {
+          this.updateData()
+        } else {
+          this.createData()
+        }
       }
     })
   }
@@ -493,16 +494,13 @@ export class HubComponent implements OnInit {
     this.requestType = smsType
     this.smsSendBody()
 
-    const dialogRef = this.dialog.open(areYouSure);
+    const dialogRef = this.dialog.open(fortesting, {
+      data: { text: this.SmsTextBody }
+    });
 
-    dialogRef.afterClosed().subscribe(res => {
-      if(res === true) {
-         this.authService.sendTestSMS(this.smsBody)
-        .subscribe(res => {
-          this.router.navigate(['/home'])
-          console.log(res);
-          this.snackBar.open('Success', '', { duration: 10000 })
-        })
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+
       }
     })
   }
@@ -515,3 +513,36 @@ export class HubComponent implements OnInit {
   imports: [MatDialogModule, MatButtonModule],
 })
 export class areYouSure { }
+
+
+@Component({
+  selector: 'fortesting',
+  templateUrl: 'fortesting.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule, FormsModule],
+})
+export class fortesting {
+  constructor(
+    private authService: AuthService,
+    public dialogRef: MatDialogRef<fortesting>,
+    @Inject(MAT_DIALOG_DATA) public smsbody: any,
+  ) { }
+
+  onSubmit(form: NgForm) {
+    let tel_list = form.value.field.split('\n')
+    console.log(this.smsbody.text);
+
+    let smsTXTBody = {
+      'source_addr': 'ncc-rn',
+      'sms_text': this.smsbody.text,
+      'tel_number_list': tel_list,
+    }
+
+    this.authService.sendTestSMS(smsTXTBody)
+      .subscribe(res => {
+        console.log(res);
+      })
+    console.log(this.smsbody);
+
+  }
+}

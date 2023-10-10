@@ -8,9 +8,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
 import { WebSocketService } from 'src/web-socket.service';
-import {FormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
 
 @Component({
   selector: 'app-cn',
@@ -292,7 +293,6 @@ export class CnComponent implements OnInit {
   }
 
   onSubmit() {
-
     this.tableSendBody()
 
     this.authService.postData(this.tableBody)
@@ -308,7 +308,6 @@ export class CnComponent implements OnInit {
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
 
-   
     this.smsSendBody()
 
     const dialogRef = this.dialog.open(areYouSure);
@@ -320,15 +319,15 @@ export class CnComponent implements OnInit {
             console.log(res);
             this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
             this.router.navigate(['/home'])
-            if (this.newForm == false) {
-              this.updateData()
-            } else {
-              this.onSubmit()
-            }
           }, error => {
             console.log(error);
             this.snackBar.open("Ошибка", '', { duration: 10000 })
           })
+        if (this.newForm == false) {
+          this.updateData()
+        } else {
+          this.onSubmit()
+        }
       }
 
     })
@@ -339,11 +338,11 @@ export class CnComponent implements OnInit {
     this.smsSendBody()
 
     const dialogRef = this.dialog.open(fortesting, {
-      data: {text: this.SmsTextBody}
-      });
+      data: { text: this.SmsTextBody }
+    });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result == true) {
+      if (result == true) {
 
       }
     })
@@ -371,22 +370,21 @@ export class fortesting {
     private authService: AuthService,
     public dialogRef: MatDialogRef<fortesting>,
     @Inject(MAT_DIALOG_DATA) public smsbody: any,
-    ) {}
+  ) { }
 
   onSubmit(form: NgForm) {
     let tel_list = form.value.field.split('\n')
     console.log(this.smsbody.text);
-    
+
     let smsTXTBody = {
       'source_addr': 'ncc-cn',
       'sms_text': this.smsbody.text,
       'tel_number_list': tel_list,
     }
-    
+
     this.authService.sendTestSMS(smsTXTBody)
-      .subscribe(res => {console.log(res);
+      .subscribe(res => {
+        console.log(res);
       })
-    console.log(this.smsbody);
-    
   }
- }
+}

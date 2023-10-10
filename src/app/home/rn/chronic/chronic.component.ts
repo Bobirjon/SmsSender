@@ -1,8 +1,9 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormsModule, NgForm } from '@angular/forms';
+import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
@@ -107,28 +108,28 @@ export class ChronicComponent implements OnInit {
   }
 
   district: { value: string; viewValue: string }[] = [
-    { value:'Аккурган', viewValue: 'Аккурган'},
-    { value:'Ахангаран', viewValue: 'Ахангаран'},
-    { value:'Бекабад', viewValue: 'Бекабад'},
-    { value:'Бустанлик', viewValue: 'Бустанлик'},
-    { value:'Бука', viewValue: 'Бука'},
-    { value:'Зангиота', viewValue: 'Зангиота'},
-    { value:'Кибрай', viewValue: 'Кибрай'},
-    { value:'Куйичирчик', viewValue: 'Куйичирчик'},
-    { value:'Паркент', viewValue: 'Паркент'},
-    { value:'Пскент', viewValue: 'Пскент'},
-    { value:'Ташкент', viewValue: 'Ташкент'},
-    { value:'Уртачирчик', viewValue: 'Уртачирчик'},
-    { value:'Чиназ', viewValue: 'Чиназ'},
-    { value:'Юкоричирчик', viewValue: 'Юкоричирчик'},
-    { value:'Янгиюль', viewValue: 'Янгиюль'},
-    { value:'Алмалик', viewValue: 'Алмалик'},
-    { value:'Чирчик', viewValue: 'Чирчик'},
-    { value:'Ангрен', viewValue: 'Ангрен'},
-    { value:'Нурафшон', viewValue: 'Нурафшон'},
-    { value:'Чимбай', viewValue: 'Чимбай'},
-    { value: '', viewValue: ''}
-   
+    { value: 'Аккурган', viewValue: 'Аккурган' },
+    { value: 'Ахангаран', viewValue: 'Ахангаран' },
+    { value: 'Бекабад', viewValue: 'Бекабад' },
+    { value: 'Бустанлик', viewValue: 'Бустанлик' },
+    { value: 'Бука', viewValue: 'Бука' },
+    { value: 'Зангиота', viewValue: 'Зангиота' },
+    { value: 'Кибрай', viewValue: 'Кибрай' },
+    { value: 'Куйичирчик', viewValue: 'Куйичирчик' },
+    { value: 'Паркент', viewValue: 'Паркент' },
+    { value: 'Пскент', viewValue: 'Пскент' },
+    { value: 'Ташкент', viewValue: 'Ташкент' },
+    { value: 'Уртачирчик', viewValue: 'Уртачирчик' },
+    { value: 'Чиназ', viewValue: 'Чиназ' },
+    { value: 'Юкоричирчик', viewValue: 'Юкоричирчик' },
+    { value: 'Янгиюль', viewValue: 'Янгиюль' },
+    { value: 'Алмалик', viewValue: 'Алмалик' },
+    { value: 'Чирчик', viewValue: 'Чирчик' },
+    { value: 'Ангрен', viewValue: 'Ангрен' },
+    { value: 'Нурафшон', viewValue: 'Нурафшон' },
+    { value: 'Чимбай', viewValue: 'Чимбай' },
+    { value: '', viewValue: '' }
+
   ]
 
   dist = {
@@ -152,7 +153,7 @@ export class ChronicComponent implements OnInit {
     'Ангрен': 'Ангренском районе',
     'Нурафшон': 'город Нурафшон',
     'Чимбай': 'Чимбайском районе',
-    '':''
+    '': ''
   }
 
 
@@ -251,7 +252,7 @@ export class ChronicComponent implements OnInit {
       'category': this.chronicForm.value.categories_report,
       'responsible_area': this.chronicForm.value.responsible_report,
       'problem': this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + this.dist[this.chronicForm.value.district] +
-      ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " "),
+        ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " "),
 
       'reason': this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite,
       'hub_reason': this.chronicForm.value.reason,
@@ -304,8 +305,8 @@ export class ChronicComponent implements OnInit {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
-          this.dist[this.chronicForm.value.district] + ' с  ' + this.chronicForm.value.startTime.replace("T", " ") +
-          'по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
+          this.dist[this.chronicForm.value.district] + ' с ' + this.chronicForm.value.startTime.replace("T", " ") +
+          ' по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
@@ -317,7 +318,7 @@ export class ChronicComponent implements OnInit {
           '(' + this.chronicForm.value.AddOrCor + ') \n' +
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' с  ' + this.chronicForm.value.startTime.replace("T", " ") +
-          'по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
+          ' по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
@@ -372,41 +373,35 @@ export class ChronicComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
         this.authService.sendSms(this.smsBody)
-        .subscribe(res => {
-          console.log(res);
-          this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-          this.router.navigate(['/home'])
-          if (this.newForm == false) {
-            this.updateData()
-          } else {
-            this.createData()
-          }
-        }, error => {
-          console.log(error);
-          this.snackBar.open("Ошибка", '', { duration: 10000 })
-        })
+          .subscribe(res => {
+            console.log(res);
+            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+            this.router.navigate(['/home'])
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+
+        if (this.newForm == false) {
+          this.updateData()
+        } else {
+          this.createData()
+        }
       }
     })
-
   }
 
   forSmsTesting(smsType: string) {
     this.requestType = smsType
     this.smsSendBody()
 
-    const dialogRef = this.dialog.open(areYouSure);
+    const dialogRef = this.dialog.open(fortesting, {
+      data: { text: this.SmsTextBody }
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-        this.authService.sendTestSMS(this.smsBody)
-        .subscribe(res => {
-          console.log(res);
-          this.snackBar.open('Success', '', { duration: 10000 })
-          this.router.navigate(['/home'])
-        }, error => {
-          console.log(error);
-          this.snackBar.open("Error", '', { duration: 10000 })
-        }) 
+
       }
     })
   }
@@ -419,3 +414,32 @@ export class ChronicComponent implements OnInit {
   imports: [MatDialogModule, MatButtonModule],
 })
 export class areYouSure { }
+
+@Component({
+  selector: 'fortesting',
+  templateUrl: 'fortesting.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule, FormsModule],
+})
+export class fortesting {
+  constructor(
+    private authService: AuthService,
+    public dialogRef: MatDialogRef<fortesting>,
+    @Inject(MAT_DIALOG_DATA) public smsbody: any,
+  ) { }
+
+  onSubmit(form: NgForm) {
+    let tel_list = form.value.field.split('\n')
+
+    let smsTXTBody = {
+      'source_addr': 'ncc-rn',
+      'sms_text': this.smsbody.text,
+      'tel_number_list': tel_list,
+    }
+
+    this.authService.sendTestSMS(smsTXTBody)
+      .subscribe(res => {
+        console.log(res);
+      })
+  }
+}

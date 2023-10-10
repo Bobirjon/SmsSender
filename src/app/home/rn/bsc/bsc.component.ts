@@ -1,8 +1,8 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormsModule, NgForm } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
@@ -268,7 +268,7 @@ export class BscComponent implements OnInit {
 
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
-    
+
     this.smsSendBody()
 
     const dialogRef = this.dialog.open(areYouSure);
@@ -280,16 +280,17 @@ export class BscComponent implements OnInit {
             console.log(res);
             this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
             this.router.navigate(['/home'])
-            if (this.newForm == false) {
-              this.updateData()
-            } else {
-              this.createData()
-            }
-
           }, error => {
             console.log(error);
             this.snackBar.open("Ошибка", '', { duration: 10000 })
           })
+
+        if (this.newForm == false) {
+          this.updateData()
+        } else {
+          this.createData()
+        }
+
       }
 
     })
@@ -299,20 +300,13 @@ export class BscComponent implements OnInit {
     this.requestType = smsType
     this.smsSendBody()
 
-    const dialogRef = this.dialog.open(areYouSure);
+    const dialogRef = this.dialog.open(fortesting, {
+      data: { text: this.SmsTextBody }
+    });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result == true) {
-        this.authService.sendTestSMS(this.smsBody)
-        .subscribe(res => {
-          console.log(res);
-          this.snackBar.open('Success', '', { duration: 10000 })
-          this.router.navigate(['/home'])
+      if (result == true) {
 
-        }, error => {
-          console.log(error);
-          this.snackBar.open("Error", '', { duration: 10000 })
-        })
       }
     })
   }
@@ -325,3 +319,34 @@ export class BscComponent implements OnInit {
   imports: [MatDialogModule, MatButtonModule],
 })
 export class areYouSure { }
+
+@Component({
+  selector: 'fortesting',
+  templateUrl: 'fortesting.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule, FormsModule],
+})
+export class fortesting {
+  constructor(
+    private authService: AuthService,
+    public dialogRef: MatDialogRef<fortesting>,
+    @Inject(MAT_DIALOG_DATA) public smsbody: any,
+  ) { }
+
+  onSubmit(form: NgForm) {
+    let tel_list = form.value.field.split('\n')
+    console.log(this.smsbody.text);
+
+    let smsTXTBody = {
+      'source_addr': 'ncc-rn',
+      'sms_text': this.smsbody.text,
+      'tel_number_list': tel_list,
+    }
+
+    this.authService.sendTestSMS(smsTXTBody)
+      .subscribe(res => {
+        console.log(res);
+      })
+
+  }
+}

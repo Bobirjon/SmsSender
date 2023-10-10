@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Введите номера телефонов</h1>
+<div mat-dialog-content>
+  <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+    <textarea name="field" id="" cols="30" rows="10" ngModel></textarea>
+    <mat-dialog-actions align="end">
+      <button mat-button  mat-dialog-close>Отменить</button>
+      <button mat-button [mat-dialog-close]="true" cdkFocusInitial type="submit">Отправить SMS</button>
+  </mat-dialog-actions>
+  </form>
+</div>

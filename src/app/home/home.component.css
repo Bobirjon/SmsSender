@@ -10,6 +10,10 @@
     padding: 6px;
 }
 
+.fail:hover {
+    background-color: green;
+}
+
 .success, .success:hover {
     background-color: yellow;
     font-weight: bold;
@@ -21,4 +25,9 @@
 
 .successChronicMin, .successChronicMin:hover {
     background-color: blue;
+}
+
+.mat-mdc-table .mat-mdc-row:hover, .mat-mdc-table .mat-mdc-footer-row:hover {
+    /* background-color: greenyellow; */
+    pointer-events: none;
 }
