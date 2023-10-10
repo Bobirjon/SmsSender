@@ -27,7 +27,6 @@
     background-color: blue;
 }
 
-.mat-mdc-table .mat-mdc-row:hover, .mat-mdc-table .mat-mdc-footer-row:hover {
-    /* background-color: greenyellow; */
+/* .mat-mdc-table .mat-mdc-row:hover, .mat-mdc-table .mat-mdc-footer-row:hover {
     pointer-events: none;
-}
+} */
