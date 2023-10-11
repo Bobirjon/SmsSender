@@ -156,22 +156,8 @@ export class HomeComponent implements OnInit {
 
   isRegisteredUser(isRegistered: any) {
     this.UserActive = isRegistered
-    console.log(this.UserActive);
   }
 
-  getRows(time: any) {
-    let classNames = {}
-
-    if((time.chronic_hours >= '48') == true) {
-      classNames['successChronicMax'] =true
-      
-    }
-    if(( (time.chronic_hours >= '12') && (time.chronic_hours < '48')) == true) {
-      classNames['successChronicMin'] = true
-    }
-    return classNames;
-
-  }
 
   filterForAllCase() {
     this.type.valueChanges.subscribe((typeFilter) => {

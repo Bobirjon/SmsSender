@@ -356,6 +356,7 @@ export class HubComponent implements OnInit {
   smsSendBody() {
     let power_off_time
     let block_time
+    let word
     if (this.hubForm.value.powerOffTime == '') {
       power_off_time = 'Н/Д'
     } else {
@@ -367,13 +368,19 @@ export class HubComponent implements OnInit {
       block_time = this.hubForm.value.hubBlockTime.replace("T", " ")
     }
 
+    if((this.hubForm.value.hubSite == '') || (this.hubForm.value.hubSite == undefined)) {
+      word = ' '
+    } else {
+      word = ' Узловой сайт '
+    }
+
     if (this.requestType == 'Проблема') {
       if (this.hubForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
-          'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
+          'Причина: ' + this.hubForm.value.reason + word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
@@ -386,7 +393,7 @@ export class HubComponent implements OnInit {
           '(' + this.hubForm.value.AddOrCor + ')\n ' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
-          'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
+          'Причина: ' + this.hubForm.value.reason + word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
@@ -400,7 +407,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
-          'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
+          'Причина: ' + this.hubForm.value.reason + word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
@@ -414,7 +421,7 @@ export class HubComponent implements OnInit {
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
-          'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
+          'Причина: ' + this.hubForm.value.reason + word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
@@ -425,7 +432,7 @@ export class HubComponent implements OnInit {
           'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
-
+    
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],

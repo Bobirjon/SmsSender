@@ -11,22 +11,15 @@
 }
 
 .fail:hover {
-    background-color: green;
+    background-color: transparent;
 }
 
-.success, .success:hover {
-    background-color: yellow;
+.reason, .reason:hover {
+    background-color: rgb(255, 249, 87) !important;
     font-weight: bold;
 }
 
-.successChronicMax, .successChronicMax:hover {
-    background-color: red;
+.chronicHours, .chronicHours:hover {
+    background-color: rgb(255, 69, 69) !important;
 }
 
-.successChronicMin, .successChronicMin:hover {
-    background-color: blue;
-}
-
-/* .mat-mdc-table .mat-mdc-row:hover, .mat-mdc-table .mat-mdc-footer-row:hover {
-    pointer-events: none;
-} */

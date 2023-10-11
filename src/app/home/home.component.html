@@ -69,8 +69,6 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Действия</th>
         <td mat-cell *matCellDef="let element">
-          <!-- <a style="text-decoration: none"
-            routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a></td> -->
             <a routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()" style="color: black;">
               <mat-icon aria-hidden="false" fontIcon="edit" style="margin-right: 10px;"></mat-icon>
             </a>
@@ -81,7 +79,8 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsNew"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumnsNew" [ngClass]="getRows(row)"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsNew" 
+      [ngClass]="((row.chronic_hours >= '48') ? 'chronicHours' : 'fail')"></tr>
     </table>
   </div>
   <hr>
@@ -103,8 +102,6 @@
         <td mat-cell *matCellDef="let row">{{row.level.replace('P','П')}}</td>
         <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="level" search
             [formControl]="level"></td>
-
-
       </ng-container>
 
       <ng-container matColumnDef="created_at">
@@ -159,11 +156,8 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Действия</th>
         <td mat-cell *matCellDef="let element">
-          <!-- <a style="text-decoration: none"
-            routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()">Edit</a> 
-            <a href="">Delete</a> -->
 
-          <a routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()" style="color: black;">
+          <a routerLink="/home/{{element.type}}/{{element.id}}" (click)="onEdit()" style="color: black;cursor: pointer;">
             <mat-icon aria-hidden="false" fontIcon="edit" style="margin-right: 10px;"></mat-icon>
           </a>
           <button style="background-color: transparent; border: none; cursor: pointer;" (click)="onDelete(element.id)">
@@ -178,7 +172,7 @@
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsForAllCases"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumnsForAllCases"
-        [ngClass]="((row.reason.includes('Выясняется')) ? 'success' : 'fail')">
+        [ngClass]="((row.reason.includes('Выясняется')) ? 'reason' : 'fail')">
       </tr>
  
       <tr mat-footer-row *matFooterRowDef="displayedColumnsForAllCases" class="example-first-footer-row"></tr>
