@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('table1sort') public table1sort: MatSort;
   @ViewChild('table2sort') public table2sort: MatSort;
-  levelSelect: string[] = ['All', 'A1', 'A2', 'A3', 'A4', 'P5', 'P1', 'P2', 'P3', 'P4', 'P5'];
+  levelSelect: string[] = ['All', 'A1', 'A2', 'A3', 'A4', 'A5', 'P1', 'P2', 'P3', 'P4', 'P5'];
   typeSelect: string[] = ['All', 'CORE', 'RN']
   selectableFilters: any[] = []
 

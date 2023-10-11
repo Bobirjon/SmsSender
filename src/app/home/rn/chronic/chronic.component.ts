@@ -228,7 +228,7 @@ export class ChronicComponent implements OnInit {
             'categories_report': [result['category'], Validators.required],
             'responsible_report': [result['responsible_area'], Validators.required],
             'problem': [result['problem'], Validators.required],
-            'reason': [result['reason'], Validators.required],
+            'reason': [result['hub_reason'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [endTimeForUpdate],
             'region': [result['region'], Validators.required],

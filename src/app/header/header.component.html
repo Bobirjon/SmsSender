@@ -1,11 +1,11 @@
 <mat-toolbar color="primary">
     <a href="/home" style="text-decoration: none; color: white;"><span>Домой</span></a>
     <span class="example-spacer"></span>
-    <span>V-11.10.23.13.45</span>
+    <span>V-11.10.23.21.15</span>
     <span class="example-spacer"></span>
     <a href="/login" style="text-decoration: none; text-align: center;
                      color: white; font-size: medium;" (click)="logout()" 
                      *ngIf='(IsLoggedIn$ | async)' >
-        <p>{{userName}}</p>Выход
+        Выход ({{userName}})
     </a>
 </mat-toolbar>
