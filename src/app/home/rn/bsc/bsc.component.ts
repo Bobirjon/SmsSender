@@ -37,6 +37,7 @@ export class BscComponent implements OnInit {
     { value: 'P4', viewValue: 'П4' },
     { value: 'P5', viewValue: 'П5' },
   ];
+  
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
     { value: 'ЭС и Клим', viewValue: 'ЭС и Клим' },

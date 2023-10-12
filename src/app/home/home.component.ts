@@ -127,7 +127,7 @@ export class HomeComponent implements OnInit {
     this.authService.getData()
       .subscribe((data) => {
         this.posts = data
-
+        
         this.dataTable = new MatTableDataSource(this.posts)
         this.dataTable.sort = this.table2sort;
         this.dataTable.paginator = this.paginator;

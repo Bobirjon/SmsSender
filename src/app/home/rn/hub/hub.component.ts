@@ -43,6 +43,7 @@ export class HubComponent implements OnInit {
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
     { value: 'ЭС и Клим', viewValue: 'ЭС и Клим' },
     { value: 'ПР', viewValue: 'ПР' },
+    { value: 'Провайдер', viewValue: 'Провайдер' },
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
   responsible_report: { value: string; viewValue: string }[] = [
