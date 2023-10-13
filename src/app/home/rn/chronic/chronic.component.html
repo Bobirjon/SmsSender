@@ -12,7 +12,6 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            
             <!-- categories report -->
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
@@ -49,7 +48,7 @@
                             <p>{{chronicForm.value.siteName + ' - сайт не работает в ' + regions[chronicForm.value.region] + ' ' +
                                 dist[chronicForm.value.district] + ' более ' +
                                 chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T', ' ')}}</p>
-                            <p>{{'Причина: ' + chronicForm.value.reason + ' ' + chronicForm.value.hubSite}}</p>
+                            <p>{{'Причина: ' + chronicForm.value.reason }} <span *ngIf="chronicForm.value.hubSite != ''">{{word}}</span> {{ chronicForm.value.hubSite}}</p>
                             <p>{{'Оповещен: ' + chronicForm.value.informed}}</p>
                             <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
@@ -82,7 +81,7 @@
                                 dist[chronicForm.value.district] + ' более ' +
                                 chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T',' ') + ' по ' +
                                 chronicForm.value.endTime.replace('T', ' ')}}</p>
-                            <p>{{'Причина: ' + chronicForm.value.reason + ' ' + chronicForm.value.hubSite}}</p>
+                            <p>{{'Причина: ' + chronicForm.value.reason }} <span *ngIf="chronicForm.value.hubSite != ''">{{word}}</span> {{ chronicForm.value.hubSite}}</p>
                             <p>{{'Описание: ' + chronicForm.value.desc}}</p>
                             <p>{{'Оповещен: ' + chronicForm.value.informed}}</p>
                             <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>

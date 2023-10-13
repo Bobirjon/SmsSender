@@ -29,6 +29,7 @@ export class ChronicComponent implements OnInit {
   requestType: any
   tableBody: any
   smsBody: any
+  word: string = ' Узловой сайт '
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -252,7 +253,7 @@ export class ChronicComponent implements OnInit {
       'level': this.chronicForm.value.level,
       'category': this.chronicForm.value.categories_report,
       'responsible_area': this.chronicForm.value.responsible_report,
-      'problem': this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + this.dist[this.chronicForm.value.district] +
+      'problem': this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + ' ' + this.dist[this.chronicForm.value.district] +
         ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " "),
 
       'reason': this.chronicForm.value.reason + ' ' + this.chronicForm.value.hubSite,
@@ -278,11 +279,11 @@ export class ChronicComponent implements OnInit {
   }
 
   smsSendBody() {
-    let word
+
     if ((this.chronicForm.value.hubSite == '') || (this.chronicForm.value.hubSite == undefined)) {
-      word = ' '
+      this.word = ' '
     } else {
-      word = ' Узловой сайт '
+      this.word = ' Узловой сайт '
     }
 
 
@@ -292,7 +293,7 @@ export class ChronicComponent implements OnInit {
           this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
           this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
-          'Причина: ' + this.chronicForm.value.reason + word + this.chronicForm.value.hubSite + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
           'Скачайте приложение Ucell: www.ucell.uz/lead'
@@ -302,7 +303,7 @@ export class ChronicComponent implements OnInit {
           '(' + this.chronicForm.value.AddOrCor + ') \n' +
           this.chronicForm.value.siteName + ' - сайт не работает в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
-          'Причина: ' + this.chronicForm.value.reason + word + this.chronicForm.value.hubSite + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
           'Скачайте приложение Ucell: www.ucell.uz/lead'
@@ -315,7 +316,7 @@ export class ChronicComponent implements OnInit {
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' с ' + this.chronicForm.value.startTime.replace("T", " ") +
           ' по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
-          'Причина: ' + this.chronicForm.value.reason + word + this.chronicForm.value.hubSite + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
@@ -327,7 +328,7 @@ export class ChronicComponent implements OnInit {
           this.chronicForm.value.siteName + ' - сайт не работал в ' + this.regions[this.chronicForm.value.region] + ' ' +
           this.dist[this.chronicForm.value.district] + ' с  ' + this.chronicForm.value.startTime.replace("T", " ") +
           ' по ' + this.chronicForm.value.endTime.replace("T", " ") + '\n' +
-          'Причина: ' + this.chronicForm.value.reason + word + this.chronicForm.value.hubSite + '\n' +
+          'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +

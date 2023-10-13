@@ -26,6 +26,7 @@ export class HubComponent implements OnInit {
   requestType: any
   tableBody: any
   smsBody: any
+  word: string = ' Узловой сайт '
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -215,6 +216,7 @@ export class HubComponent implements OnInit {
 
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
+
     } else {
       this.newForm = false
       let endTimeForUpdate: any
@@ -224,6 +226,7 @@ export class HubComponent implements OnInit {
       let block_time: any
       let effected_sites: any
       let district: any
+
 
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
@@ -304,7 +307,7 @@ export class HubComponent implements OnInit {
       'level': this.hubForm.value.level,
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
-      'problem': this.hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region] + this.dist[this.hubForm.value.district],
+      'problem': this.hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district],
       'reason': 'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator,
       'effect': 'С влиянием',
       'start_time': this.hubForm.value.startTime,
@@ -312,7 +315,7 @@ export class HubComponent implements OnInit {
       'category_for_hub': this.hubForm.value.category,
       'description': this.hubForm.value.desc,
       'informed': this.hubForm.value.informed,
-      'influence': this.hubForm.value.effect,
+      'influence': 'Потеря покрытия и качество связи в' + this.regions[this.hubForm.value.region],
       'sender': this.user?.username,
       'hub_site': this.hubForm.value.hubSite,
       'fg_avb': this.hubForm.value.generator,
@@ -348,16 +351,17 @@ export class HubComponent implements OnInit {
     }
 
     if (this.hubForm.value.effectedSites !== '') {
-      let splited: string[] = []
-      splited = this.hubForm.value.effectedSites.split('\n')
-      this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
+      if(Array.isArray(this.hubForm.value.effectedSites) == false) {
+        let splited: string[] = []
+        splited = this.hubForm.value.effectedSites.split((/\n|,/) )
+        this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
+      }
     }
   }
 
   smsSendBody() {
     let power_off_time
     let block_time
-    let word
     if (this.hubForm.value.powerOffTime == '') {
       power_off_time = 'Н/Д'
     } else {
@@ -369,10 +373,10 @@ export class HubComponent implements OnInit {
       block_time = this.hubForm.value.hubBlockTime.replace("T", " ")
     }
 
-    if((this.hubForm.value.hubSite == '') || (this.hubForm.value.hubSite == undefined)) {
-      word = ' '
+    if ((this.hubForm.value.hubSite == '') || (this.hubForm.value.hubSite == undefined)) {
+      this.word = ' '
     } else {
-      word = ' Узловой сайт '
+      this.word = ' Узловой сайт '
     }
 
     if (this.requestType == 'Проблема') {
@@ -381,7 +385,7 @@ export class HubComponent implements OnInit {
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
-          'Причина: ' + this.hubForm.value.reason + word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
+          'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
@@ -394,7 +398,7 @@ export class HubComponent implements OnInit {
           '(' + this.hubForm.value.AddOrCor + ')\n ' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
-          'Причина: ' + this.hubForm.value.reason + word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
+          'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
@@ -408,7 +412,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
-          'Причина: ' + this.hubForm.value.reason + word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
+          'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
@@ -422,7 +426,7 @@ export class HubComponent implements OnInit {
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n' +
           this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
-          'Причина: ' + this.hubForm.value.reason + word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
+          'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
@@ -433,7 +437,7 @@ export class HubComponent implements OnInit {
           'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
-    
+
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
@@ -459,6 +463,8 @@ export class HubComponent implements OnInit {
   }
 
   createData() {
+
+
     this.tableSendBody()
 
     this.authService.postData(this.tableBody)
@@ -512,6 +518,7 @@ export class HubComponent implements OnInit {
       }
     })
   }
+
 }
 
 @Component({
