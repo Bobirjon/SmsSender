@@ -30,7 +30,6 @@ export class ChronicComponent implements OnInit {
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
-  ads: string
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -281,12 +280,6 @@ export class ChronicComponent implements OnInit {
 
   smsSendBody() {
 
-    if((this.chronicForm.value.region == 'г.Ташкент') || (this.chronicForm.value.region == 'Ташкент.обл')) {
-      this.ads = 'Стань участником Марафона ценностей, перейдя по ссылке: https://t.me/+THuWD4Xq7803ODVi'
-    } else {
-      this.ads = 'Скачайте приложение Ucell: www.ucell.uz/lead'
-    }
-
     if ((this.chronicForm.value.hubSite == '') || (this.chronicForm.value.hubSite == undefined)) {
       this.word = ' '
     } else {
@@ -303,7 +296,7 @@ export class ChronicComponent implements OnInit {
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          this.ads
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
@@ -313,7 +306,7 @@ export class ChronicComponent implements OnInit {
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          this.ads
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
     else {
@@ -327,7 +320,7 @@ export class ChronicComponent implements OnInit {
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          this.ads
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
@@ -339,7 +332,7 @@ export class ChronicComponent implements OnInit {
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          this.ads
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
 

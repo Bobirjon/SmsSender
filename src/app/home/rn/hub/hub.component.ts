@@ -27,7 +27,6 @@ export class HubComponent implements OnInit {
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
-  ads: string
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -363,11 +362,6 @@ export class HubComponent implements OnInit {
   smsSendBody() {
     let power_off_time
     let block_time
-    if((this.hubForm.value.region == 'г.Ташкент') || (this.hubForm.value.region == 'Ташкент.обл')) {
-      this.ads = 'Стань участником Марафона ценностей, перейдя по ссылке: https://t.me/+THuWD4Xq7803ODVi'
-    } else {
-      this.ads = 'Скачайте приложение Ucell: www.ucell.uz/lead'
-    }
 
     if (this.hubForm.value.powerOffTime == '') {
       power_off_time = 'Н/Д'
@@ -398,7 +392,7 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          this.ads
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
@@ -411,7 +405,7 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          this.ads
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
 
     } else {
@@ -427,7 +421,7 @@ export class HubComponent implements OnInit {
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          this.ads
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
@@ -441,7 +435,7 @@ export class HubComponent implements OnInit {
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          this.ads
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
 
