@@ -52,6 +52,8 @@ export class HubComponent implements OnInit {
     { value: 'Эксплуатация', viewValue: 'Эксплуатация' },
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
+
+  
   generator: { value: string; viewValue: string }[] = [
     { value: 'FG', viewValue: 'FG' },
     { value: '', viewValue: 'Empty' }

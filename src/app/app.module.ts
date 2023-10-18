@@ -26,6 +26,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
@@ -83,7 +84,8 @@ import { AuthGuard } from './auth-guard.service';
     MatProgressBarModule,
     MatExpansionModule,
     MatDialogModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatAutocompleteModule
   ],
   providers: [ AuthGuard,
     {

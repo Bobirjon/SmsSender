@@ -11,12 +11,15 @@ import { WebSocketService } from 'src/web-socket.service';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Observable } from 'rxjs';
+import {NgFor, AsyncPipe} from '@angular/common';
+import { map, startWith } from 'rxjs/operators';
 
 
 @Component({
   selector: 'app-cn',
   templateUrl: './cn.component.html',
-  styleUrls: ['./cn.component.css']
+  styleUrls: ['./cn.component.css'],
 })
 
 export class CnComponent implements OnInit {
@@ -33,6 +36,8 @@ export class CnComponent implements OnInit {
   tableBody: any
   smsBody: any
   criteriaArray: any
+  filteredOptionsProblem: Observable<string[]>;
+  filteredOptionsReason: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -86,6 +91,21 @@ export class CnComponent implements OnInit {
     { value: 'Хорезм', viewValue: 'Хорезм' },
   ];
 
+  optionsProblem: string[] = [
+    'Отсутствие основного электропитания на ', 
+    'Высокая температура в комнате на', 
+    'GPRS трафик от',
+    'IP MPLS канал'];
+
+  optionsReason: string[] = [
+      'Выясняется ', 
+      'Отключение электропитания со стороны РЭС', 
+      'В связи с',
+      'Из-за автоматического обновления узлов GGC',
+      'Плановые работы на ', 
+      'Проблема на стороне ', 
+      'В связи с плановыми работами',];
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -94,6 +114,21 @@ export class CnComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog) {
     this.createForm()
+
+    this.filteredOptionsProblem = this.cnForm.controls.problem.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsProblem))
+    )
+
+    this.filteredOptionsReason = this.cnForm.controls.reason.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsReason))
+    )
+  }
+
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toLocaleLowerCase()
+    return options.filter(option => option.toLocaleLowerCase().includes(filterValue))
   }
 
   setDefault() {
@@ -124,6 +159,7 @@ export class CnComponent implements OnInit {
   }
 
   ngOnInit(): void {
+   
     // get Current user
     this.authService.getUser()
       .subscribe(result => {
@@ -172,6 +208,8 @@ export class CnComponent implements OnInit {
 
     }
   }
+
+
 
   isNewForm(isNew: boolean) {
     this.newForm = isNew

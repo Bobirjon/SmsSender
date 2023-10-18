@@ -19,7 +19,6 @@ export class StorageService {
   }
 
   public saveToken(token: string): void {
-    localStorage.removeItem('token')
     localStorage.setItem('token', token['auth_token'])
     localStorage.setItem('loggedIn', 'true');
     this.isLoggedIn$.next(true); 
