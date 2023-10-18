@@ -177,7 +177,7 @@ export class HubComponent implements OnInit {
       'level': ['', Validators.required],
       'categories_report': ['', Validators.required],
       'responsible_report': ['', Validators.required],
-      'problem': ['', Validators.required],
+      'problem': [' 2G,  3G,  4G сайтов', Validators.required],
       'reason': ['', Validators.required],
       'startTime': ['', Validators.required],
       'endTime': [''],
@@ -386,7 +386,7 @@ export class HubComponent implements OnInit {
       if (this.hubForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          this.hubForm.value.problem + ' не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -399,7 +399,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n ' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          this.hubForm.value.problem + ' не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -414,7 +414,7 @@ export class HubComponent implements OnInit {
       if (this.hubForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          this.hubForm.value.problem + ' не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -428,7 +428,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n' +
-          this.hubForm.value.problem + ' сайтов не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          this.hubForm.value.problem + ' не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +

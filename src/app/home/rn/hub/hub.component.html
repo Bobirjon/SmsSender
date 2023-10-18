@@ -31,6 +31,7 @@
                 </mat-form-field>
             </mat-grid-tile>
             <!-- preview problem -->
+
             <mat-grid-tile colspan="5" rowspan="8">
                 <div class="grid-container">
                     <mat-card class="preview">
@@ -42,7 +43,7 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + regions[this.hubForm.value.region] + ' ' +  dist[this.hubForm.value.district]}}</p>
+                            <p>{{hubForm.value.problem + ' не работают в ' + regions[this.hubForm.value.region] + ' ' +  dist[this.hubForm.value.district]}}</p>
                             <p>{{'Эффект: Потеря покрытия и качества связи в ' + this.regions[this.hubForm.value.region]}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason }} <span *ngIf="hubForm.value.hubSite != ''">{{word}}</span> {{hubForm.value.hubSite + hubForm.value.generator}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
@@ -78,7 +79,7 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают в ' + regions[this.hubForm.value.region] + ' ' + dist[this.hubForm.value.district]}}</p>
+                            <p>{{hubForm.value.problem + ' не работают в ' + regions[this.hubForm.value.region] + ' ' + dist[this.hubForm.value.district]}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason}} <span *ngIf="hubForm.value.hubSite !== ''">{{word}}</span> {{hubForm.value.hubSite + hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
@@ -114,7 +115,7 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' сайтов не работают ' + regions[this.hubForm.value.region] + ' ' +  dist[this.hubForm.value.district]}}</p>
+                            <p>{{hubForm.value.problem + ' не работают ' + regions[this.hubForm.value.region] + ' ' +  dist[this.hubForm.value.district]}}</p>
                             <p>{{'Причина: ' + hubForm.value.reason}} <span *ngIf="hubForm.value.hubSite != ''">{{word}}</span> {{hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
