@@ -7,6 +7,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
 import { StorageService } from 'src/app/storage.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-bsc',
@@ -24,6 +27,9 @@ export class BscComponent implements OnInit {
   requestType: any
   tableBody: any
   smsBody: any
+  filteredOptionsProblem: Observable<string[]>;
+  filteredOptionsReason: Observable<string[]>;
+  filteredOptionsEffect: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -76,6 +82,23 @@ export class BscComponent implements OnInit {
     { value: 'Хорезм', viewValue: 'Хорезм' },
   ];
 
+  optionsProblem: string[] = [
+    'Некорректная состояние платы ',
+    'Плата',
+    'Потеря',
+  ];
+
+  optionsReason: string[] = [
+    'Из-за неисправности платы ',
+    'В связи с плановыми работами',
+    'Выясняется',
+  ];
+
+  optionsEffect: string[] = [
+    'Нет эффект на сервис ',
+    'Недоступен 3G',
+  ]
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -85,6 +108,25 @@ export class BscComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog) {
     this.createForm()
+    this.filteredOptionsProblem = this.bscForm.controls.problem.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsProblem))
+    )
+
+    this.filteredOptionsReason = this.bscForm.controls.reason.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsReason))
+    )
+
+    this.filteredOptionsEffect = this.bscForm.controls.effect.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsEffect))
+    )
+  }
+
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toLocaleLowerCase()
+    return options.filter(option => option.toLocaleLowerCase().includes(filterValue))
   }
 
   setDefault() {

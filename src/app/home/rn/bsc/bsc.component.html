@@ -114,7 +114,14 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
                     <textarea matInput type="text" formControlName="problem"
-                        [(ngModel)]="bscForm.value.problem" spellcheck="true"></textarea>
+                        [(ngModel)]="bscForm.value.problem" spellcheck="true"
+                        [matAutocomplete]="autoProblem">
+                    </textarea>
+                    <mat-autocomplete #autoProblem="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsProblem | async" [value]="option">
+                          {{option}}
+                        </mat-option>
+                      </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- reason -->
@@ -122,7 +129,14 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
                     <textarea matInput type="text" formControlName="reason"
-                        [(ngModel)]="bscForm.value.reason" spellcheck="true"></textarea>
+                        [(ngModel)]="bscForm.value.reason" spellcheck="true"
+                        [matAutocomplete]="autoReason">
+                    </textarea>
+                    <mat-autocomplete #autoReason="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsReason | async" [value]="option">
+                          {{option}}
+                        </mat-option>
+                      </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- effect -->
@@ -130,7 +144,14 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Эффект</mat-label>
                     <textarea matInput type="text" formControlName="effect"
-                        [(ngModel)]="bscForm.value.effect" spellcheck="true"></textarea>
+                        [(ngModel)]="bscForm.value.effect" spellcheck="true"
+                        [matAutocomplete]="autoEffect">
+                    </textarea>
+                    <mat-autocomplete #autoEffect="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsEffect | async" [value]="option">
+                          {{option}}
+                        </mat-option>
+                      </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- Description -->

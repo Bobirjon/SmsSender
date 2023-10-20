@@ -6,6 +6,8 @@ import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angu
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-hub',
@@ -27,6 +29,7 @@ export class HubComponent implements OnInit {
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
+  filteredOptionsReason: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -161,6 +164,15 @@ export class HubComponent implements OnInit {
     { value: 'Выясняется', viewValue: 'Выясняется ' },
   ];
 
+  optionsReason: string[] = [
+    'Нет питания ',
+    'Проблема',
+    'Выясняется',
+    'В связи с плановыми работами',
+    'Нет питания. Узловой сайт',
+    'Нет питания. FG не завёлся. Узловой сайт',
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -170,7 +182,18 @@ export class HubComponent implements OnInit {
     public dialog: MatDialog) {
     this.createForm()
 
+    this.filteredOptionsReason = this.hubForm.controls.reason.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsReason))
+    )
+
   }
+
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toLocaleLowerCase()
+    return options.filter(option => option.toLocaleLowerCase().includes(filterValue))
+  }
+  
   createForm() {
     this.hubForm = this.formBuilder.group({
       'AddOrCor': [null],

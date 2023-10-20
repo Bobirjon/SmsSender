@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Observable } from 'rxjs';
-import {NgFor, AsyncPipe} from '@angular/common';
+import { NgFor, AsyncPipe } from '@angular/common';
 import { map, startWith } from 'rxjs/operators';
 
 
@@ -38,6 +38,7 @@ export class CnComponent implements OnInit {
   criteriaArray: any
   filteredOptionsProblem: Observable<string[]>;
   filteredOptionsReason: Observable<string[]>;
+  filteredOptionsEffect: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -92,19 +93,40 @@ export class CnComponent implements OnInit {
   ];
 
   optionsProblem: string[] = [
-    'Отсутствие основного электропитания на ', 
-    'Высокая температура в комнате на', 
+    'Отсутствие основного электропитания на ',
+    'Высокая температура в комнате на',
     'GPRS трафик от',
-    'IP MPLS канал'];
+    'IP MPLS канал',
+    'Не работает DIAMETER ',
+    'Потеря линк',
+    'Периодическая потеря линк',
+    'Периодический недоступен',
+    'Скачок линка меджу',
+    'Резервная плата недоступна',
+    'Увеличена'
+  ];
+
 
   optionsReason: string[] = [
-      'Выясняется ', 
-      'Отключение электропитания со стороны РЭС', 
-      'В связи с',
-      'Из-за автоматического обновления узлов GGC',
-      'Плановые работы на ', 
-      'Проблема на стороне ', 
-      'В связи с плановыми работами',];
+    'Выясняется ',
+    'Отключение электропитания со стороны РЭС',
+    'В связи с',
+    'Из-за автоматического обновления узлов GGC',
+    'Плановые работы на ',
+    'Проблема на стороне ',
+    'В связи с плановыми работами',
+    'Обрыв кабеля на участке',
+  ];
+
+  optionsEffect: string[] = [
+    'Нет эффект на сервисе ',
+    'Трафик переключился на альтернативные каналы',
+    'Нет эффект на услугу роуминга',
+    'Сервис 4G не был доступен для абонентов в роуминге',
+    'Проподание сервиса на Люкс Контент. Работают только короткие номера 0909, 0720',
+  ]
+
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -123,6 +145,11 @@ export class CnComponent implements OnInit {
     this.filteredOptionsReason = this.cnForm.controls.reason.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, this.optionsReason))
+    )
+
+    this.filteredOptionsEffect = this.cnForm.controls.effect.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsEffect))
     )
   }
 
@@ -159,7 +186,7 @@ export class CnComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+
     // get Current user
     this.authService.getUser()
       .subscribe(result => {

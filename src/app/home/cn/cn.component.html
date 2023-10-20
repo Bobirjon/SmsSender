@@ -185,6 +185,7 @@
                 </mat-form-field>
             </mat-grid-tile>
             <!-- problem -->
+            
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
@@ -218,8 +219,15 @@
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Эффект</mat-label>
-                    <textarea matInput type="text" formControlName="effect" [(ngModel)]="cnForm.value.effect"
-                        spellcheck="true"></textarea>
+                    <textarea matInput type="text" formControlName="effect" 
+                        [(ngModel)]="cnForm.value.effect" spellcheck="true"
+                        [matAutocomplete]="autoEffect">
+                    </textarea>
+                    <mat-autocomplete #autoEffect="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsEffect | async" [value]="option">
+                          {{option}}
+                        </mat-option>
+                      </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- Description -->

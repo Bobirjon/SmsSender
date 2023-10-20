@@ -195,7 +195,15 @@
               <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
-                    <textarea matInput type="text" formControlName="reason" [(ngModel)]="hubForm.value.reason" spellcheck="true"></textarea>
+                    <textarea matInput type="text" formControlName="reason" 
+                            [(ngModel)]="hubForm.value.reason" spellcheck="true"
+                            [matAutocomplete]="autoReason">
+                    </textarea>
+                    <mat-autocomplete #autoReason="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsReason | async" [value]="option">
+                          {{option}}
+                        </mat-option>
+                      </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
              <!-- desc -->

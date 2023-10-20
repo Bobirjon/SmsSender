@@ -8,6 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
 import { StorageService } from 'src/app/storage.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chronic',
@@ -30,6 +32,7 @@ export class ChronicComponent implements OnInit {
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
+  filteredOptionsReason: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -158,6 +161,14 @@ export class ChronicComponent implements OnInit {
     '': ''
   }
 
+  optionsReason: string[] = [
+    'Выясняется ',
+    'В связи с плановыми работами',
+    'Проблема',
+    'Нет питание',
+    'Арендодатель отключил питание',
+  ];
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -168,8 +179,19 @@ export class ChronicComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog) {
     this.createForm()
+
+    this.filteredOptionsReason = this.chronicForm.controls.reason.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsReason))
+    )
   }
 
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toLocaleLowerCase()
+    return options.filter(option => option.toLocaleLowerCase().includes(filterValue))
+  }
+
+  
   setDefault() {
     if (this.chronicForm.value.level == 'P1' || this.chronicForm.value.level == 'P2' ||
       this.chronicForm.value.level == 'P3' || this.chronicForm.value.level == 'P4' || this.chronicForm.value.level == 'P5') {
