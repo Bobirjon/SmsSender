@@ -350,15 +350,15 @@ export class CnComponent implements OnInit {
     console.log('Suucess sned', this.smsBody);
     
     // api for send SMS
-    // this.authService.sendSms(this.smsBody)
-    //       .subscribe(res => {
-    //         console.log(res);
-    //         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-    //         this.router.navigate(['/home'])
-    //       }, error => {
-    //         console.log(error);
-    //         this.snackBar.open("Ошибка", '', { duration: 10000 })
-    //       })
+    this.authService.sendSms(this.smsBody)
+          .subscribe(res => {
+            console.log(res);
+            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+            this.router.navigate(['/home'])
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
   }
 
   onSubmit() {
