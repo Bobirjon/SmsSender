@@ -11,7 +11,6 @@ export class WebSocketService {
 
     constructor() {
         this.socket = new WebSocket(this.url)
-        console.log(this.socket);  
     }
     
     listen(): Observable<any> {

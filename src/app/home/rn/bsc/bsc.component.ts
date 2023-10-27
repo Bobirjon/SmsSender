@@ -98,6 +98,7 @@ export class BscComponent implements OnInit {
     'Нет эффект на сервис ',
     'Недоступен 3G',
   ]
+  idAlarmReport: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -107,7 +108,24 @@ export class BscComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     public dialog: MatDialog) {
-    this.createForm()
+      // form creation
+     this.bscForm = this.formBuilder.group({
+      'AddOrCor': [null],
+      'level': ['', Validators.required],
+      'categories_report': ['', Validators.required],
+      'responsible_report': ['', Validators.required],
+      'problem': ['', Validators.required],
+      'reason': ['', Validators.required],
+      'effect_option': ['C Влиянием', Validators.required],
+      'startTime': ['', Validators.required],
+      'endTime': [''],
+      'region': ['', Validators.required],
+      'effect': ['', Validators.required],
+      'informed': ['', Validators.required],
+      'desc': ['', Validators.required],
+      'sender': [''],
+    })
+
     this.filteredOptionsProblem = this.bscForm.controls.problem.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, this.optionsProblem))
@@ -136,24 +154,6 @@ export class BscComponent implements OnInit {
     }
   }
 
-  createForm() {
-    this.bscForm = this.formBuilder.group({
-      'AddOrCor': [null],
-      'level': ['', Validators.required],
-      'categories_report': ['', Validators.required],
-      'responsible_report': ['', Validators.required],
-      'problem': ['', Validators.required],
-      'reason': ['', Validators.required],
-      'effect_option': ['C Влиянием', Validators.required],
-      'startTime': ['', Validators.required],
-      'endTime': [''],
-      'region': ['', Validators.required],
-      'effect': ['', Validators.required],
-      'informed': ['', Validators.required],
-      'desc': ['', Validators.required],
-      'sender': [''],
-    })
-  }
 
   ngOnInit(): void {
     // get Current user
@@ -217,7 +217,7 @@ export class BscComponent implements OnInit {
     }
   }
 
-  smsSendBody() {
+  smsSendBody(id?: number) {
     if (this.requestType == 'Проблема') {
       if (this.bscForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
@@ -276,7 +276,8 @@ export class BscComponent implements OnInit {
       'network': ['RN'],
       'criteria': [this.bscForm.value.level.replace('P', 'A')],
       'notification': ['BSC/RNC'],
-      'sms_text': this.SmsTextBody
+      'sms_text': this.SmsTextBody,
+      'alarmreport_id': id
     }
 
     if (this.bscForm.value.region != (null || undefined)) {
@@ -309,6 +310,18 @@ export class BscComponent implements OnInit {
       })
   }
 
+  sendButton() {
+    this.authService.sendSms(this.smsBody)
+          .subscribe(res => {
+            console.log(res);
+            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+            this.router.navigate(['/home'])
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+  }
+
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
 
@@ -318,20 +331,34 @@ export class BscComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-        this.authService.sendSms(this.smsBody)
-          .subscribe(res => {
-            console.log(res);
-            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-            this.router.navigate(['/home'])
-          }, error => {
-            console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
-
         if (this.newForm == false) {
-          this.updateData()
+          this.tableSendBody()
+
+          this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+            .subscribe((result) => {
+              console.log(result);
+              this.snackBar.open('Обновлено', '', { duration: 10000 })
+
+              this.idAlarmReport = result
+              this.smsSendBody(this.idAlarmReport.id)
+              this.sendButton()
+            }, error => {
+              this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+            })
         } else {
-          this.createData()
+          this.tableSendBody()
+
+          this.authService.postData(this.tableBody)
+            .subscribe((res) => {
+              console.log(res);
+              this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+
+              this.smsSendBody(result.id)
+              this.sendButton()
+            }, error => {
+              console.log(error);
+              this.snackBar.open("Ошибка", '', { duration: 10000 })
+            })
         }
 
       }

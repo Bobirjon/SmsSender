@@ -29,6 +29,7 @@ export class HubComponent implements OnInit {
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
+  idAlarmReport: any
   filteredOptionsReason: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
@@ -56,7 +57,7 @@ export class HubComponent implements OnInit {
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
 
-  
+
   generator: { value: string; viewValue: string }[] = [
     { value: 'FG', viewValue: 'FG' },
     { value: '', viewValue: 'Empty' }
@@ -180,21 +181,6 @@ export class HubComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
-    this.createForm()
-
-    this.filteredOptionsReason = this.hubForm.controls.reason.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value, this.optionsReason))
-    )
-
-  }
-
-  private _filter(value: string, options: string[]): string[] {
-    const filterValue = value.toLocaleLowerCase()
-    return options.filter(option => option.toLocaleLowerCase().includes(filterValue))
-  }
-  
-  createForm() {
     this.hubForm = this.formBuilder.group({
       'AddOrCor': [null],
       'level': ['', Validators.required],
@@ -222,6 +208,17 @@ export class HubComponent implements OnInit {
       'dg_start_time': [''],
       'district': ['']
     })
+
+    this.filteredOptionsReason = this.hubForm.controls.reason.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsReason))
+    )
+
+  }
+
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toLocaleLowerCase()
+    return options.filter(option => option.toLocaleLowerCase().includes(filterValue))
   }
 
   setDefault() {
@@ -376,15 +373,15 @@ export class HubComponent implements OnInit {
     }
 
     if (this.hubForm.value.effectedSites !== '') {
-      if(Array.isArray(this.hubForm.value.effectedSites) == false) {
+      if (Array.isArray(this.hubForm.value.effectedSites) == false) {
         let splited: string[] = []
-        splited = this.hubForm.value.effectedSites.split((/\n|,/) )
+        splited = this.hubForm.value.effectedSites.split((/\n|,/))
         this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
       }
     }
   }
 
-  smsSendBody() {
+  smsSendBody(id?: number) {
     let power_off_time
     let block_time
 
@@ -470,7 +467,8 @@ export class HubComponent implements OnInit {
       'criteria': [this.hubForm.value.level.replace('P', 'A')],
       'notification': ['Hub'],
       'sms_text': this.SmsTextBody,
-      'region': [this.hubForm.value.region]
+      'region': [this.hubForm.value.region],
+      'alarmreport_id': id
     }
   }
 
@@ -503,6 +501,18 @@ export class HubComponent implements OnInit {
       })
   }
 
+  sendButton() {
+    this.authService.sendSms(this.smsBody)
+    .subscribe(res => {
+      console.log(res);
+      this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+      this.router.navigate(['/home'])
+    }, error => {
+      console.log(error);
+      this.snackBar.open("Ошибка", '', { duration: 10000 })
+    })
+  }
+
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
     this.smsSendBody()
@@ -511,20 +521,35 @@ export class HubComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(res => {
       if (res == true) {
-        this.authService.sendSms(this.smsBody)
-          .subscribe(res => {
-            console.log(res);
-            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-            this.router.navigate(['/home'])
-          }, error => {
-            console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
 
         if (this.newForm == false) {
-          this.updateData()
+          this.tableSendBody()
+
+          this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+            .subscribe((result) => {
+              console.log(result);
+              this.snackBar.open('Обновлено', '', { duration: 10000 })
+
+              this.idAlarmReport = result
+              this.smsSendBody(this.idAlarmReport.id)
+              this.sendButton()
+            }, error => {
+              this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+            })
         } else {
-          this.createData()
+          this.tableSendBody()
+
+          this.authService.postData(this.tableBody)
+            .subscribe((res) => {
+              console.log(res);
+              this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+
+              this.smsSendBody(res.id)
+              this.sendButton()
+            }, error => {
+              console.log(error);
+              this.snackBar.open("Ошибка", '', { duration: 10000 })
+            })
         }
       }
     })

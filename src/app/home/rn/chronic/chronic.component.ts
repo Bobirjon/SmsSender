@@ -32,6 +32,7 @@ export class ChronicComponent implements OnInit {
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
+  idAlarmReport: any
   filteredOptionsReason: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
@@ -178,7 +179,25 @@ export class ChronicComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     public dialog: MatDialog) {
-    this.createForm()
+  
+        this.chronicForm = this.formBuilder.group({
+          'AddOrCor': [null],
+          'level': ['', Validators.required],
+          'categories_report': ['', Validators.required],
+          'responsible_report': ['', Validators.required],
+          'reason': ['', Validators.required],
+          'startTime': ['', Validators.required],
+          'endTime': [''],
+          'region': ['', Validators.required],
+          'siteName': [''],
+          'time': [''],
+          'hubSite': [''],
+          'informed': [''],
+          'desc': [''],
+          'category': [''],
+          'sender': [''],
+          'district': ['']
+        })
 
     this.filteredOptionsReason = this.chronicForm.controls.reason.valueChanges.pipe(
       startWith(''),
@@ -199,26 +218,6 @@ export class ChronicComponent implements OnInit {
     }
   }
 
-  createForm() {
-    this.chronicForm = this.formBuilder.group({
-      'AddOrCor': [null],
-      'level': ['', Validators.required],
-      'categories_report': ['', Validators.required],
-      'responsible_report': ['', Validators.required],
-      'reason': ['', Validators.required],
-      'startTime': ['', Validators.required],
-      'endTime': [''],
-      'region': ['', Validators.required],
-      'siteName': [''],
-      'time': [''],
-      'hubSite': [''],
-      'informed': [''],
-      'desc': [''],
-      'category': [''],
-      'sender': [''],
-      'district': ['']
-    })
-  }
 
   ngOnInit(): void {
     // get Current user
@@ -300,7 +299,7 @@ export class ChronicComponent implements OnInit {
     }
   }
 
-  smsSendBody() {
+  smsSendBody(id?: number) {
 
     if ((this.chronicForm.value.hubSite == '') || (this.chronicForm.value.hubSite == undefined)) {
       this.word = ' '
@@ -366,7 +365,8 @@ export class ChronicComponent implements OnInit {
       'criteria': [this.chronicForm.value.level.replace('P', 'A')],
       'notification': ['Chronic'],
       'sms_text': this.SmsTextBody,
-      'region': [this.chronicForm.value.region]
+      'region': [this.chronicForm.value.region],
+      'alarmreport_id': id
     }
   }
 
@@ -395,6 +395,17 @@ export class ChronicComponent implements OnInit {
       })
   }
 
+  sendButton() {
+    this.authService.sendSms(this.smsBody)
+          .subscribe(res => {
+            console.log(res);
+            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+            this.router.navigate(['/home'])
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+  }
 
   onSubmitButtonProblem(smsType: string) {
 
@@ -405,20 +416,35 @@ export class ChronicComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-        this.authService.sendSms(this.smsBody)
-          .subscribe(res => {
-            console.log(res);
-            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-            this.router.navigate(['/home'])
-          }, error => {
-            console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
 
         if (this.newForm == false) {
-          this.updateData()
+          this.tableSendBody()
+
+          this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+            .subscribe((result) => {
+              console.log(result);
+              this.snackBar.open('Обновлено', '', { duration: 10000 })
+
+              this.idAlarmReport = result
+              this.smsSendBody(this.idAlarmReport.id)
+              this.sendButton()
+            }, error => {
+              this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+            })
         } else {
-          this.createData()
+          this.tableSendBody()
+
+          this.authService.postData(this.tableBody)
+            .subscribe((res) => {
+              console.log(res);
+              this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+
+              this.smsSendBody(result.id)
+              this.sendButton()
+            }, error => {
+              console.log(error);
+              this.snackBar.open("Ошибка", '', { duration: 10000 })
+            })
         }
       }
     })

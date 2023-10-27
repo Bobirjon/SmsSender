@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
+import { AuthService } from './auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,9 @@ import { BehaviorSubject } from 'rxjs';
 export class StorageService {
   public isLoggedIn$: BehaviorSubject<boolean>;
 
-  constructor() {
+  constructor(
+    private authService: AuthService,
+    private snackBar: MatSnackBar,) {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
     this.isLoggedIn$ = new BehaviorSubject(isLoggedIn);
   }
@@ -62,6 +65,16 @@ export class StorageService {
     console.log(isNew);
     
     return isNew  
+  }
+
+  public updateData(id: any, data: any) {
+    this.authService.updateSms(id, data)
+    .subscribe((result) => {
+      console.log(result);
+      this.snackBar.open('Обновлено', '', { duration: 10000 })
+    }, error => {
+      this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+    })
   }
 
 }

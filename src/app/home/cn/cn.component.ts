@@ -11,7 +11,7 @@ import { WebSocketService } from 'src/web-socket.service';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { NgFor, AsyncPipe } from '@angular/common';
 import { map, startWith } from 'rxjs/operators';
 
@@ -36,6 +36,7 @@ export class CnComponent implements OnInit {
   tableBody: any
   smsBody: any
   criteriaArray: any
+  idAlarmReport: any
   filteredOptionsProblem: Observable<string[]>;
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsEffect: Observable<string[]>;
@@ -135,7 +136,27 @@ export class CnComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     public dialog: MatDialog) {
-    this.createForm()
+
+    // form creation
+    this.cnForm = this.formBuilder.group({
+      'AddOrCor': [null],
+      'level': ['', Validators.required],
+      'categories_report': ['', Validators.required],
+      'responsible_report': ['', Validators.required],
+      'problem': ['', Validators.required],
+      'reason': ['', Validators.required],
+      'startTime': ['', Validators.required],
+      'endTime': [''],
+      'region': [''],
+      'effect': ['', Validators.required],
+      'effect_option': ['', Validators.required],
+      'category': ['', Validators.required],
+      'informed': ['', Validators.required],
+      'desc': [''],
+      'sender': ['']
+    })
+
+    // option for input fields
 
     this.filteredOptionsProblem = this.cnForm.controls.problem.valueChanges.pipe(
       startWith(''),
@@ -165,84 +186,6 @@ export class CnComponent implements OnInit {
     }
   }
 
-  createForm() {
-    this.cnForm = this.formBuilder.group({
-      'AddOrCor': [null],
-      'level': ['', Validators.required],
-      'categories_report': ['', Validators.required],
-      'responsible_report': ['', Validators.required],
-      'problem': ['', Validators.required],
-      'reason': ['', Validators.required],
-      'startTime': ['', Validators.required],
-      'endTime': [''],
-      'region': [''],
-      'effect': ['', Validators.required],
-      'effect_option': ['', Validators.required],
-      'category': ['', Validators.required],
-      'informed': ['', Validators.required],
-      'desc': [''],
-      'sender': ['']
-    })
-  }
-
-  ngOnInit(): void {
-
-    // get Current user
-    this.authService.getUser()
-      .subscribe(result => {
-        this.user = result
-      })
-    //is it new request or update mode
-    if (this.route.snapshot.params.id == null) {
-      this.newForm = true
-    } else {
-      let isDisabled: any
-      let endTimeForUpdate: any
-      this.newForm = false
-      this.isNewForm(this.newForm)
-
-      this.authService.getSms(this.route.snapshot.params.id)
-        .subscribe(result => {
-          if (result['category_for_core'] == 'Core' || result['category_for_core'] == 'Roaming' || result['category_for_core'] == 'GPRS') {
-            isDisabled = true
-          } else {
-            isDisabled = false
-          }
-          if (result['end_time'] == null) {
-            endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
-          } else {
-            endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
-          }
-          this.cnForm = this.formBuilder.group({
-            'AddOrCor': [null],
-            'level': [result['level'], Validators.required],
-            'categories_report': [result['category'], Validators.required],
-            'responsible_report': [result['responsible_area'], Validators.required],
-            'problem': [result['problem'], Validators.required],
-            'reason': [result['reason'], Validators.required],
-            'effect_option': [result['effect'], Validators.required],
-            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            // 'endTime': [(result['end_time'], 'yyyy-MM-ddTHH:mm', '')],
-            'endTime': [endTimeForUpdate],
-            'region': [{ value: result['region'], disabled: isDisabled }, Validators.required],
-            'effect': [result['influence']],
-            'category': [result['category_for_core']],
-            'informed': [result['informed']],
-            'desc': [result['description']],
-            'sender': [result['sender']]
-          })
-        })
-
-    }
-  }
-
-
-
-  isNewForm(isNew: boolean) {
-    this.newForm = isNew
-    return this.newForm
-  }
-
   tableSendBody() {
     this.tableBody = {
       'type': 'CORE',
@@ -253,8 +196,6 @@ export class CnComponent implements OnInit {
       'reason': this.cnForm.value.reason,
       'effect': this.cnForm.value.effect_option,
       'start_time': this.cnForm.value.startTime,
-      // 'end_time': this.cnForm.value.endTime,
-      // 'region': this.cnForm.value.region,
       'category_for_core': this.cnForm.value.category,
       'description': this.cnForm.value.desc,
       'informed': this.cnForm.value.informed,
@@ -272,21 +213,7 @@ export class CnComponent implements OnInit {
     }
   }
 
-  updateData() {
-
-    this.tableSendBody()
-
-    this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-      .subscribe((result) => {
-        console.log(result);
-        this.snackBar.open('Обновлено', '', { duration: 10000 })
-      }, error => {
-        this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
-      })
-  }
-
-  smsSendBody() {
-
+  smsSendBody(id?: number) {
     if (this.requestType == 'Проблема') {
       if (this.cnForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
@@ -343,9 +270,8 @@ export class CnComponent implements OnInit {
       'source_addr': 'ncc-cn',
       'network': ['CN'],
       'criteria': [this.cnForm.value.level.replace('P', 'A')],
-      'sms_text': this.SmsTextBody
-      // 'region'
-      // 'notification'
+      'sms_text': this.SmsTextBody,
+      'alarmreport_id': id
     }
 
     if (this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp')) {
@@ -357,12 +283,90 @@ export class CnComponent implements OnInit {
     }
   }
 
+  ngOnInit(): void {
+
+    // get Current user
+    this.authService.getUser()
+      .subscribe(result => {
+        this.user = result
+      })
+    //is it new request or update mode
+    if (this.route.snapshot.params.id == null) {
+      this.newForm = true
+
+    } else {
+      let isDisabled: any
+      let endTimeForUpdate: any
+      this.newForm = false
+
+      this.authService.getSms(this.route.snapshot.params.id)
+        .subscribe(result => {
+          if (result['category_for_core'] == 'Core' || result['category_for_core'] == 'Roaming' || result['category_for_core'] == 'GPRS') {
+            isDisabled = true
+          } else {
+            isDisabled = false
+          }
+          if (result['end_time'] == null) {
+            endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
+          } else {
+            endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
+          }
+          this.cnForm = this.formBuilder.group({
+            'AddOrCor': [null],
+            'level': [result['level'], Validators.required],
+            'categories_report': [result['category'], Validators.required],
+            'responsible_report': [result['responsible_area'], Validators.required],
+            'problem': [result['problem'], Validators.required],
+            'reason': [result['reason'], Validators.required],
+            'effect_option': [result['effect'], Validators.required],
+            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
+            'endTime': [endTimeForUpdate],
+            'region': [{ value: result['region'], disabled: isDisabled }, Validators.required],
+            'effect': [result['influence']],
+            'category': [result['category_for_core']],
+            'informed': [result['informed']],
+            'desc': [result['description']],
+            'sender': [result['sender']]
+          })
+        })
+
+    }
+  }
+
+  updateData() {
+    this.tableSendBody()
+
+    this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+      .subscribe((result) => {
+        console.log(result);
+        this.snackBar.open('Обновлено', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+        this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+      })
+  }
+
+  sendButton() {
+    console.log('Suucess sned', this.smsBody);
+    
+    // api for send SMS
+    // this.authService.sendSms(this.smsBody)
+    //       .subscribe(res => {
+    //         console.log(res);
+    //         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+    //         this.router.navigate(['/home'])
+    //       }, error => {
+    //         console.log(error);
+    //         this.snackBar.open("Ошибка", '', { duration: 10000 })
+    //       })
+  }
+
   onSubmit() {
     this.tableSendBody()
 
     this.authService.postData(this.tableBody)
-      .subscribe((res) => {
-        console.log(res);
+      .subscribe((result) => {
+        console.log(result);
         this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
       }, error => {
         console.log(error);
@@ -373,42 +377,62 @@ export class CnComponent implements OnInit {
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
 
-    this.smsSendBody()
-
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-        this.authService.sendSms(this.smsBody)
-          .subscribe(res => {
-            console.log(res);
-            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-            this.router.navigate(['/home'])
-          }, error => {
-            console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
         if (this.newForm == false) {
-          this.updateData()
+          this.tableSendBody()
+
+          this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+            .subscribe((result) => {
+              console.log(result);
+              this.idAlarmReport = result
+              console.log(this.idAlarmReport.id);
+              
+              this.snackBar.open('Обновлено', '', { duration: 10000 })
+              this.smsSendBody(this.idAlarmReport.id)
+              this.sendButton()
+              console.log('ok workung id is', this.idAlarmReport.id);
+              
+            }, error => {
+              console.log(error);
+              this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+            })
+
         } else {
-          this.onSubmit()
+          this.tableSendBody()
+
+          this.authService.postData(this.tableBody)
+            .subscribe((result) => {
+              console.log(result);
+              this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+              this.smsSendBody(result.id)
+              this.sendButton()
+              console.log('ok workung id is', result.id)
+            }, error => {
+              console.log(error);
+              this.snackBar.open("Ошибка", '', { duration: 10000 })
+            })
         }
       }
-
     })
+
   }
 
   forTestSms(smsType: string) {
     this.requestType = smsType
     this.smsSendBody()
-
     const dialogRef = this.dialog.open(fortesting, {
-      data: { text: this.SmsTextBody }
+      data: { text: this.SmsTextBody}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-
+        // this.smsSendBody()
+        // console.log(this.smsBody);
+        
+        // this.sendButton()
       }
     })
   }
@@ -439,7 +463,7 @@ export class fortesting {
 
   onSubmit(form: NgForm) {
     let tel_list = form.value.field.split('\n')
-    console.log(this.smsbody.text);
+    console.log(this.smsbody);
 
     let smsTXTBody = {
       'source_addr': 'ncc-cn',
