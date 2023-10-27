@@ -311,6 +311,8 @@ export class BscComponent implements OnInit {
   }
 
   sendButton() {
+    console.log('Success  ');
+    
     this.authService.sendSms(this.smsBody)
           .subscribe(res => {
             console.log(res);
@@ -353,7 +355,7 @@ export class BscComponent implements OnInit {
               console.log(res);
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
 
-              this.smsSendBody(result.id)
+              this.smsSendBody(res.id)
               this.sendButton()
             }, error => {
               console.log(error);

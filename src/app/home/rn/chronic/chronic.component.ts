@@ -357,8 +357,6 @@ export class ChronicComponent implements OnInit {
       }
     }
 
-
-
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
@@ -439,7 +437,7 @@ export class ChronicComponent implements OnInit {
               console.log(res);
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
 
-              this.smsSendBody(result.id)
+              this.smsSendBody(res.id)
               this.sendButton()
             }, error => {
               console.log(error);
