@@ -27,6 +27,7 @@ export class BscComponent implements OnInit {
   requestType: any
   tableBody: any
   smsBody: any
+  idAlarmReport: any
   filteredOptionsProblem: Observable<string[]>;
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsEffect: Observable<string[]>;
@@ -98,7 +99,6 @@ export class BscComponent implements OnInit {
     'Нет эффект на сервис ',
     'Недоступен 3G',
   ]
-  idAlarmReport: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -288,40 +288,42 @@ export class BscComponent implements OnInit {
   updateData() {
     this.tableSendBody()
 
-    this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-      .subscribe((result) => {
-        console.log(result);
-        this.snackBar.open('Обновлено', '', { duration: 10000 })
-      }, error => {
-        this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
-      })
+    this.storageService.updateData(this.route.snapshot.params.id, this.tableBody)
+    // this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+    //   .subscribe((result) => {
+    //     console.log(result);
+    //     this.snackBar.open('Обновлено', '', { duration: 10000 })
+    //   }, error => {
+    //     this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+    //   })
   }
 
   createData() {
     this.tableSendBody()
-
-    this.authService.postData(this.tableBody)
-      .subscribe((res) => {
-        console.log(res);
-        this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-      }, error => {
-        console.log(error);
-        this.snackBar.open("Ошибка", '', { duration: 10000 })
-      })
+    
+    this.storageService.createToTable(this.tableBody)
+    // this.authService.postData(this.tableBody)
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //     this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+    //   }, error => {
+    //     console.log(error);
+    //     this.snackBar.open("Ошибка", '', { duration: 10000 })
+    //   })
   }
 
   sendButton() {
-    console.log('Success  ');
     
-    this.authService.sendSms(this.smsBody)
-          .subscribe(res => {
-            console.log(res);
-            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-            this.router.navigate(['/home'])
-          }, error => {
-            console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
+    this.storageService.sendSms(this.smsBody)
+    // this.authService.sendSms(this.smsBody)
+    //       .subscribe(res => {
+    //         console.log(res);
+    //         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+    //         this.router.navigate(['/home'])
+    //       }, error => {
+    //         console.log(error);
+    //         this.snackBar.open("Ошибка", '', { duration: 10000 })
+    //       })
   }
 
   onSubmitButtonProblem(smsType: string) {

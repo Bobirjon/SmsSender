@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,9 @@ export class StorageService {
 
   constructor(
     private authService: AuthService,
-    private snackBar: MatSnackBar,) {
+    private snackBar: MatSnackBar,
+    private router: Router,) 
+    {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
     this.isLoggedIn$ = new BehaviorSubject(isLoggedIn);
   }
@@ -67,14 +70,55 @@ export class StorageService {
     return isNew  
   }
 
+  public createToTable(data: any) {
+    return this.authService.postData(data)
+      .subscribe((result) => {
+        console.log(result);
+        this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+        return result
+      }, error => {
+        console.log(error);
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
+      })
+  }
+
+  public createToTableForSMS(data: any) {
+    this.authService.postData(data)
+      .subscribe((result) => {
+        console.log(result);
+        this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
+      })
+  }
+
   public updateData(id: any, data: any) {
     this.authService.updateSms(id, data)
     .subscribe((result) => {
       console.log(result);
       this.snackBar.open('Обновлено', '', { duration: 10000 })
     }, error => {
+      console.log(error);
       this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
     })
   }
+
+  public updateDataForSMS(id: any, data: any) {
+
+  }
+
+  public sendSms(data: any) {
+    this.authService.sendSms(data)
+          .subscribe(res => {
+            console.log(res);
+            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+            this.router.navigate(['/home'])
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+  }
+
 
 }

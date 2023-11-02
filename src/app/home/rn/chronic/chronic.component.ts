@@ -371,38 +371,42 @@ export class ChronicComponent implements OnInit {
   updateData() {
     this.tableSendBody()
 
-    this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-      .subscribe((result) => {
-        console.log(result);
-        this.snackBar.open('Обновлено', '', { duration: 10000 })
-      }, error => {
-        this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
-      })
+    this.storageService.updateData(this.route.snapshot.params.id, this.tableBody)
+    // this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+    //   .subscribe((result) => {
+    //     console.log(result);
+    //     this.snackBar.open('Обновлено', '', { duration: 10000 })
+    //   }, error => {
+    //     this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+    //   })
   }
 
   createData() {
     this.tableSendBody()
 
-    this.authService.postData(this.tableBody)
-      .subscribe((res) => {
-        console.log(res);
-        this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-      }, error => {
-        console.log(error);
-        this.snackBar.open("Ошибка", '', { duration: 10000 })
-      })
+    this.storageService.createToTable(this.tableBody)
+    // this.authService.postData(this.tableBody)
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //     this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+    //   }, error => {
+    //     console.log(error);
+    //     this.snackBar.open("Ошибка", '', { duration: 10000 })
+    //   })
   }
 
   sendButton() {
-    this.authService.sendSms(this.smsBody)
-          .subscribe(res => {
-            console.log(res);
-            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-            this.router.navigate(['/home'])
-          }, error => {
-            console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
+    this.storageService.sendSms(this.smsBody)
+
+    // this.authService.sendSms(this.smsBody)
+    //       .subscribe(res => {
+    //         console.log(res);
+    //         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+    //         this.router.navigate(['/home'])
+    //       }, error => {
+    //         console.log(error);
+    //         this.snackBar.open("Ошибка", '', { duration: 10000 })
+    //       })
   }
 
   onSubmitButtonProblem(smsType: string) {
@@ -414,18 +418,19 @@ export class ChronicComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-
         if (this.newForm == false) {
           this.tableSendBody()
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
             .subscribe((result) => {
               console.log(result);
-              this.snackBar.open('Обновлено', '', { duration: 10000 })
-
               this.idAlarmReport = result
+              console.log(this.idAlarmReport.id);
+
+              this.snackBar.open('Обновлено', '', { duration: 10000 })
               this.smsSendBody(this.idAlarmReport.id)
               this.sendButton()
+              console.log('ok workung id is', this.idAlarmReport.id);
             }, error => {
               this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
             })
@@ -434,11 +439,11 @@ export class ChronicComponent implements OnInit {
 
           this.authService.postData(this.tableBody)
             .subscribe((res) => {
-              console.log(res);
+              console.log(result);
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-
-              this.smsSendBody(res.id)
+              this.smsSendBody(result.id)
               this.sendButton()
+              console.log('ok workung id is', result.id)
             }, error => {
               console.log(error);
               this.snackBar.open("Ошибка", '', { duration: 10000 })

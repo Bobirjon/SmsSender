@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { Observable, Subject } from 'rxjs';
 import { NgFor, AsyncPipe } from '@angular/common';
 import { map, startWith } from 'rxjs/operators';
+import { StorageService } from 'src/app/storage.service';
 
 
 @Component({
@@ -135,6 +136,7 @@ export class CnComponent implements OnInit {
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private router: Router,
+    private storageService: StorageService,
     public dialog: MatDialog) {
 
     // form creation
@@ -334,44 +336,52 @@ export class CnComponent implements OnInit {
   }
 
   updateData() {
+    
     this.tableSendBody()
 
-    this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-      .subscribe((result) => {
-        console.log(result);
-        this.snackBar.open('Обновлено', '', { duration: 10000 })
-      }, error => {
-        console.log(error);
-        this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
-      })
+    this.storageService.updateData(this.route.snapshot.params.id, this.tableBody)
+    // this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+    //   .subscribe((result) => {
+    //     console.log(result);
+    //     this.snackBar.open('Обновлено', '', { duration: 10000 })
+    //   }, error => {
+    //     console.log(error);
+    //     this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+    //   })
   }
 
   sendButton() {
     console.log('Suucess sned', this.smsBody);
     
     // api for send SMS
-    this.authService.sendSms(this.smsBody)
-          .subscribe(res => {
-            console.log(res);
-            this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-            this.router.navigate(['/home'])
-          }, error => {
-            console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
+    this.storageService.sendSms(this.smsBody)
+
+    // this.authService.sendSms(this.smsBody)
+    //       .subscribe(res => {
+    //         console.log(res);
+    //         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+    //         this.router.navigate(['/home'])
+    //       }, error => {
+    //         console.log(error);
+    //         this.snackBar.open("Ошибка", '', { duration: 10000 })
+    //       })
   }
 
   onSubmit() {
     this.tableSendBody()
 
-    this.authService.postData(this.tableBody)
-      .subscribe((result) => {
-        console.log(result);
-        this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-      }, error => {
-        console.log(error);
-        this.snackBar.open("Ошибка", '', { duration: 10000 })
-      })
+    this.storageService.createToTable(this.tableBody)
+    
+    // this.authService.postData(this.tableBody)
+    //   .subscribe((result) => {
+    //     console.log(result);
+    //     this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+    //   }, error => {
+    //     console.log(error);
+    //     this.snackBar.open("Ошибка", '', { duration: 10000 })
+    //   })
+
+    
   }
 
   onSubmitButtonProblem(smsType: string) {
@@ -399,6 +409,7 @@ export class CnComponent implements OnInit {
               console.log(error);
               this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
             })
+          
 
         } else {
           this.tableSendBody()
@@ -423,6 +434,7 @@ export class CnComponent implements OnInit {
   forTestSms(smsType: string) {
     this.requestType = smsType
     this.smsSendBody()
+    
     const dialogRef = this.dialog.open(fortesting, {
       data: { text: this.SmsTextBody}
     });
