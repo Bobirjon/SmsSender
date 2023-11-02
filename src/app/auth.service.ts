@@ -22,11 +22,11 @@ export class AuthService {
   }
 
   getData() {
-    return this.http.get(this.URLsender + 'smssender/alarmreport/?limit=2&offset=0')
+    return this.http.get(this.URLsender + 'smssender/alarmreport/?limit=1000&offset=0')
   }
 
   getFilteredData() {
-    return this.http.get(this.URLsender + 'smssender/alarmreport/?is_complete=false&limit=2&offset=0')
+    return this.http.get(this.URLsender + 'smssender/alarmreport/?is_complete=false&limit=1000&offset=0')
   }
 
   getSms(id: number) {

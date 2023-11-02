@@ -128,7 +128,7 @@ export class HomeComponent implements OnInit {
       .subscribe((data) => {
         this.posts = data
         
-        this.dataTable = new MatTableDataSource(this.posts)
+        this.dataTable = new MatTableDataSource(this.posts.results)
         this.dataTable.sort = this.table2sort;
         this.dataTable.paginator = this.paginator;
 
@@ -143,8 +143,10 @@ export class HomeComponent implements OnInit {
     this.authService.getFilteredData()
       .subscribe((data) => {
         this.posts2 = data
+        console.log(data);
+        
 
-        this.Data = new MatTableDataSource(this.posts2)
+        this.Data = new MatTableDataSource(this.posts2.results)
         this.Data.sort = this.table1sort;
 
         this.selectableFilters.push({ name: 'level', options: this.levelSelect, defaultValue: this.defaultValue })
