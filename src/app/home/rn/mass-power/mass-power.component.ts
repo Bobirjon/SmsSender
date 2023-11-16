@@ -12,12 +12,11 @@ import { map, startWith } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'app-bsc',
-  templateUrl: './bsc.component.html',
-  styleUrls: ['./bsc.component.css']
+  selector: 'app-mass-power',
+  templateUrl: './mass-power.component.html',
+  styleUrls: ['./mass-power.component.css']
 })
-export class BscComponent implements OnInit {
-
+export class MassPowerComponent {
   bscForm: FormGroup
   user: any
   newForm: boolean
@@ -227,7 +226,7 @@ export class BscComponent implements OnInit {
           'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
           'Оповещен: ' + this.bscForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
@@ -238,7 +237,7 @@ export class BscComponent implements OnInit {
           'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
           'Оповещен: ' + this.bscForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
     else {
@@ -253,7 +252,7 @@ export class BscComponent implements OnInit {
           'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
           'Оповещен: ' + this.bscForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       } else {
         this.SmsTextBody =
           this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
@@ -266,7 +265,7 @@ export class BscComponent implements OnInit {
           'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
           'Оповещен: ' + this.bscForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Скачайте приложение Ucell: www.ucell.uz/lead'
       }
     }
 
@@ -423,3 +422,4 @@ export class fortesting {
 
   }
 }
+

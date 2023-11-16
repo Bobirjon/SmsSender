@@ -121,7 +121,7 @@ export class CnComponent implements OnInit {
   ];
 
   optionsEffect: string[] = [
-    'Нет эффект на сервисе ',
+    'Нет эффект на сервис ',
     'Трафик переключился на альтернативные каналы',
     'Нет эффект на услугу роуминга',
     'Сервис 4G не был доступен для абонентов в роуминге',
@@ -226,7 +226,7 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'Скачайте приложение Ucell по ссылке www.ucell.uz/lead'
+          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -237,7 +237,7 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'Скачайте приложение Ucell по ссылке www.ucell.uz/lead'
+          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
       }
     } else {
       if (this.cnForm.value.AddOrCor == (null || undefined)) {
@@ -251,7 +251,7 @@ export class CnComponent implements OnInit {
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'Скачайте приложение Ucell по ссылке www.ucell.uz/lead'
+          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -264,7 +264,7 @@ export class CnComponent implements OnInit {
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'Скачайте приложение Ucell по ссылке www.ucell.uz/lead'
+          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
       }
     }
 

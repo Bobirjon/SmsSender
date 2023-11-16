@@ -65,6 +65,12 @@
                                 [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
                                 Отправить SMS
                             </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Проблема')" type="submit"
+                                *ngIf="newForm == false"
+                                [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
+                                Отправить как новый SMS
+                            </button>
                             <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Проблема')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
                                 TEST SMS
@@ -100,6 +106,11 @@
                                 [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
                                 Отправить SMS
                             </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Решения')" type="submit"
+                                [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
+                                Отправить как новый SMS
+                            </button>
                             <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Решения')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
                                 TEST SMS
@@ -134,6 +145,11 @@
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
                                 [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
                                 Отправить SMS
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Информационное')" type="submit"
+                                [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
+                                Отправить как новый SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Информационное')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">

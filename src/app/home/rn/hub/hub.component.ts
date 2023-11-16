@@ -330,7 +330,7 @@ export class HubComponent implements OnInit {
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
       'problem': this.hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district],
-      'reason': 'Причина: ' + this.hubForm.value.reason + ' ' + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator,
+      'reason':  this.hubForm.value.reason + ' ' + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator,
       'effect': 'С влиянием',
       'start_time': this.hubForm.value.startTime,
       'region': this.hubForm.value.region,
@@ -379,6 +379,12 @@ export class HubComponent implements OnInit {
         this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
       }
     }
+
+    if ((this.hubForm.value.hubSite == '') || (this.hubForm.value.hubSite == undefined)) {
+      this.word = ' '
+    } else {
+      this.word = ' Узловой сайт '
+    }
   }
 
   smsSendBody(id?: number) {
@@ -414,7 +420,7 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'Скачайте приложение Ucell: www.ucell.uz/lead'
+          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
@@ -427,7 +433,7 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'Скачайте приложение Ucell: www.ucell.uz/lead'
+          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
       }
 
     } else {
@@ -443,7 +449,7 @@ export class HubComponent implements OnInit {
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'Скачайте приложение Ucell: www.ucell.uz/lead'
+          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
@@ -457,7 +463,7 @@ export class HubComponent implements OnInit {
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'Скачайте приложение Ucell: www.ucell.uz/lead'
+          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
       }
     }
 

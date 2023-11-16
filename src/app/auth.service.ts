@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { SortDirection } from '@angular/material/sort';
 
 
 @Injectable({
@@ -23,6 +24,36 @@ export class AuthService {
 
   getData() {
     return this.http.get(this.URLsender + 'smssender/alarmreport/?limit=1000&offset=0')
+  }
+
+  getDataTest( 
+    level: string, 
+    type: string, 
+    description: string, reason: string, 
+    problem: string, createdAt: any, startTime: any, 
+    endTime: any, 
+    region: string,
+    ordering: string,
+    order: string,
+    page: number,
+    perpage: number,): Observable<any> {
+
+    // const url = this.URLsender + `smssender/alarmreport/?level__contains=${level}
+    // &type__contains=${type}&problem__contains=${problem}&reason__contains=${reason}
+    // &description__contains=${description}&region__contains=${region}
+    // &start_time__contains=${startTime}&end_time__contains=${endTime}
+    // &created_at__contains=${createdAt}&ordering=${order}${ordering}
+    // &page=${page}&page_size=${perpage}`
+    const url = this.URLsender + `smssender/alarmreport/?level__contains=${level}
+      &type__contains=${type}&description__contains=${description}
+      &region__contains=${region}
+    
+      &problem__contains=${problem}&reason__contains=${reason}
+      &ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
+    console.log(url);
+    
+    return this.http.get(url)
+
   }
 
   getFilteredData() {
@@ -66,7 +97,12 @@ export class AuthService {
   }
 
   exportExcel(startTime: any, endTime: any) {
-    return this.http.get((`${this.URLsender + 'smssender/alarmreport'}/?starttime=${startTime}&endtime=${endTime}`))
+    console.log();
+    
+    // return this.http.get((`${this.URLsender + 'smssender/alarmreport'}/?end_time__range=${startTime},${endTime}&limit=1000&offset=0`))
+    return this.http.get((`${this.URLsender + 'smssender/alarmreport/'}`))
+
+    
   }
 
   deleteData(id: number) {

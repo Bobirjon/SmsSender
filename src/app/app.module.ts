@@ -41,6 +41,7 @@ import { BscComponent } from './home/rn/bsc/bsc.component';
 import { StartComponent } from './home/start/start.component';
 import { AddPhoneNumbersComponent } from './add-phone-numbers/add-phone-numbers.component';
 import { AuthGuard } from './auth-guard.service';
+import { MassPowerComponent } from './home/rn/mass-power/mass-power.component';
 
 
 
@@ -55,6 +56,7 @@ import { AuthGuard } from './auth-guard.service';
     ChronicComponent,
     HubComponent,
     BscComponent,
+    MassPowerComponent,
     StartComponent,
     AddPhoneNumbersComponent
   ],

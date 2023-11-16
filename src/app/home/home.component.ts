@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Data, Router } from '@angular/router';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -8,7 +8,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, Form, FormBuilder, FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { BehaviorSubject, Subscription, ValueFromArray, map, windowWhen } from 'rxjs';
+import { BehaviorSubject, Subscription, ValueFromArray, catchError, map, merge, startWith, switchMap, windowWhen } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
 import * as XLSX from 'xlsx';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -33,7 +33,7 @@ export interface DataTable {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   Data: any
   Loaded: boolean;
   CurrentRoute = this.router.url
@@ -45,6 +45,12 @@ export class HomeComponent implements OnInit {
   isRegister: any;
   UserActive: boolean
   isColor: any
+  currentPage = 0
+  pageSize = 10
+  totalItems = 0
+  dataTest: any[] = []
+  pageSizes = [25, 50, 10];
+  totalData: any
 
   displayedColumnsNew: string[] = [
     'type',
@@ -72,7 +78,7 @@ export class HomeComponent implements OnInit {
   ]
 
 
-  dataTable: MatTableDataSource<DataTable>
+  dataTable = new MatTableDataSource<DataTable>()
   posts: any
   posts2: any
   @ViewChild(MatPaginator) paginator: MatPaginator
@@ -104,6 +110,9 @@ export class HomeComponent implements OnInit {
   feedback: any
   nameOfUser: any
   messageDataTest: any
+  resultsLength = 0;
+  isLoadingResults = true;
+  isRateLimitReached = false;
 
   level = new FormControl()
   type = new FormControl()
@@ -123,28 +132,32 @@ export class HomeComponent implements OnInit {
     private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
-    // Table for all Cases
-    this.authService.getData()
-      .subscribe((data) => {
-        this.posts = data
-        
-        this.dataTable = new MatTableDataSource(this.posts.results)
-        this.dataTable.sort = this.table2sort;
-        this.dataTable.paginator = this.paginator;
 
-        this.filterForAllCase()
-      }, error => {
-        this.isRegister = error.statusText
-        if (this.isRegister == 'Unauthorized') {
-          this.isRegisteredUser(false)
-        }
-      })
+    // testing one
+   
+    
+    // Table for all Cases
+    // this.authService.getData()
+    //   .subscribe((data) => {
+    //     this.posts = data
+        
+    //     this.dataTable = new MatTableDataSource(this.posts.results)
+    //     this.dataTable.sort = this.table2sort;
+    //     this.dataTable.paginator = this.paginator;
+
+    //     this.filterForAllCase()
+    //   }, error => {
+    //     this.isRegister = error.statusText
+    //     if (this.isRegister == 'Unauthorized') {
+    //       this.isRegisteredUser(false)
+    //     }
+    //   })
     // Filtred data
+
     this.authService.getFilteredData()
       .subscribe((data) => {
         this.posts2 = data
         console.log(data);
-        
 
         this.Data = new MatTableDataSource(this.posts2.results)
         this.Data.sort = this.table1sort;
@@ -156,81 +169,154 @@ export class HomeComponent implements OnInit {
       })
   }
 
+  ngAfterViewInit() {
+
+    // If the user changes the sort order, reset back to the first page.
+    this.table2sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+
+    merge(
+      this.level.valueChanges,
+      this.type.valueChanges, 
+      this.description.valueChanges, 
+      this.reason.valueChanges, 
+      this.problem.valueChanges, 
+      this.createdAt.valueChanges, 
+      this.startTime.valueChanges, 
+      this.endTime.valueChanges,  
+      this.region.valueChanges,  
+      this.table2sort.sortChange, 
+      this.paginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          var dir: string
+          var level = this.level.value == null ? '' : this.level.value;
+          var type = this.type.value == null ? '' : this.type.value;
+          var description = this.description.value == null ? '' : this.description.value;
+          var reason = this.reason.value == null ? '' : this.reason.value;
+          var problem = this.problem.value == null ? '' : this.problem.value;
+          var createdAt = this.createdAt.value == null ? '' : this.createdAt.value; 
+          var startTime = this.startTime.value == null ? '' : this.startTime.value; 
+          console.log(startTime);
+          
+          var endTime = this.endTime.value == null ? '' : this.endTime.value; 
+          var region = this.region.value == null ? '' : this.region.value; 
+          if(this.table2sort.direction == 'desc') {
+            dir = '-'
+          } else {
+            dir = ''
+          }
+          
+          return this.authService
+            .getDataTest(
+              level, type, description, reason, problem,
+              createdAt, startTime, endTime, region,
+              this.table2sort.active,
+              dir,
+              this.paginator.pageIndex + 1,
+              this.paginator.pageSize
+            )
+            .pipe(catchError(() => observableOf(null)));
+        }),
+        map((data) => {
+          // Flip flag to show that loading has finished.
+          this.isLoadingResults = false;
+          this.isRateLimitReached = data === null;
+
+          if (data === null) {
+            return [];
+          }
+
+          // Only refresh the result length if there is new data. In case of rate
+          // limit errors, we do not want to reset the paginator to zero, as that
+          // would prevent users from re-triggering requests.
+          this.resultsLength = data.count;
+          
+          return data;
+        })
+      )
+      .subscribe((data) => {
+        this.posts = data
+        this.dataTable = new MatTableDataSource(this.posts.results)
+      });
+  }
+  
   isRegisteredUser(isRegistered: any) {
     this.UserActive = isRegistered
   }
 
 
-  filterForAllCase() {
-    this.type.valueChanges.subscribe((typeFilter) => {
-      this.filteredValues['type'] = typeFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-    })
+  // filterForAllCase() {
+  //   this.type.valueChanges.subscribe((typeFilter) => {
+  //     this.filteredValues['type'] = typeFilter;
+  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
+  //   })
 
-    this.level.valueChanges.subscribe((levelFilter) => {
-      this.filteredValues['level'] = levelFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-    })
+  //   this.level.valueChanges.subscribe((levelFilter) => {
+  //     this.filteredValues['level'] = levelFilter;
+  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
+  //   })
 
-    this.createdAt.valueChanges.subscribe((createdAtFilter) => {
-      this.filteredValues['created_at'] = createdAtFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-    })
+  //   this.createdAt.valueChanges.subscribe((createdAtFilter) => {
+  //     this.filteredValues['created_at'] = createdAtFilter;
+  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
+  //   })
 
-    this.startTime.valueChanges.subscribe((startTimeFilter) => {
-      this.filteredValues['start_time'] = startTimeFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-      console.log(this.filteredValues);
+  //   this.startTime.valueChanges.subscribe((startTimeFilter) => {
+  //     this.filteredValues['start_time'] = startTimeFilter;
+  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
+  //     console.log(this.filteredValues);
       
-    })
+  //   })
 
-    this.endTime.valueChanges.subscribe((endTimeFilter) => {
-      this.filteredValues['end_time'] = endTimeFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-      console.log(this.filteredValues);
-    })
+  //   this.endTime.valueChanges.subscribe((endTimeFilter) => {
+  //     this.filteredValues['end_time'] = endTimeFilter;
+  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
+  //     console.log(this.filteredValues);
+  //   })
 
-    this.problem.valueChanges.subscribe((problemFilter) => {
-      this.filteredValues['problem'] = problemFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-      console.log(this.filteredValues);
-    })
+  //   this.problem.valueChanges.subscribe((problemFilter) => {
+  //     this.filteredValues['problem'] = problemFilter;
+  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
+  //     console.log(this.filteredValues);
+  //   })
 
-    this.reason.valueChanges.subscribe((reasonFilter) => {
-      this.filteredValues['reason'] = reasonFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-    })
+  //   this.reason.valueChanges.subscribe((reasonFilter) => {
+  //     this.filteredValues['reason'] = reasonFilter;
+  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
+  //   })
 
-    this.description.valueChanges.subscribe((descriptionFilter) => {
-      this.filteredValues['description'] = descriptionFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-    })
+  //   this.description.valueChanges.subscribe((descriptionFilter) => {
+  //     this.filteredValues['description'] = descriptionFilter;
+  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
+  //   })
 
-    this.region.valueChanges.subscribe((regionFilter) => {
-      this.filteredValues['region'] = regionFilter;
-      this.dataTable.filter = JSON.stringify(this.filteredValues)
-    })
+  //   this.region.valueChanges.subscribe((regionFilter) => {
+  //     this.filteredValues['region'] = regionFilter;
+  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
+  //   })
 
 
-    this.dataTable.filterPredicate = function (data, filter): boolean {
-      let searchString = JSON.parse(filter);
-      let typeFound = (data.type || '').toString().trim().toLowerCase().indexOf(searchString.type.toLowerCase()) !== -1
-      let levelFound = (data.level || '').toString().trim().toLowerCase().indexOf(searchString.level.toLowerCase()) !== -1
-      let createdAtFound = (data.created_at || '').toString().trim().toLowerCase().indexOf(searchString.created_at.toLowerCase()) !== -1
-      let startTimeFound = (data.start_time || '').toString().trim().toLowerCase().indexOf(searchString.start_time.toLowerCase()) !== -1
-      let endTimeFound = (data.end_time || '').toString().trim().toLowerCase().indexOf(searchString.end_time.toLowerCase()) !== -1
-      let problemFound = (data.problem || '').toString().trim().toLowerCase().indexOf(searchString.problem.toLowerCase()) !== -1
-      let descriptionFound = (data.description || '').toString().trim().toLowerCase().indexOf(searchString.description.toLowerCase()) !== -1
-      let reasonFound = (data.reason || '').toString().trim().toLowerCase().indexOf(searchString.reason.toLowerCase()) !== -1
-      let regionFound = (data.region || '').toString().trim().toLowerCase().indexOf(searchString.region.toLowerCase()) !== -1
+  //   this.dataTable.filterPredicate = function (data, filter): boolean {
+  //     let searchString = JSON.parse(filter);
+  //     let typeFound = (data.type || '').toString().trim().toLowerCase().indexOf(searchString.type.toLowerCase()) !== -1
+  //     let levelFound = (data.level || '').toString().trim().toLowerCase().indexOf(searchString.level.toLowerCase()) !== -1
+  //     let createdAtFound = (data.created_at || '').toString().trim().toLowerCase().indexOf(searchString.created_at.toLowerCase()) !== -1
+  //     let startTimeFound = (data.start_time || '').toString().trim().toLowerCase().indexOf(searchString.start_time.toLowerCase()) !== -1
+  //     let endTimeFound = (data.end_time || '').toString().trim().toLowerCase().indexOf(searchString.end_time.toLowerCase()) !== -1
+  //     let problemFound = (data.problem || '').toString().trim().toLowerCase().indexOf(searchString.problem.toLowerCase()) !== -1
+  //     let descriptionFound = (data.description || '').toString().trim().toLowerCase().indexOf(searchString.description.toLowerCase()) !== -1
+  //     let reasonFound = (data.reason || '').toString().trim().toLowerCase().indexOf(searchString.reason.toLowerCase()) !== -1
+  //     let regionFound = (data.region || '').toString().trim().toLowerCase().indexOf(searchString.region.toLowerCase()) !== -1
 
-      if (searchString.topFilter) {
-        return typeFound || levelFound || createdAtFound || startTimeFound || endTimeFound  || problemFound || reasonFound || descriptionFound || regionFound
-      } else {
-        return typeFound && levelFound && createdAtFound && startTimeFound && endTimeFound  && problemFound && reasonFound && descriptionFound && regionFound
-      }
-    }
-  }
+  //     if (searchString.topFilter) {
+  //       return typeFound || levelFound || createdAtFound || startTimeFound || endTimeFound  || problemFound || reasonFound || descriptionFound || regionFound
+  //     } else {
+  //       return typeFound && levelFound && createdAtFound && startTimeFound && endTimeFound  && problemFound && reasonFound && descriptionFound && regionFound
+  //     }
+  //   }
+  // }
 
   filterForOpenCase() {
 
@@ -306,7 +392,7 @@ export class HomeComponent implements OnInit {
     this.Data.sort = this.table1sort;
     this.dataTable.sort = this.table2sort;
     this.dataTable.paginator = this.paginator;
-    this.filterForAllCase()
+    // this.filterForAllCase()
     this.filterForOpenCase()
 
   }
@@ -375,13 +461,20 @@ export class HomeComponent implements OnInit {
   imports: [MatDialogModule, MatButtonModule, FormsModule],
 })
 export class exportExcel {
+  posttest: any
   constructor(
     private authService: AuthService,
   ) { }
   onSubmit(form: NgForm) {
-    this.authService.exportExcel(form.value.starttime, form.value.endtime)
+    // this.authService.exportExcel(form.value.starttime, form.value.endtime)
+    //   .subscribe(res => {
+    //     this.convertToXLSX(res, 'data')
+    //   })
+    this.authService.getData()
       .subscribe(res => {
-        this.convertToXLSX(res, 'data')
+        console.log(res);
+        this.posttest = res
+        this.convertToXLSX(this.posttest.results, 'data')
       })
   }
 
@@ -414,4 +507,8 @@ export class exportExcel {
   imports: [MatDialogModule, MatButtonModule],
 })
 export class areYouSure { }
+
+function observableOf(arg0: null): any {
+  throw new Error('Function not implemented.');
+}
 
