@@ -113,6 +113,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
+  searchQuery: string = ''
 
   level = new FormControl()
   type = new FormControl()
@@ -157,10 +158,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.authService.getFilteredData()
       .subscribe((data) => {
         this.posts2 = data
-        console.log(data);
 
         this.Data = new MatTableDataSource(this.posts2.results)
+        
         this.Data.sort = this.table1sort;
+        console.log(this.Data.filter);
+        
 
         this.selectableFilters.push({ name: 'level', options: this.levelSelect, defaultValue: this.defaultValue })
         this.selectableFilters.push({ name: 'type', options: this.typeSelect, defaultValue: this.defaultValue })
@@ -244,6 +247,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   
   isRegisteredUser(isRegistered: any) {
     this.UserActive = isRegistered
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    console.log(this.Data.result);
+    
+    this.Data.filter = filterValue.trim().toLocaleLowerCase();
   }
 
 

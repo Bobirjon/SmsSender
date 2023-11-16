@@ -419,8 +419,7 @@ export class HubComponent implements OnInit {
           'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
@@ -432,8 +431,7 @@ export class HubComponent implements OnInit {
           'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       }
 
     } else {
@@ -448,8 +446,7 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
@@ -462,8 +459,7 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       }
     }
 

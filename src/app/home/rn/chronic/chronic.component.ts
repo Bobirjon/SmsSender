@@ -324,8 +324,7 @@ export class ChronicComponent implements OnInit {
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       } else {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
@@ -334,8 +333,7 @@ export class ChronicComponent implements OnInit {
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       }
     }
     else {
@@ -348,8 +346,7 @@ export class ChronicComponent implements OnInit {
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       } else {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
@@ -360,8 +357,7 @@ export class ChronicComponent implements OnInit {
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       }
     }
 

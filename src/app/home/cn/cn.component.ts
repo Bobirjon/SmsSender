@@ -225,8 +225,7 @@ export class CnComponent implements OnInit {
           'Эффект: ' + this.cnForm.value.effect + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -236,8 +235,7 @@ export class CnComponent implements OnInit {
           'Эффект: ' + this.cnForm.value.effect + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n'
       }
     } else {
       if (this.cnForm.value.AddOrCor == (null || undefined)) {
@@ -250,8 +248,7 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -263,8 +260,7 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          'А5 Ucell - ты сможешь решить данную проблему быстрее \n А4 Ucell - подумай как сделать так, чтобы это больше не повторялось \n А3 Ucell - предотвращение таких аварий зависит от тебя!'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n'
       }
     }
 
