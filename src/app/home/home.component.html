@@ -11,11 +11,12 @@
   </mat-grid-list>
   <mat-divider></mat-divider>
 
+
   <h1 style="margin-left: 50px; margin-top: 40px;">Открытые Инциденты</h1>
 
-  <mat-form-field style="margin-left: 20px;">
+  <!-- <mat-form-field style="margin-left: 20px;">
     <mat-label>Поиск по открытым инцидентам</mat-label>
-    <input matInput type="text" (keyup)="applyFilter($event)">
+    <input matInput type="text" (keyup)="applyFilter($event)" #input>
   </mat-form-field>
 
   <mat-form-field style="margin-left: 50px;" appearance="fill" *ngFor="let selectableFilter of selectableFilters">
@@ -25,6 +26,32 @@
       <mat-option *ngFor="let op of selectableFilter.options" [value]="op">
         {{ op.replace('P','П') }}
       </mat-option>
+    </mat-select>
+  </mat-form-field> -->
+
+  <mat-form-field>
+    <mat-label>Поиск по открытым инцидентам</mat-label>
+    <input matInput (input)="applyFilterInput()" #input [(ngModel)]="inputFilterValue">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Уровень</mat-label>
+    <mat-select (selectionChange)="applyFilterSelect1($event.value)" [(ngModel)]="selectFilterValue1">
+      <mat-option value="A1">A1</mat-option>
+      <mat-option value="A2">A2</mat-option>
+      <mat-option value="A3">A3</mat-option>
+      <mat-option value="A4">A4</mat-option>
+      <mat-option value="A5">A5</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Уровень</mat-label>
+    <mat-select (selectionChange)="applyFilterSelect2($event.value)">
+      <mat-option value="CORE">CORE</mat-option>
+      <mat-option value="CHRONIC">CHRONIC</mat-option>
+      <mat-option value="BSC">BSC</mat-option>
+      <mat-option value="HUB">HUB</mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -87,6 +114,10 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumnsNew" 
       [ngClass]="((row.chronic_hours >= '48') ? 'chronicHours' : 'fail')"></tr>
     </table>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+    </tr>
   </div>
   <hr>
 

@@ -216,6 +216,9 @@ export class CnComponent implements OnInit {
   }
 
   smsSendBody(id?: number) {
+
+    let addWord = this.storageService.additionWord(this.cnForm.value.level)
+
     if (this.requestType == 'Проблема') {
       if (this.cnForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
@@ -225,7 +228,8 @@ export class CnComponent implements OnInit {
           'Эффект: ' + this.cnForm.value.effect + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n'+
+          addWord
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -235,7 +239,8 @@ export class CnComponent implements OnInit {
           'Эффект: ' + this.cnForm.value.effect + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          addWord
       }
     } else {
       if (this.cnForm.value.AddOrCor == (null || undefined)) {
@@ -248,7 +253,8 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          addWord
       } else {
         this.SmsTextBody =
           this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
@@ -260,7 +266,8 @@ export class CnComponent implements OnInit {
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n'
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          addWord
       }
     }
 

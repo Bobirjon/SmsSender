@@ -120,5 +120,20 @@ export class StorageService {
           })
   }
 
+  public additionWord(value: any) {
+    let addWord
+    if(value == 'A3') {
+      addWord = 'Ucell - предотвращение таких аварий зависит от тебя!'
+    } else if (value == 'A4') {
+      addWord = 'Ucell - подумай как сделать так, чтобы это больше не повторялось'
+    } else if (value == 'A5') {
+      addWord = 'Ucell - ты сможешь решить данную проблему быстрее'
+    } else {
+      addWord = ''
+    }
+
+    return addWord
+  }
+
 
 }

@@ -36,15 +36,7 @@ export class ChronicComponent implements OnInit {
   filteredOptionsReason: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
-    { value: 'A1', viewValue: 'A1' },
-    { value: 'A2', viewValue: 'A2' },
-    { value: 'A3', viewValue: 'A3' },
-    { value: 'A4', viewValue: 'A4' },
     { value: 'A5', viewValue: 'A5' },
-    { value: 'P1', viewValue: 'П1' },
-    { value: 'P2', viewValue: 'П2' },
-    { value: 'P3', viewValue: 'П3' },
-    { value: 'P4', viewValue: 'П4' },
     { value: 'P5', viewValue: 'П5' },
   ];
   categories_report: { value: string; viewValue: string }[] = [
@@ -308,6 +300,7 @@ export class ChronicComponent implements OnInit {
   }
 
   smsSendBody(id?: number) {
+    let addWord = this.storageService.additionWord(this.chronicForm.value.level)
 
     if ((this.chronicForm.value.hubSite == '') || (this.chronicForm.value.hubSite == undefined)) {
       this.word = ' '
@@ -324,7 +317,8 @@ export class ChronicComponent implements OnInit {
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          addWord
       } else {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' ' + ' Хронический сайт Проблема: \n' +
@@ -333,7 +327,8 @@ export class ChronicComponent implements OnInit {
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          addWord
       }
     }
     else {
@@ -346,7 +341,8 @@ export class ChronicComponent implements OnInit {
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          addWord
       } else {
         this.SmsTextBody =
           this.chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + this.requestType + '\n' +
@@ -357,7 +353,8 @@ export class ChronicComponent implements OnInit {
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          addWord
       }
     }
 

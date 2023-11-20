@@ -114,6 +114,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isLoadingResults = true;
   isRateLimitReached = false;
   searchQuery: string = ''
+  inputFilterValue: string = ''
+  selectFilterValue1: string = ''
+  selectFilterValue2: string = ''
 
   level = new FormControl()
   type = new FormControl()
@@ -158,17 +161,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.authService.getFilteredData()
       .subscribe((data) => {
         this.posts2 = data
-
         this.Data = new MatTableDataSource(this.posts2.results)
+        console.log(this.Data.data);
         
         this.Data.sort = this.table1sort;
-        console.log(this.Data.filter);
-        
-
+      
         this.selectableFilters.push({ name: 'level', options: this.levelSelect, defaultValue: this.defaultValue })
         this.selectableFilters.push({ name: 'type', options: this.typeSelect, defaultValue: this.defaultValue })
 
-        this.filterForOpenCase()
+        // this.filterForOpenCase()
       })
   }
 
@@ -249,14 +250,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.UserActive = isRegistered
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    console.log(this.Data.result);
-    
-    this.Data.filter = filterValue.trim().toLocaleLowerCase();
-  }
-
-
   // filterForAllCase() {
   //   this.type.valueChanges.subscribe((typeFilter) => {
   //     this.filteredValues['type'] = typeFilter;
@@ -328,20 +321,39 @@ export class HomeComponent implements OnInit, AfterViewInit {
   //   }
   // }
 
-  filterForOpenCase() {
+  // filterForOpenCase() {
 
-    this.Data.filterPredicate = function (selectRecord: any, selectFilter: any) {
-      var map = new Map(JSON.parse(selectFilter));
-      let isMatch = false;
-      for (let [key, value] of map) {
-        isMatch = value == 'All' ||
-          selectRecord[key as keyof Data] == value[0] ||
-          selectRecord[key as keyof Data] == value[1] ||
-          selectRecord[key as keyof Data] == value[2]
-        if (!isMatch) return false;
-      }
-      return isMatch;
-    };
+  //   this.Data.filterPredicate = function (selectRecord: any, selectFilter: any) {
+  //     console.log(selectFilter);
+  //     console.log(selectRecord);
+      
+  //     var map = new Map(JSON.parse(selectFilter));
+  //     let isMatch = false;
+  //     for (let [key, value] of map) {
+  //       isMatch = value == 'All' ||
+  //         selectRecord[key as keyof Data] == value[0] ||
+  //         selectRecord[key as keyof Data] == value[1] ||
+  //         selectRecord[key as keyof Data] == value[2]
+  //       if (!isMatch) return false;
+  //     }
+  //     return isMatch;
+  //   };
+  // }
+
+  applyFilterInput() {
+    let fValue = this.inputFilterValue.trim().toLocaleLowerCase()
+    console.log(this.Data.getFilteredData);
+    
+    this.Data.filter = fValue
+  }
+
+  applyFilterSelect1(fValue: string) {
+    this.selectFilterValue1 = fValue
+    this.applyFilterInput()
+  }
+
+  applyFilterSelect2(fValue: string) {
+
   }
 
   ngOnInit(): void {
@@ -355,6 +367,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     } else {
       this.Loaded = false
     }
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.Data.filter = filterValue.trim().toLowerCase();
+    console.log(this.Data.filter);
+    
   }
 
   updateMessage(data: any): void {
@@ -403,7 +422,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.dataTable.sort = this.table2sort;
     this.dataTable.paginator = this.paginator;
     // this.filterForAllCase()
-    this.filterForOpenCase()
+    // this.filterForOpenCase()
 
   }
 

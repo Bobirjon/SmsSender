@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StorageService } from 'src/app/storage.service';
 import { AuthService } from 'src/app/auth.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -179,6 +180,7 @@ export class HubComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
+    private storageService: StorageService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
     this.hubForm = this.formBuilder.group({
@@ -388,6 +390,8 @@ export class HubComponent implements OnInit {
   }
 
   smsSendBody(id?: number) {
+
+    let addWord = this.storageService.additionWord(this.hubForm.value.level)
     let power_off_time
     let block_time
 
@@ -419,7 +423,8 @@ export class HubComponent implements OnInit {
           'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          addWord
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
@@ -431,7 +436,8 @@ export class HubComponent implements OnInit {
           'Время блокировки секторов: ' + block_time + '\n' +
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          addWord
       }
 
     } else {
@@ -446,7 +452,8 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          addWord
       } else {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
@@ -459,7 +466,8 @@ export class HubComponent implements OnInit {
           'Начало: ' + this.hubForm.value.startTime.replace("T", " ") + '\n' +
           'Конец: ' + this.hubForm.value.endTime.replace("T", " ") + '\n' +
           'Информирован: ' + this.hubForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+          addWord
       }
     }
 
