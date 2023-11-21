@@ -342,8 +342,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   applyFilterInput() {
     let fValue = this.inputFilterValue.trim().toLocaleLowerCase()
-    console.log(this.Data.getFilteredData);
-    
     this.Data.filter = fValue
   }
 
@@ -351,7 +349,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.selectFilterValue1 = fValue
     this.applyFilterInput()
   }
-
+  
   applyFilterSelect2(fValue: string) {
 
   }

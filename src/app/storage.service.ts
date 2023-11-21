@@ -9,6 +9,30 @@ import { Router } from '@angular/router';
 })
 export class StorageService {
   public isLoggedIn$: BehaviorSubject<boolean>;
+  addWordA3 = [
+    'Ucell - предотвращение таких аварий зависит от тебя!', 
+    'Кто-же если не ты…?, ', 
+    'По отдельности мы одна капля. Вместе мы океан.',
+    'Всегда есть возможность изменить ситуацию',
+    'Успех — это результат скрещивания удачи и тяжёлого труда'
+  ]
+
+  addWordA4 = [
+    'Подумай как сделать так, чтобы это больше не повторялось.', 
+    'Просите помощи у коллег своевременно и часто', 
+    'Воображение важнее знаний',
+    'Последние 10% работы перед запуском проекта требуют столько же энергии, как и первые 90%',
+    'Ценить нужно подлинную продуктивность труда, а не показную усталость',
+    'Всё начинается с отличной идеи и командной работы.'
+  ]
+
+  addWordA5 = [
+    'Ты сможешь решить данную проблему быстрее.', 
+    'Свзяь - это то, что должно быть всегда и везде.', 
+    'Вспомни историю про проигранную войну, из-за незабитого гвоздя',
+  ]
+  addWord: any
+  textIndex = 0;
 
   constructor(
     private authService: AuthService,
@@ -121,18 +145,21 @@ export class StorageService {
   }
 
   public additionWord(value: any) {
-    let addWord
+
     if(value == 'A3') {
-      addWord = 'Ucell - предотвращение таких аварий зависит от тебя!'
+      this.textIndex = (this.textIndex + 1) % this.addWordA3.length
+      this.addWord = this.addWordA3[this.textIndex]
     } else if (value == 'A4') {
-      addWord = 'Ucell - подумай как сделать так, чтобы это больше не повторялось'
+      this.textIndex = (this.textIndex + 1) % this.addWordA4.length
+      this.addWord = this.addWordA4[this.textIndex]
     } else if (value == 'A5') {
-      addWord = 'Ucell - ты сможешь решить данную проблему быстрее'
+      this.textIndex = (this.textIndex + 1) % this.addWordA5.length
+      this.addWord = this.addWordA5[this.textIndex]
     } else {
-      addWord = ''
+      this.addWord = ''
     }
 
-    return addWord
+    return this.addWord
   }
 
 
