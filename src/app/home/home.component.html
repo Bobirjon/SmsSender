@@ -29,14 +29,14 @@
     </mat-select>
   </mat-form-field> -->
 
-  <mat-form-field>
+  <mat-form-field style="margin-left: 20px; width: 500px;">
     <mat-label>Поиск по открытым инцидентам</mat-label>
-    <input matInput (input)="applyFilterInput()" #input [(ngModel)]="inputFilterValue">
+    <input matInput [ngModel]="filterInput"  (ngModelChange)="applyFilter($event)">
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field style="margin-left: 20px;">
     <mat-label>Уровень</mat-label>
-    <mat-select (selectionChange)="applyFilterSelect1($event.value)" [(ngModel)]="selectFilterValue1">
+    <mat-select [(ngModel)]="selectedLevel" (ngModelChange)="onSelectLevel()">
       <mat-option value="A1">A1</mat-option>
       <mat-option value="A2">A2</mat-option>
       <mat-option value="A3">A3</mat-option>
@@ -45,9 +45,9 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Уровень</mat-label>
-    <mat-select (selectionChange)="applyFilterSelect2($event.value)">
+  <mat-form-field style="margin-left: 20px;">
+    <mat-label>Тип</mat-label>
+    <mat-select  [(ngModel)]="selectedType" (ngModelChange)="onSelectType()">
       <mat-option value="CORE">CORE</mat-option>
       <mat-option value="CHRONIC">CHRONIC</mat-option>
       <mat-option value="BSC">BSC</mat-option>
@@ -114,10 +114,6 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumnsNew" 
       [ngClass]="((row.chronic_hours >= '48') ? 'chronicHours' : 'fail')"></tr>
     </table>
-
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-    </tr>
   </div>
   <hr>
 

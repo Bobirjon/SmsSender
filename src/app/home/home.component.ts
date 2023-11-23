@@ -8,7 +8,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, Form, FormBuilder, FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { BehaviorSubject, Subscription, ValueFromArray, catchError, map, merge, startWith, switchMap, windowWhen } from 'rxjs';
+import { BehaviorSubject, Subscription, ValueFromArray, catchError, filter, map, merge, startWith, switchMap, windowWhen } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
 import * as XLSX from 'xlsx';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -34,6 +34,7 @@ export interface DataTable {
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+
   Data: any
   Loaded: boolean;
   CurrentRoute = this.router.url
@@ -48,9 +49,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   currentPage = 0
   pageSize = 10
   totalItems = 0
-  dataTest: any[] = []
   pageSizes = [25, 50, 10];
   totalData: any
+  filterInput: string
+  filterSelectLevel: string
+  filterSelectType: string
+  selectedLevel:string
+  selectedType: string
 
   displayedColumnsNew: string[] = [
     'type',
@@ -105,6 +110,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     region: '',
   };
 
+  filteredValuesForOpenCases = {
+    type: '',
+    level: '',
+    created_at: '',
+    start_time: '',
+    end_time: '',
+    problem: '',
+    reason: '',
+    description: '',
+    region: '',
+  }
+
   refreshUser$ = new BehaviorSubject<boolean>(true)
   output: any[] = []
   feedback: any
@@ -113,10 +130,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
-  searchQuery: string = ''
-  inputFilterValue: string = ''
-  selectFilterValue1: string = ''
-  selectFilterValue2: string = ''
+  globalFilter = '';
 
   level = new FormControl()
   type = new FormControl()
@@ -130,13 +144,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   username = new FormControl()
 
 
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
-
     // testing one
    
     
@@ -162,15 +176,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
       .subscribe((data) => {
         this.posts2 = data
         this.Data = new MatTableDataSource(this.posts2.results)
-        console.log(this.Data.data);
         
         this.Data.sort = this.table1sort;
+
+        this.Data.filterPredicate = this.customFilterPredicate();
       
         this.selectableFilters.push({ name: 'level', options: this.levelSelect, defaultValue: this.defaultValue })
         this.selectableFilters.push({ name: 'type', options: this.typeSelect, defaultValue: this.defaultValue })
 
         // this.filterForOpenCase()
       })
+
+    
   }
 
   ngAfterViewInit() {
@@ -250,110 +267,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.UserActive = isRegistered
   }
 
-  // filterForAllCase() {
-  //   this.type.valueChanges.subscribe((typeFilter) => {
-  //     this.filteredValues['type'] = typeFilter;
-  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
-  //   })
-
-  //   this.level.valueChanges.subscribe((levelFilter) => {
-  //     this.filteredValues['level'] = levelFilter;
-  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
-  //   })
-
-  //   this.createdAt.valueChanges.subscribe((createdAtFilter) => {
-  //     this.filteredValues['created_at'] = createdAtFilter;
-  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
-  //   })
-
-  //   this.startTime.valueChanges.subscribe((startTimeFilter) => {
-  //     this.filteredValues['start_time'] = startTimeFilter;
-  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
-  //     console.log(this.filteredValues);
-      
-  //   })
-
-  //   this.endTime.valueChanges.subscribe((endTimeFilter) => {
-  //     this.filteredValues['end_time'] = endTimeFilter;
-  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
-  //     console.log(this.filteredValues);
-  //   })
-
-  //   this.problem.valueChanges.subscribe((problemFilter) => {
-  //     this.filteredValues['problem'] = problemFilter;
-  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
-  //     console.log(this.filteredValues);
-  //   })
-
-  //   this.reason.valueChanges.subscribe((reasonFilter) => {
-  //     this.filteredValues['reason'] = reasonFilter;
-  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
-  //   })
-
-  //   this.description.valueChanges.subscribe((descriptionFilter) => {
-  //     this.filteredValues['description'] = descriptionFilter;
-  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
-  //   })
-
-  //   this.region.valueChanges.subscribe((regionFilter) => {
-  //     this.filteredValues['region'] = regionFilter;
-  //     this.dataTable.filter = JSON.stringify(this.filteredValues)
-  //   })
-
-
-  //   this.dataTable.filterPredicate = function (data, filter): boolean {
-  //     let searchString = JSON.parse(filter);
-  //     let typeFound = (data.type || '').toString().trim().toLowerCase().indexOf(searchString.type.toLowerCase()) !== -1
-  //     let levelFound = (data.level || '').toString().trim().toLowerCase().indexOf(searchString.level.toLowerCase()) !== -1
-  //     let createdAtFound = (data.created_at || '').toString().trim().toLowerCase().indexOf(searchString.created_at.toLowerCase()) !== -1
-  //     let startTimeFound = (data.start_time || '').toString().trim().toLowerCase().indexOf(searchString.start_time.toLowerCase()) !== -1
-  //     let endTimeFound = (data.end_time || '').toString().trim().toLowerCase().indexOf(searchString.end_time.toLowerCase()) !== -1
-  //     let problemFound = (data.problem || '').toString().trim().toLowerCase().indexOf(searchString.problem.toLowerCase()) !== -1
-  //     let descriptionFound = (data.description || '').toString().trim().toLowerCase().indexOf(searchString.description.toLowerCase()) !== -1
-  //     let reasonFound = (data.reason || '').toString().trim().toLowerCase().indexOf(searchString.reason.toLowerCase()) !== -1
-  //     let regionFound = (data.region || '').toString().trim().toLowerCase().indexOf(searchString.region.toLowerCase()) !== -1
-
-  //     if (searchString.topFilter) {
-  //       return typeFound || levelFound || createdAtFound || startTimeFound || endTimeFound  || problemFound || reasonFound || descriptionFound || regionFound
-  //     } else {
-  //       return typeFound && levelFound && createdAtFound && startTimeFound && endTimeFound  && problemFound && reasonFound && descriptionFound && regionFound
-  //     }
-  //   }
-  // }
-
-  // filterForOpenCase() {
-
-  //   this.Data.filterPredicate = function (selectRecord: any, selectFilter: any) {
-  //     console.log(selectFilter);
-  //     console.log(selectRecord);
-      
-  //     var map = new Map(JSON.parse(selectFilter));
-  //     let isMatch = false;
-  //     for (let [key, value] of map) {
-  //       isMatch = value == 'All' ||
-  //         selectRecord[key as keyof Data] == value[0] ||
-  //         selectRecord[key as keyof Data] == value[1] ||
-  //         selectRecord[key as keyof Data] == value[2]
-  //       if (!isMatch) return false;
-  //     }
-  //     return isMatch;
-  //   };
-  // }
-
-  applyFilterInput() {
-    let fValue = this.inputFilterValue.trim().toLocaleLowerCase()
-    this.Data.filter = fValue
-  }
-
-  applyFilterSelect1(fValue: string) {
-    this.selectFilterValue1 = fValue
-    this.applyFilterInput()
-  }
-  
-  applyFilterSelect2(fValue: string) {
-
-  }
-
   ngOnInit(): void {
 
     this.webSocketService.listen().subscribe((data) => {
@@ -367,11 +280,84 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.Data.filter = filterValue.trim().toLowerCase();
+  applyFilter(filter: string) {
+    this.globalFilter = filter;
+    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases)
     console.log(this.Data.filter);
     
+  }
+
+  onSelectLevel() {
+    this.filteredValuesForOpenCases['level'] = this.selectedLevel
+    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases)
+  }
+
+  onSelectType() {
+    this.filteredValuesForOpenCases['type'] = this.selectedType
+    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases)
+  }
+
+  customFilterPredicate() {
+    const myFilterPredicate = (
+      data: any,
+      filter: string
+    ): boolean => {
+      var globalMatch = !this.globalFilter;
+
+      if (this.globalFilter) {
+        // search all text fields
+        console.log(data);
+        
+        globalMatch =
+          data.reason
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.problem
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.description
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.region
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.created_at
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.start_time
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1
+
+      }
+
+      if (!globalMatch) {
+        return;
+      }
+
+      let searchString = JSON.parse(filter);
+      
+      return (
+        data.level.toString().trim().indexOf(searchString.level) !== -1 &&
+        data.type
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.type.toLowerCase()) !== -1
+      );
+    };
+    return myFilterPredicate;
   }
 
   updateMessage(data: any): void {
@@ -493,16 +479,18 @@ export class exportExcel {
     private authService: AuthService,
   ) { }
   onSubmit(form: NgForm) {
-    // this.authService.exportExcel(form.value.starttime, form.value.endtime)
-    //   .subscribe(res => {
-    //     this.convertToXLSX(res, 'data')
-    //   })
-    this.authService.getData()
+    this.authService.exportExcel(form.value.starttime, form.value.endtime)
       .subscribe(res => {
         console.log(res);
         this.posttest = res
         this.convertToXLSX(this.posttest.results, 'data')
       })
+    // this.authService.getData()
+    //   .subscribe(res => {
+    //     console.log(res);
+    //     this.posttest = res
+    //     this.convertToXLSX(this.posttest.results, 'data')
+    //   })
   }
 
   convertToXLSX(data: any, filename: string): void {

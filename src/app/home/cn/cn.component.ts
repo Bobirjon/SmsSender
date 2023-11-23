@@ -41,6 +41,7 @@ export class CnComponent implements OnInit {
   filteredOptionsProblem: Observable<string[]>;
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsEffect: Observable<string[]>;
+  filteredOptionsDesc: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -128,7 +129,12 @@ export class CnComponent implements OnInit {
     'Проподание сервиса на Люкс Контент. Работают только короткие номера 0909, 0720',
   ]
 
-
+  optionsDesc: string[] = [
+    'Линк автоматически поднялся ',
+    'Трафик автоматически восстановлен',
+    'Включили основное питание',
+    'Работа частично завершена',
+  ]
 
   constructor(
     private formBuilder: FormBuilder,
@@ -173,6 +179,11 @@ export class CnComponent implements OnInit {
     this.filteredOptionsEffect = this.cnForm.controls.effect.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, this.optionsEffect))
+    )
+
+    this.filteredOptionsDesc = this.cnForm.controls.desc.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsDesc))
     )
   }
 

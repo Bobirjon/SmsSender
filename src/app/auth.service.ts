@@ -46,11 +46,10 @@ export class AuthService {
     // &page=${page}&page_size=${perpage}`
     const url = this.URLsender + `smssender/alarmreport/?level__contains=${level}
       &type__contains=${type}&description__contains=${description}
-      &region__contains=${region}
-    
+      &region__contains=${region}&createdat_in=${createdAt}
+      &starttime_in=${startTime}&endtime_in=${endTime}
       &problem__contains=${problem}&reason__contains=${reason}
       &ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
-    console.log(url);
     
     return this.http.get(url)
 
@@ -97,12 +96,13 @@ export class AuthService {
   }
 
   exportExcel(startTime: any, endTime: any) {
-    console.log();
-    
-    // return this.http.get((`${this.URLsender + 'smssender/alarmreport'}/?end_time__range=${startTime},${endTime}&limit=1000&offset=0`))
-    return this.http.get((`${this.URLsender + 'smssender/alarmreport/'}`))
+    console.log((`${this.URLsender + 'smssender/alarmreport/'}?
+    end_time__range=${startTime},${endTime}&page_size=1000`));
 
+    const url = this.URLsender + 
+            `smssender/alarmreport/?end_time__range=${startTime},${endTime}&page_size=1000`
     
+    return this.http.get(url)
   }
 
   deleteData(id: number) {
