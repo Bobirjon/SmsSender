@@ -38,12 +38,6 @@ export class AuthService {
     page: number,
     perpage: number,): Observable<any> {
 
-    // const url = this.URLsender + `smssender/alarmreport/?level__contains=${level}
-    // &type__contains=${type}&problem__contains=${problem}&reason__contains=${reason}
-    // &description__contains=${description}&region__contains=${region}
-    // &start_time__contains=${startTime}&end_time__contains=${endTime}
-    // &created_at__contains=${createdAt}&ordering=${order}${ordering}
-    // &page=${page}&page_size=${perpage}`
     const url = this.URLsender + `smssender/alarmreport/?level__contains=${level}
       &type__contains=${type}&description__contains=${description}
       &region__contains=${region}&createdat_in=${createdAt}

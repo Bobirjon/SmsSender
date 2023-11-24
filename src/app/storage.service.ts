@@ -31,7 +31,7 @@ export class StorageService {
     'Ucell - свзязь, это то, что должно быть всегда и везде.', 
     'Ucell - вспомни историю про проигранную войну, из-за незабитого гвоздя',
   ]
-  addWord: any
+  addWord = ''
   textIndex = 0;
 
   constructor(
@@ -146,14 +146,19 @@ export class StorageService {
 
   public additionWord(value: any) {
 
+    this.textIndex = +localStorage.getItem('counter') || 0;
+
     if(value == 'A3') {
       this.textIndex = (this.textIndex + 1) % this.addWordA3.length
+      localStorage.setItem('counter', this.textIndex.toString());
       this.addWord = this.addWordA3[this.textIndex]
     } else if (value == 'A4') {
       this.textIndex = (this.textIndex + 1) % this.addWordA4.length
+      localStorage.setItem('counter', this.textIndex.toString());
       this.addWord = this.addWordA4[this.textIndex]
     } else if (value == 'A5') {
       this.textIndex = (this.textIndex + 1) % this.addWordA5.length
+      localStorage.setItem('counter', this.textIndex.toString());
       this.addWord = this.addWordA5[this.textIndex]
     } else {
       this.addWord = ''

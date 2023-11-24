@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Data, Router } from '@angular/router';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -35,27 +35,32 @@ export interface DataTable {
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
-  Data: any
+  dataTable = new MatTableDataSource<DataTable>()
+  Data = new MatTableDataSource<DataTable>()
+  posts: any
+  posts2: any
   Loaded: boolean;
-  CurrentRoute = this.router.url
-  isComplete: boolean
-  name: any
-  user: any;
-  hidden: any
+  //CurrentRoute = this.router.url
+  //isComplete: boolean
+  // name: any
+  // user: any;
+  // hidden: any
   isAdmin = localStorage.getItem('role')
-  isRegister: any;
-  UserActive: boolean
-  isColor: any
-  currentPage = 0
-  pageSize = 10
-  totalItems = 0
+  // isRegister: any;
+  // UserActive: boolean
+  //isColor: any
+  //currentPage = 0
+  //pageSize = 10
+  //totalItems = 0
   pageSizes = [25, 50, 10];
-  totalData: any
+  // totalData: any
   filterInput: string
-  filterSelectLevel: string
-  filterSelectType: string
-  selectedLevel:string
+  selectedLevel: string
   selectedType: string
+  resultsLength = 0;
+  isLoadingResults = true;
+  isRateLimitReached = false;
+  globalFilter = '';
 
   displayedColumnsNew: string[] = [
     'type',
@@ -82,33 +87,29 @@ export class HomeComponent implements OnInit, AfterViewInit {
     'actions'
   ]
 
-
-  dataTable = new MatTableDataSource<DataTable>()
-  posts: any
-  posts2: any
   @ViewChild(MatPaginator) paginator: MatPaginator
 
   @ViewChild('table1sort') public table1sort: MatSort;
   @ViewChild('table2sort') public table2sort: MatSort;
-  levelSelect: string[] = ['All', 'A1', 'A2', 'A3', 'A4', 'A5', 'P1', 'P2', 'P3', 'P4', 'P5'];
-  typeSelect: string[] = ['All', 'CORE', 'RN']
-  selectableFilters: any[] = []
+  // levelSelect: string[] = ['All', 'A1', 'A2', 'A3', 'A4', 'A5', 'P1', 'P2', 'P3', 'P4', 'P5'];
+  // typeSelect: string[] = ['All', 'CORE', 'RN']
+  // selectableFilters: any[] = []
 
-  defaultValue = "All";
+  // defaultValue = "All";
 
-  filterDictionary = new Map<string, string[]>();
+  // filterDictionary = new Map<string, string[]>();
 
-  filteredValues = {
-    type: '',
-    level: '',
-    created_at: '',
-    start_time: '',
-    end_time: '',
-    problem: '',
-    reason: '',
-    description: '',
-    region: '',
-  };
+  // filteredValues = {
+  //   type: '',
+  //   level: '',
+  //   created_at: '',
+  //   start_time: '',
+  //   end_time: '',
+  //   problem: '',
+  //   reason: '',
+  //   description: '',
+  //   region: '',
+  // };
 
   filteredValuesForOpenCases = {
     type: '',
@@ -122,15 +123,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     region: '',
   }
 
-  refreshUser$ = new BehaviorSubject<boolean>(true)
-  output: any[] = []
-  feedback: any
-  nameOfUser: any
-  messageDataTest: any
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
-  globalFilter = '';
+  //refreshUser$ = new BehaviorSubject<boolean>(true)
+  //output: any[] = []
+  // feedback: any
+  // nameOfUser: any
+  // messageDataTest: any
+
 
   level = new FormControl()
   type = new FormControl()
@@ -148,17 +146,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private webSocketService: WebSocketService,
+    //private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
     // testing one
-   
-    
+
+
     // Table for all Cases
     // this.authService.getData()
     //   .subscribe((data) => {
     //     this.posts = data
-        
+
     //     this.dataTable = new MatTableDataSource(this.posts.results)
     //     this.dataTable.sort = this.table2sort;
     //     this.dataTable.paginator = this.paginator;
@@ -176,18 +174,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
       .subscribe((data) => {
         this.posts2 = data
         this.Data = new MatTableDataSource(this.posts2.results)
-        
+
         this.Data.sort = this.table1sort;
 
         this.Data.filterPredicate = this.customFilterPredicate();
-      
-        this.selectableFilters.push({ name: 'level', options: this.levelSelect, defaultValue: this.defaultValue })
-        this.selectableFilters.push({ name: 'type', options: this.typeSelect, defaultValue: this.defaultValue })
+
+        // this.selectableFilters.push({ name: 'level', options: this.levelSelect, defaultValue: this.defaultValue })
+        // this.selectableFilters.push({ name: 'type', options: this.typeSelect, defaultValue: this.defaultValue })
 
         // this.filterForOpenCase()
       })
 
-    
+
   }
 
   ngAfterViewInit() {
@@ -197,15 +195,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     merge(
       this.level.valueChanges,
-      this.type.valueChanges, 
-      this.description.valueChanges, 
-      this.reason.valueChanges, 
-      this.problem.valueChanges, 
-      this.createdAt.valueChanges, 
-      this.startTime.valueChanges, 
-      this.endTime.valueChanges,  
-      this.region.valueChanges,  
-      this.table2sort.sortChange, 
+      this.type.valueChanges,
+      this.description.valueChanges,
+      this.reason.valueChanges,
+      this.problem.valueChanges,
+      this.createdAt.valueChanges,
+      this.startTime.valueChanges,
+      this.endTime.valueChanges,
+      this.region.valueChanges,
+      this.table2sort.sortChange,
       this.paginator.page)
       .pipe(
         startWith({}),
@@ -217,18 +215,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
           var description = this.description.value == null ? '' : this.description.value;
           var reason = this.reason.value == null ? '' : this.reason.value;
           var problem = this.problem.value == null ? '' : this.problem.value;
-          var createdAt = this.createdAt.value == null ? '' : this.createdAt.value; 
-          var startTime = this.startTime.value == null ? '' : this.startTime.value; 
+          var createdAt = this.createdAt.value == null ? '' : this.createdAt.value;
+          var startTime = this.startTime.value == null ? '' : this.startTime.value;
           console.log(startTime);
-          
-          var endTime = this.endTime.value == null ? '' : this.endTime.value; 
-          var region = this.region.value == null ? '' : this.region.value; 
-          if(this.table2sort.direction == 'desc') {
+
+          var endTime = this.endTime.value == null ? '' : this.endTime.value;
+          var region = this.region.value == null ? '' : this.region.value;
+          if (this.table2sort.direction == 'desc') {
             dir = '-'
           } else {
             dir = ''
           }
-          
+
           return this.authService
             .getDataTest(
               level, type, description, reason, problem,
@@ -253,7 +251,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // limit errors, we do not want to reset the paginator to zero, as that
           // would prevent users from re-triggering requests.
           this.resultsLength = data.count;
-          
+
           return data;
         })
       )
@@ -262,16 +260,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.dataTable = new MatTableDataSource(this.posts.results)
       });
   }
-  
-  isRegisteredUser(isRegistered: any) {
-    this.UserActive = isRegistered
-  }
+
+  // isRegisteredUser(isRegistered: any) {
+  //   this.UserActive = isRegistered
+  // }
 
   ngOnInit(): void {
 
-    this.webSocketService.listen().subscribe((data) => {
-      this.updateMessage(data)
-    })
+    // this.webSocketService.listen().subscribe((data) => {
+    //   this.updateMessage(data)
+    // })
 
     if (this.router.url == '/home') {
       this.Loaded = true
@@ -284,7 +282,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.globalFilter = filter;
     this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases)
     console.log(this.Data.filter);
-    
+
   }
 
   onSelectLevel() {
@@ -307,7 +305,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       if (this.globalFilter) {
         // search all text fields
         console.log(data);
-        
+
         globalMatch =
           data.reason
             .toString()
@@ -347,7 +345,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
 
       let searchString = JSON.parse(filter);
-      
+
       return (
         data.level.toString().trim().indexOf(searchString.level) !== -1 &&
         data.type
@@ -360,70 +358,70 @@ export class HomeComponent implements OnInit, AfterViewInit {
     return myFilterPredicate;
   }
 
-  updateMessage(data: any): void {
+  // updateMessage(data: any): void {
 
-    let dataee = JSON.parse(data.data)
+  //   let dataee = JSON.parse(data.data)
 
-    if (!!!data) return;
-    let indexAll = this.posts.findIndex((item: any) => item.id == dataee.id)
-    let indexOpen = this.posts2.findIndex((item: any) => item.id == dataee.id)
-    if (dataee.is_complete == true) {
-      if (indexAll !== -1 && indexOpen !== -1) {
-        this.posts.splice(indexAll, 1)
-        this.posts.push(dataee)
-        this.dataTable = new MatTableDataSource(this.posts)
+  //   if (!!!data) return;
+  //   let indexAll = this.posts.findIndex((item: any) => item.id == dataee.id)
+  //   let indexOpen = this.posts2.findIndex((item: any) => item.id == dataee.id)
+  //   if (dataee.is_complete == true) {
+  //     if (indexAll !== -1 && indexOpen !== -1) {
+  //       this.posts.splice(indexAll, 1)
+  //       this.posts.push(dataee)
+  //       this.dataTable = new MatTableDataSource(this.posts)
 
-        this.posts2.splice(indexOpen, 1)
-        this.Data = new MatTableDataSource(this.posts2)
-      } else if (indexAll !== -1 && indexOpen === -1) {
-        this.posts.splice(indexAll, 1)
-        this.posts.push(dataee)
-        this.dataTable = new MatTableDataSource(this.posts)
-      }
-      else {
-        this.posts.push(dataee)
-        this.dataTable = new MatTableDataSource(this.posts)
-      }
-    } else {
-      if (indexAll !== -1 && indexOpen !== -1) {
-        this.posts.splice(indexAll, 1)
-        this.posts.push(dataee)
-        this.dataTable = new MatTableDataSource(this.posts)
+  //       this.posts2.splice(indexOpen, 1)
+  //       this.Data = new MatTableDataSource(this.posts2)
+  //     } else if (indexAll !== -1 && indexOpen === -1) {
+  //       this.posts.splice(indexAll, 1)
+  //       this.posts.push(dataee)
+  //       this.dataTable = new MatTableDataSource(this.posts)
+  //     }
+  //     else {
+  //       this.posts.push(dataee)
+  //       this.dataTable = new MatTableDataSource(this.posts)
+  //     }
+  //   } else {
+  //     if (indexAll !== -1 && indexOpen !== -1) {
+  //       this.posts.splice(indexAll, 1)
+  //       this.posts.push(dataee)
+  //       this.dataTable = new MatTableDataSource(this.posts)
 
-        this.posts2.splice(indexOpen, 1)
-        this.posts2.push(dataee)
-        this.Data = new MatTableDataSource(this.posts2)
-      } else {
-        this.posts.push(dataee)
-        this.dataTable = new MatTableDataSource(this.posts)
+  //       this.posts2.splice(indexOpen, 1)
+  //       this.posts2.push(dataee)
+  //       this.Data = new MatTableDataSource(this.posts2)
+  //     } else {
+  //       this.posts.push(dataee)
+  //       this.dataTable = new MatTableDataSource(this.posts)
 
-        this.posts2.push(dataee)
-        this.Data = new MatTableDataSource(this.posts2)
-      }
-    }
+  //       this.posts2.push(dataee)
+  //       this.Data = new MatTableDataSource(this.posts2)
+  //     }
+  //   }
 
-    this.Data.sort = this.table1sort;
-    this.dataTable.sort = this.table2sort;
-    this.dataTable.paginator = this.paginator;
-    // this.filterForAllCase()
-    // this.filterForOpenCase()
+  //   this.Data.sort = this.table1sort;
+  //   this.dataTable.sort = this.table2sort;
+  //   this.dataTable.paginator = this.paginator;
+  //   // this.filterForAllCase()
+  //   // this.filterForOpenCase()
 
-  }
+  // }
 
-  applySelectableFilter(ob: MatSelectChange, data: Data) {
-    if (ob.value == 'RN') {
-      this.filterDictionary.set(data.name, ['CHRONIC', 'BSC/RNC', 'HUB'])
-    } else {
-      this.filterDictionary.set(data.name, [ob.value])
-    }
+  // applySelectableFilter(ob: MatSelectChange, data: Data) {
+  //   if (ob.value == 'RN') {
+  //     this.filterDictionary.set(data.name, ['CHRONIC', 'BSC/RNC', 'HUB'])
+  //   } else {
+  //     this.filterDictionary.set(data.name, [ob.value])
+  //   }
 
-    var jsonString = JSON.stringify(
-      Array.from(this.filterDictionary.entries())
-    )
+  //   var jsonString = JSON.stringify(
+  //     Array.from(this.filterDictionary.entries())
+  //   )
 
-    this.Data.filter = jsonString
+  //   this.Data.filter = jsonString
 
-  }
+  // }
 
   onRN() {
     this.Loaded = !this.Loaded
@@ -456,8 +454,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(res => {
-      if(res == true) {
-        this.authService.deleteData(id).subscribe(res =>{
+      if (res == true) {
+        this.authService.deleteData(id).subscribe(res => {
           console.log(res);
           this.snackBar.open('Удалено', '', { duration: 10000 })
           window.location.reload()
