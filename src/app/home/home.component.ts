@@ -37,6 +37,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   dataTable = new MatTableDataSource<DataTable>()
   Data = new MatTableDataSource<DataTable>()
+  TemplateData = new MatTableDataSource<DataTable>()
   posts: any
   posts2: any
   Loaded: boolean;
@@ -185,6 +186,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
         // this.filterForOpenCase()
       })
 
+    this.authService.getTemplateSMS()
+      .subscribe((data) => {
+        let post3: any = data
+        console.log(post3.results);
+        
+        this.TemplateData = new MatTableDataSource(post3.results)
+      })
+
 
   }
 
@@ -256,6 +265,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe((data) => {
+        console.log(data);
+        
         this.posts = data
         this.dataTable = new MatTableDataSource(this.posts.results)
       });
@@ -304,7 +315,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
       if (this.globalFilter) {
         // search all text fields
-        console.log(data);
 
         globalMatch =
           data.reason
@@ -345,7 +355,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
 
       let searchString = JSON.parse(filter);
-
       return (
         data.level.toString().trim().indexOf(searchString.level) !== -1 &&
         data.type
@@ -357,71 +366,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     };
     return myFilterPredicate;
   }
-
-  // updateMessage(data: any): void {
-
-  //   let dataee = JSON.parse(data.data)
-
-  //   if (!!!data) return;
-  //   let indexAll = this.posts.findIndex((item: any) => item.id == dataee.id)
-  //   let indexOpen = this.posts2.findIndex((item: any) => item.id == dataee.id)
-  //   if (dataee.is_complete == true) {
-  //     if (indexAll !== -1 && indexOpen !== -1) {
-  //       this.posts.splice(indexAll, 1)
-  //       this.posts.push(dataee)
-  //       this.dataTable = new MatTableDataSource(this.posts)
-
-  //       this.posts2.splice(indexOpen, 1)
-  //       this.Data = new MatTableDataSource(this.posts2)
-  //     } else if (indexAll !== -1 && indexOpen === -1) {
-  //       this.posts.splice(indexAll, 1)
-  //       this.posts.push(dataee)
-  //       this.dataTable = new MatTableDataSource(this.posts)
-  //     }
-  //     else {
-  //       this.posts.push(dataee)
-  //       this.dataTable = new MatTableDataSource(this.posts)
-  //     }
-  //   } else {
-  //     if (indexAll !== -1 && indexOpen !== -1) {
-  //       this.posts.splice(indexAll, 1)
-  //       this.posts.push(dataee)
-  //       this.dataTable = new MatTableDataSource(this.posts)
-
-  //       this.posts2.splice(indexOpen, 1)
-  //       this.posts2.push(dataee)
-  //       this.Data = new MatTableDataSource(this.posts2)
-  //     } else {
-  //       this.posts.push(dataee)
-  //       this.dataTable = new MatTableDataSource(this.posts)
-
-  //       this.posts2.push(dataee)
-  //       this.Data = new MatTableDataSource(this.posts2)
-  //     }
-  //   }
-
-  //   this.Data.sort = this.table1sort;
-  //   this.dataTable.sort = this.table2sort;
-  //   this.dataTable.paginator = this.paginator;
-  //   // this.filterForAllCase()
-  //   // this.filterForOpenCase()
-
-  // }
-
-  // applySelectableFilter(ob: MatSelectChange, data: Data) {
-  //   if (ob.value == 'RN') {
-  //     this.filterDictionary.set(data.name, ['CHRONIC', 'BSC/RNC', 'HUB'])
-  //   } else {
-  //     this.filterDictionary.set(data.name, [ob.value])
-  //   }
-
-  //   var jsonString = JSON.stringify(
-  //     Array.from(this.filterDictionary.entries())
-  //   )
-
-  //   this.Data.filter = jsonString
-
-  // }
 
   onRN() {
     this.Loaded = !this.Loaded

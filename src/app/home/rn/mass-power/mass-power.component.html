@@ -52,7 +52,6 @@
                         <mat-card-content>
                             <p>{{bscForm.value.problem}}</p>
                             <p>{{'Причина: ' + bscForm.value.reason}}</p>
-                            <p>{{'Эффект: ' + bscForm.value.effect}}</p>
                             <p>{{'Начало: ' + bscForm.value.startTime.replace('T',' ')}}</p>
                             <p>{{'Оповещен: ' + bscForm.value.informed}}</p>
                             <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
@@ -86,8 +85,6 @@
                         <mat-card-content>
                             <p>{{bscForm.value.problem}}</p>
                             <p>{{'Причина: ' + bscForm.value.reason}}</p>
-                            <p>{{'Эффект: ' + bscForm.value.effect}}</p>
-                            <p>{{'Описание: ' + bscForm.value.desc}}</p>
                             <p>{{'Начало: ' + bscForm.value.startTime.replace("T", " ")}}</p>
                             <p>{{'Конец: ' + bscForm.value.endTime.replace("T", " ")}}</p>
                             <p>{{'Оповещен: ' + bscForm.value.informed}}</p>
@@ -136,39 +133,6 @@
                           {{option}}
                         </mat-option>
                       </mat-autocomplete>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- effect -->
-            <mat-grid-tile colspan="5" rowspan="1">
-                <mat-form-field class="margin-container">
-                    <mat-label>Эффект</mat-label>
-                    <textarea matInput type="text" formControlName="effect"
-                        [(ngModel)]="bscForm.value.effect" spellcheck="true"
-                        [matAutocomplete]="autoEffect">
-                    </textarea>
-                    <mat-autocomplete #autoEffect="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptionsEffect | async" [value]="option">
-                          {{option}}
-                        </mat-option>
-                      </mat-autocomplete>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- Description -->
-            <mat-grid-tile colspan="5" rowspan="1">
-                <mat-form-field class="margin-container">
-                    <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="bscForm.value.desc" spellcheck="true"></textarea>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- effect option -->
-            <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>Эффект</mat-label>
-                    <mat-select formControlName="effect_option" [(ngModel)]="bscForm.value.effect_option">
-                        <mat-option *ngFor="let eff_rep of effect_option" [value]="eff_rep.value">
-                            {{eff_rep.viewValue}}
-                        </mat-option>
-                    </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- region -->

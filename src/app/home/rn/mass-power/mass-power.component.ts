@@ -55,10 +55,6 @@ export class MassPowerComponent {
     { value: 'Эксплуатация', viewValue: 'Эксплуатация' },
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
-  effect_option: { value: string; viewValue: string }[] = [
-    { value: 'С влиянием', viewValue: 'С влиянием' },
-    { value: 'Без влияния', viewValue: 'Без влияния' }
-  ];
   category: { value: string; viewValue: string }[] = [
     { value: 'wb', viewValue: 'wb' },
     { value: 'fault', viewValue: 'fault' },
@@ -114,13 +110,10 @@ export class MassPowerComponent {
       'responsible_report': ['', Validators.required],
       'problem': ['', Validators.required],
       'reason': ['', Validators.required],
-      'effect_option': ['C Влиянием', Validators.required],
       'startTime': ['', Validators.required],
       'endTime': [''],
       'region': ['', Validators.required],
-      'effect': ['', Validators.required],
       'informed': ['', Validators.required],
-      'desc': ['', Validators.required],
       'sender': [''],
     })
 
@@ -134,10 +127,6 @@ export class MassPowerComponent {
       map(value => this._filter(value, this.optionsReason))
     )
 
-    this.filteredOptionsEffect = this.bscForm.controls.effect.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value, this.optionsEffect))
-    )
   }
 
   private _filter(value: string, options: string[]): string[] {
@@ -179,13 +168,10 @@ export class MassPowerComponent {
             'responsible_report': [result['responsible_area'], Validators.required],
             'problem': [result['problem'], Validators.required],
             'reason': [result['reason'], Validators.required],
-            'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [endTimeForUpdate],
             'region': [result['region'], Validators.required],
-            'effect': [result['influence'], Validators.required],
             'informed': [result['informed'], Validators.required],
-            'desc': [result['description'], Validators.required],
             'sender': [result['sender']],
           })
         })
@@ -201,12 +187,10 @@ export class MassPowerComponent {
       'problem': this.bscForm.value.problem,
       'reason': this.bscForm.value.reason,
       'effect': this.bscForm.value.effect_option,
-      'influence': this.bscForm.value.effect,
       'start_time': this.bscForm.value.startTime,
       'region': this.bscForm.value.region,
 
       'informed': this.bscForm.value.informed,
-      'description': this.bscForm.value.desc,
       'sender': this.user?.username
     }
 

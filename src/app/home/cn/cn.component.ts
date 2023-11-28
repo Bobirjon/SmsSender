@@ -239,7 +239,7 @@ export class CnComponent implements OnInit {
           'Эффект: ' + this.cnForm.value.effect + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n'+
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
           addWord
       } else {
         this.SmsTextBody =
@@ -250,7 +250,7 @@ export class CnComponent implements OnInit {
           'Эффект: ' + this.cnForm.value.effect + '\n' +
           'Оповещен: ' + this.cnForm.value.informed + '\n' +
           'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
           addWord
       }
     } else {
@@ -350,7 +350,7 @@ export class CnComponent implements OnInit {
   }
 
   updateData() {
-    
+
     this.tableSendBody()
 
     this.storageService.updateData(this.route.snapshot.params.id, this.tableBody)
@@ -366,7 +366,7 @@ export class CnComponent implements OnInit {
 
   sendButton() {
     console.log('Suucess sned', this.smsBody);
-    
+
     // api for send SMS
     this.storageService.sendSms(this.smsBody)
 
@@ -385,7 +385,7 @@ export class CnComponent implements OnInit {
     this.tableSendBody()
 
     this.storageService.createToTable(this.tableBody)
-    
+
     // this.authService.postData(this.tableBody)
     //   .subscribe((result) => {
     //     console.log(result);
@@ -395,7 +395,7 @@ export class CnComponent implements OnInit {
     //     this.snackBar.open("Ошибка", '', { duration: 10000 })
     //   })
 
-    
+
   }
 
   onSubmitButtonProblem(smsType: string) {
@@ -413,17 +413,15 @@ export class CnComponent implements OnInit {
               console.log(result);
               this.idAlarmReport = result
               console.log(this.idAlarmReport.id);
-              
+
               this.snackBar.open('Обновлено', '', { duration: 10000 })
               this.smsSendBody(this.idAlarmReport.id)
               this.sendButton()
-              console.log('ok workung id is', this.idAlarmReport.id);
-              
             }, error => {
               console.log(error);
               this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
             })
-          
+
 
         } else {
           this.tableSendBody()
@@ -434,7 +432,6 @@ export class CnComponent implements OnInit {
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
               this.smsSendBody(result.id)
               this.sendButton()
-              console.log('ok workung id is', result.id)
             }, error => {
               console.log(error);
               this.snackBar.open("Ошибка", '', { duration: 10000 })
@@ -445,24 +442,46 @@ export class CnComponent implements OnInit {
 
   }
 
+  onSubmitasNew(smsType: string) {
+    this.requestType = smsType
+
+    const dialogRef = this.dialog.open(areYouSure);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.tableSendBody()
+
+        this.authService.postData(this.tableBody)
+          .subscribe((result) => {
+            console.log(result);
+            this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+            this.smsSendBody(result.id)
+            this.sendButton()
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+      }
+    })
+  }
+
   forTestSms(smsType: string) {
     this.requestType = smsType
     this.smsSendBody()
-    
+
     const dialogRef = this.dialog.open(fortesting, {
-      data: { text: this.SmsTextBody}
+      data: { text: this.SmsTextBody }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
         // this.smsSendBody()
         // console.log(this.smsBody);
-        
+
         // this.sendButton()
       }
     })
   }
-
 }
 
 @Component({

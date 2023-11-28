@@ -26,6 +26,10 @@ export class AuthService {
     return this.http.get(this.URLsender + 'smssender/alarmreport/?limit=1000&offset=0')
   }
 
+  getTemplateSMS() {
+    return this.http.get(this.URLsender + 'smssender/alarmreport/?is_send_sms=false&&is_complete=false')
+  }
+
   getDataTest( 
     level: string, 
     type: string, 
@@ -38,12 +42,14 @@ export class AuthService {
     page: number,
     perpage: number,): Observable<any> {
 
-    const url = this.URLsender + `smssender/alarmreport/?level__contains=${level}
-      &type__contains=${type}&description__contains=${description}
-      &region__contains=${region}&createdat_in=${createdAt}
+    const url = this.URLsender + `smssender/alarmreport/?level__icontains=${level}
+      &type__icontains=${type}&description__icontains=${description}
+      &region__icontains=${region}&createdat_in=${createdAt}
       &starttime_in=${startTime}&endtime_in=${endTime}
-      &problem__contains=${problem}&reason__contains=${reason}
+      &problem__icontains=${problem}&reason__icontains=${reason}
       &ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
+      console.log(url);
+      
     
     return this.http.get(url)
 
@@ -52,6 +58,8 @@ export class AuthService {
   getFilteredData() {
     return this.http.get(this.URLsender + 'smssender/alarmreport/?is_complete=false&limit=1000&offset=0')
   }
+
+
 
   getSms(id: number) {
     return this.http.get(`${this.URLsender + 'smssender/alarmreport'}/${id}`)

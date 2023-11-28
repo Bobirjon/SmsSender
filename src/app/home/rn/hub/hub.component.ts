@@ -565,6 +565,29 @@ export class HubComponent implements OnInit {
     })
   }
 
+  onSubmitasNew(smsType: string) {
+    this.requestType = smsType
+
+    const dialogRef = this.dialog.open(areYouSure);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.tableSendBody()
+
+        this.authService.postData(this.tableBody)
+          .subscribe((result) => {
+            console.log(result);
+            this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+            this.smsSendBody(result.id)
+            this.sendButton()
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+      }
+    })
+  }
+
   forSmsTesting(smsType: string) {
     this.requestType = smsType
     this.smsSendBody()

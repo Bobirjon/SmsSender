@@ -140,7 +140,7 @@ export class StorageService {
             this.router.navigate(['/home'])
           }, error => {
             console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
+            this.snackBar.open("Ошибка при отправлении сообщения", '', { duration: 10000 })
           })
   }
 
@@ -166,6 +166,4 @@ export class StorageService {
 
     return this.addWord
   }
-
-
 }

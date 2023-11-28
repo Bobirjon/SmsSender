@@ -343,7 +343,7 @@ export class BscComponent implements OnInit {
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
             .subscribe((result) => {
               console.log(result);
-              this.snackBar.open('Обновлено', '', { duration: 10000 })
+              this.snackBar.open('Обновлено в таблице', '', { duration: 10000 })
 
               this.idAlarmReport = result
               this.smsSendBody(this.idAlarmReport.id)
@@ -363,12 +363,35 @@ export class BscComponent implements OnInit {
               this.sendButton()
             }, error => {
               console.log(error);
-              this.snackBar.open("Ошибка", '', { duration: 10000 })
+              this.snackBar.open("Ошибка при добавлении в таблицу ", '', { duration: 10000 })
             })
         }
 
       }
 
+    })
+  }
+
+  onSubmitasNew(smsType: string) {
+    this.requestType = smsType
+
+    const dialogRef = this.dialog.open(areYouSure);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.tableSendBody()
+
+        this.authService.postData(this.tableBody)
+          .subscribe((result) => {
+            console.log(result);
+            this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+            this.smsSendBody(result.id)
+            this.sendButton()
+          }, error => {
+            console.log(error);
+            this.snackBar.open("Ошибка при добавлении в таблицу ", '', { duration: 10000 })
+          })
+      }
     })
   }
 
