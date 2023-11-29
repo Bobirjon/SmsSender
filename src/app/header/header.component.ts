@@ -9,10 +9,9 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  userName: any
-  loginStatus: any
-  IsLoggedIn$: any
 
+  isLoggedIn$ = this.storageService.isAuth$
+  username$ = this.storageService.username$
 
   constructor(
     private storageService: StorageService,
@@ -20,29 +19,14 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.getUser().subscribe(res=> {
-      let fullName: any
-      fullName = res
-      this.userName = fullName.first_name + ' ' + fullName.last_name
-      
-    })
+    console.log(this.isLoggedIn$);
     
-    this.IsLoggedIn$ = this.storageService.isLoggedIn$
-
-    if(this.storageService.getToken() == null) {
-      this.loginStatus = false
-    } else {
-      this.loginStatus = true
-    }
   }
-
+  
   logout() {
     this.authService.logout()
-      .subscribe((res) => {
-        console.log(res);
-      })
+    this.storageService.logout()
     this.storageService.deleteToken()
   }
-
 }
 

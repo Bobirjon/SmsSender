@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
   auth: FormGroup;
   loginStatus: any 
 
+  userName: any
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -31,8 +32,17 @@ export class LoginComponent implements OnInit {
   submit(){
     this.authService.login(this.auth.value.username, this.auth.value.password)
       .subscribe(response => {
-        this.storage.saveToken(response)
+         this.storage.saveToken(response)
         this.router.navigate(['home'])
+
+        this.authService.getUser().subscribe(res => {
+          let name: any
+          name = res
+          this.userName = name.first_name + name.last_name
+          console.log(this.userName);
+        })
+        this.storage.login(this.userName)
+
       }, error => {
         this.snackBar.open(error.error.non_field_errors, 'Dismiss', {duration: 10000})
       }, )

@@ -14,6 +14,7 @@ import * as XLSX from 'xlsx';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { StorageService } from '../storage.service';
 
 export interface DataTable {
   region: string
@@ -41,6 +42,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   posts: any
   posts2: any
   Loaded: boolean;
+  userName: any
   //CurrentRoute = this.router.url
   //isComplete: boolean
   // name: any
@@ -147,6 +149,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private storageService: StorageService,
     //private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
@@ -189,8 +192,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.authService.getTemplateSMS()
       .subscribe((data) => {
         let post3: any = data
-        console.log(post3.results);
-        
         this.TemplateData = new MatTableDataSource(post3.results)
       })
 
@@ -226,8 +227,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
           var problem = this.problem.value == null ? '' : this.problem.value;
           var createdAt = this.createdAt.value == null ? '' : this.createdAt.value;
           var startTime = this.startTime.value == null ? '' : this.startTime.value;
-          console.log(startTime);
-
           var endTime = this.endTime.value == null ? '' : this.endTime.value;
           var region = this.region.value == null ? '' : this.region.value;
           if (this.table2sort.direction == 'desc') {
@@ -260,13 +259,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // limit errors, we do not want to reset the paginator to zero, as that
           // would prevent users from re-triggering requests.
           this.resultsLength = data.count;
-
+          
           return data;
         })
       )
       .subscribe((data) => {
-        console.log(data);
-        
         this.posts = data
         this.dataTable = new MatTableDataSource(this.posts.results)
       });
@@ -281,6 +278,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // this.webSocketService.listen().subscribe((data) => {
     //   this.updateMessage(data)
     // })
+
 
     if (this.router.url == '/home') {
       this.Loaded = true

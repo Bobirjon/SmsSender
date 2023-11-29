@@ -367,6 +367,7 @@ export class ChronicComponent implements OnInit {
       'region': [this.chronicForm.value.region],
       'alarmreport_id': id
     }
+    
   }
 
   updateData() {

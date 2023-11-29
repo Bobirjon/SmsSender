@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class StorageService {
-  public isLoggedIn$: BehaviorSubject<boolean>;
+
   addWordA3 = [
     'Ucell - предотвращение таких аварий зависит от тебя!', 
     'Ucell - кто-же если не ты…?, ', 
@@ -34,31 +34,50 @@ export class StorageService {
   addWord = ''
   textIndex = 0;
 
+  private isAuthSubject: BehaviorSubject<boolean>;
+  private usernameSubject: BehaviorSubject<string | null>
+
+  public isAuth$: Observable<boolean>
+  public username$: Observable<string | null>
+
   constructor(
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private router: Router,) 
-    {
-    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-    this.isLoggedIn$ = new BehaviorSubject(isLoggedIn);
+    private router: Router,) {
+      this.isAuthSubject = new BehaviorSubject<boolean>(false)
+      this.usernameSubject = new BehaviorSubject<string | null>(null)
+
+      this.isAuth$ = this.isAuthSubject.asObservable()
+      this.username$ = this.usernameSubject.asObservable()
   }
 
-  public tokenExpired(token: string) {
-    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
-    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+  login(userName: string) {
+    setTimeout(() => {
+      this.isAuthSubject.next(true)
+      this.usernameSubject.next(userName)
+    })
+  }
+
+  logout() {
+    setTimeout(() => {
+      this.isAuthSubject.next(false)
+      this.usernameSubject.next(null)
+    })
+  }
+
+  isLoggedIn(): boolean {
+    return this.isAuthSubject.value
   }
 
   public saveToken(token: string): void {
     localStorage.setItem('token', token['auth_token'])
     localStorage.setItem('loggedIn', 'true');
-    this.isLoggedIn$.next(true); 
   }
 
   public deleteToken() {
     localStorage.removeItem('token')
     localStorage.removeItem('role')
     localStorage.setItem('loggedIn', 'false');
-    this.isLoggedIn$.next(false);
   }
 
   public getToken(): string {
@@ -166,4 +185,5 @@ export class StorageService {
 
     return this.addWord
   }
+  
 }

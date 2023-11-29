@@ -17,7 +17,7 @@ import { map, startWith } from 'rxjs/operators';
   styleUrls: ['./mass-power.component.css']
 })
 export class MassPowerComponent {
-  bscForm: FormGroup
+  massOff: FormGroup
   user: any
   newForm: boolean
   SmsTextBody: any
@@ -28,7 +28,6 @@ export class MassPowerComponent {
   idAlarmReport: any
   filteredOptionsProblem: Observable<string[]>;
   filteredOptionsReason: Observable<string[]>;
-  filteredOptionsEffect: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -89,11 +88,6 @@ export class MassPowerComponent {
     'Выясняется',
   ];
 
-  optionsEffect: string[] = [
-    'Нет эффект на сервис ',
-    'Недоступен 3G',
-  ]
-
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -103,7 +97,7 @@ export class MassPowerComponent {
     private router: Router,
     public dialog: MatDialog) {
       // form creation
-     this.bscForm = this.formBuilder.group({
+     this.massOff = this.formBuilder.group({
       'AddOrCor': [null],
       'level': ['', Validators.required],
       'categories_report': ['', Validators.required],
@@ -113,16 +107,16 @@ export class MassPowerComponent {
       'startTime': ['', Validators.required],
       'endTime': [''],
       'region': ['', Validators.required],
-      'informed': ['', Validators.required],
+      'informed': [''],
       'sender': [''],
     })
 
-    this.filteredOptionsProblem = this.bscForm.controls.problem.valueChanges.pipe(
+    this.filteredOptionsProblem = this.massOff.controls.problem.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, this.optionsProblem))
     )
 
-    this.filteredOptionsReason = this.bscForm.controls.reason.valueChanges.pipe(
+    this.filteredOptionsReason = this.massOff.controls.reason.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, this.optionsReason))
     )
@@ -135,9 +129,9 @@ export class MassPowerComponent {
   }
 
   setDefault() {
-    if (this.bscForm.value.level == 'P1' || this.bscForm.value.level == 'P2' ||
-      this.bscForm.value.level == 'P3' || this.bscForm.value.level == 'P4' || this.bscForm.value.level == 'P5') {
-      this.bscForm.value.categories_report = 'ПР'
+    if (this.massOff.value.level == 'P1' || this.massOff.value.level == 'P2' ||
+      this.massOff.value.level == 'P3' || this.massOff.value.level == 'P4' || this.massOff.value.level == 'P5') {
+      this.massOff.value.categories_report = 'ПР'
     }
   }
 
@@ -161,7 +155,7 @@ export class MassPowerComponent {
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
           }
-          this.bscForm = this.formBuilder.group({
+          this.massOff = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
             'categories_report': [result['category'], Validators.required],
@@ -181,89 +175,77 @@ export class MassPowerComponent {
   tableSendBody() {
     this.tableBody = {
       'type': 'BSC/RNC',
-      'level': this.bscForm.value.level,
-      'category': this.bscForm.value.categories_report,
-      'responsible_area': this.bscForm.value.responsible_report,
-      'problem': this.bscForm.value.problem,
-      'reason': this.bscForm.value.reason,
-      'effect': this.bscForm.value.effect_option,
-      'start_time': this.bscForm.value.startTime,
-      'region': this.bscForm.value.region,
-
-      'informed': this.bscForm.value.informed,
+      'level': this.massOff.value.level,
+      'category': this.massOff.value.categories_report,
+      'responsible_area': this.massOff.value.responsible_report,
+      'problem': this.massOff.value.problem,
+      'reason': this.massOff.value.reason,
+      'start_time': this.massOff.value.startTime,
+      'region': this.massOff.value.region,
+      'informed': this.massOff.value.informed,
       'sender': this.user?.username
     }
 
-    if (this.bscForm.value.endTime != '') {
-      this.tableBody.end_time = this.bscForm.value.endTime
+    if (this.massOff.value.endTime != '') {
+      this.tableBody.end_time = this.massOff.value.endTime
     }
   }
 
   smsSendBody(id?: number) {
     if (this.requestType == 'Проблема') {
-      if (this.bscForm.value.AddOrCor == (undefined || null)) {
+      if (this.massOff.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
-          this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
-          this.bscForm.value.problem + '\n' +
-          'Причина: ' + this.bscForm.value.reason + '\n' +
-          'Эффект: ' + this.bscForm.value.effect + '\n' +
-          'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-          'Оповещен: ' + this.bscForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
-          'Скачайте приложение Ucell: www.ucell.uz/lead'
+          this.massOff.value.level.replace('P', 'П') + ' Массовое отключение ' + this.requestType + ':\n' +
+          this.massOff.value.problem + ' сайтов не работают в ' + this.massOff.value.region + '\n' +
+          'Причина: ' + this.massOff.value.reason + '\n' +
+          'Начало: ' + this.massOff.value.startTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.massOff.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n '
       } else {
         this.SmsTextBody =
-          this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
-          '(' + this.bscForm.value.AddOrCor + ')\n' +
-          this.bscForm.value.problem + '\n' +
-          'Причина: ' + this.bscForm.value.reason + '\n' +
-          'Эффект: ' + this.bscForm.value.effect + '\n' +
-          'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-          'Оповещен: ' + this.bscForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
-          'Скачайте приложение Ucell: www.ucell.uz/lead'
+          this.massOff.value.level.replace('P', 'П') + ' Массовое отключение ' + this.requestType + ':\n' +
+          '(' + this.massOff.value.AddOrCor + ')\n' +
+          this.massOff.value.problem + ' сайтов не работают в ' + this.massOff.value.region + '\n' +
+          'Причина: ' + this.massOff.value.reason + '\n' +
+          'Начало: ' + this.massOff.value.startTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.massOff.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n '
       }
     }
     else {
-      if (this.bscForm.value.AddOrCor == (null || undefined)) {
+      if (this.massOff.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
-          this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
-          this.bscForm.value.problem + '\n' +
-          'Причина: ' + this.bscForm.value.reason + '\n' +
-          'Эффект: ' + this.bscForm.value.effect + '\n' +
-          'Описание: ' + this.bscForm.value.desc + '\n' +
-          'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-          'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
-          'Оповещен: ' + this.bscForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
-          'Скачайте приложение Ucell: www.ucell.uz/lead'
+          this.massOff.value.level.replace('P', 'П') + ' Массовое отключение ' + this.requestType + ':\n' +
+          this.massOff.value.problem + ' сайтов не работают в ' + this.massOff.value.region + '\n' +
+          'Причина: ' + this.massOff.value.reason + '\n' +
+          'Начало: ' + this.massOff.value.startTime.replace("T", " ") + '\n' +
+          'Конец: ' + this.massOff.value.endTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.massOff.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n '
       } else {
         this.SmsTextBody =
-          this.bscForm.value.level.replace('P', 'П') + ' BSC ' + this.requestType + ':\n' +
-          '(' + this.bscForm.value.AddOrCor + ')\n' +
-          this.bscForm.value.problem + '\n' +
-          'Причина: ' + this.bscForm.value.reason + '\n' +
-          'Эффект: ' + this.bscForm.value.effect + '\n' +
-          'Описание: ' + this.bscForm.value.desc + '\n' +
-          'Начало: ' + this.bscForm.value.startTime.replace("T", " ") + '\n' +
-          'Конец: ' + this.bscForm.value.endTime.replace("T", " ") + '\n' +
-          'Оповещен: ' + this.bscForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n ' +
-          'Скачайте приложение Ucell: www.ucell.uz/lead'
+          this.massOff.value.level.replace('P', 'П') + ' Массовое отключение ' + this.requestType + ':\n' +
+          '(' + this.massOff.value.AddOrCor + ')\n' +
+          this.massOff.value.problem + ' сайтов не работают в ' + this.massOff.value.region + '\n' +
+          'Причина: ' + this.massOff.value.reason + '\n' +
+          'Начало: ' + this.massOff.value.startTime.replace("T", " ") + '\n' +
+          'Конец: ' + this.massOff.value.endTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.massOff.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n '
       }
     }
 
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
-      'criteria': [this.bscForm.value.level.replace('P', 'A')],
+      'criteria': [this.massOff.value.level.replace('P', 'A')],
       'notification': ['BSC/RNC'],
       'sms_text': this.SmsTextBody,
       'alarmreport_id': id
     }
 
-    if (this.bscForm.value.region != (null || undefined)) {
-      this.smsBody.region = [this.bscForm.value.region]
+    if (this.massOff.value.region != (null || undefined)) {
+      this.smsBody.region = [this.massOff.value.region]
     }
   }
 

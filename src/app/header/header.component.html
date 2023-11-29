@@ -1,11 +1,15 @@
 <mat-toolbar color="primary">
-    <a href="/home" style="text-decoration: none; color: white;"><span>Домой</span></a>
+    <a routerLink="/home" style="text-decoration: none; color: white;"><span>Домой</span></a>
     <span class="example-spacer"></span>
     <span>V-24.11.23.11.30</span>
     <span class="example-spacer"></span>
-    <a href="/login" style="text-decoration: none; text-align: center;
-                     color: white; font-size: medium;" (click)="logout()" 
-                     *ngIf='(IsLoggedIn$ | async)' >
-        Выход ({{userName}})
+    <a style="text-decoration: none; 
+             text-align: center; 
+             color: white; 
+             font-size: medium;"
+        *ngIf="isLoggedIn$ | async"
+        (click)="logout()">
+        Выход <span>{{username$ | async}}</span>
     </a>
+    
 </mat-toolbar>

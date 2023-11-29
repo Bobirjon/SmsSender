@@ -11,7 +11,9 @@ export class AuthService {
   
   URLsender = 'http://10.7.119.12/api/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+
+  }
 
   login(username: string, password: string): Observable<any> {
     localStorage.setItem('role', username)
@@ -48,8 +50,6 @@ export class AuthService {
       &starttime_in=${startTime}&endtime_in=${endTime}
       &problem__icontains=${problem}&reason__icontains=${reason}
       &ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
-      console.log(url);
-      
     
     return this.http.get(url)
 
@@ -58,8 +58,6 @@ export class AuthService {
   getFilteredData() {
     return this.http.get(this.URLsender + 'smssender/alarmreport/?is_complete=false&limit=1000&offset=0')
   }
-
-
 
   getSms(id: number) {
     return this.http.get(`${this.URLsender + 'smssender/alarmreport'}/${id}`)
