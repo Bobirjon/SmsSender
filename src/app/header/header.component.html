@@ -1,15 +1,16 @@
 <mat-toolbar color="primary">
     <a routerLink="/home" style="text-decoration: none; color: white;"><span>Домой</span></a>
     <span class="example-spacer"></span>
-    <span>V-24.11.23.11.30</span>
+    <span>V-30.11.23.17.30</span>
     <span class="example-spacer"></span>
     <a style="text-decoration: none; 
              text-align: center; 
              color: white; 
-             font-size: medium;"
-        *ngIf="isLoggedIn$ | async"
+             font-size: medium;
+             cursor: pointer;"
+        *ngIf="storageService.isAuthenticatedUser()"
         (click)="logout()">
-        Выход <span>{{username$ | async}}</span>
+        Выход <span>{{storageService.getUserName()}}</span>
     </a>
     
 </mat-toolbar>

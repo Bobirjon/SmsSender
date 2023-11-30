@@ -331,7 +331,7 @@ export class HubComponent implements OnInit {
       'level': this.hubForm.value.level,
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
-      'problem': this.hubForm.value.problem + ' сайтов не работают в регионе ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district],
+      'problem': this.hubForm.value.problem + ' не работают в регионе ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district],
       'reason':  this.hubForm.value.reason + ' ' + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator,
       'effect': 'С влиянием',
       'start_time': this.hubForm.value.startTime,

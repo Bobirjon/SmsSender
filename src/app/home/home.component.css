@@ -2,7 +2,6 @@
     margin: 20px;
 }
 .hidden {
-    background-color: brown;
     display: none;
 }
 .filter {
@@ -20,6 +19,6 @@
 }
 
 .chronicHours, .chronicHours:hover {
-    background-color: rgb(255, 69, 69) !important;
+    background-color: rgb(255, 85, 85) !important;
 }
 

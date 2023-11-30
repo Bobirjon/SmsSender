@@ -9,24 +9,23 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-
-  isLoggedIn$ = this.storageService.isAuth$
-  username$ = this.storageService.username$
+  isAuth: string
+  name: string
 
   constructor(
-    private storageService: StorageService,
-    private authService: AuthService,){
+    public storageService: StorageService,
+    private authService: AuthService,
+    private router: Router){
   }
 
   ngOnInit(): void {
-    console.log(this.isLoggedIn$);
-    
   }
   
   logout() {
     this.authService.logout()
     this.storageService.logout()
     this.storageService.deleteToken()
+    this.router.navigate(['/login'])
   }
 }
 

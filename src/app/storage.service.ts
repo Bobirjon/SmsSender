@@ -40,6 +40,9 @@ export class StorageService {
   public isAuth$: Observable<boolean>
   public username$: Observable<string | null>
 
+  private isAuthenticated = false;
+  private userNameTest: string = '';
+
   constructor(
     private authService: AuthService,
     private snackBar: MatSnackBar,
@@ -49,24 +52,38 @@ export class StorageService {
 
       this.isAuth$ = this.isAuthSubject.asObservable()
       this.username$ = this.usernameSubject.asObservable()
+
+      const storedAuth = localStorage.getItem('auth');
+      if (storedAuth) {
+        const authData = JSON.parse(storedAuth);
+        this.isAuthenticated = authData.isAuthenticated;
+        this.userNameTest = authData.userName;
+      }
   }
 
-  login(userName: string) {
-    setTimeout(() => {
-      this.isAuthSubject.next(true)
-      this.usernameSubject.next(userName)
-    })
+  login(name: string) {
+    this.isAuthenticated = true;
+    this.userNameTest = name;
+
+    // Store authentication data in localStorage
+    localStorage.setItem('auth', JSON.stringify({ isAuthenticated: true, userName: this.userNameTest }));
   }
 
   logout() {
-    setTimeout(() => {
-      this.isAuthSubject.next(false)
-      this.usernameSubject.next(null)
-    })
+    this.isAuthenticated = false;
+    this.userNameTest = '';
+
+    // Remove authentication data from localStorage
+    localStorage.removeItem('auth');
   }
 
-  isLoggedIn(): boolean {
-    return this.isAuthSubject.value
+  isAuthenticatedUser(): boolean {
+    return this.isAuthenticated;
+  }
+
+  // Get the user's name
+  getUserName(): string {
+    return this.userNameTest;
   }
 
   public saveToken(token: string): void {
@@ -78,6 +95,7 @@ export class StorageService {
     localStorage.removeItem('token')
     localStorage.removeItem('role')
     localStorage.setItem('loggedIn', 'false');
+    localStorage.removeItem('auth')
   }
 
   public getToken(): string {

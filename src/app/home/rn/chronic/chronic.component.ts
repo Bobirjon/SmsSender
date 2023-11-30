@@ -469,7 +469,10 @@ export class ChronicComponent implements OnInit {
             console.log(result);
             this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
             this.smsSendBody(result.id)
-            this.sendButton()
+            setTimeout(() => {
+              this.sendButton()
+            })
+            
           }, error => {
             console.log(error);
             this.snackBar.open("Ошибка", '', { duration: 10000 })
