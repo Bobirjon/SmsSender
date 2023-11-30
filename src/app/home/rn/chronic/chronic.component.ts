@@ -427,11 +427,12 @@ export class ChronicComponent implements OnInit {
             .subscribe((result) => {
               console.log(result);
               this.idAlarmReport = result
-              console.log(this.idAlarmReport.id);
-
               this.snackBar.open('Обновлено', '', { duration: 10000 })
               this.smsSendBody(this.idAlarmReport.id)
-              this.sendButton()
+              setTimeout(() => {
+                this.sendButton()  
+              });
+              
               console.log('ok workung id is', this.idAlarmReport.id);
             }, error => {
               this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
@@ -440,11 +441,15 @@ export class ChronicComponent implements OnInit {
           this.tableSendBody()
 
           this.authService.postData(this.tableBody)
-            .subscribe((res) => {
+            .subscribe((result) => {
               console.log(result);
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
               this.smsSendBody(result.id)
-              this.sendButton()
+              this.smsSendBody(this.idAlarmReport.id)
+              setTimeout(() => {
+                this.sendButton()  
+              });
+            
               console.log('ok workung id is', result.id)
             }, error => {
               console.log(error);
