@@ -424,12 +424,10 @@ export class ChronicComponent implements OnInit {
           this.tableSendBody()
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-            .subscribe((result) => {
-              console.log(result);
-              this.idAlarmReport = result
+            .subscribe((result: any) => {
               this.snackBar.open('Обновлено', '', { duration: 10000 })
-              this.smsSendBody(this.idAlarmReport.id)
-              this.sendButton() 
+              this.smsSendBody(result.id)
+              this.sendButton()
             }, error => {
               this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
             })
@@ -438,10 +436,8 @@ export class ChronicComponent implements OnInit {
 
           this.authService.postData(this.tableBody)
             .subscribe((result) => {
-              console.log(result);
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
               this.smsSendBody(result.id)
-              this.smsSendBody(this.idAlarmReport.id)
               this.sendButton()  
             }, error => {
               this.snackBar.open("Ошибка", '', { duration: 10000 })
