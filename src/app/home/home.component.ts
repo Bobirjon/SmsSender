@@ -392,6 +392,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     })
   }
 
+  dashBorad() {
+    this.Loaded = !this.Loaded
+    this.router.navigate(['home/dashboard'])
+  }
+
   onDelete(id: number) {
     const dialogRef = this.dialog.open(areYouSure);
 

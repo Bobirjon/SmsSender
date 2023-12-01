@@ -10,6 +10,7 @@ import { HubComponent } from "./home/rn/hub/hub.component";
 import { AuthGuard } from "./auth-guard.service";
 import { AddPhoneNumbersComponent } from "./add-phone-numbers/add-phone-numbers.component";
 import { RoleGuardGuard } from "./role-guard.guard";
+import { DashboardComponent } from "./home/dashboard/dashboard.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
@@ -29,12 +30,13 @@ const routes: Routes = [
     // canActivate:[AuthGuard],
     // },
     { path: 'home', component: HomeComponent, canActivate:[AuthGuard]  },
+    { path: 'home/dashboard', component: DashboardComponent , canActivate:[AuthGuard]},
     { path: 'home/cn', component: CnComponent , canActivate:[AuthGuard]},
     {
         path: 'home/rn', component: RnComponent, children: [
             { path: 'bsc', component: BscComponent },
             { path: 'chronic', component: ChronicComponent },
-            { path: 'hub', component: HubComponent }
+            { path: 'hub', component: HubComponent },
         ] , canActivate:[AuthGuard]
     },
     { path: 'home/HUB/:id', component: HubComponent, canActivate:[AuthGuard]  },
