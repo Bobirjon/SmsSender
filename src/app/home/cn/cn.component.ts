@@ -410,7 +410,6 @@ export class CnComponent implements OnInit {
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
             .subscribe((result) => {
-              console.log(result);
               this.idAlarmReport = result
               console.log(this.idAlarmReport.id);
 
@@ -428,7 +427,6 @@ export class CnComponent implements OnInit {
 
           this.authService.postData(this.tableBody)
             .subscribe((result) => {
-              console.log(result);
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
               this.smsSendBody(result.id)
               this.sendButton()

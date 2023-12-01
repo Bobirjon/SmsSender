@@ -537,7 +537,6 @@ export class HubComponent implements OnInit {
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
             .subscribe((result) => {
-              console.log(result);
               this.snackBar.open('Обновлено', '', { duration: 10000 })
 
               this.idAlarmReport = result
@@ -551,7 +550,6 @@ export class HubComponent implements OnInit {
 
           this.authService.postData(this.tableBody)
             .subscribe((res) => {
-              console.log(res);
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
 
               this.smsSendBody(res.id)
@@ -576,12 +574,10 @@ export class HubComponent implements OnInit {
 
         this.authService.postData(this.tableBody)
           .subscribe((result) => {
-            console.log(result);
             this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
             this.smsSendBody(result.id)
             this.sendButton()
           }, error => {
-            console.log(error);
             this.snackBar.open("Ошибка", '', { duration: 10000 })
           })
       }

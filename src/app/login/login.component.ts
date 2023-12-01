@@ -39,9 +39,8 @@ export class LoginComponent implements OnInit {
         this.authService.getUser().subscribe(res => {
           let name: any
           name = res
-          this.userName = name.first_name + name.last_name
+          this.userName = name.first_name + ' ' + name.last_name
           this.storage.login(this.userName)
-
         })
        
       }, error => {

@@ -10,7 +10,8 @@
              cursor: pointer;"
         *ngIf="storageService.isAuthenticatedUser()"
         (click)="logout()">
-        Выход <span>{{storageService.getUserName()}}</span>
+        <span>({{storageService.getUserName()}})</span>
+        Выход
     </a>
     
 </mat-toolbar>
