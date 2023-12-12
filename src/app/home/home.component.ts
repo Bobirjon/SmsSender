@@ -1,14 +1,11 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { Data, Router } from '@angular/router';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { Router } from '@angular/router';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { AbstractControl, Form, FormBuilder, FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
-import { BehaviorSubject, Subscription, ValueFromArray, catchError, filter, map, merge, startWith, switchMap, windowWhen } from 'rxjs';
+import { FormControl, FormsModule, NgForm } from '@angular/forms';
+import { Subscription, catchError, map, merge, startWith, switchMap } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
 import * as XLSX from 'xlsx';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -34,29 +31,14 @@ export interface DataTable {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
 
   dataTable = new MatTableDataSource<DataTable>()
   Data = new MatTableDataSource<DataTable>()
   TemplateData = new MatTableDataSource<DataTable>()
-  posts: any
-  posts2: any
-  Loaded: boolean;
   userName: any
-  //CurrentRoute = this.router.url
-  //isComplete: boolean
-  // name: any
-  // user: any;
-  // hidden: any
   isAdmin = localStorage.getItem('role')
-  // isRegister: any;
-  // UserActive: boolean
-  //isColor: any
-  //currentPage = 0
-  //pageSize = 10
-  //totalItems = 0
   pageSizes = [25, 50, 10];
-  // totalData: any
   filterInput: string
   selectedLevel: string
   selectedType: string
@@ -64,6 +46,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isLoadingResults = true;
   isRateLimitReached = false;
   globalFilter = '';
+  private socketSubscription: Subscription;
 
   displayedColumnsNew: string[] = [
     'type',
@@ -94,26 +77,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   @ViewChild('table1sort') public table1sort: MatSort;
   @ViewChild('table2sort') public table2sort: MatSort;
-  // levelSelect: string[] = ['All', 'A1', 'A2', 'A3', 'A4', 'A5', 'P1', 'P2', 'P3', 'P4', 'P5'];
-  // typeSelect: string[] = ['All', 'CORE', 'RN']
-  // selectableFilters: any[] = []
-
-  // defaultValue = "All";
-
-  // filterDictionary = new Map<string, string[]>();
-
-  // filteredValues = {
-  //   type: '',
-  //   level: '',
-  //   created_at: '',
-  //   start_time: '',
-  //   end_time: '',
-  //   problem: '',
-  //   reason: '',
-  //   description: '',
-  //   region: '',
-  // };
-
+ 
   filteredValuesForOpenCases = {
     type: '',
     level: '',
@@ -125,13 +89,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     description: '',
     region: '',
   }
-
-  //refreshUser$ = new BehaviorSubject<boolean>(true)
-  //output: any[] = []
-  // feedback: any
-  // nameOfUser: any
-  // messageDataTest: any
-
 
   level = new FormControl()
   type = new FormControl()
@@ -145,58 +102,46 @@ export class HomeComponent implements OnInit, AfterViewInit {
   username = new FormControl()
 
 
-
   constructor(
     private authService: AuthService,
     private router: Router,
-    private storageService: StorageService,
-    //private webSocketService: WebSocketService,
+    private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
-    // testing one
-
-
-    // Table for all Cases
-    // this.authService.getData()
-    //   .subscribe((data) => {
-    //     this.posts = data
-
-    //     this.dataTable = new MatTableDataSource(this.posts.results)
-    //     this.dataTable.sort = this.table2sort;
-    //     this.dataTable.paginator = this.paginator;
-
-    //     this.filterForAllCase()
-    //   }, error => {
-    //     this.isRegister = error.statusText
-    //     if (this.isRegister == 'Unauthorized') {
-    //       this.isRegisteredUser(false)
-    //     }
-    //   })
-    // Filtred data
-
+   
+    // Open Cases table
     this.authService.getFilteredData()
-      .subscribe((data) => {
-        this.posts2 = data
-        this.Data = new MatTableDataSource(this.posts2.results)
-
+      .subscribe((data: any) => {
+        this.Data = new MatTableDataSource(data.results)
+        console.log(data.results);
+        
         this.Data.sort = this.table1sort;
-
         this.Data.filterPredicate = this.customFilterPredicate();
+        
+        this.socketSubscription = webSocketService.getDataObservable().subscribe((data) => {
+          this.Data.data.push(data)
 
-        // this.selectableFilters.push({ name: 'level', options: this.levelSelect, defaultValue: this.defaultValue })
-        // this.selectableFilters.push({ name: 'type', options: this.typeSelect, defaultValue: this.defaultValue })
-
-        // this.filterForOpenCase()
+          this.Data.data = [...this.Data.data]
+        })
       })
-
+    
+    // Template table
     this.authService.getTemplateSMS()
-      .subscribe((data) => {
-        let post3: any = data
-        this.TemplateData = new MatTableDataSource(post3.results)
+      .subscribe((data: any) => {
+        this.TemplateData = new MatTableDataSource(data.results)
+
+        this.socketSubscription = webSocketService.getDataObservable().subscribe((data) => {
+          this.TemplateData.data.push(data)
+
+          this.TemplateData.data = [...this.TemplateData.data]
+        })
       })
-
-
   }
+  ngOnDestroy(): void {
+    this.socketSubscription.unsubscribe();
+  }
+
+  // All Cases table with backend pagination
 
   ngAfterViewInit() {
 
@@ -264,27 +209,30 @@ export class HomeComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe((data) => {
-        this.posts = data
-        this.dataTable = new MatTableDataSource(this.posts.results)
+        this.dataTable = new MatTableDataSource(data.results)
+        
+        this.socketSubscription = this.webSocketService.getDataObservable().subscribe((data) => {
+          this.dataTable.data.push(data)
+
+          this.dataTable.data = [...this.dataTable.data]
+        })
       });
   }
 
-  // isRegisteredUser(isRegistered: any) {
-  //   this.UserActive = isRegistered
+
+  // private mergeData(existingData: any[], newData: any[]): any[] {
+  //   // Assuming each item has a unique identifier property (e.g., 'id')
+  //   const uniqueIds = new Set(existingData.map(item => item.id));
+
+  //   // Filter out items from newData that already exist in existingData
+  //   const filteredNewData = newData.filter(item => !uniqueIds.has(item.id));
+
+  //   // Concatenate existingData and filteredNewData
+  //   return existingData.concat(filteredNewData);
   // }
 
   ngOnInit(): void {
 
-    // this.webSocketService.listen().subscribe((data) => {
-    //   this.updateMessage(data)
-    // })
-
-
-    if (this.router.url == '/home') {
-      this.Loaded = true
-    } else {
-      this.Loaded = false
-    }
   }
 
   applyFilter(filter: string) {
@@ -366,18 +314,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   onRN() {
-    this.Loaded = !this.Loaded
     this.router.navigate(['home/rn'])
   }
 
   onCN() {
-    this.Loaded = !this.Loaded
     this.router.navigate(['home/cn'])
   }
 
-  onEdit() {
-    this.Loaded = !this.Loaded
-  }
+
 
   addNumber() {
     this.router.navigate(['/add'])
@@ -393,7 +337,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   dashBorad() {
-    this.Loaded = !this.Loaded
     this.router.navigate(['home/dashboard'])
   }
 
@@ -430,12 +373,6 @@ export class exportExcel {
         this.posttest = res
         this.convertToXLSX(this.posttest.results, 'data')
       })
-    // this.authService.getData()
-    //   .subscribe(res => {
-    //     console.log(res);
-    //     this.posttest = res
-    //     this.convertToXLSX(this.posttest.results, 'data')
-    //   })
   }
 
   convertToXLSX(data: any, filename: string): void {

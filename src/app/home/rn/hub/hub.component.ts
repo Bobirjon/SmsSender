@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from 'src/app/storage.service';
 import { AuthService } from 'src/app/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, range } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
@@ -230,7 +230,81 @@ export class HubComponent implements OnInit {
     }
   }
 
+  private extractNumbersFromString(input: string): number[] {
+    const numberMatches: RegExpMatchArray | null = input.match(/\d+/g)
+
+    if(numberMatches) {
+      return numberMatches.map(Number);
+    } else {
+      return []
+    }
+  }
+
+  findAndDisplayMax() {
+
+    const numbers: number[] = this.extractNumbersFromString(this.hubForm.value.problem)
+
+    if(numbers.length > 0) {
+      const maxNumber: number = Math.max(...numbers)
+      console.log('Maks Номера ', maxNumber);
+      if(this.hubForm.value.region == 'г.Ташкент' || this.hubForm.value.region == 'Ташкент.обл') {
+        if(this.hubForm.value.categories_report == 'ПР') {
+          if(maxNumber >= 4 && maxNumber <= 19) {
+            this.hubForm.value.level = 'P4'
+          } else if(maxNumber >= 20 && maxNumber <= 49) {
+            console.log('A3');
+            this.hubForm.value.level = 'P3'
+          } else if(maxNumber >= 50) {
+            console.log('A2');
+            this.hubForm.value.level = 'P2'
+          }
+        } else {
+          if(maxNumber >= 4 && maxNumber <= 19) {
+            console.log('A4');
+            this.hubForm.value.level = 'A4'
+          } else if(maxNumber >= 20 && maxNumber <= 49) {
+            console.log('A3');
+            this.hubForm.value.level = 'A3'
+          } else if(maxNumber >= 50) {
+            console.log('A2');
+            this.hubForm.value.level = 'A2'
+          }
+        }
+      } else {
+        if(this.hubForm.value.categories_report == 'ПР') {
+          if(maxNumber > 2 && maxNumber < 10) {
+            console.log('З4');
+            this.hubForm.value.level = 'P4'
+          } else if(maxNumber >= 10 && maxNumber < 30) {
+            console.log('A3');
+            this.hubForm.value.level = 'P3'
+          } else if(maxNumber >= 30) {
+            console.log('A2');
+            this.hubForm.value.level = 'P2'
+          }
+        } else {
+          if(maxNumber > 2 && maxNumber < 10){
+            console.log('A4');
+            this.hubForm.value.level = 'A4'
+          } else if(maxNumber >= 10 && maxNumber < 30) {
+            console.log('A3');
+            this.hubForm.value.level = 'A3'
+          } else if(maxNumber >= 30) {
+            console.log('A2');
+            this.hubForm.value.level = 'A2'
+          }
+        }
+      }
+      
+    } else {
+      console.log('non number detexted');
+      
+    }
+
+  }
+
   ngOnInit(): void {
+  
 
     // get Current user
     this.authService.getUser()
@@ -289,6 +363,7 @@ export class HubComponent implements OnInit {
           } else {
             district = result['district']
           }
+
           this.hubForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],

@@ -5,7 +5,7 @@
              <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="hubForm.value.level" (ngModelChange)="setDefault()">
+                    <mat-select formControlName="level" [(ngModel)]="hubForm.value.level" (ngModelChange)="setDefault()">(ngModelChange)="findAndDisplayMax()"
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
@@ -206,7 +206,7 @@
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
-                    <textarea matInput type="text" formControlName="problem" [(ngModel)]="hubForm.value.problem" spellcheck="true"> </textarea>
+                    <textarea matInput type="text" formControlName="problem" [(ngModel)]="hubForm.value.problem" (ngModelChange)="findAndDisplayMax()" spellcheck="true"> </textarea>
                 </mat-form-field>
             </mat-grid-tile>
               <!-- reason -->
