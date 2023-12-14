@@ -44,6 +44,7 @@ import { AddPhoneNumbersComponent } from './add-phone-numbers/add-phone-numbers.
 import { AuthGuard } from './auth-guard.service';
 import { MassPowerComponent } from './home/rn/mass-power/mass-power.component';
 import { DashboardComponent } from './home/dashboard/dashboard.component';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -93,7 +94,7 @@ import { DashboardComponent } from './home/dashboard/dashboard.component';
     MatButtonToggleModule,
     MatAutocompleteModule
   ],
-  providers: [ AuthGuard,
+  providers: [ AuthGuard, DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,

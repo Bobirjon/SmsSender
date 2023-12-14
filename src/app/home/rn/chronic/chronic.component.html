@@ -55,18 +55,18 @@
                             <mat-card-actions>
                                 <button class="form-button" mat-raised-button color="primary"
                                     (click)="onSubmitButtonProblem('Проблема')" type="submit"
-                                    [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
+                                    [disabled]="chronicForm.invalid || chronicForm.value.endTime !=='' || timeValidation == false">
                                     Отправить Сообщения
                                 </button>
                                 <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Проблема')" type="submit"
                                 *ngIf="newForm == false"
-                                [disabled]="(chronicForm.invalid) || chronicForm.value.endTime==''">
+                                [disabled]="(chronicForm.invalid) || chronicForm.value.endTime=='' || timeValidation == false">
                                 Новое SMS
                             </button>
                                 <button class="form-button" mat-raised-button color="primary"
                                 (click)="forSmsTesting('Проблема')" type="submit" 
-                                [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
+                                [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''|| timeValidation == false ">
                                 TEST SMS 
                             </button>
                             </mat-card-actions>
@@ -95,18 +95,18 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                [disabled]="(chronicForm.invalid) || chronicForm.value.endTime==''">
+                                [disabled]="(chronicForm.invalid) || chronicForm.value.endTime=='' || timeValidation == false ">
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Решения')" type="submit"
                                 *ngIf="newForm == false"
-                                [disabled]="(chronicForm.invalid) || chronicForm.value.endTime==''">
+                                [disabled]="(chronicForm.invalid) || chronicForm.value.endTime==''|| timeValidation == false ">
                                 Новое SMS
                             </button>
-                            <button class="form-button" mat-raised-button color="primary"
+                            <button class="form-button" mat-raised-button color="primary" 
                             (click)="forSmsTesting('Решение')" type="submit" 
-                            [disabled]="chronicForm.invalid || chronicForm.value.endTime ==''">
+                            [disabled]="chronicForm.invalid || chronicForm.value.endTime =='' || timeValidation == false">
                             TEST SMS 
                         </button>
                         </mat-card-actions>
@@ -161,12 +161,6 @@
                 </mat-form-field>
             </mat-grid-tile>
              <!-- time -->
-             <!-- <mat-grid-tile colspan="2">
-                <mat-form-field class="margin-container">
-                    <mat-label>Время Простоя</mat-label>
-                    <input matInput type="text" formControlName="time" [(ngModel)]="chronicForm.value.time"/>
-                </mat-form-field>
-            </mat-grid-tile> -->
             <mat-grid-tile colspan="2">
                 <mat-form-field class="margin-container">
                     <mat-label>Время Простоя</mat-label>
@@ -209,18 +203,18 @@
              <!-- start Time -->
              <mat-grid-tile colspan="6">
                 <div class="margin-container">
-                    <p>Начало</p>
-                    <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
-                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="chronicForm.value.startTime">
-
+                    <p>Начало <span>*</span></p>
+                    <input type="datetime-local" class="dateTime" formControlName="startTime" 
+                        [(ngModel)]="chronicForm.value.startTime" (ngModelChange)="startTimeSet()">
                 </div>
+            
             </mat-grid-tile>
             <!-- end Time -->
             <mat-grid-tile colspan="6">
                 <div class="margin-container">
                     <p>Конец</p>
-                    <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00" 
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="chronicForm.value.endTime">
+                    <input type="datetime-local" class="dateTime" formControlName="endTime"
+                       [(ngModel)]="chronicForm.value.endTime">
                 </div>
             </mat-grid-tile>
             <!-- button -->

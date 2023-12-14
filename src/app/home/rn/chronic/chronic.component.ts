@@ -1,5 +1,5 @@
-import { formatDate } from '@angular/common';
-import { Component, OnInit, Inject } from '@angular/core';
+import { DatePipe, formatDate } from '@angular/common';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, NgForm } from '@angular/forms';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
@@ -20,6 +20,8 @@ import { map, startWith } from 'rxjs/operators';
 export class ChronicComponent implements OnInit {
 
   chronicForm: FormGroup
+  timeValidation: boolean
+  styling: boolean = true
   preview = false
   previewResheniya = false
   user: any
@@ -27,13 +29,15 @@ export class ChronicComponent implements OnInit {
   criteria_list: any
   criteria: any
   SmsTextBody: any
-  time = new Date()
+  DateTime = new Date()
   requestType: any
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
   idAlarmReport: any
   filteredOptionsReason: Observable<string[]>;
+
+  @ViewChild('item') item: any;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A5', viewValue: 'A5' },
@@ -172,26 +176,27 @@ export class ChronicComponent implements OnInit {
     private storageService: StorageService,
     private snackBar: MatSnackBar,
     private router: Router,
+    private datePipe: DatePipe,
     public dialog: MatDialog) {
-  
-        this.chronicForm = this.formBuilder.group({
-          'AddOrCor': [null],
-          'level': ['', Validators.required],
-          'categories_report': ['', Validators.required],
-          'responsible_report': ['', Validators.required],
-          'reason': ['', Validators.required],
-          'startTime': ['', Validators.required],
-          'endTime': [''],
-          'region': ['', Validators.required],
-          'siteName': [''],
-          'time': [''],
-          'hubSite': [''],
-          'informed': [''],
-          'desc': [''],
-          'category': [''],
-          'sender': [''],
-          'district': ['']
-        })
+
+    this.chronicForm = this.formBuilder.group({
+      'AddOrCor': [null],
+      'level': ['', Validators.required],
+      'categories_report': ['', Validators.required],
+      'responsible_report': ['', Validators.required],
+      'reason': ['', Validators.required],
+      'startTime': ['', Validators.required],
+      'endTime': [''],
+      'region': ['', Validators.required],
+      'siteName': [''],
+      'time': [''],
+      'hubSite': [''],
+      'informed': [''],
+      'desc': [''],
+      'category': [''],
+      'sender': [''],
+      'district': ['']
+    })
 
     this.filteredOptionsReason = this.chronicForm.controls.reason.valueChanges.pipe(
       startWith(''),
@@ -204,7 +209,7 @@ export class ChronicComponent implements OnInit {
     return options.filter(option => option.toLocaleLowerCase().includes(filterValue))
   }
 
-  
+
   setDefault() {
     if (this.chronicForm.value.level == 'P1' || this.chronicForm.value.level == 'P2' ||
       this.chronicForm.value.level == 'P3' || this.chronicForm.value.level == 'P4' || this.chronicForm.value.level == 'P5') {
@@ -212,8 +217,8 @@ export class ChronicComponent implements OnInit {
     }
   }
 
-
   ngOnInit(): void {
+
     // get Current user
     this.authService.getUser()
       .subscribe(result => {
@@ -260,6 +265,47 @@ export class ChronicComponent implements OnInit {
           })
         })
     }
+
+  }
+
+  startTimeSet() {
+
+    setTimeout (() => {
+
+      let currentDate: Date = new Date()
+      let startTime = new Date(this.chronicForm.value.startTime)
+      let difference: number = currentDate.getTime() - startTime.getTime()
+
+      console.log(Math.floor(difference / (1000 * 60 * 60)));
+
+      switch (true) {
+        case this.chronicForm.value.time == 12 && Math.floor(difference / (1000 * 60 * 60)) >= 12 && Math.floor(difference / (1000 * 60 * 60)) < 24: {
+          this.timeValidation = true
+          this.styling = false
+          break;
+        }
+        case this.chronicForm.value.time == 24 && Math.floor(difference / (1000 * 60 * 60)) >= 24 && Math.floor(difference / (1000 * 60 * 60)) < 36: {
+          this.timeValidation = true
+          this.styling = false
+          break;
+        }
+        case this.chronicForm.value.time == 36 && Math.floor(difference / (1000 * 60 * 60)) >= 36 && Math.floor(difference / (1000 * 60 * 60)) < 48: {
+          this.timeValidation = true
+          this.styling = false
+          break;
+        }
+        case this.chronicForm.value.time == 48 && Math.floor(difference / (1000 * 60 * 60)) >= 48: {
+          this.timeValidation = true
+          this.styling = false
+          break;
+        }
+        default: {
+          this.timeValidation = false
+          this.styling = true
+        }
+      }
+
+    }, 0 )
   }
 
   tableSendBody() {
@@ -317,7 +363,7 @@ export class ChronicComponent implements OnInit {
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
           addWord
       } else {
         this.SmsTextBody =
@@ -327,7 +373,7 @@ export class ChronicComponent implements OnInit {
           this.dist[this.chronicForm.value.district] + ' более ' + this.chronicForm.value.time + '  часов с  ' + this.chronicForm.value.startTime.replace("T", " ") + '\n' +
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
           addWord
       }
     }
@@ -341,7 +387,7 @@ export class ChronicComponent implements OnInit {
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
           addWord
       } else {
         this.SmsTextBody =
@@ -353,7 +399,7 @@ export class ChronicComponent implements OnInit {
           'Причина: ' + this.chronicForm.value.reason + this.word + this.chronicForm.value.hubSite + '\n' +
           'Описание: ' + this.chronicForm.value.desc + ' \n' +
           'Оповещен: ' + this.chronicForm.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' + 
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
           addWord
       }
     }
@@ -367,48 +413,24 @@ export class ChronicComponent implements OnInit {
       'region': [this.chronicForm.value.region],
       'alarmreport_id': id
     }
-    
+
   }
 
   updateData() {
     this.tableSendBody()
 
     this.storageService.updateData(this.route.snapshot.params.id, this.tableBody)
-    // this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-    //   .subscribe((result) => {
-    //     console.log(result);
-    //     this.snackBar.open('Обновлено', '', { duration: 10000 })
-    //   }, error => {
-    //     this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
-    //   })
   }
 
   createData() {
     this.tableSendBody()
 
     this.storageService.createToTable(this.tableBody)
-    // this.authService.postData(this.tableBody)
-    //   .subscribe((res) => {
-    //     console.log(res);
-    //     this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-    //   }, error => {
-    //     console.log(error);
-    //     this.snackBar.open("Ошибка", '', { duration: 10000 })
-    //   })
+
   }
 
   sendButton() {
     this.storageService.sendSms(this.smsBody)
-
-    // this.authService.sendSms(this.smsBody)
-    //       .subscribe(res => {
-    //         console.log(res);
-    //         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-    //         this.router.navigate(['/home'])
-    //       }, error => {
-    //         console.log(error);
-    //         this.snackBar.open("Ошибка", '', { duration: 10000 })
-    //       })
   }
 
   onSubmitButtonProblem(smsType: string) {
@@ -438,7 +460,7 @@ export class ChronicComponent implements OnInit {
             .subscribe((result) => {
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
               this.smsSendBody(result.id)
-              this.sendButton()  
+              this.sendButton()
             }, error => {
               this.snackBar.open("Ошибка", '', { duration: 10000 })
             })

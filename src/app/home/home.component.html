@@ -169,7 +169,7 @@
 
   <h1 style="margin-left: 50px; margin-top: 40px;">Все Инциденты</h1>
 
-  <div class="table-style"> 
+  <div class="table-style mat-elevation-z8"> 
     <table mat-table [dataSource]="dataTable" matSort  matSortActive="created_at" matSortDisableClear matSortDirection="desc" #table2 #table2sort="matSort" class="mat-elevation-z8 full-width-table">
 
       <ng-container matColumnDef="type">
@@ -263,6 +263,8 @@
     <!-- <mat-paginator [pageSizeOptions]="[10,20,30,40,50]" aria-labels="select page"></mat-paginator> -->
     <mat-paginator #paginator [pageSizeOptions]="pageSizes" [length]="resultsLength" showFirstLastButtons></mat-paginator>
   </div>
+
+  <hr>
 
 </div>
 <router-outlet></router-outlet>
