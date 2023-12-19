@@ -5,7 +5,7 @@
              <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="hubForm.value.level" (ngModelChange)="setDefault()">
+                    <mat-select formControlName="level" [(ngModel)]="hubForm.value.level" (ngModelChange)="setDefault()">(ngModelChange)="findAndDisplayMax()"
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
@@ -29,7 +29,7 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-            </mat-grid-tile>d
+            </mat-grid-tile>
             <!-- preview problem -->
 
             <mat-grid-tile colspan="5" rowspan="8">

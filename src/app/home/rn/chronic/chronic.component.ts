@@ -179,13 +179,17 @@ export class ChronicComponent implements OnInit {
     private datePipe: DatePipe,
     public dialog: MatDialog) {
 
+    if (this.timeValidation == undefined) {
+      this.timeValidation = true
+    }
+
     this.chronicForm = this.formBuilder.group({
       'AddOrCor': [null],
       'level': ['', Validators.required],
       'categories_report': ['', Validators.required],
       'responsible_report': ['', Validators.required],
       'reason': ['', Validators.required],
-      'startTime': ['', Validators.required],
+      'startTime': ['', [Validators.required, this.startTimeSet]],
       'endTime': [''],
       'region': ['', Validators.required],
       'siteName': [''],
@@ -251,7 +255,7 @@ export class ChronicComponent implements OnInit {
             'responsible_report': [result['responsible_area'], Validators.required],
             'problem': [result['problem'], Validators.required],
             'reason': [result['hub_reason'], Validators.required],
-            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
+            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), [Validators.required, this.startTimeSet]],
             'endTime': [endTimeForUpdate],
             'region': [result['region'], Validators.required],
             'siteName': [result['chronic_site']],
@@ -268,44 +272,38 @@ export class ChronicComponent implements OnInit {
 
   }
 
-  startTimeSet() {
+  startTimeSet(control: any) {
 
-    setTimeout (() => {
+    let currentDate: Date = new Date()
+    let startTime = new Date(control.value)
+    const difference = currentDate.getTime() - startTime.getTime()
+    const timedif:number = difference / (1000 * 60 * 60)
 
-      let currentDate: Date = new Date()
-      let startTime = new Date(this.chronicForm.value.startTime)
-      let difference: number = currentDate.getTime() - startTime.getTime()
-
-      console.log(Math.floor(difference / (1000 * 60 * 60)));
-
-      switch (true) {
-        case this.chronicForm.value.time == 12 && Math.floor(difference / (1000 * 60 * 60)) >= 12 && Math.floor(difference / (1000 * 60 * 60)) < 24: {
-          this.timeValidation = true
-          this.styling = false
-          break;
-        }
-        case this.chronicForm.value.time == 24 && Math.floor(difference / (1000 * 60 * 60)) >= 24 && Math.floor(difference / (1000 * 60 * 60)) < 36: {
-          this.timeValidation = true
-          this.styling = false
-          break;
-        }
-        case this.chronicForm.value.time == 36 && Math.floor(difference / (1000 * 60 * 60)) >= 36 && Math.floor(difference / (1000 * 60 * 60)) < 48: {
-          this.timeValidation = true
-          this.styling = false
-          break;
-        }
-        case this.chronicForm.value.time == 48 && Math.floor(difference / (1000 * 60 * 60)) >= 48: {
-          this.timeValidation = true
-          this.styling = false
-          break;
-        }
-        default: {
-          this.timeValidation = false
-          this.styling = true
+    const formGroup = control?.parent;
+    if (formGroup) {
+      const selectedTimeControl = formGroup.get('time')
+      if (selectedTimeControl) {
+        const selectedTime = selectedTimeControl.value
+        
+        if(selectedTime == 12 && 12 <= timedif && timedif < 24 ) {
+          console.log('if statemen 1');
+          return null
+        } else if (selectedTime == 24 && 24 <= timedif && timedif < 36) {
+          console.log('if statemen 2');
+          return null
+        } else if (selectedTime == 36 && 36 <= timedif && timedif < 48) {
+          console.log('if statemen 3');
+          return null
+        } else if (selectedTime == 48 && 48 <= timedif) {
+          console.log('if statemen 4');
+          return null
+        } else {
+          console.log('else');
+          return { invalidDatetime: true }
         }
       }
-
-    }, 0 )
+    }
+    return null
   }
 
   tableSendBody() {
