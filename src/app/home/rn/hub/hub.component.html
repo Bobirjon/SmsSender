@@ -5,7 +5,7 @@
              <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="hubForm.value.level" (ngModelChange)="setDefault()">(ngModelChange)="findAndDisplayMax()"
+                    <mat-select formControlName="level" [(ngModel)]="hubForm.value.level" (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
@@ -61,7 +61,7 @@
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Проблема')" type="submit"
                                 *ngIf="newForm == false"
-                                [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">
+                                [disabled]="(hubForm.invalid) || hubForm.value.endTime !==''">
                                 Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"

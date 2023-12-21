@@ -26,10 +26,4 @@
  .timeNotValid {
     border-color: red;
     color: red;
-    
- }
-
- .invalidForm {
-    color: red;
-    display: none;
  }

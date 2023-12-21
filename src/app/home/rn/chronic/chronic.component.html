@@ -68,7 +68,7 @@
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Проблема')" type="submit" *ngIf="newForm == false"
-                                [disabled]="chronicForm.invalid || chronicForm.value.endTime==''">
+                                [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
                                 Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
@@ -85,8 +85,9 @@
                 <div class="grid-container">
                     <mat-card class="preview">
                         <mat-card-header>
-                            <mat-card-title>{{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт
-                                Решение:'}}</mat-card-title>
+                            <mat-card-title>
+                                {{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт Решение:'}}
+                            </mat-card-title>
                             <mat-card-title
                                 *ngIf="chronicForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title
@@ -217,11 +218,13 @@
             <!-- start Time -->
             <mat-grid-tile colspan="6">
                 <div class="margin-container">
-                    <p>Начало</p>
+                    <p>Начало <span *ngIf="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched"
+                                    class="timeNotValid"> 
+                        *Время заполнено не верно*</span>
+                    </p>
                     <input type="datetime-local" class="dateTime" formControlName="startTime"
-                        [(ngModel)]="chronicForm.value.startTime">
+                        [(ngModel)]="chronicForm.value.startTime" [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched">
                 </div>
-
             </mat-grid-tile>
             <!-- end Time -->
             <mat-grid-tile colspan="6">
@@ -236,7 +239,7 @@
                 <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
                     (click)="updateData()">Обновить</button>
                 <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
-                    [disabled]="chronicForm.invalid && newForm" (click)="createData()">Создать</button>
+                    (click)="createData()">Создать</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="6">
                 <mat-chip-listbox formControlName="AddOrCor">

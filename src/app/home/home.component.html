@@ -1,13 +1,15 @@
 <div class="container">
   <mat-grid-list cols="10" rowHeight="100px">
     <mat-grid-tile colspan="6">
-      <button mat-raised-button color="primary" (click)="onCN()">Создать CN шаблон</button>
-      <button mat-raised-button color="primary" (click)="onRN()" style="margin-left: 15px;">Создать RN шаблон</button>
-      <button mat-raised-button color="primary" (click)="addNumber()" style="margin-left: 15px;"
+      <button mat-raised-button color="primary" (click)="onCN()" style="margin-left: 15px; padding: 25px;">Создать CN шаблон</button>
+      <button mat-raised-button color="primary" (click)="onRN()" style="margin-left: 15px; padding: 25px;">Создать RN шаблон</button>
+      <button mat-raised-button color="primary" (click)="addNumber()" style="margin-left: 15px; padding: 25px;"
         *ngIf="isAdmin == 'admin'">Добавить получателя</button>
-      <button mat-raised-button color="primary" (click)="exportXlsx()" style="margin-left: 15px;"> Экспорт таблицы
+      <button mat-raised-button color="primary" (click)="exportXlsx()" style="margin-left: 15px; padding: 25px"> Экспорт таблицы
       </button>
-      <button mat-raised-button color="primary" (click)="dashBorad()" style="margin-left: 15px;"> Dashboard
+      <button mat-raised-button color="primary" (click)="dashBorad()" style="margin-left: 15px; padding: 25px "> Dashboard
+      </button>
+      <button mat-raised-button color="primary" (click)="dashBorad()" style="margin-left: 15px; padding: 25px"> Новые Идеи
       </button>
     </mat-grid-tile>
   </mat-grid-list>

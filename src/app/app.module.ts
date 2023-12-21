@@ -45,6 +45,7 @@ import { AuthGuard } from './auth-guard.service';
 import { MassPowerComponent } from './home/rn/mass-power/mass-power.component';
 import { DashboardComponent } from './home/dashboard/dashboard.component';
 import { DatePipe } from '@angular/common';
+import { NewIdeasComponent } from './home/new-ideas/new-ideas.component';
 
 
 
@@ -63,6 +64,7 @@ import { DatePipe } from '@angular/common';
     DashboardComponent,
     StartComponent,
     AddPhoneNumbersComponent,
+    NewIdeasComponent,
   ],
   imports: [
     BrowserModule,

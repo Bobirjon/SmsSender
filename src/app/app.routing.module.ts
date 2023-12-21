@@ -11,26 +11,14 @@ import { AuthGuard } from "./auth-guard.service";
 import { AddPhoneNumbersComponent } from "./add-phone-numbers/add-phone-numbers.component";
 import { RoleGuardGuard } from "./role-guard.guard";
 import { DashboardComponent } from "./home/dashboard/dashboard.component";
+import { NewIdeasComponent } from "./home/new-ideas/new-ideas.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
     { path: 'login', component: LoginComponent },
-    // {path: 'home', component: HomeComponent, 
-    // children: [
-    //     {path: 'cn', component: CnComponent},
-    //     {path: 'rn', component: RnComponent, children: [
-    //         {path: 'bsc', component: BscComponent},
-    //         {path: 'chronic', component: ChronicComponent},
-    //         {path: 'hub', component: HubComponent}
-    //     ]},
-    //     {path: 'HUB/:id', component: HubComponent},
-    //     {path: 'CORE/:id', component: CnComponent},
-    //     {path: 'CHRONIC/:id', component: ChronicComponent},
-    //     {path: 'BSC/RNC/:id', component: BscComponent},], 
-    // canActivate:[AuthGuard],
-    // },
     { path: 'home', component: HomeComponent, canActivate:[AuthGuard]  },
     { path: 'home/dashboard', component: DashboardComponent , canActivate:[AuthGuard]},
+    { path: 'home/newIdeas', component: NewIdeasComponent , canActivate:[AuthGuard]},
     { path: 'home/cn', component: CnComponent , canActivate:[AuthGuard]},
     {
         path: 'home/rn', component: RnComponent, children: [

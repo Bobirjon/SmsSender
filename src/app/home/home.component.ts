@@ -337,7 +337,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
   }
 
   dashBorad() {
-    this.router.navigate(['home/dashboard'])
+    this.router.navigate(['home/newIdeas'])
   }
 
   onDelete(id: number) {

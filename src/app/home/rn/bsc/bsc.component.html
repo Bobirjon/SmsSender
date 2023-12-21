@@ -66,7 +66,7 @@
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Проблема')" type="submit"
                                 *ngIf="newForm == false"
-                                [disabled]="(bscForm.invalid) || bscForm.value.endTime==''">
+                                [disabled]="(bscForm.invalid) || bscForm.value.endTime !==''">
                                 Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
