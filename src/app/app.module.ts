@@ -34,7 +34,8 @@ import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { AppRoutingModule } from './app.routing.module';
 import { AuthInterceptorService } from './auth-interceptor.service'
-import { CnComponent } from './home/cn/cn.component';
+import { CnComponent } from './home/cn/core-template/cn.component';
+import { CoreTemplateComponent } from './home/cn/core-template.component';
 import { RnComponent } from './home/rn/rn.component';
 import { ChronicComponent } from './home/rn/chronic/chronic.component';
 import { HubComponent } from './home/rn/hub/hub.component';
@@ -46,6 +47,7 @@ import { MassPowerComponent } from './home/rn/mass-power/mass-power.component';
 import { DashboardComponent } from './home/dashboard/dashboard.component';
 import { DatePipe } from '@angular/common';
 import { NewIdeasComponent } from './home/new-ideas/new-ideas.component';
+import { InternetTemplateComponent } from './home/cn/internet-template/internet-template.component';
 
 
 
@@ -56,6 +58,8 @@ import { NewIdeasComponent } from './home/new-ideas/new-ideas.component';
     HeaderComponent,
     HomeComponent,
     CnComponent,
+    CoreTemplateComponent,
+    InternetTemplateComponent,
     RnComponent,
     ChronicComponent,
     HubComponent,

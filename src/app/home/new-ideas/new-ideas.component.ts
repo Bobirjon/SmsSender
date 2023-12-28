@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataModel } from './myData.model';
 import { Observable, of } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-new-ideas',
@@ -10,60 +11,43 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 
 export class NewIdeasComponent implements OnInit {
-  addForm: FormGroup
-  displayedColumns: string[] = ['id', 'description', 'status'];
-  dataSource: DataModel[] = [
-    {id: 1, description: 'description', status: 'status'}
-  ]
+  dataSource = new MatTableDataSource<any>();
+  displayedColumns: string[] = ['priority', 'description', 'status'];
 
-  loadData() {
-    this.getData().subscribe((data) => {this.dataSource = data; console.log(data);
-    })
-  }
-  
-  ngOnInit(): void {
-    this.loadData()
-  }
+  // Define a FormGroup for the user input
+  userInputForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    this.addForm = this.fb.group({
+  constructor(private formBuilder: FormBuilder) { }
+
+  ngOnInit() {
+    // Initial data
+    const initialData = [
+      { priority: 1, description: 'John Doe', status: 'john@example.com' },
+      { priority: 2, description: 'Jane Doe', status: 'jane@example.com' },
+      { priority: 3, description: 'Bob Smith', status: 'bob@example.com' },
+    ];
+
+    // Push initial data to the MatTableDataSource
+    this.dataSource.data = initialData;
+
+    // Initialize the user input form
+    this.userInputForm = this.formBuilder.group({
+      priority: [null, Validators.required],
       description: ['', Validators.required],
-      status: ['', Validators.required]
-    })
+      status: ['', Validators.required],
+    });
   }
 
-  addDataButton() {
-    if (this.addForm.valid) {
-      const newItem: DataModel = {
-        id: this.dataSource.length + 1,
-        description: this.addForm.value.description,
-        status: this.addForm.value.status 
-      }
+  // Function to add new user input data to the MatTable
+  addUserInputData() {
+    const newData = this.userInputForm.value;
 
-      this.dataSource.push(newItem);
-      console.log(this.dataSource);
-      
-      this.loadData()
-      this.addForm.reset()
-    }
-  }
+    // Push the new data to the MatTableDataSource
+    this.dataSource.data = [...this.dataSource.data, newData];
+    // Reset the form
+    this.userInputForm.reset();
+    // Trigger a refresh of the table
+    this.dataSource._updateChangeSubscription();
 
-  updateDataButton(item: DataModel) {
-    const index = this.dataSource.findIndex((i) => i.id === item.id);
-    if (index !== -1) {
-      this.dataSource[index] = item;
-    }
-    this.loadData()
-  }
-
-  deleteButton(id: number) {
-    this.dataSource = this.dataSource.filter((item) => item.id !== id);
-    this.loadData();  
-  }
-
-  getData(): Observable<DataModel[]> {
-    console.log(this.dataSource);
-    
-    return of(this.dataSource);
   }
 }

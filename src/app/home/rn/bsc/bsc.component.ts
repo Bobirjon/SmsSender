@@ -117,7 +117,7 @@ export class BscComponent implements OnInit {
       'reason': ['', Validators.required],
       'effect_option': ['C Влиянием', Validators.required],
       'startTime': ['', Validators.required],
-      'endTime': [''],
+      'endTime': ['', [this.endTimeValidation]],
       'region': ['', Validators.required],
       'effect': ['', Validators.required],
       'informed': ['', Validators.required],
@@ -153,6 +153,22 @@ export class BscComponent implements OnInit {
     }
   }
 
+  endTimeValidation(control: any) {
+    let endTime = new Date(control.value)
+    const formGroup = control?.parent;
+    if(formGroup) {
+      const startTime = formGroup.get('startTime')
+      const startTimeSelected = new Date(startTime.value)
+      const difference = endTime.getTime() - startTimeSelected.getTime()
+      if(difference < 0) {
+
+        return { timeValid: true}
+      } else {
+        return null
+      }
+    }
+    return null
+  }
 
   ngOnInit(): void {
     // get Current user
@@ -182,7 +198,7 @@ export class BscComponent implements OnInit {
             'reason': [result['reason'], Validators.required],
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            'endTime': [endTimeForUpdate],
+            'endTime': [endTimeForUpdate, [this.endTimeValidation]],
             'region': [result['region'], Validators.required],
             'effect': [result['influence'], Validators.required],
             'informed': [result['informed'], Validators.required],

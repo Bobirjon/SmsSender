@@ -190,7 +190,7 @@ export class ChronicComponent implements OnInit {
       'responsible_report': ['', Validators.required],
       'reason': ['', Validators.required],
       'startTime': ['', [Validators.required, this.startTimeSet]],
-      'endTime': [''],
+      'endTime': ['', [this.endTimeValidation]],
       'region': ['', Validators.required],
       'siteName': [''],
       'time': [''],
@@ -256,7 +256,7 @@ export class ChronicComponent implements OnInit {
             'problem': [result['problem'], Validators.required],
             'reason': [result['hub_reason'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), [Validators.required, this.startTimeSet]],
-            'endTime': [endTimeForUpdate],
+            'endTime': [endTimeForUpdate, [this.endTimeValidation]],
             'region': [result['region'], Validators.required],
             'siteName': [result['chronic_site']],
             'district': [district],
@@ -286,21 +286,33 @@ export class ChronicComponent implements OnInit {
         const selectedTime = selectedTimeControl.value
         
         if(selectedTime == 12 && 12 <= timedif && timedif < 24 ) {
-          console.log('if statemen 1');
           return null
         } else if (selectedTime == 24 && 24 <= timedif && timedif < 36) {
-          console.log('if statemen 2');
           return null
         } else if (selectedTime == 36 && 36 <= timedif && timedif < 48) {
-          console.log('if statemen 3');
           return null
         } else if (selectedTime == 48 && 48 <= timedif) {
-          console.log('if statemen 4');
           return null
         } else {
-          console.log('else');
           return { invalidDatetime: true }
         }
+      }
+    }
+    return null
+  }
+
+  endTimeValidation(control: any) {
+    let endTime = new Date(control.value)
+    const formGroup = control?.parent;
+    if(formGroup) {
+      const startTime = formGroup.get('startTime')
+      const startTimeSelected = new Date(startTime.value)
+      const difference = endTime.getTime() - startTimeSelected.getTime()
+      if(difference < 0) {
+
+        return { timeValid: true}
+      } else {
+        return null
       }
     }
     return null

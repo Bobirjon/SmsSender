@@ -1,0 +1,115 @@
+<div>
+    <h1 style="margin: 30px;">Core SMS</h1>
+    <!-- form Filling -->
+    <form [formGroup]="cnForm" class="form-container">
+        <mat-grid-list cols="40" rowHeight="85px">
+            <!-- level -->
+            <mat-grid-tile colspan="4" rowspan="1">
+                <mat-form-field class="margin-container">
+                    <mat-label>Уровень</mat-label>
+                    <mat-select formControlName="level" [(ngModel)]="cnForm.value.level" (ngModelChange)="setDefault()">
+                        <mat-option *ngFor="let lev of level" [value]="lev.value">
+                            {{lev.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- categories report -->
+            <mat-grid-tile colspan="7" rowspan="1">
+                <mat-form-field class="margin-container">
+                    <mat-label>Категория для отчета</mat-label>
+                    <mat-select formControlName="categories_report" [(ngModel)]="cnForm.value.categories_report">
+                        <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
+                            {{cat_rep.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- responsible area -->
+             <mat-grid-tile colspan="5" rowspan="1">
+                <mat-form-field class="margin-container">
+                    <mat-label>Ответственная Зона</mat-label>
+                    <mat-select formControlName="responsible_report" [(ngModel)]="cnForm.value.responsible_report">
+                        <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
+                            {{res_rep.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- Description -->
+             <mat-grid-tile colspan="12" rowspan="1">
+                <mat-form-field class="margin-container">
+                    <mat-label>Описание</mat-label>
+                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="cnForm.value.desc"
+                        spellcheck="true" [matAutocomplete]="autoDesc">
+                    </textarea>
+                    <mat-autocomplete #autoDesc="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsDesc | async" [value]="option">
+                          {{option}}
+                        </mat-option>
+                      </mat-autocomplete>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- preview infromacionoe-->
+            <mat-grid-tile colspan="11" rowspan="8">
+                <div class="grid-container">
+                    <mat-card class="preview">
+                        <mat-card-header>
+                            <mat-card-title>
+                                {{cnForm.value.level.replace('P', 'П') + ' Информационное:'}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
+                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{'Описание: ' + cnForm.value.desc}}</p>
+                            <p>{{'Начало: ' + cnForm.value.startTime.replace("T", " ")}}</p>
+                            <p>{{'Отправил: ' + user?.first_name + ' ' + user?.last_name}}</p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Информационное')" type="submit"
+                                [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
+                                Отправить SMS
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitasNew('Информационное')" type="submit"
+                                *ngIf="newForm == false"
+                                [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
+                                Новое SMS
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Информационное')"
+                                type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
+                                TEST SMS
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </mat-grid-tile>
+           
+            <!-- start Time -->
+            <mat-grid-tile colspan="10" rowspan="1">
+                <div class="margin-container">
+                    <p>Начало</p>
+                    <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
+                        [(ngModel)]="cnForm.value.startTime" />
+                </div>
+
+            </mat-grid-tile>
+            <br>
+            <mat-grid-tile colspan="5">
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
+                    (click)="updateData()">Обновить</button>
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                    [disabled]="cnForm.invalid" (click)="onSubmit()">Добавить</button>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="6">
+                <mat-chip-listbox formControlName="AddOrCor">
+                    <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
+                    <mat-chip-option value="Дополнения">Дополнения</mat-chip-option>
+                </mat-chip-listbox>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </form>
+</div>

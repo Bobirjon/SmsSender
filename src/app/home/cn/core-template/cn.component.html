@@ -274,7 +274,8 @@
             <!-- end Time -->
             <mat-grid-tile colspan="5" rowspan="1">
                 <div class="margin-container">
-                    <p>Конец</p>
+                    <p>Конец<span *ngIf="cnForm.get('endTime').hasError('timeValid') && cnForm.get('startTime').touched"
+                        class="timeNotValid" > *Начало больше чем Конец времени</span></p>
                     <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
                         [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="cnForm.value.endTime">
                 </div>

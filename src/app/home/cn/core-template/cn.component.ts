@@ -1,5 +1,4 @@
-import { Dialog } from '@angular/cdk/dialog';
-import { NgIf, formatDate } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,12 +6,8 @@ import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angu
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
-import { WebSocketService } from 'src/web-socket.service';
 import { FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { Observable, Subject } from 'rxjs';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { StorageService } from 'src/app/storage.service';
 
@@ -154,7 +149,7 @@ export class CnComponent implements OnInit {
       'problem': ['', Validators.required],
       'reason': ['', Validators.required],
       'startTime': ['', Validators.required],
-      'endTime': [''],
+      'endTime': ['', this.endTimeValidation],
       'region': [''],
       'effect': ['', Validators.required],
       'effect_option': ['', Validators.required],
@@ -197,6 +192,23 @@ export class CnComponent implements OnInit {
       this.cnForm.value.level == 'P3' || this.cnForm.value.level == 'P4' || this.cnForm.value.level == 'P5') {
       this.cnForm.value.categories_report = 'ПР'
     }
+  }
+
+  endTimeValidation(control: any) {
+    let endTime = new Date(control.value)
+    const formGroup = control?.parent;
+    if(formGroup) {
+      const startTime = formGroup.get('startTime')
+      const startTimeSelected = new Date(startTime.value)
+      const difference = endTime.getTime() - startTimeSelected.getTime()
+      if(difference < 0) {
+
+        return { timeValid: true}
+      } else {
+        return null
+      }
+    }
+    return null
   }
 
   tableSendBody() {
@@ -336,7 +348,7 @@ export class CnComponent implements OnInit {
             'reason': [result['reason'], Validators.required],
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            'endTime': [endTimeForUpdate],
+            'endTime': [endTimeForUpdate, this.endTimeValidation],
             'region': [{ value: result['region'], disabled: isDisabled }, Validators.required],
             'effect': [result['influence']],
             'category': [result['category_for_core']],
@@ -385,16 +397,6 @@ export class CnComponent implements OnInit {
     this.tableSendBody()
 
     this.storageService.createToTable(this.tableBody)
-
-    // this.authService.postData(this.tableBody)
-    //   .subscribe((result) => {
-    //     console.log(result);
-    //     this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-    //   }, error => {
-    //     console.log(error);
-    //     this.snackBar.open("Ошибка", '', { duration: 10000 })
-    //   })
-
 
   }
 

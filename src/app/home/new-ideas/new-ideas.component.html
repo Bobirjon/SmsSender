@@ -1,36 +1,43 @@
+<div class="mat-elevation-z8">
+  <!-- User input form -->
 
-<div style="margin: 25px;">
+  <form [formGroup]="userInputForm" (ngSubmit)="addUserInputData()">
+    <mat-form-field class="margin-container" style="margin-left: 25px;">
+      <mat-label>Priority:</mat-label>
+      <input matInput type="text" formControlName="priority" />
+    </mat-form-field>
+    <mat-form-field class="margin-container" style="margin-left: 25px;">
+      <mat-label>Description:</mat-label>
+      <input matInput type="text" formControlName="description" />
+    </mat-form-field>
+    <mat-form-field class="margin-container" style="margin-left: 25px;">
+      <mat-label>Status:</mat-label>
+      <input matInput type="status" formControlName="status" />
+    </mat-form-field>
 
-    <form [formGroup]="addForm" (ngSubmit)="addDataButton()">
-        <mat-form-field>
-          <input matInput placeholder="Description" formControlName="description">
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput placeholder="Status" formControlName="status">
-          </mat-form-field>
-        <button mat-raised-button color="primary" type="submit">Add</button>
-    </form>
+    <button style="margin-left: 25px;" mat-button type="submit" (click)="addUserInputData()">Add User</button>
+  </form>
 
-    <!-- my-component.component.html -->
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!-- MatTable -->
+  <table mat-table [dataSource]="dataSource">
+    <!-- Define columns -->
+    <ng-container matColumnDef="priority">
+      <th mat-header-cell *matHeaderCellDef> Priority </th>
+      <td mat-cell *matCellDef="let element"> {{ element.priority }} </td>
+    </ng-container>
 
-        <!-- Define columns -->
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef>ID</th>
-            <td mat-cell *matCellDef="let element">{{element.id}}</td>
-        </ng-container>
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
+    </ng-container>
 
-        <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef>Описание</th>
-            <td mat-cell *matCellDef="let element">{{element.description}}</td>
-        </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let element"> {{ element.status }} </td>
+    </ng-container>
 
-        <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Статус</th>
-            <td mat-cell *matCellDef="let element">{{element.status}}</td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+    <!-- Header and row definitions -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </div>

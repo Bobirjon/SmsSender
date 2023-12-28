@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
     <a routerLink="/home" style="text-decoration: none; color: white;"><span>Домой</span></a>
     <span class="example-spacer"></span>
-    <span>V-19.12.23.19.30</span>
+    <span>V-28.12.23.15.00</span>
     <span class="example-spacer"></span>
     <a style="text-decoration: none; 
              text-align: center; 
@@ -10,7 +10,7 @@
              cursor: pointer;"
         *ngIf="storageService.isAuthenticatedUser()"
         (click)="logout()">
-        <span>({{storageService.getUserName()}})</span>
+        <span>( {{storageService.getUserName()}})</span>
         Выход
     </a>
     

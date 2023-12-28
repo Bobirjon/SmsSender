@@ -192,7 +192,7 @@ export class HubComponent implements OnInit {
       'problem': [' 2G,  3G,  4G сайтов', Validators.required],
       'reason': ['', Validators.required],
       'startTime': ['', Validators.required],
-      'endTime': [''],
+      'endTime': ['', this.endTimeValidation],
       'region': ['', Validators.required],
       'hubSite': [''],
       'effectedSites': ['',Validators.required],
@@ -239,6 +239,23 @@ export class HubComponent implements OnInit {
     } else {
       return []
     }
+  }
+
+  endTimeValidation(control: any) {
+    let endTime = new Date(control.value)
+    const formGroup = control?.parent;
+    if(formGroup) {
+      const startTime = formGroup.get('startTime')
+      const startTimeSelected = new Date(startTime.value)
+      const difference = endTime.getTime() - startTimeSelected.getTime()
+      if(difference < 0) {
+
+        return { timeValid: true}
+      } else {
+        return null
+      }
+    }
+    return null
   }
 
   findAndDisplayMax() {
@@ -373,7 +390,7 @@ export class HubComponent implements OnInit {
             'problem': [result['hub_problem'], Validators.required],
             'reason': [result['hub_reason'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            'endTime': [endTimeForUpdate],
+            'endTime': [endTimeForUpdate, this.endTimeValidation],
             'region': [result['region'], Validators.required],
             'effectedSites': [result['effected_sites'], Validators.required],
             'hubSite': [result['hub_site']],

@@ -285,7 +285,8 @@
             <!-- end Time -->
             <mat-grid-tile colspan="5">
                 <div class="margin-container">
-                    <p>Конец</p>
+                    <p>Конец<span *ngIf="hubForm.get('endTime').hasError('timeValid') && hubForm.get('startTime').touched"
+                        class="timeNotValid" > *Начало больше чем Конец времени</span></p>
                     <input type="datetime-local" class="dateTime" formControlName="endTime" [(ngModel)]="hubForm.value.endTime">
                 </div>
             </mat-grid-tile>

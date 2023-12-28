@@ -1,0 +1,23 @@
+
+.form-container {
+    margin-top: 50px;
+ }
+.margin-container {
+    margin: 15px;
+    width: 100%;
+}
+.dateTime {
+    padding: 10px;
+    width: 100%;
+}
+.form-button {
+    margin: 10px;
+    width: 100%;
+}
+.grid-container {
+   display:contents
+}
+.preview {
+   width: 100%;
+   height: 100%;
+}

@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./login/login.component";
-import { CnComponent } from "./home/cn/cn.component";
+import { CnComponent } from "./home/cn/core-template/cn.component";
 import { RnComponent } from "./home/rn/rn.component";
 import { BscComponent } from "./home/rn/bsc/bsc.component";
 import { ChronicComponent } from "./home/rn/chronic/chronic.component";
@@ -12,6 +12,8 @@ import { AddPhoneNumbersComponent } from "./add-phone-numbers/add-phone-numbers.
 import { RoleGuardGuard } from "./role-guard.guard";
 import { DashboardComponent } from "./home/dashboard/dashboard.component";
 import { NewIdeasComponent } from "./home/new-ideas/new-ideas.component";
+import { CoreTemplateComponent } from "./home/cn/core-template.component";
+import { InternetTemplateComponent } from "./home/cn/internet-template/internet-template.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
@@ -19,7 +21,13 @@ const routes: Routes = [
     { path: 'home', component: HomeComponent, canActivate:[AuthGuard]  },
     { path: 'home/dashboard', component: DashboardComponent , canActivate:[AuthGuard]},
     { path: 'home/newIdeas', component: NewIdeasComponent , canActivate:[AuthGuard]},
-    { path: 'home/cn', component: CnComponent , canActivate:[AuthGuard]},
+    //{ path: 'home/cn', component: CnComponent , canActivate:[AuthGuard]},
+    {
+        path: 'home/cn', component: CoreTemplateComponent, children: [
+            { path: 'template', component: CnComponent },
+            { path: 'internet', component: InternetTemplateComponent },
+        ] , canActivate:[AuthGuard]
+    },
     {
         path: 'home/rn', component: RnComponent, children: [
             { path: 'bsc', component: BscComponent },
