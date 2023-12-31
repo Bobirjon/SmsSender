@@ -258,7 +258,7 @@ export class ChronicComponent implements OnInit {
             'region': [result['region'], Validators.required],
             'siteName': [result['chronic_site']],
             'district': [district],
-            'time': [result['chronic_hours'], this.startTimeSet],
+            'time': [result['chronic_hours']],
             'hubSite': [result['hub_site']],
             'informed': [result['informed']],
             'desc': [result['description']],

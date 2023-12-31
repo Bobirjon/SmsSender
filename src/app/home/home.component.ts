@@ -144,6 +144,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
         this.TemplateData = new MatTableDataSource(data.results)
 
         this.socketSubscription = webSocketService.getDataObservable().subscribe((data) => {
+          console.log(data);
+          
           this.TemplateData.data.push(data)
 
           this.TemplateData.data = [...this.TemplateData.data]
@@ -352,9 +354,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
     dialogRef.afterClosed().subscribe(res => {
       if (res == true) {
         this.authService.deleteData(id).subscribe(res => {
-          console.log(res);
           this.snackBar.open('Удалено', '', { duration: 10000 })
-          window.location.reload()
         })
       }
     })
