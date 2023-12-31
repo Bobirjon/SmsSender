@@ -19,6 +19,8 @@ export class WebSocketService {
     }
 
     getDataObservable() {
+        console.log(this.dataSubject.asObservable());
+        
         return this.dataSubject.asObservable();
     }
 }

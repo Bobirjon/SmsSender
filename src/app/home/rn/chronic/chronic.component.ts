@@ -191,7 +191,7 @@ export class ChronicComponent implements OnInit {
       'endTime': ['', [this.endTimeValidation]],
       'region': ['', Validators.required],
       'siteName': [''],
-      'time': ['', this.startTimeSet],
+      'time': ['',],
       'hubSite': [''],
       'informed': [''],
       'desc': [''],

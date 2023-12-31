@@ -73,7 +73,6 @@ export class InternetTemplateComponent {
     private authService: AuthService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private router: Router,
     private storageService: StorageService,
     public dialog: MatDialog) {
 
@@ -176,9 +175,11 @@ export class InternetTemplateComponent {
       }
     }
 
+
     this.smsBody = {
       'source_addr': 'ncc-cn',
       'network': ['CN'],
+      'notification': ['GPRS'],
       'criteria': [this.cnForm.value.level.replace('P', 'A')],
       'sms_text': this.SmsTextBody,
       'alarmreport_id': id
