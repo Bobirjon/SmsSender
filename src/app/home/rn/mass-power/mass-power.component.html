@@ -1,7 +1,9 @@
-<div>
+<h1 style="font-weight: bold; text-align: center; margin-top: 200px;">Страница Временно недоступна</h1>
+
+
+<!-- <div>
     <form [formGroup]="massOff" class="form-container">
         <mat-grid-list cols="25" rowHeight="85px">
-            <!-- level -->
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
@@ -12,7 +14,6 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- categories report -->
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория для отчета</mat-label>
@@ -23,8 +24,7 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            
-            <!-- preview problem -->
+
             <mat-grid-tile colspan="5" rowspan="5">
                 <div class="grid-container">
                     <mat-card class="preview">
@@ -61,7 +61,6 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-            <!-- preview resheniya-->
             <mat-grid-tile colspan="5" rowspan="5">
                 <div class="grid-container">
                     <mat-card class="preview">
@@ -95,7 +94,7 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-             <!-- preview informacionaya-->
+
              <mat-grid-tile colspan="5" rowspan="5">
                 <div class="grid-container">
                     <mat-card class="preview">
@@ -129,7 +128,6 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-            <!-- region -->
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
@@ -140,7 +138,6 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- responsible area -->
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Ответственная Зона</mat-label>
@@ -151,7 +148,6 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- problem -->
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
@@ -166,7 +162,7 @@
                       </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- reason -->
+
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
@@ -181,7 +177,6 @@
                       </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- start Time -->
             <mat-grid-tile colspan="5" rowspan="1">
                 <div class="margin-container">
                     <p>Начало</p>
@@ -190,7 +185,6 @@
                         [(ngModel)]="massOff.value.startTime" />
                 </div>
             </mat-grid-tile>
-            <!-- end Time -->
             <mat-grid-tile colspan="5" rowspan="1">
                 <div class="margin-container">
                     <p>Конец</p>
@@ -198,7 +192,6 @@
                         [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="massOff.value.endTime">
                 </div>
             </mat-grid-tile>
-            <!-- buttons -->
             <mat-grid-tile colspan="2">
                 <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
                     (click)="updateData()" [disabled]="massOff.invalid">Обновить </button>
@@ -213,4 +206,4 @@
             </mat-grid-tile>
         </mat-grid-list>
     </form>
-</div>
+</div> -->

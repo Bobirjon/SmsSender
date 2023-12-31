@@ -22,9 +22,7 @@ export class NewIdeasComponent implements OnInit {
   ngOnInit() {
     // Initial data
     const initialData = [
-      { priority: 1, description: 'John Doe', status: 'john@example.com' },
-      { priority: 2, description: 'Jane Doe', status: 'jane@example.com' },
-      { priority: 3, description: 'Bob Smith', status: 'bob@example.com' },
+      { priority: 'test', description: 'testtesttesttesttest', status: 'test' },
     ];
 
     // Push initial data to the MatTableDataSource

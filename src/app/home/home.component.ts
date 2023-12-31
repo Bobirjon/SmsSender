@@ -73,6 +73,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
     'actions'
   ]
 
+  columnWidths = {
+    type: '100px', // Set the width of column1 to 100 pixels
+    level: '200px', // Set the width of column2 to 200 pixels
+    createdAt: 'auto',   // Set the width of column3 to auto (adjust based on content)
+    start_time: '100px', // Set the width of column1 to 100 pixels
+    end_time: '200px', // Set the width of column2 to 200 pixels
+    problem: 'auto',
+    reason: '100px', // Set the width of column1 to 100 pixels
+    description: '200px', // Set the width of column2 to 200 pixels
+    region: 'auto',
+    action: 'auto'
+  };
+
   @ViewChild(MatPaginator) paginator: MatPaginator
 
   @ViewChild('table1sort') public table1sort: MatSort;
@@ -219,19 +232,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
       });
   }
 
-
-  // private mergeData(existingData: any[], newData: any[]): any[] {
-  //   // Assuming each item has a unique identifier property (e.g., 'id')
-  //   const uniqueIds = new Set(existingData.map(item => item.id));
-
-  //   // Filter out items from newData that already exist in existingData
-  //   const filteredNewData = newData.filter(item => !uniqueIds.has(item.id));
-
-  //   // Concatenate existingData and filteredNewData
-  //   return existingData.concat(filteredNewData);
-  // }
-
   ngOnInit(): void {
+
+    this.authService.getUser().subscribe((data:any) => {
+      this.userName = data.first_name + ' ' + data.last_name
+      console.log(this.userName);
+      
+      
+    })
 
   }
 
@@ -321,8 +329,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
     this.router.navigate(['home/cn'])
   }
 
-
-
   addNumber() {
     this.router.navigate(['/add'])
   }
@@ -374,6 +380,7 @@ export class exportExcel {
         this.convertToXLSX(this.posttest.results, 'data')
       })
   }
+
 
   convertToXLSX(data: any, filename: string): void {
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);

@@ -6,8 +6,10 @@
     display: none;
 }
 .filter {
-    width:100%;
-    padding: 6px;
+    padding: 15px;
+    border: 10px;
+    background-color: #ecebeb;
+    width: 100%
 }
 
 .fail:hover {
@@ -22,4 +24,25 @@
 .chronicHours, .chronicHours:hover {
     background-color: rgb(255, 85, 85) !important;
 }
+
+.tag {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    background-color: red;
+    border-radius: 15px;
+    padding: 0px 5px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: bold;
+}
+
+button {
+    width: 100%;
+    height: auto;
+    padding: 25px 0px;
+    margin: 5px;
+}
+
+
+
 

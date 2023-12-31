@@ -175,8 +175,6 @@ export class ChronicComponent implements OnInit {
     private route: ActivatedRoute,
     private storageService: StorageService,
     private snackBar: MatSnackBar,
-    private router: Router,
-    private datePipe: DatePipe,
     public dialog: MatDialog) {
 
     if (this.timeValidation == undefined) {
@@ -193,7 +191,7 @@ export class ChronicComponent implements OnInit {
       'endTime': ['', [this.endTimeValidation]],
       'region': ['', Validators.required],
       'siteName': [''],
-      'time': [''],
+      'time': ['', this.startTimeSet],
       'hubSite': [''],
       'informed': [''],
       'desc': [''],
@@ -260,7 +258,7 @@ export class ChronicComponent implements OnInit {
             'region': [result['region'], Validators.required],
             'siteName': [result['chronic_site']],
             'district': [district],
-            'time': [result['chronic_hours']],
+            'time': [result['chronic_hours'], this.startTimeSet],
             'hubSite': [result['hub_site']],
             'informed': [result['informed']],
             'desc': [result['description']],

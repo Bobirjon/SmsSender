@@ -1,3 +1,14 @@
 .margin-container {
     margin: 30px;
 }
+
+.tag {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    background-color: red;
+    border-radius: 15px;
+    padding: 0px 5px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: bold;
+}
