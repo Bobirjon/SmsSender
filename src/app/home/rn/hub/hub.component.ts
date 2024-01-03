@@ -564,6 +564,8 @@ export class HubComponent implements OnInit {
       }
     }
 
+    let smsType = this.storageService.SmsType(this.requestType, this.hubForm.value.AddOrCor)
+
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
@@ -571,7 +573,8 @@ export class HubComponent implements OnInit {
       'notification': ['Hub'],
       'sms_text': this.SmsTextBody,
       'region': [this.hubForm.value.region],
-      'alarmreport_id': id
+      'alarmreport_id': id,
+      'sms_type': smsType
     }
   }
 

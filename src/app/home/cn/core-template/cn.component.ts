@@ -294,12 +294,15 @@ export class CnComponent implements OnInit {
       }
     }
 
+    let smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor)
+
     this.smsBody = {
       'source_addr': 'ncc-cn',
       'network': ['CN'],
       'criteria': [this.cnForm.value.level.replace('P', 'A')],
       'sms_text': this.SmsTextBody,
-      'alarmreport_id': id
+      'alarmreport_id': id,
+      'sms_type': smsType
     }
 
     if (this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp')) {

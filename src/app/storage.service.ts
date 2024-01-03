@@ -203,5 +203,38 @@ export class StorageService {
 
     return this.addWord
   }
+
+  public SmsType(smsType: string, type: string) {
+    let typeOfSms
+
+    if(smsType == 'Проблема' && type == null) {
+      typeOfSms = 'Проблема'
+      return typeOfSms
+    } else if(smsType == 'Проблема' && type == 'Дополнения') {
+      typeOfSms = 'Проблема-дополнение'
+      return typeOfSms
+    } else if(smsType == 'Проблема' && type == 'Коррекция') {
+      typeOfSms = 'Проблема-коррекция'
+      return typeOfSms
+    } else if(smsType == 'Решение' && type == null) {
+      typeOfSms = 'Решение'
+      return typeOfSms
+    } else if(smsType == 'Решение' && type == 'Дополнения') {
+      typeOfSms = 'Решение-дополнение'
+      return typeOfSms
+    } else if(smsType == 'Решение' && type == 'Коррекция') {
+      typeOfSms = 'Решение-коррекция'
+      return typeOfSms
+    }else if(smsType == 'Информационное' && type == null) {
+      typeOfSms = 'Информационное'
+      return typeOfSms
+    } else if(smsType == 'Информационное' && type == 'Дополнения') {
+      typeOfSms = 'Информационное-дополнение'
+      return typeOfSms
+    } else if(smsType == 'Информационное' && type == 'Коррекция') {
+      typeOfSms = 'Информационное-коррекция'
+      return typeOfSms
+    }
+  }
   
 }

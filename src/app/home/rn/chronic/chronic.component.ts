@@ -191,7 +191,7 @@ export class ChronicComponent implements OnInit {
       'endTime': ['', [this.endTimeValidation]],
       'region': ['', Validators.required],
       'siteName': [''],
-      'time': ['',],
+      'time': [''],
       'hubSite': [''],
       'informed': [''],
       'desc': [''],
@@ -267,16 +267,15 @@ export class ChronicComponent implements OnInit {
           })
         })
     }
-
   }
 
-  startTimeSet(control: any) {
 
+  startTimeSet(control: any) {
     let currentDate: Date = new Date()
     let startTime = new Date(control.value)
     const difference = currentDate.getTime() - startTime.getTime()
     const timedif:number = difference / (1000 * 60 * 60)
-
+    
     const formGroup = control?.parent;
     if (formGroup) {
       const selectedTimeControl = formGroup.get('time')
@@ -412,6 +411,8 @@ export class ChronicComponent implements OnInit {
       }
     }
 
+    let smsType = this.storageService.SmsType(this.requestType, this.chronicForm.value.AddOrCor)
+
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
@@ -419,8 +420,12 @@ export class ChronicComponent implements OnInit {
       'notification': ['Chronic'],
       'sms_text': this.SmsTextBody,
       'region': [this.chronicForm.value.region],
-      'alarmreport_id': id
+      'alarmreport_id': id,
+      'sms_type' : smsType
     }
+
+    console.log(this.smsBody);
+    
 
   }
 

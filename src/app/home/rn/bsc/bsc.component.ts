@@ -289,13 +289,16 @@ export class BscComponent implements OnInit {
       }
     }
 
+    let smsType = this.storageService.SmsType(this.requestType, this.bscForm.value.AddOrCor)
+    
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
       'criteria': [this.bscForm.value.level.replace('P', 'A')],
       'notification': ['BSC/RNC'],
       'sms_text': this.SmsTextBody,
-      'alarmreport_id': id
+      'alarmreport_id': id,
+      'sms_type': smsType
     }
 
     if (this.bscForm.value.region != (null || undefined)) {
@@ -307,41 +310,20 @@ export class BscComponent implements OnInit {
     this.tableSendBody()
 
     this.storageService.updateData(this.route.snapshot.params.id, this.tableBody)
-    // this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-    //   .subscribe((result) => {
-    //     console.log(result);
-    //     this.snackBar.open('Обновлено', '', { duration: 10000 })
-    //   }, error => {
-    //     this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
-    //   })
+   
   }
 
   createData() {
     this.tableSendBody()
     
     this.storageService.createToTable(this.tableBody)
-    // this.authService.postData(this.tableBody)
-    //   .subscribe((res) => {
-    //     console.log(res);
-    //     this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-    //   }, error => {
-    //     console.log(error);
-    //     this.snackBar.open("Ошибка", '', { duration: 10000 })
-    //   })
+
   }
 
   sendButton() {
     
     this.storageService.sendSms(this.smsBody)
-    // this.authService.sendSms(this.smsBody)
-    //       .subscribe(res => {
-    //         console.log(res);
-    //         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-    //         this.router.navigate(['/home'])
-    //       }, error => {
-    //         console.log(error);
-    //         this.snackBar.open("Ошибка", '', { duration: 10000 })
-    //       })
+
   }
 
   onSubmitButtonProblem(smsType: string) {
