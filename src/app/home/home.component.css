@@ -1,28 +1,35 @@
-.table-style {
-    margin: 20px;
-    
-}
 .hidden {
     display: none;
 }
+
 .filter {
-    padding: 15px;
-    border: 10px;
-    background-color: #ecebeb;
-    width: 100%
+    width: 100%;
+    border: 1px #572469d5 solid;
+    border-radius: 5px;
+    padding: 10px 0px 10px 5px;
+    background-color: #a06ea817;
+    /* box-shadow: #4b365f74 0px 1px 2px 0px, #4b365f88 0px 2px 6px 2px; */
+}
+
+.filter:focus {
+    border: 1px #572469d5 solid;
+    box-shadow: #4b365f74 0px 1px 2px 0px, #4b365f88 0px 2px 6px 2px;
+    background-color: white;
 }
 
 .fail:hover {
     background-color: transparent;
 }
 
-.reason, .reason:hover {
-    background-color: rgb(255, 249, 87) !important;
+.reason,
+.reason:hover {
+    background-color: rgba(255, 249, 69, 0.489) !important;
     font-weight: bold;
 }
 
-.chronicHours, .chronicHours:hover {
-    background-color: rgb(255, 85, 85) !important;
+.chronicHours,
+.chronicHours:hover {
+    background-color: rgba(255, 33, 33, 0.386) !important;
 }
 
 .tag {
@@ -32,17 +39,78 @@
     background-color: red;
     border-radius: 15px;
     padding: 0px 5px;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-weight: bold;
 }
 
 button {
     width: 100%;
     height: auto;
-    padding: 25px 0px;
+    padding: 25px 10px;
     margin: 5px;
+    background-color: #572469d5 !important;
+    color: white !important;
 }
 
+.container-style {
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 20px;
+}
 
+.table-style {
+    width: 2500px;
+}
+.mat-column-type {
+    max-width: 100px;
+}
 
+.mat-column-level {
+    max-width: 70px;
+}
 
+.mat-column-created_at, .mat-column-start_time, .mat-column-end_time {
+    max-width: 100px;
+}
+
+.mat-column-problem{
+    max-width: 800px;
+}
+.mat-column-reason {
+    max-width: 900px;
+}
+
+.mat-column-region {
+    max-width: 130px;
+}
+
+.mat-column-informed {
+    max-width: 200px;
+}
+
+.mat-column-description {
+    max-width: 200px;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+  }
+
+tr:nth-child(even) {background-color: #a06ea80a;}
+
+tr:nth-child(even):hover {background-color: #a06ea80a;}
+
+.tableHeader {
+    background-color: #86449c42 !important;
+    color: white !important;
+}
+
+.edit {
+    text-decoration: none;
+    color: #572469d5;
+    border: 1px #572469d5 solid;
+    padding: 5px;
+    border-radius: 7px;
+    box-shadow: #4b365f74 0px 1px 2px 0px, #4b365f88 0px 2px 6px 2px;
+}

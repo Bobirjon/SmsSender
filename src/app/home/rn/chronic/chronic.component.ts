@@ -21,7 +21,8 @@ export class ChronicComponent implements OnInit {
 
   chronicForm: FormGroup
   timeValidation: boolean
-  styling: boolean = true
+  validationStyle: boolean = true
+  hasError: boolean
   preview = false
   previewResheniya = false
   user: any
@@ -212,6 +213,7 @@ export class ChronicComponent implements OnInit {
   }
 
 
+
   setDefault() {
     if (this.chronicForm.value.level == 'P1' || this.chronicForm.value.level == 'P2' ||
       this.chronicForm.value.level == 'P3' || this.chronicForm.value.level == 'P4' || this.chronicForm.value.level == 'P5') {
@@ -220,22 +222,21 @@ export class ChronicComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     // get Current user
     this.authService.getUser()
       .subscribe(result => {
         this.user = result
       })
-
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
     } else {
+      this.validationStyle = false
       this.newForm = false
       let endTimeForUpdate: any
       let district: any
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-
+          
           if (result['end_time'] == null) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
@@ -246,6 +247,7 @@ export class ChronicComponent implements OnInit {
           } else {
             district = result['district']
           }
+
           this.chronicForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -253,61 +255,94 @@ export class ChronicComponent implements OnInit {
             'responsible_report': [result['responsible_area'], Validators.required],
             'problem': [result['problem'], Validators.required],
             'reason': [result['hub_reason'], Validators.required],
-            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), [Validators.required, this.startTimeSet]],
+            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), [Validators.required]],
             'endTime': [endTimeForUpdate, [this.endTimeValidation]],
             'region': [result['region'], Validators.required],
             'siteName': [result['chronic_site']],
             'district': [district],
-            'time': [result['chronic_hours']],
+            'time': [result['chronic_hours'], [this.timeSetValidation]],
             'hubSite': [result['hub_site']],
             'informed': [result['informed']],
             'desc': [result['description']],
             'category': [result['category_for_hub']],
             'sender': [result['sender']]
           })
+          
         })
     }
   }
 
+  timeSetValidation(control: any) {
 
-  startTimeSet(control: any) {
-    let currentDate: Date = new Date()
-    let startTime = new Date(control.value)
-    const difference = currentDate.getTime() - startTime.getTime()
-    const timedif:number = difference / (1000 * 60 * 60)
+    console.log('time Validation wokrs');
     
+    let currentDate: Date = new Date()
     const formGroup = control?.parent;
+  
     if (formGroup) {
-      const selectedTimeControl = formGroup.get('time')
-      if (selectedTimeControl) {
-        const selectedTime = selectedTimeControl.value
-        
-        if(selectedTime == 12 && 12 <= timedif && timedif < 24 ) {
-          return null
-        } else if (selectedTime == 24 && 24 <= timedif && timedif < 36) {
-          return null
-        } else if (selectedTime == 36 && 36 <= timedif && timedif < 48) {
-          return null
-        } else if (selectedTime == 48 && 48 <= timedif) {
-          return null
-        } else {
-          return { invalidDatetime: true }
-        }
+      const selectedTimeControl = formGroup.get('startTime')
+      let startTime = new Date(selectedTimeControl.value)
+      const difference = currentDate.getTime() - startTime.getTime()
+      const timedif: number = difference / (1000 * 60 * 60)
+      if (control.value == 12 && 12 <= timedif && timedif < 24) {
+        return null
+      } else if (control.value == 24 && 24 <= timedif && timedif < 36) {
+        return null
+      } else if (control.value == 36 && 36 <= timedif && timedif < 48) {
+        return null
+      } else if (control.value == 48 && 48 <= timedif) {
+        return null
+      } else {
+        return { invalidDatetime: true }
       }
+
+      
+      
     }
     return null
+    
+  }
+
+  startTimeSet(control: any) {
+    
+    
+      let currentDate: Date = new Date()
+      let startTime = new Date(control.value)
+      const difference = currentDate.getTime() - startTime.getTime()
+      const timedif: number = difference / (1000 * 60 * 60)
+      const formGroup = control?.parent;
+      
+      if (formGroup) {
+        const selectedTimeControl = formGroup.get('time')
+        if (selectedTimeControl) {
+          const selectedTime = selectedTimeControl.value
+
+          if (selectedTime == 12 && 12 <= timedif && timedif < 24) {
+            return null
+          } else if (selectedTime == 24 && 24 <= timedif && timedif < 36) {
+            return null
+          } else if (selectedTime == 36 && 36 <= timedif && timedif < 48) {
+            return null
+          } else if (selectedTime == 48 && 48 <= timedif) {
+            return null
+          } else {
+            return { invalidDatetime: true }
+          }
+        }
+      }
+      return null
   }
 
   endTimeValidation(control: any) {
     let endTime = new Date(control.value)
     const formGroup = control?.parent;
-    if(formGroup) {
+    if (formGroup) {
       const startTime = formGroup.get('startTime')
       const startTimeSelected = new Date(startTime.value)
       const difference = endTime.getTime() - startTimeSelected.getTime()
-      if(difference < 0) {
+      if (difference < 0) {
 
-        return { timeValid: true}
+        return { timeValid: true }
       } else {
         return null
       }
@@ -421,11 +456,11 @@ export class ChronicComponent implements OnInit {
       'sms_text': this.SmsTextBody,
       'region': [this.chronicForm.value.region],
       'alarmreport_id': id,
-      'sms_type' : smsType
+      'sms_type': smsType
     }
 
     console.log(this.smsBody);
-    
+
 
   }
 

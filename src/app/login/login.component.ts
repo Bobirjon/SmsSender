@@ -27,6 +27,11 @@ export class LoginComponent implements OnInit {
       password: '',
       username: ''
     })
+  
+    this.loginStatus = localStorage.getItem('token')
+    console.log(this.loginStatus);
+    
+
   }
 
 

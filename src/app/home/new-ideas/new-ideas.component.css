@@ -1,0 +1,16 @@
+.input-style {
+    margin: 15px;
+}
+
+
+.mat-column-name {
+    width: 200px;
+}
+
+.mat-column-status {
+    width: 100px;
+}
+
+.mat-column-priority {
+    width: 100px;
+}

@@ -1,26 +1,23 @@
-import { Injectable } from "@angular/core"
-import * as io from "socket.io-client"
-import { Observable, Subject } from "rxjs"
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
-@Injectable({ providedIn: 'root' })
-
+@Injectable({
+  providedIn: 'root',
+})
 export class WebSocketService {
+  private socket$: WebSocketSubject<any>;
 
-    socket: WebSocket;
-    url: string = 'ws://10.7.119.12/ws/alarm_report/'
-    dataSubject = new Subject<any>()
+  constructor() {
+    this.socket$ = webSocket('ws://10.7.119.12/ws/alarm_report/');
+  }
 
-    constructor() {
-        this.socket = new WebSocket(this.url)
-        this.socket.addEventListener('message', (event) => {
-            const data = JSON.parse(event.data)
-            this.dataSubject.next(data)
-        })
-    }
+  sendMessage(message: any): void {
+    
+    this.socket$.next(message);
+  }
 
-    getDataObservable() {
-        console.log(this.dataSubject.asObservable());
-        
-        return this.dataSubject.asObservable();
-    }
+  receiveMessage(): Observable<any> {
+    return this.socket$.asObservable();
+  }
 }

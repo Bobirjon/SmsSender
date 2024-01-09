@@ -26,6 +26,7 @@ export class HeaderComponent implements OnInit {
     this.storageService.logout()
     this.storageService.deleteToken()
     this.router.navigate(['/login'])
+    window.location.reload()
   }
 }
 

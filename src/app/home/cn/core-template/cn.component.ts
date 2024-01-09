@@ -117,11 +117,13 @@ export class CnComponent implements OnInit {
   ];
 
   optionsEffect: string[] = [
-    'Нет эффект на сервис ',
+    'Нет эффекта на сервис ',
+    'Нет эффекта на сервис, кор сайт работает на ДГ, остаток ДТ на',
     'Трафик переключился на альтернативные каналы',
     'Нет эффект на услугу роуминга',
     'Сервис 4G не был доступен для абонентов в роуминге',
     'Проподание сервиса на Люкс Контент. Работают только короткие номера 0909, 0720',
+    
   ]
 
   optionsDesc: string[] = [
@@ -329,7 +331,7 @@ export class CnComponent implements OnInit {
       let isDisabled: any
       let endTimeForUpdate: any
       this.newForm = false
-
+      
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
           if (result['category_for_core'] == 'Core' || result['category_for_core'] == 'Roaming' || result['category_for_core'] == 'GPRS') {
@@ -369,31 +371,12 @@ export class CnComponent implements OnInit {
     this.tableSendBody()
 
     this.storageService.updateData(this.route.snapshot.params.id, this.tableBody)
-    // this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-    //   .subscribe((result) => {
-    //     console.log(result);
-    //     this.snackBar.open('Обновлено', '', { duration: 10000 })
-    //   }, error => {
-    //     console.log(error);
-    //     this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
-    //   })
   }
 
   sendButton() {
-    console.log('Suucess sned', this.smsBody);
 
     // api for send SMS
     this.storageService.sendSms(this.smsBody)
-
-    // this.authService.sendSms(this.smsBody)
-    //       .subscribe(res => {
-    //         console.log(res);
-    //         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-    //         this.router.navigate(['/home'])
-    //       }, error => {
-    //         console.log(error);
-    //         this.snackBar.open("Ошибка", '', { duration: 10000 })
-    //       })
   }
 
   onSubmit() {

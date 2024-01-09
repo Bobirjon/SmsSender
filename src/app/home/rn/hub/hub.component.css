@@ -28,3 +28,19 @@
     border-color: red;
     color: red;
  }
+
+ button {
+    background-color: #572469d5 !important;
+    color: white !important;
+}
+
+button:disabled {
+    background-color: #ececec !important;
+    color: rgb(29, 29, 29) !important;
+    border: 1px rgba(128, 128, 128, 0.448) solid;
+}
+
+.mat-mdc-chip-selected {
+    background-color: #572469d5 !important; 
+    color: #FFFFFF !important; 
+}

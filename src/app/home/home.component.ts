@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
@@ -11,9 +11,9 @@ import * as XLSX from 'xlsx';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StorageService } from '../storage.service';
 
 export interface DataTable {
+  informed: string,
   region: string
   username: string
   start_time: any
@@ -31,14 +31,14 @@ export interface DataTable {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
+export class HomeComponent implements OnInit, AfterViewInit   {
 
   dataTable = new MatTableDataSource<DataTable>()
   Data = new MatTableDataSource<DataTable>()
   TemplateData = new MatTableDataSource<DataTable>()
   userName: any
   isAdmin = localStorage.getItem('role')
-  pageSizes = [25, 50, 10];
+  pageSizes = [10, 25, 50];
   filterInput: string
   selectedLevel: string
   selectedType: string
@@ -46,7 +46,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
   isLoadingResults = true;
   isRateLimitReached = false;
   globalFilter = '';
-  private socketSubscription: Subscription;
 
   displayedColumnsNew: string[] = [
     'type',
@@ -57,7 +56,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
     'reason',
     'description',
     'region',
-    'actions'
+    'informed',
   ]
 
   displayedColumnsForAllCases: string[] = [
@@ -70,21 +69,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
     'reason',
     'description',
     'region',
-    'actions'
+    'informed',
   ]
-
-  columnWidths = {
-    type: '100px', // Set the width of column1 to 100 pixels
-    level: '200px', // Set the width of column2 to 200 pixels
-    createdAt: 'auto',   // Set the width of column3 to auto (adjust based on content)
-    start_time: '100px', // Set the width of column1 to 100 pixels
-    end_time: '200px', // Set the width of column2 to 200 pixels
-    problem: 'auto',
-    reason: '100px', // Set the width of column1 to 100 pixels
-    description: '200px', // Set the width of column2 to 200 pixels
-    region: 'auto',
-    action: 'auto'
-  };
 
   @ViewChild(MatPaginator) paginator: MatPaginator
 
@@ -101,6 +87,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
     reason: '',
     description: '',
     region: '',
+    informed: ''
   }
 
   level = new FormControl()
@@ -112,6 +99,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
   startTime = new FormControl()
   endTime = new FormControl()
   region = new FormControl()
+  informed = new FormControl()
   username = new FormControl()
 
 
@@ -120,7 +108,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
     private router: Router,
     private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,) {
    
     // Open Cases table
     this.authService.getFilteredData()
@@ -131,10 +119,25 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
         this.Data.sort = this.table1sort;
         this.Data.filterPredicate = this.customFilterPredicate();
         
-        this.socketSubscription = webSocketService.getDataObservable().subscribe((data) => {
-          this.Data.data.push(data)
+        this.webSocketService.receiveMessage().subscribe((data) => {
+          const exist = this.Data.data.findIndex(
+            (item : any) => item.id === data.id
+          )
 
-          this.Data.data = [...this.Data.data]
+          if( exist !== -1) {
+            //check if it is exist, update it
+            if (data.is_complete == true) {
+              this.Data.data.splice(exist, 1)
+              this.Data.data = this.Data.data
+            } else {
+              this.Data.data[exist] = data
+              this.Data.data = this.Data.data
+            }
+            
+          } else {
+            this.Data.data = [...this.Data.data, data]
+          }
+          
         })
       })
     
@@ -143,17 +146,29 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
       .subscribe((data: any) => {
         this.TemplateData = new MatTableDataSource(data.results)
 
-        this.socketSubscription = webSocketService.getDataObservable().subscribe((data) => {
-          console.log(data);
-          
-          this.TemplateData.data.push(data)
+        this.webSocketService.receiveMessage().subscribe((data) => {
+          const exist = this.TemplateData.data.findIndex(
+            (item : any) => item.id === data.id
+          )
 
-          this.TemplateData.data = [...this.TemplateData.data]
+          if( exist !== -1) {
+            //check if it is exist, update it
+            if (data.is_send_sms == true) {
+              this.TemplateData.data.splice(exist, 1)
+              this.TemplateData.data = this.TemplateData.data
+              console.log( this.TemplateData.data);
+            } else {
+              this.TemplateData.data[exist] = data
+              this.TemplateData.data = this.TemplateData.data
+              console.log( this.TemplateData.data);
+              
+            }
+            
+          } else {
+            this.TemplateData.data = [...this.TemplateData.data, data]
+          }
         })
       })
-  }
-  ngOnDestroy(): void {
-    this.socketSubscription.unsubscribe();
   }
 
   // All Cases table with backend pagination
@@ -173,6 +188,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
       this.startTime.valueChanges,
       this.endTime.valueChanges,
       this.region.valueChanges,
+      this.informed.valueChanges,
       this.table2sort.sortChange,
       this.paginator.page)
       .pipe(
@@ -189,16 +205,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
           var startTime = this.startTime.value == null ? '' : this.startTime.value;
           var endTime = this.endTime.value == null ? '' : this.endTime.value;
           var region = this.region.value == null ? '' : this.region.value;
+          var informed = this.informed.value == null ? '' : this.informed.value;
           if (this.table2sort.direction == 'desc') {
             dir = '-'
           } else {
             dir = ''
           }
-
+          
           return this.authService
             .getDataTest(
               level, type, description, reason, problem,
-              createdAt, startTime, endTime, region,
+              createdAt, startTime, endTime, region, informed ,
               this.table2sort.active,
               dir,
               this.paginator.pageIndex + 1,
@@ -226,21 +243,26 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
       .subscribe((data) => {
         this.dataTable = new MatTableDataSource(data.results)
         
-        this.socketSubscription = this.webSocketService.getDataObservable().subscribe((data) => {
-          this.dataTable.data.push(data)
+        this.webSocketService.receiveMessage().subscribe((data) => {
+          const exist = this.dataTable.data.findIndex(
+            (item : any) => item.id === data.id
+          )
 
-          this.dataTable.data = [...this.dataTable.data]
+          if( exist !== -1) {
+            //check if it is exist, update it
+            this.dataTable.data[exist] = data
+          } else {
+            this.dataTable.data = [...this.dataTable.data, data]
+            this.TemplateData.data = this.TemplateData.data
+          }
+          
         })
       });
   }
 
   ngOnInit(): void {
-
     this.authService.getUser().subscribe((data:any) => {
       this.userName = data.first_name + ' ' + data.last_name
-      console.log(this.userName);
-      
-      
     })
 
   }
@@ -289,6 +311,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
           data.region
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.informed
             .toString()
             .trim()
             .toLowerCase()
@@ -356,8 +383,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy   {
         this.authService.deleteData(id).subscribe(res => {
           this.snackBar.open('Удалено', '', { duration: 10000 })
         })
+        this.webSocketService.sendMessage({action: 'delete', id})
       }
     })
+  }
+
+  private deleteItem(index:number) {
+    if (index >= 0 && index < this.TemplateData.data.length) {
+      this.TemplateData.data.splice(index, 1);
+    }
   }
 }
 

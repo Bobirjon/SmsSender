@@ -1,209 +1,156 @@
-<h1 style="font-weight: bold; text-align: center; margin-top: 200px;">Страница Временно недоступна</h1>
+<div>
 
-
-<!-- <div>
-    <form [formGroup]="massOff" class="form-container">
+    <form [formGroup]="massPowerForm" class="form-container">
         <mat-grid-list cols="25" rowHeight="85px">
-            <mat-grid-tile colspan="5">
+            <!-- level -->
+            <mat-grid-tile colspan="2">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="massOff.value.level" (ngModelChange)="setDefault()">
+                    <mat-select formControlName="level" [(ngModel)]="massPowerForm.value.level"
+                        (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
+            <!-- categories report -->
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория для отчета</mat-label>
-                    <mat-select formControlName="categories_report" [(ngModel)]="massOff.value.categories_report">
+                    <mat-select formControlName="categories_report" [(ngModel)]="massPowerForm.value.categories_report">
                         <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
                             {{cat_rep.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-
-            <mat-grid-tile colspan="5" rowspan="5">
-                <div class="grid-container">
-                    <mat-card class="preview">
-                        <mat-card-header>
-                            <mat-card-title>
-                                {{massOff.value.level.replace('P', 'П') + ' Массовое отключение Проблема:'}}
-                            </mat-card-title>
-                            <mat-card-title *ngIf="massOff.value.AddOrCor == 'Дополнения'">
-                                (Дополнения)
-                            </mat-card-title>
-                            <mat-card-title *ngIf="massOff.value.AddOrCor == 'Коррекция'">
-                                (Коррекция)
-                            </mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <p>{{massOff.value.problem}}</p>
-                            <p>{{'Причина: ' + massOff.value.reason}}</p>
-                            <p>{{'Начало: ' + massOff.value.startTime.replace('T',' ')}}</p>
-                            <p>{{'Оповещен: ' + massOff.value.informed}}</p>
-                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
-                        </mat-card-content>
-                        <mat-card-actions>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Проблема')" type="submit"
-                                [disabled]="massOff.invalid || massOff.value.endTime !==''">
-                                Отправить Сообщения
-                            </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting('Проблема')" type="submit"
-                                [disabled]="massOff.invalid || massOff.value.endTime !==''">
-                                TEST SMS
-                            </button>
-                        </mat-card-actions>
-                    </mat-card>
-                </div>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="5" rowspan="5">
-                <div class="grid-container">
-                    <mat-card class="preview">
-                        <mat-card-header>
-                            <mat-card-title>
-                                {{massOff.value.level.replace('P', 'П') + ' Массовое отключение Решение:'}}
-                            </mat-card-title>
-                            <mat-card-title *ngIf="massOff.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
-                            <mat-card-title *ngIf="massOff.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <p>{{massOff.value.problem}}</p>
-                            <p>{{'Причина: ' + massOff.value.reason}}</p>
-                            <p>{{'Начало: ' + massOff.value.startTime.replace("T", " ")}}</p>
-                            <p>{{'Конец: ' + massOff.value.endTime.replace("T", " ")}}</p>
-                            <p>{{'Оповещен: ' + massOff.value.informed}}</p>
-                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
-                        </mat-card-content>
-                        <mat-card-actions>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                [disabled]="(massOff.invalid) || massOff.value.endTime==''">
-                                Отправить Сообщения
-                            </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting('Решение')" type="submit"
-                                [disabled]="massOff.invalid || massOff.value.endTime ==''">
-                                TEST SMS
-                            </button>
-                        </mat-card-actions>
-                    </mat-card>
-                </div>
-            </mat-grid-tile>
-
-             <mat-grid-tile colspan="5" rowspan="5">
-                <div class="grid-container">
-                    <mat-card class="preview">
-                        <mat-card-header>
-                            <mat-card-title>
-                                {{massOff.value.level.replace('P', 'П') + ' Массовое отключение Решение:'}}
-                            </mat-card-title>
-                            <mat-card-title *ngIf="massOff.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
-                            <mat-card-title *ngIf="massOff.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <p>{{massOff.value.problem}}</p>
-                            <p>{{'Причина: ' + massOff.value.reason}}</p>
-                            <p>{{'Начало: ' + massOff.value.startTime.replace("T", " ")}}</p>
-                            <p>{{'Конец: ' + massOff.value.endTime.replace("T", " ")}}</p>
-                            <p>{{'Оповещен: ' + massOff.value.informed}}</p>
-                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
-                        </mat-card-content>
-                        <mat-card-actions>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                [disabled]="(massOff.invalid) || massOff.value.endTime==''">
-                                Отправить Сообщения
-                            </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting('Решение')" type="submit"
-                                [disabled]="massOff.invalid || massOff.value.endTime ==''">
-                                TEST SMS
-                            </button>
-                        </mat-card-actions>
-                    </mat-card>
-                </div>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="5" rowspan="1">
-                <mat-form-field class="margin-container">
-                    <mat-label>Регион</mat-label>
-                    <mat-select formControlName="region" [(ngModel)]="massOff.value.region">
-                        <mat-option *ngFor="let reg of region" [value]="reg.value">
-                            {{reg.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
+            <!-- responsible area -->
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Ответственная Зона</mat-label>
-                    <mat-select formControlName="responsible_report" [(ngModel)]="massOff.value.responsible_report">
+                    <mat-select formControlName="responsible_report" [(ngModel)]="massPowerForm.value.responsible_report">
                         <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
                             {{res_rep.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <mat-grid-tile colspan="5" rowspan="1">
+            <mat-grid-tile colspan="3">
+            </mat-grid-tile>
+            <!-- preview infromacionoe-->
+            <mat-grid-tile colspan="10" rowspan="8">
+                <div class="grid-container">
+                    <mat-card class="preview">
+                        <mat-card-header>
+                            <mat-card-title>
+                                {{'Информационное' + massPowerForm.value.level?.replace('P','П')}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="massPowerForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
+                            <mat-card-title *ngIf="massPowerForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{massPowerForm.value.problem + ' не работают в ' + massPowerForm.value.region}}</p>
+                            <p>{{'Причина: ' + massPowerForm.value.reason + ' в ' +  massPowerForm.value.region}} </p>
+                            <p>{{'Начало: ' + massPowerForm.value.startTime.replace("T", " ")}}</p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Информационное')" type="submit"
+                                [disabled]="(massPowerForm.invalid) || massPowerForm.value.endTime==''">
+                                Отправить Сообщения
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitasNew('Информационное')" type="submit" *ngIf="newForm == false"
+                                [disabled]="(massPowerForm.invalid) || massPowerForm.value.endTime==''">
+                                Новое SMS
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="forSmsTesting('Информационное')" type="submit"
+                                [disabled]="massPowerForm.invalid || massPowerForm.value.endTime ==''">
+                                TEST SMS
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </mat-grid-tile>
+            <!-- region -->
+            <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
-                    <mat-label>Проблема</mat-label>
-                    <textarea matInput type="text" formControlName="problem"
-                        [(ngModel)]="massOff.value.problem" spellcheck="true"
-                        [matAutocomplete]="autoProblem">
-                    </textarea>
-                    <mat-autocomplete #autoProblem="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptionsProblem | async" [value]="option">
-                          {{option}}
+                    <mat-label>Регион</mat-label>
+                    <mat-select formControlName="region" [(ngModel)]="massPowerForm.value.region">
+                        <mat-option *ngFor="let reg of region" [value]="reg.value">
+                            {{reg.value}}
                         </mat-option>
-                      </mat-autocomplete>
+                    </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-
-            <mat-grid-tile colspan="5" rowspan="1">
+            <!-- district -->
+            <mat-grid-tile colspan="6">
+                <mat-form-field class="margin-container">
+                    <mat-label>Район</mat-label>
+                    <mat-select formControlName="district" [(ngModel)]="massPowerForm.value.district"
+                        [disabled]="this.massPowerForm.value.region.value == 'Ташкент.обл'">
+                        <mat-option *ngFor="let dis of district" [value]="dis.value">
+                            {{dis.value}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="3">
+            </mat-grid-tile>
+            <!-- problem -->
+            <mat-grid-tile colspan="6">
+                <mat-form-field class="margin-container">
+                    <mat-label>Проблема</mat-label>
+                    <textarea matInput type="text" formControlName="problem" [(ngModel)]="massPowerForm.value.problem"
+                        (ngModelChange)="findAndDisplayMax()" spellcheck="true"> </textarea>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- reason -->
+            <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
-                    <textarea matInput type="text" formControlName="reason"
-                        [(ngModel)]="massOff.value.reason" spellcheck="true"
-                        [matAutocomplete]="autoReason">
+                    <textarea matInput type="text" formControlName="reason" [(ngModel)]="massPowerForm.value.reason"
+                        spellcheck="true" [matAutocomplete]="autoReason">
                     </textarea>
                     <mat-autocomplete #autoReason="matAutocomplete">
                         <mat-option *ngFor="let option of filteredOptionsReason | async" [value]="option">
-                          {{option}}
+                            {{option}}
                         </mat-option>
-                      </mat-autocomplete>
+                    </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-            <mat-grid-tile colspan="5" rowspan="1">
+            <mat-grid-tile colspan="3">
+            </mat-grid-tile>
+            <!-- start Time -->
+            <mat-grid-tile colspan="5">
                 <div class="margin-container">
                     <p>Начало</p>
                     <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
                         min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
-                        [(ngModel)]="massOff.value.startTime" />
+                        [(ngModel)]="massPowerForm.value.startTime">
                 </div>
             </mat-grid-tile>
-            <mat-grid-tile colspan="5" rowspan="1">
-                <div class="margin-container">
-                    <p>Конец</p>
-                    <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="massOff.value.endTime">
-                </div>
+            <mat-grid-tile colspan="9">
+            </mat-grid-tile>
+            <!-- buttons -->
+            <mat-grid-tile colspan="2">
+                <button class="form-button" mat-raised-button type="button" *ngIf="newForm == false"
+                    (click)="updateData()" style="position: absolute; bottom: 8px;">Обновить</button>
+                <button class="form-button" mat-raised-button type="button" *ngIf="newForm == true"
+                    [disabled]="massPowerForm.invalid" (click)="createData()" style="position: absolute; bottom: 0px;">Создать</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="2">
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
-                    (click)="updateData()" [disabled]="massOff.invalid">Обновить </button>
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
-                    [disabled]="massOff.invalid" (click)="createData()">Создать</button>
+                
             </mat-grid-tile>
-            <mat-grid-tile colspan="4">
-                <mat-chip-listbox formControlName="AddOrCor">
+            <mat-grid-tile colspan="3">
+                <mat-chip-listbox formControlName="AddOrCor" style="position: absolute; bottom: 8px;">
                     <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
                     <mat-chip-option value="Дополнения">Дополнения</mat-chip-option>
                 </mat-chip-listbox>
             </mat-grid-tile>
         </mat-grid-list>
+
     </form>
-</div> -->
+</div>

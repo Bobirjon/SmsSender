@@ -39,6 +39,7 @@ export class AuthService {
     problem: string, createdAt: any, startTime: any, 
     endTime: any, 
     region: string,
+    informed: string,
     ordering: string,
     order: string,
     page: number,
@@ -47,10 +48,10 @@ export class AuthService {
     const url = this.URLsender + `smssender/alarmreport/?level__icontains=${level}
       &type__icontains=${type}&description__icontains=${description}
       &region__icontains=${region}&createdat_in=${createdAt}
-      &starttime_in=${startTime}&endtime_in=${endTime}
+      &starttime_in=${startTime}&endtime_in=${endTime}&informed__icontains=${informed}
       &problem__icontains=${problem}&reason__icontains=${reason}
       &ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
-    
+
     return this.http.get(url)
 
   }
@@ -107,5 +108,21 @@ export class AuthService {
 
   deleteData(id: number) {
     return this.http.delete(`${this.URLsender + 'smssender/alarmreport'}/${id}/`)
+  }
+
+  postNewIdeas(body: any) {
+    return this.http.post(this.URLsender + 'smssender/newtask/', body)
+  }
+
+  getNewIdeas() {
+    return this.http.get(this.URLsender + 'smssender/newtask/')
+  }
+
+  updateNewIdeas(id: number, data: any) {
+      return this.http.put(`${this.URLsender + 'smssender/newtask'}/${id}/`, data)
+  }
+
+  deleteNewIdeas(id: number) {
+    return this.http.delete(`${this.URLsender + 'smssender/newtask'}/${id}/`)
   }
 }

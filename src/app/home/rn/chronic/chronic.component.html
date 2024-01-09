@@ -215,23 +215,26 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            
+
             <!-- start Time -->
             <mat-grid-tile colspan="6">
                 <div class="margin-container">
-                    <p>Начало <span *ngIf="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched"
-                                    class="timeNotValid"> 
+                    <p>Начало 
+                        <span *ngIf="validationStyle ? (chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched) :
+                        chronicForm.get('time').hasError('invalidDatetime') "  class="timeNotValid"> 
                         *Время простоя не соответствует Началу времени*</span>
                     </p>
                     <input type="datetime-local" class="dateTime" formControlName="startTime"
-                        [(ngModel)]="chronicForm.value.startTime" [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched">
+                        [(ngModel)]="chronicForm.value.startTime"
+                        [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime')">
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
             <mat-grid-tile colspan="6">
                 <div class="margin-container">
-                    <p>Конец<span *ngIf="chronicForm.get('endTime').hasError('timeValid') && chronicForm.get('startTime').touched"
-                        class="timeNotValid" > *Начало больше чем Конец времени</span></p>
+                    <p>Конец<span
+                            *ngIf="chronicForm.get('endTime').hasError('timeValid') && chronicForm.get('startTime').touched"
+                            class="timeNotValid"> *Начало больше чем Конец времени</span></p>
                     <input type="datetime-local" class="dateTime" formControlName="endTime"
                         [(ngModel)]="chronicForm.value.endTime">
                 </div>

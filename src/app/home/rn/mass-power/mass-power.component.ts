@@ -5,28 +5,28 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from 'src/app/auth.service';
 import { StorageService } from 'src/app/storage.service';
-import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/auth.service';
+import { Observable, range } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-
 
 @Component({
   selector: 'app-mass-power',
   templateUrl: './mass-power.component.html',
-  styleUrls: ['./mass-power.component.css']
+  styleUrls: ['./mass-power.component.css'],
 })
-export class MassPowerComponent {
-  massOff: FormGroup
+export class MassPowerComponent implements OnInit {
+
+  massPowerForm: FormGroup
   user: any
   newForm: boolean
   SmsTextBody: any
   time = new Date()
   requestType: any
-  tableBody: any    
+  tableBody: any
   smsBody: any
+  word: string = ' Узловой сайт '
   idAlarmReport: any
-  filteredOptionsProblem: Observable<string[]>;
   filteredOptionsReason: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
@@ -41,12 +41,13 @@ export class MassPowerComponent {
     { value: 'P4', viewValue: 'П4' },
     { value: 'P5', viewValue: 'П5' },
   ];
-  
+
+
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
     { value: 'ЭС и Клим', viewValue: 'ЭС и Клим' },
-    { value: 'Провайдер', viewValue: 'Провайдер' },
     { value: 'ПР', viewValue: 'ПР' },
+    { value: 'Провайдер', viewValue: 'Провайдер' },
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
   responsible_report: { value: string; viewValue: string }[] = [
@@ -54,69 +55,120 @@ export class MassPowerComponent {
     { value: 'Эксплуатация', viewValue: 'Эксплуатация' },
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
-  category: { value: string; viewValue: string }[] = [
-    { value: 'wb', viewValue: 'wb' },
-    { value: 'fault', viewValue: 'fault' },
-    { value: 'no', viewValue: 'no' }
-  ];
+
   region: { value: string; viewValue: string }[] = [
-    { value: 'Андижан', viewValue: 'Андижан' },
-    { value: 'Бухара', viewValue: 'Бухара' },
-    { value: 'Джизак', viewValue: 'Джизак' },
-    { value: 'Фергана', viewValue: 'Фергана' },
-    { value: 'Сырдарья', viewValue: 'Сырдарья' },
-    { value: 'Кашкадарья', viewValue: 'Кашкадарья' },
-    { value: 'Наманган', viewValue: 'Наманган' },
+    { value: 'Андижан', viewValue: 'Андижане' },
+    { value: 'Бухара', viewValue: 'Бухаре' },
+    { value: 'Джизак', viewValue: 'Джизаке' },
+    { value: 'Фергана', viewValue: 'Фергане' },
+    { value: 'Сырдарья', viewValue: 'Сырдарье' },
+    { value: 'Кашкадарья', viewValue: 'Кашкадарье' },
+    { value: 'Наманган', viewValue: 'Намангане' },
     { value: 'Навои', viewValue: 'Навои' },
-    { value: 'Каракалпакстан', viewValue: 'Каракалпакстан' },
-    { value: 'Самарканд', viewValue: 'Самарканд' },
-    { value: 'г.Ташкент', viewValue: 'г.Ташкент' },
-    { value: 'Ташкент.обл', viewValue: 'Ташкент.обл' },
-    { value: 'Сурхандарья', viewValue: 'Сурхандарья' },
-    { value: 'Хорезм', viewValue: 'Хорезм' },
+    { value: 'Каракалпакстан', viewValue: 'Каракалпакстане' },
+    { value: 'Самарканд', viewValue: 'Самарканде' },
+    { value: 'г.Ташкент', viewValue: 'г.Ташкенте' },
+    { value: 'Ташкент.обл', viewValue: 'Ташкентской области' },
+    { value: 'Сурхандарья', viewValue: 'Сурхандарье' },
+    { value: 'Хорезм', viewValue: 'Хорезме' },
   ];
 
-  optionsProblem: string[] = [
-    'Некорректная состояние платы ',
-    'Плата',
-    'Потеря',
-  ];
+  regions = {
+    'Андижан': 'Андижане',
+    'Бухара': 'Бухаре',
+    'Джизак': 'Джизаке',
+    'Фергана': 'Фергане',
+    'Сырдарья': 'Сырдарье',
+    'Кашкадарья': 'Кашкадарье',
+    'Наманган': 'Намангане',
+    'Навои': 'Навои',
+    'Каракалпакстан': 'Каракалпакстане',
+    'Самарканд': 'Самарканде',
+    'г.Ташкент': 'г.Ташкент',
+    'Ташкент.обл': 'Ташкентской области',
+    'Сурхандарья': 'Сурхандарье',
+    'Хорезм': 'Хорезме',
+    '': ''
+  }
+
+  district: { value: string; viewValue: string }[] = [
+    { value: 'Аккурган', viewValue: 'Аккурган' },
+    { value: 'Ахангаран', viewValue: 'Ахангаран' },
+    { value: 'Бекабад', viewValue: 'Бекабад' },
+    { value: 'Бустонлик', viewValue: 'Бустонлик' },
+    { value: 'Бука', viewValue: 'Бука' },
+    { value: 'Зангиота', viewValue: 'Зангиота' },
+    { value: 'Кибрай', viewValue: 'Кибрай' },
+    { value: 'Куйичирчик', viewValue: 'Куйичирчик' },
+    { value: 'Паркент', viewValue: 'Паркент' },
+    { value: 'Пскент', viewValue: 'Пскент' },
+    { value: 'Ташкент', viewValue: 'Ташкент' },
+    { value: 'Уртачирчик', viewValue: 'Уртачирчик' },
+    { value: 'Чиназ', viewValue: 'Чиназ' },
+    { value: 'Юкоричирчик', viewValue: 'Юкоричирчик' },
+    { value: 'Янгиюль', viewValue: 'Янгиюль' },
+    { value: 'Алмалык', viewValue: 'Алмалык' },
+    { value: 'Чирчик', viewValue: 'Чирчик' },
+    { value: 'Ангрен', viewValue: 'Ангрен' },
+    { value: 'Нурафшон', viewValue: 'Нурафшон' },
+    { value: 'Чимбай', viewValue: 'Чимбай' },
+
+  ]
+
+  dist = {
+    'Аккурган': 'Аккурганском районе',
+    'Ахангаран': 'Ахангаранском районе',
+    'Бекабад': 'Бекабадском районе',
+    'Бустонлик': 'Бустанликском районе',
+    'Бука': 'Букинском районе',
+    'Зангиота': 'Зангиотинском районе',
+    'Кибрай': 'Кибрайском районе',
+    'Куйичирчик': 'Куйичирчикском районе',
+    'Паркент': 'Паркентском районе',
+    'Пскент': 'Пскентском районе',
+    'Ташкент': 'Ташкентском районе',
+    'Уртачирчик': 'Уртачирчикском районе',
+    'Чиназ': 'Чиназском районе',
+    'Юкоричирчик': 'Юкоричирчикском районе',
+    'Янгиюль': 'Янгиюльском районе',
+    'Алмалык': 'Алмалыкском районе',
+    'Чирчик': 'город Чирчик',
+    'Ангрен': 'Ангренском районе',
+    'Нурафшон': 'город Нурафшон',
+    'Чимбай': 'Чимбайском районе',
+    '': ''
+  }
 
   optionsReason: string[] = [
-    'Из-за неисправности платы ',
-    'В связи с плановыми работами',
+    'Нет питания ',
+    'Проблема',
     'Выясняется',
+    'В связи с плановыми работами',
+    'Нет питания. Узловой сайт',
+    'Нет питания. FG не завёлся. Узловой сайт',
   ];
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
+    private router: Router,
     private storageService: StorageService,
     private snackBar: MatSnackBar,
-    private router: Router,
     public dialog: MatDialog) {
-      // form creation
-     this.massOff = this.formBuilder.group({
+    this.massPowerForm = this.formBuilder.group({
       'AddOrCor': [null],
       'level': ['', Validators.required],
       'categories_report': ['', Validators.required],
       'responsible_report': ['', Validators.required],
-      'problem': ['', Validators.required],
+      'problem': [' 2G,  3G,  4G сайтов', Validators.required],
       'reason': ['', Validators.required],
       'startTime': ['', Validators.required],
-      'endTime': [''],
       'region': ['', Validators.required],
-      'informed': [''],
-      'sender': [''],
+      'district' : ['', Validators.required]
     })
 
-    this.filteredOptionsProblem = this.massOff.controls.problem.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value, this.optionsProblem))
-    )
-
-    this.filteredOptionsReason = this.massOff.controls.reason.valueChanges.pipe(
+    this.filteredOptionsReason = this.massPowerForm.controls.reason.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, this.optionsReason))
     )
@@ -129,12 +181,101 @@ export class MassPowerComponent {
   }
 
   setDefault() {
-    if (this.massOff.value.level == 'P1' || this.massOff.value.level == 'P2' ||
-      this.massOff.value.level == 'P3' || this.massOff.value.level == 'P4' || this.massOff.value.level == 'P5') {
-      this.massOff.value.categories_report = 'ПР'
+    if (this.massPowerForm.value.level == 'P1' || this.massPowerForm.value.level == 'P2' ||
+      this.massPowerForm.value.level == 'P3' || this.massPowerForm.value.level == 'P4' || this.massPowerForm.value.level == 'P5') {
+      this.massPowerForm.value.categories_report = 'ПР'
     }
   }
 
+  private extractNumbersFromString(input: string): number[] {
+    const numberMatches: RegExpMatchArray | null = input.match(/\d+/g)
+
+    if (numberMatches) {
+      return numberMatches.map(Number);
+    } else {
+      return []
+    }
+  }
+
+  endTimeValidation(control: any) {
+    let endTime = new Date(control.value)
+    const formGroup = control?.parent;
+    if (formGroup) {
+      const startTime = formGroup.get('startTime')
+      const startTimeSelected = new Date(startTime.value)
+      const difference = endTime.getTime() - startTimeSelected.getTime()
+      if (difference < 0) {
+
+        return { timeValid: true }
+      } else {
+        return null
+      }
+    }
+    return null
+  }
+
+  findAndDisplayMax() {
+
+    const numbers: number[] = this.extractNumbersFromString(this.massPowerForm.value.problem)
+
+    if (numbers.length > 0) {
+      const maxNumber: number = Math.max(...numbers)
+      console.log('Maks Номера ', maxNumber);
+      if (this.massPowerForm.value.region == 'г.Ташкент' || this.massPowerForm.value.region == 'Ташкент.обл') {
+        if (this.massPowerForm.value.categories_report == 'ПР') {
+          if (maxNumber >= 4 && maxNumber <= 19) {
+            this.massPowerForm.value.level = 'P4'
+          } else if (maxNumber >= 20 && maxNumber <= 49) {
+            console.log('A3');
+            this.massPowerForm.value.level = 'P3'
+          } else if (maxNumber >= 50) {
+            console.log('A2');
+            this.massPowerForm.value.level = 'P2'
+          }
+        } else {
+          if (maxNumber >= 4 && maxNumber <= 19) {
+            console.log('A4');
+            this.massPowerForm.value.level = 'A4'
+          } else if (maxNumber >= 20 && maxNumber <= 49) {
+            console.log('A3');
+            this.massPowerForm.value.level = 'A3'
+          } else if (maxNumber >= 50) {
+            console.log('A2');
+            this.massPowerForm.value.level = 'A2'
+          }
+        }
+      } else {
+        if (this.massPowerForm.value.categories_report == 'ПР') {
+          if (maxNumber > 2 && maxNumber < 10) {
+            console.log('З4');
+            this.massPowerForm.value.level = 'P4'
+          } else if (maxNumber >= 10 && maxNumber < 30) {
+            console.log('A3');
+            this.massPowerForm.value.level = 'P3'
+          } else if (maxNumber >= 30) {
+            console.log('A2');
+            this.massPowerForm.value.level = 'P2'
+          }
+        } else {
+          if (maxNumber > 2 && maxNumber < 10) {
+            console.log('A4');
+            this.massPowerForm.value.level = 'A4'
+          } else if (maxNumber >= 10 && maxNumber < 30) {
+            console.log('A3');
+            this.massPowerForm.value.level = 'A3'
+          } else if (maxNumber >= 30) {
+            console.log('A2');
+            this.massPowerForm.value.level = 'A2'
+          }
+        }
+      }
+
+    } else {
+      console.log('non number detexted');
+
+    }
+
+  }
 
   ngOnInit(): void {
     // get Current user
@@ -142,169 +283,147 @@ export class MassPowerComponent {
       .subscribe(result => {
         this.user = result
       })
-    // is user in edit mode
-    if (this.route.snapshot.params.id == (null || undefined)) {
+
+    if (this.route.snapshot.params.id == null) {
       this.newForm = true
+
     } else {
       this.newForm = false
-      let endTimeForUpdate: any
+      let district: any
+
+
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          if (result['end_time'] == null) {
-            endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
+          if (result['district'] == null || result['district'] == undefined) {
+            district = ''
           } else {
-            endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
+            district = result['district']
           }
-          this.massOff = this.formBuilder.group({
+
+          this.massPowerForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
             'categories_report': [result['category'], Validators.required],
             'responsible_report': [result['responsible_area'], Validators.required],
-            'problem': [result['problem'], Validators.required],
-            'reason': [result['reason'], Validators.required],
+            'problem': [result['hub_problem'], Validators.required],
+            'reason': [result['hub_reason'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
-            'endTime': [endTimeForUpdate],
             'region': [result['region'], Validators.required],
-            'informed': [result['informed'], Validators.required],
-            'sender': [result['sender']],
           })
+
         })
     }
   }
 
   tableSendBody() {
-    this.tableBody = {
-      'type': 'BSC/RNC',
-      'level': this.massOff.value.level,
-      'category': this.massOff.value.categories_report,
-      'responsible_area': this.massOff.value.responsible_report,
-      'problem': this.massOff.value.problem,
-      'reason': this.massOff.value.reason,
-      'start_time': this.massOff.value.startTime,
-      'region': this.massOff.value.region,
-      'informed': this.massOff.value.informed,
-      'sender': this.user?.username
-    }
 
-    if (this.massOff.value.endTime != '') {
-      this.tableBody.end_time = this.massOff.value.endTime
+    this.tableBody = {
+      'type': 'HUB',
+      'level': this.massPowerForm.value.level,
+      'category': this.massPowerForm.value.categories_report,
+      'responsible_area': this.massPowerForm.value.responsible_report,
+      'problem': this.massPowerForm.value.problem ,
+      'reason': this.massPowerForm.value.reason ,
+      'start_time': this.massPowerForm.value.startTime,
+      'end_time': this.massPowerForm.value.startTime,
+      'region': this.massPowerForm.value.region,
+      'sender': this.user?.username,
     }
   }
 
   smsSendBody(id?: number) {
-    if (this.requestType == 'Проблема') {
-      if (this.massOff.value.AddOrCor == (undefined || null)) {
-        this.SmsTextBody =
-          this.massOff.value.level.replace('P', 'П') + ' Массовое отключение ' + this.requestType + ':\n' +
-          this.massOff.value.problem + ' сайтов не работают в ' + this.massOff.value.region + '\n' +
-          'Причина: ' + this.massOff.value.reason + '\n' +
-          'Начало: ' + this.massOff.value.startTime.replace("T", " ") + '\n' +
-          'Оповещен: ' + this.massOff.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n '
-      } else {
-        this.SmsTextBody =
-          this.massOff.value.level.replace('P', 'П') + ' Массовое отключение ' + this.requestType + ':\n' +
-          '(' + this.massOff.value.AddOrCor + ')\n' +
-          this.massOff.value.problem + ' сайтов не работают в ' + this.massOff.value.region + '\n' +
-          'Причина: ' + this.massOff.value.reason + '\n' +
-          'Начало: ' + this.massOff.value.startTime.replace("T", " ") + '\n' +
-          'Оповещен: ' + this.massOff.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n '
-      }
+
+    let addWord = this.storageService.additionWord(this.massPowerForm.value.level)
+
+
+    if (this.massPowerForm.value.AddOrCor == (null || undefined)) {
+      this.SmsTextBody =
+        this.requestType + this.massPowerForm.value.level.replace('P', 'П') + '\n' +
+        this.massPowerForm.value.problem + ' не работают в ' + this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
+        'Причина: ' + this.massPowerForm.value.reason + this.word + this.massPowerForm.value.hubSite + ' ' + this.massPowerForm.value.generator + '\n' +
+        'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
+        'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+        addWord
+    } else {
+      this.SmsTextBody =
+        this.requestType + this.massPowerForm.value.level.replace('P', 'П') + '\n' +
+        '(' + this.massPowerForm.value.AddOrCor + ')\n' +
+        this.massPowerForm.value.problem + ' не работают в ' + this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
+        'Причина: ' + this.massPowerForm.value.reason + this.word + this.massPowerForm.value.hubSite + ' ' + this.massPowerForm.value.generator + '\n' +
+        'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
+        'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+        addWord
     }
-    else {
-      if (this.massOff.value.AddOrCor == (null || undefined)) {
-        this.SmsTextBody =
-          this.massOff.value.level.replace('P', 'П') + ' Массовое отключение ' + this.requestType + ':\n' +
-          this.massOff.value.problem + ' сайтов не работают в ' + this.massOff.value.region + '\n' +
-          'Причина: ' + this.massOff.value.reason + '\n' +
-          'Начало: ' + this.massOff.value.startTime.replace("T", " ") + '\n' +
-          'Конец: ' + this.massOff.value.endTime.replace("T", " ") + '\n' +
-          'Оповещен: ' + this.massOff.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n '
-      } else {
-        this.SmsTextBody =
-          this.massOff.value.level.replace('P', 'П') + ' Массовое отключение ' + this.requestType + ':\n' +
-          '(' + this.massOff.value.AddOrCor + ')\n' +
-          this.massOff.value.problem + ' сайтов не работают в ' + this.massOff.value.region + '\n' +
-          'Причина: ' + this.massOff.value.reason + '\n' +
-          'Начало: ' + this.massOff.value.startTime.replace("T", " ") + '\n' +
-          'Конец: ' + this.massOff.value.endTime.replace("T", " ") + '\n' +
-          'Оповещен: ' + this.massOff.value.informed + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n '
-      }
-    }
+
+    let smsType = this.storageService.SmsType(this.requestType, this.massPowerForm.value.AddOrCor)
 
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
-      'criteria': [this.massOff.value.level.replace('P', 'A')],
-      'notification': ['BSC/RNC'],
+      'criteria': [this.massPowerForm.value.level.replace('P', 'A')],
+      'notification': ['Hub'],
       'sms_text': this.SmsTextBody,
-      'alarmreport_id': id
-    }
-
-    if (this.massOff.value.region != (null || undefined)) {
-      this.smsBody.region = [this.massOff.value.region]
+      'region': [this.massPowerForm.value.region],
+      'alarmreport_id': id,
+      'sms_type': smsType
     }
   }
 
+
   updateData() {
+
     this.tableSendBody()
 
-    this.storageService.updateData(this.route.snapshot.params.id, this.tableBody)
-    // this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-    //   .subscribe((result) => {
-    //     console.log(result);
-    //     this.snackBar.open('Обновлено', '', { duration: 10000 })
-    //   }, error => {
-    //     this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
-    //   })
+    this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
+      .subscribe((result) => {
+        console.log(result);
+        this.snackBar.open('Обновлено', '', { duration: 10000 })
+      }, error => {
+        this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
+      })
   }
 
   createData() {
+
+
     this.tableSendBody()
-    
-    this.storageService.createToTable(this.tableBody)
-    // this.authService.postData(this.tableBody)
-    //   .subscribe((res) => {
-    //     console.log(res);
-    //     this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-    //   }, error => {
-    //     console.log(error);
-    //     this.snackBar.open("Ошибка", '', { duration: 10000 })
-    //   })
+
+    this.authService.postData(this.tableBody)
+      .subscribe((res) => {
+        console.log(res);
+        this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+      }, error => {
+        console.log(error);
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
+      })
   }
 
   sendButton() {
-    
-    this.storageService.sendSms(this.smsBody)
-    // this.authService.sendSms(this.smsBody)
-    //       .subscribe(res => {
-    //         console.log(res);
-    //         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-    //         this.router.navigate(['/home'])
-    //       }, error => {
-    //         console.log(error);
-    //         this.snackBar.open("Ошибка", '', { duration: 10000 })
-    //       })
+    this.authService.sendSms(this.smsBody)
+      .subscribe(res => {
+        console.log(res);
+        this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+        this.router.navigate(['/home'])
+      }, error => {
+        console.log(error);
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
+      })
   }
 
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
-
     this.smsSendBody()
 
     const dialogRef = this.dialog.open(areYouSure);
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
+    dialogRef.afterClosed().subscribe(res => {
+      if (res == true) {
+
         if (this.newForm == false) {
           this.tableSendBody()
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
             .subscribe((result) => {
-              console.log(result);
               this.snackBar.open('Обновлено', '', { duration: 10000 })
 
               this.idAlarmReport = result
@@ -318,7 +437,6 @@ export class MassPowerComponent {
 
           this.authService.postData(this.tableBody)
             .subscribe((res) => {
-              console.log(res);
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
 
               this.smsSendBody(res.id)
@@ -328,9 +446,28 @@ export class MassPowerComponent {
               this.snackBar.open("Ошибка", '', { duration: 10000 })
             })
         }
-
       }
+    })
+  }
 
+  onSubmitasNew(smsType: string) {
+    this.requestType = smsType
+
+    const dialogRef = this.dialog.open(areYouSure);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.tableSendBody()
+
+        this.authService.postData(this.tableBody)
+          .subscribe((result) => {
+            this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+            this.smsSendBody(result.id)
+            this.sendButton()
+          }, error => {
+            this.snackBar.open("Ошибка", '', { duration: 10000 })
+          })
+      }
     })
   }
 
@@ -348,6 +485,7 @@ export class MassPowerComponent {
       }
     })
   }
+
 }
 
 @Component({
@@ -357,6 +495,7 @@ export class MassPowerComponent {
   imports: [MatDialogModule, MatButtonModule],
 })
 export class areYouSure { }
+
 
 @Component({
   selector: 'fortesting',
@@ -385,7 +524,7 @@ export class fortesting {
       .subscribe(res => {
         console.log(res);
       })
+    console.log(this.smsbody);
 
   }
 }
-

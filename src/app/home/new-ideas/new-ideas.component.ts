@@ -1,8 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { DataModel } from './myData.model';
-import { Observable, of } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { AuthService } from 'src/app/auth.service';
+import {MatDialog,} from '@angular/material/dialog';
+import { EditPageComponent } from './edit-page/edit-page.component';
+
+export interface NewData {
+  name: string;
+  description: string;
+  status: string;
+  priority: string
+}
 
 @Component({
   selector: 'app-new-ideas',
@@ -11,41 +19,66 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 
 export class NewIdeasComponent implements OnInit {
-  dataSource = new MatTableDataSource<any>();
-  displayedColumns: string[] = ['priority', 'description', 'status'];
 
-  // Define a FormGroup for the user input
-  userInputForm: FormGroup;
+  displayedColumns: string[] = ['name', 'description', 'status', 'priority'];
+  dataSource = new MatTableDataSource<NewData>([]);
+  newIdeasForm: FormGroup
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor( 
+    private fb: FormBuilder, 
+    private authService: AuthService,
+    private dialog: MatDialog) {
+    this.createForm()
+
+    this.authService.getNewIdeas().subscribe(
+      (res: any) => {
+        console.log(res.results);
+        this.dataSource = new MatTableDataSource(res.results)
+      }
+    )
+  }
 
   ngOnInit() {
-    // Initial data
-    const initialData = [
-      { priority: 'test', description: 'testtesttesttesttest', status: 'test' },
-    ];
+    
+  }
 
-    // Push initial data to the MatTableDataSource
-    this.dataSource.data = initialData;
-
-    // Initialize the user input form
-    this.userInputForm = this.formBuilder.group({
-      priority: [null, Validators.required],
+  createForm() {
+    this.newIdeasForm = this.fb.group({
+      name: ['', Validators.required],
       description: ['', Validators.required],
       status: ['', Validators.required],
+      priority: ['', Validators.required]
     });
   }
 
-  // Function to add new user input data to the MatTable
-  addUserInputData() {
-    const newData = this.userInputForm.value;
+  addData() {
+    if (this.newIdeasForm.valid) {
+      let dataBody = {
+        'name': this.newIdeasForm.value.name,
+        'description': this.newIdeasForm.value.description,
+        'status': this.newIdeasForm.value.status,
+        'priority': this.newIdeasForm.value.priority,
+      }
+      this.authService.postNewIdeas(dataBody).subscribe(
+        (res) => {
+          window.location.reload()
+        }
+      )
+    }
+  }
 
-    // Push the new data to the MatTableDataSource
-    this.dataSource.data = [...this.dataSource.data, newData];
-    // Reset the form
-    this.userInputForm.reset();
-    // Trigger a refresh of the table
-    this.dataSource._updateChangeSubscription();
+  onEdit(row: string) {
+    const popup = this.dialog.open(EditPageComponent, {
+      width: '400px', 
+      data: {
+        text: row,
+        title: 'Bu Testku'
+      }
+    });
 
+    popup.afterClosed().subscribe(item => {
+      console.log(item);
+      
+    })
   }
 }

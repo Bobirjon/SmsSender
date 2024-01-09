@@ -1,9 +1,8 @@
-<h1 style="font-weight: bold; text-align: center; margin-top: 200px;">Страница Временно недоступна</h1>
-
-<!-- <div>
+<div>
     <h1 style="margin: 30px;">Core SMS</h1>
     <form [formGroup]="cnForm" class="form-container">
         <mat-grid-list cols="40" rowHeight="85px">
+            
             <mat-grid-tile colspan="4" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
@@ -63,18 +62,18 @@
                             <p>{{'Отправил: ' + user?.first_name + ' ' + user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
-                            <button class="form-button" mat-raised-button color="primary"
+                            <button class="form-button" mat-raised-button color="primary" disabled
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
                                 [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
                                 Отправить SMS
                             </button>
-                            <button class="form-button" mat-raised-button color="primary"
+                            <button class="form-button" mat-raised-button color="primary" disabled
                                 (click)="onSubmitasNew('Информационное')" type="submit"
                                 *ngIf="newForm == false"
                                 [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
                                 Новое SMS
                             </button>
-                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Информационное')"
+                            <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Информационное')" disabled
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
                                 TEST SMS
                             </button>
@@ -107,4 +106,4 @@
             </mat-grid-tile>
         </mat-grid-list>
     </form>
-</div> -->
+</div>

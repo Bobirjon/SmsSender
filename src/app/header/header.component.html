@@ -1,17 +1,10 @@
-<mat-toolbar color="primary">
-    <a routerLink="/home" style="text-decoration: none; color: white;"><span>Домой</span></a>
+<mat-toolbar class="header-style">
+    <a routerLink="/home" style="text-decoration: none; color: #fbebff; font-family: system-ui; font-size: 30px;"><span>Ucell</span></a>
     <span class="example-spacer"></span>
-    <span>V-03.01.24.17.35</span>
+    <span style="color: #fbebff;">V-09.01.24.11.07</span>
     <span class="example-spacer"></span>
-    <a style="text-decoration: none; 
-             text-align: center; 
-             color: white; 
-             font-size: medium;
-             cursor: pointer;"
-        *ngIf="storageService.isAuthenticatedUser()"
-        (click)="logout()">
-        <span>( {{storageService.getUserName()}})</span>
-        Выход
-    </a>
-    
+    <button mat-button *ngIf="storageService.isAuthenticatedUser()" [matMenuTriggerFor]="authUser" class="button-style">{{storageService.getUserName()}}</button>
+    <mat-menu #authUser="matMenu" xPosition="before">
+        <button  (click)="logout()" mat-menu-item>Выход</button>
+    </mat-menu>
 </mat-toolbar>

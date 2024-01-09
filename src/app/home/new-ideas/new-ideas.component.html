@@ -1,43 +1,60 @@
-<div class="mat-elevation-z8">
-  <!-- User input form -->
+<div>
+  <div style="padding: 25px;">
+    <form [formGroup]="newIdeasForm" (ngSubmit)="addData()">
+      <mat-form-field class="input-style" style="width: 20%;">
+        <mat-label>Наименование</mat-label>
+        <input matInput formControlName="name" required>
+      </mat-form-field>
+      <mat-form-field class="input-style" style="width: 40%;">
+        <mat-label>Описание</mat-label>
+        <input matInput formControlName="description" required>
+      </mat-form-field>
+      <mat-form-field class="input-style" style="width: 10%;">
+        <mat-label>Статус</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="Waiting">Waiting</mat-option>
+          <mat-option value="Process">Process</mat-option>
+          <mat-option value="Finished">Finished</mat-option>
+          <mat-option value="Canceled">Canceled</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="input-style" style="width: 10%;">
+        <mat-label>Приоритет</mat-label>
+        <mat-select formControlName="priority">
+          <mat-option value="High">High</mat-option>
+          <mat-option value="Medium">Medium</mat-option>
+          <mat-option value="Low">Low</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-button type="submit">Add</button>
+    </form>
+  </div>
 
-  <form [formGroup]="userInputForm" (ngSubmit)="addUserInputData()">
-    <mat-form-field class="margin-container" style="margin-left: 25px;">
-      <mat-label>Priority:</mat-label>
-      <input matInput type="text" formControlName="priority" />
-    </mat-form-field>
-    <mat-form-field class="margin-container" style="margin-left: 25px;">
-      <mat-label>Description:</mat-label>
-      <input matInput type="text" formControlName="description" />
-    </mat-form-field>
-    <mat-form-field class="margin-container" style="margin-left: 25px;">
-      <mat-label>Status:</mat-label>
-      <input matInput type="status" formControlName="status" />
-    </mat-form-field>
+  <div class="mat-elevation-z8" style="margin: 25px;">
+    <table mat-table [dataSource]="dataSource">
 
-    <button style="margin-left: 25px;" mat-button type="submit" (click)="addUserInputData()">Добавить</button>
-  </form>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Наименование</th>
+        <td mat-cell *matCellDef="let row">{{row.name}}</td>
+      </ng-container>
 
-  <!-- MatTable -->
-  <table mat-table [dataSource]="dataSource">
-    <!-- Define columns -->
-    <ng-container matColumnDef="priority">
-      <th mat-header-cell *matHeaderCellDef> Приоритет </th>
-      <td mat-cell *matCellDef="let element"> {{ element.priority }} </td>
-    </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Описание</th>
+        <td mat-cell *matCellDef="let row">{{row.description}}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef> Описания </th>
-      <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
-    </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Статус</th>
+        <td mat-cell *matCellDef="let row">{{row.status}}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef> Статус </th>
-      <td mat-cell *matCellDef="let element"> {{ element.status }} </td>
-    </ng-container>
+      <ng-container matColumnDef="priority">
+        <th mat-header-cell *matHeaderCellDef>Приоритет</th>
+        <td mat-cell *matCellDef="let row">{{row.priority}}</td>
+      </ng-container>
 
-    <!-- Header and row definitions -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      <tr mat-header-row style='background-color: #86449c42 !important;' *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onEdit(row)"></tr>
+    </table>
+  </div>
 </div>
