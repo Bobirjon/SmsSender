@@ -138,16 +138,6 @@ export class MassPowerComponent implements OnInit {
     'Чимбай': 'Чимбайском районе',
     '': ''
   }
-
-  optionsReason: string[] = [
-    'Нет питания ',
-    'Проблема',
-    'Выясняется',
-    'В связи с плановыми работами',
-    'Нет питания. Узловой сайт',
-    'Нет питания. FG не завёлся. Узловой сайт',
-  ];
-
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -158,122 +148,12 @@ export class MassPowerComponent implements OnInit {
     public dialog: MatDialog) {
     this.massPowerForm = this.formBuilder.group({
       'AddOrCor': [null],
-      'level': ['', Validators.required],
-      'categories_report': ['', Validators.required],
-      'responsible_report': ['', Validators.required],
       'problem': [' 2G,  3G,  4G сайтов', Validators.required],
       'reason': ['', Validators.required],
       'startTime': ['', Validators.required],
       'region': ['', Validators.required],
       'district' : ['', Validators.required]
     })
-
-    this.filteredOptionsReason = this.massPowerForm.controls.reason.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value, this.optionsReason))
-    )
-
-  }
-
-  private _filter(value: string, options: string[]): string[] {
-    const filterValue = value.toLocaleLowerCase()
-    return options.filter(option => option.toLocaleLowerCase().includes(filterValue))
-  }
-
-  setDefault() {
-    if (this.massPowerForm.value.level == 'P1' || this.massPowerForm.value.level == 'P2' ||
-      this.massPowerForm.value.level == 'P3' || this.massPowerForm.value.level == 'P4' || this.massPowerForm.value.level == 'P5') {
-      this.massPowerForm.value.categories_report = 'ПР'
-    }
-  }
-
-  private extractNumbersFromString(input: string): number[] {
-    const numberMatches: RegExpMatchArray | null = input.match(/\d+/g)
-
-    if (numberMatches) {
-      return numberMatches.map(Number);
-    } else {
-      return []
-    }
-  }
-
-  endTimeValidation(control: any) {
-    let endTime = new Date(control.value)
-    const formGroup = control?.parent;
-    if (formGroup) {
-      const startTime = formGroup.get('startTime')
-      const startTimeSelected = new Date(startTime.value)
-      const difference = endTime.getTime() - startTimeSelected.getTime()
-      if (difference < 0) {
-
-        return { timeValid: true }
-      } else {
-        return null
-      }
-    }
-    return null
-  }
-
-  findAndDisplayMax() {
-
-    const numbers: number[] = this.extractNumbersFromString(this.massPowerForm.value.problem)
-
-    if (numbers.length > 0) {
-      const maxNumber: number = Math.max(...numbers)
-      console.log('Maks Номера ', maxNumber);
-      if (this.massPowerForm.value.region == 'г.Ташкент' || this.massPowerForm.value.region == 'Ташкент.обл') {
-        if (this.massPowerForm.value.categories_report == 'ПР') {
-          if (maxNumber >= 4 && maxNumber <= 19) {
-            this.massPowerForm.value.level = 'P4'
-          } else if (maxNumber >= 20 && maxNumber <= 49) {
-            console.log('A3');
-            this.massPowerForm.value.level = 'P3'
-          } else if (maxNumber >= 50) {
-            console.log('A2');
-            this.massPowerForm.value.level = 'P2'
-          }
-        } else {
-          if (maxNumber >= 4 && maxNumber <= 19) {
-            console.log('A4');
-            this.massPowerForm.value.level = 'A4'
-          } else if (maxNumber >= 20 && maxNumber <= 49) {
-            console.log('A3');
-            this.massPowerForm.value.level = 'A3'
-          } else if (maxNumber >= 50) {
-            console.log('A2');
-            this.massPowerForm.value.level = 'A2'
-          }
-        }
-      } else {
-        if (this.massPowerForm.value.categories_report == 'ПР') {
-          if (maxNumber > 2 && maxNumber < 10) {
-            console.log('З4');
-            this.massPowerForm.value.level = 'P4'
-          } else if (maxNumber >= 10 && maxNumber < 30) {
-            console.log('A3');
-            this.massPowerForm.value.level = 'P3'
-          } else if (maxNumber >= 30) {
-            console.log('A2');
-            this.massPowerForm.value.level = 'P2'
-          }
-        } else {
-          if (maxNumber > 2 && maxNumber < 10) {
-            console.log('A4');
-            this.massPowerForm.value.level = 'A4'
-          } else if (maxNumber >= 10 && maxNumber < 30) {
-            console.log('A3');
-            this.massPowerForm.value.level = 'A3'
-          } else if (maxNumber >= 30) {
-            console.log('A2');
-            this.massPowerForm.value.level = 'A2'
-          }
-        }
-      }
-
-    } else {
-      console.log('non number detexted');
-
-    }
 
   }
 
@@ -302,13 +182,11 @@ export class MassPowerComponent implements OnInit {
 
           this.massPowerForm = this.formBuilder.group({
             'AddOrCor': [null],
-            'level': [result['level'], Validators.required],
-            'categories_report': [result['category'], Validators.required],
-            'responsible_report': [result['responsible_area'], Validators.required],
             'problem': [result['hub_problem'], Validators.required],
             'reason': [result['hub_reason'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'region': [result['region'], Validators.required],
+            'district': [result['district']]
           })
 
         })
@@ -325,7 +203,6 @@ export class MassPowerComponent implements OnInit {
       'problem': this.massPowerForm.value.problem ,
       'reason': this.massPowerForm.value.reason ,
       'start_time': this.massPowerForm.value.startTime,
-      'end_time': this.massPowerForm.value.startTime,
       'region': this.massPowerForm.value.region,
       'sender': this.user?.username,
     }
@@ -333,26 +210,22 @@ export class MassPowerComponent implements OnInit {
 
   smsSendBody(id?: number) {
 
-    let addWord = this.storageService.additionWord(this.massPowerForm.value.level)
-
 
     if (this.massPowerForm.value.AddOrCor == (null || undefined)) {
       this.SmsTextBody =
-        this.requestType + this.massPowerForm.value.level.replace('P', 'П') + '\n' +
+        this.requestType + '\n' +
         this.massPowerForm.value.problem + ' не работают в ' + this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
-        'Причина: ' + this.massPowerForm.value.reason + this.word + this.massPowerForm.value.hubSite + ' ' + this.massPowerForm.value.generator + '\n' +
+        'Причина: ' + this.massPowerForm.value.reason + ' Массовое отключения ЭП '+  this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
         'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
-        'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-        addWord
+        'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
     } else {
       this.SmsTextBody =
-        this.requestType + this.massPowerForm.value.level.replace('P', 'П') + '\n' +
+      this.requestType + '\n' +
         '(' + this.massPowerForm.value.AddOrCor + ')\n' +
         this.massPowerForm.value.problem + ' не работают в ' + this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
-        'Причина: ' + this.massPowerForm.value.reason + this.word + this.massPowerForm.value.hubSite + ' ' + this.massPowerForm.value.generator + '\n' +
+        'Причина: ' + this.massPowerForm.value.reason + ' Массовое отключения ЭП '+  this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
         'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
-        'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-        addWord
+        'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
     }
 
     let smsType = this.storageService.SmsType(this.requestType, this.massPowerForm.value.AddOrCor)
@@ -360,10 +233,9 @@ export class MassPowerComponent implements OnInit {
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
-      'criteria': [this.massPowerForm.value.level.replace('P', 'A')],
+      'criteria': ['A3'],
       'notification': ['Hub'],
       'sms_text': this.SmsTextBody,
-      'region': [this.massPowerForm.value.region],
       'alarmreport_id': id,
       'sms_type': smsType
     }

@@ -31,7 +31,7 @@ export interface DataTable {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, AfterViewInit   {
+export class HomeComponent implements OnInit, AfterViewInit {
 
   dataTable = new MatTableDataSource<DataTable>()
   Data = new MatTableDataSource<DataTable>()
@@ -46,6 +46,19 @@ export class HomeComponent implements OnInit, AfterViewInit   {
   isLoadingResults = true;
   isRateLimitReached = false;
   globalFilter = '';
+
+  displayedColumnsTemplate: string[] = [
+    'type',
+    'level',
+    'created_at',
+    'start_time',
+    'problem',
+    'reason',
+    'description',
+    'region',
+    'informed',
+    'action'
+  ]
 
   displayedColumnsNew: string[] = [
     'type',
@@ -76,7 +89,7 @@ export class HomeComponent implements OnInit, AfterViewInit   {
 
   @ViewChild('table1sort') public table1sort: MatSort;
   @ViewChild('table2sort') public table2sort: MatSort;
- 
+
   filteredValuesForOpenCases = {
     type: '',
     level: '',
@@ -109,62 +122,67 @@ export class HomeComponent implements OnInit, AfterViewInit   {
     private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,) {
-   
+
     // Open Cases table
     this.authService.getFilteredData()
       .subscribe((data: any) => {
+
         this.Data = new MatTableDataSource(data.results)
-        console.log(data.results);
-        
+
         this.Data.sort = this.table1sort;
         this.Data.filterPredicate = this.customFilterPredicate();
-        
-        this.webSocketService.receiveMessage().subscribe((data) => {
-          const exist = this.Data.data.findIndex(
-            (item : any) => item.id === data.id
-          )
 
-          if( exist !== -1) {
-            //check if it is exist, update it
-            if (data.is_complete == true) {
-              this.Data.data.splice(exist, 1)
-              this.Data.data = this.Data.data
-            } else {
-              this.Data.data[exist] = data
-              this.Data.data = this.Data.data
-            }
-            
-          } else {
-            this.Data.data = [...this.Data.data, data]
+        this.webSocketService.receiveMessage().subscribe((data) => {
+          console.log(data);
+
+          const exist = this.Data.data.findIndex(
+            (item: any) => item.id === data.id
+          )
+          if (data.action == 'delete') {
+            console.log('dekete');
+
+            this.Data.data.splice(exist, 1)
+            this.Data.data = this.Data.data
           }
           
+          if (exist !== -1) {
+            //check if it is exist, update it
+            console.log('update');
+
+            this.Data.data[exist] = data
+            this.Data.data = this.Data.data
+          } else if(exist == -1 && data.action != 'delete' && data.is_send_sms== true) {
+            console.log('new');
+            this.Data.data = [...this.Data.data, data]
+          }
         })
       })
-    
+
+
     // Template table
     this.authService.getTemplateSMS()
       .subscribe((data: any) => {
         this.TemplateData = new MatTableDataSource(data.results)
-
+        console.log(data.results);
+        
         this.webSocketService.receiveMessage().subscribe((data) => {
+          console.log(data);
+
           const exist = this.TemplateData.data.findIndex(
-            (item : any) => item.id === data.id
+            (item: any) => item.id === data.id
           )
 
-          if( exist !== -1) {
-            //check if it is exist, update it
-            if (data.is_send_sms == true) {
+          if (exist !== -1) {
+            if (data.action == 'delete') {
               this.TemplateData.data.splice(exist, 1)
               this.TemplateData.data = this.TemplateData.data
-              console.log( this.TemplateData.data);
+
             } else {
               this.TemplateData.data[exist] = data
               this.TemplateData.data = this.TemplateData.data
-              console.log( this.TemplateData.data);
-              
             }
-            
           } else {
+            console.log(exist);
             this.TemplateData.data = [...this.TemplateData.data, data]
           }
         })
@@ -211,11 +229,11 @@ export class HomeComponent implements OnInit, AfterViewInit   {
           } else {
             dir = ''
           }
-          
+
           return this.authService
             .getDataTest(
               level, type, description, reason, problem,
-              createdAt, startTime, endTime, region, informed ,
+              createdAt, startTime, endTime, region, informed,
               this.table2sort.active,
               dir,
               this.paginator.pageIndex + 1,
@@ -236,32 +254,37 @@ export class HomeComponent implements OnInit, AfterViewInit   {
           // limit errors, we do not want to reset the paginator to zero, as that
           // would prevent users from re-triggering requests.
           this.resultsLength = data.count;
-          
+
           return data;
         })
       )
       .subscribe((data) => {
         this.dataTable = new MatTableDataSource(data.results)
-        
+
         this.webSocketService.receiveMessage().subscribe((data) => {
           const exist = this.dataTable.data.findIndex(
-            (item : any) => item.id === data.id
+            (item: any) => item.id === data.id
           )
 
-          if( exist !== -1) {
-            //check if it is exist, update it
-            this.dataTable.data[exist] = data
+          if (exist !== -1) {
+
+            if (data.action == 'delete') {
+              this.dataTable.data.splice(exist, 1)
+              this.dataTable.data = this.dataTable.data
+            } else {
+              this.dataTable.data[exist] = data
+              this.dataTable.data = this.dataTable.data
+            }
           } else {
             this.dataTable.data = [...this.dataTable.data, data]
-            this.TemplateData.data = this.TemplateData.data
           }
-          
+
         })
       });
   }
 
   ngOnInit(): void {
-    this.authService.getUser().subscribe((data:any) => {
+    this.authService.getUser().subscribe((data: any) => {
       this.userName = data.first_name + ' ' + data.last_name
     })
 
@@ -383,15 +406,9 @@ export class HomeComponent implements OnInit, AfterViewInit   {
         this.authService.deleteData(id).subscribe(res => {
           this.snackBar.open('Удалено', '', { duration: 10000 })
         })
-        this.webSocketService.sendMessage({action: 'delete', id})
       }
     })
-  }
 
-  private deleteItem(index:number) {
-    if (index >= 0 && index < this.TemplateData.data.length) {
-      this.TemplateData.data.splice(index, 1);
-    }
   }
 }
 

@@ -2,41 +2,30 @@
 
     <form [formGroup]="massPowerForm" class="form-container">
         <mat-grid-list cols="25" rowHeight="85px">
-            <!-- level -->
-            <mat-grid-tile colspan="2">
+             <!-- region -->
+             <mat-grid-tile colspan="7">
                 <mat-form-field class="margin-container">
-                    <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="massPowerForm.value.level"
-                        (ngModelChange)="setDefault()">
-                        <mat-option *ngFor="let lev of level" [value]="lev.value">
-                            {{lev.viewValue}}
+                    <mat-label>Регион</mat-label>
+                    <mat-select formControlName="region" [(ngModel)]="massPowerForm.value.region">
+                        <mat-option *ngFor="let reg of region" [value]="reg.value">
+                            {{reg.value}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- categories report -->
-            <mat-grid-tile colspan="5">
+            <!-- district -->
+            <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
-                    <mat-label>Категория для отчета</mat-label>
-                    <mat-select formControlName="categories_report" [(ngModel)]="massPowerForm.value.categories_report">
-                        <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
-                            {{cat_rep.viewValue}}
+                    <mat-label>Район</mat-label>
+                    <mat-select formControlName="district" [(ngModel)]="massPowerForm.value.district"
+                        [disabled]="this.massPowerForm.value.region.value == 'Ташкент.обл'">
+                        <mat-option *ngFor="let dis of district" [value]="dis.value">
+                            {{dis.value}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- responsible area -->
-            <mat-grid-tile colspan="5">
-                <mat-form-field class="margin-container">
-                    <mat-label>Ответственная Зона</mat-label>
-                    <mat-select formControlName="responsible_report" [(ngModel)]="massPowerForm.value.responsible_report">
-                        <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
-                            {{res_rep.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="3">
+            <mat-grid-tile colspan="1" rowspan="8">
             </mat-grid-tile>
             <!-- preview infromacionoe-->
             <mat-grid-tile colspan="10" rowspan="8">
@@ -44,7 +33,7 @@
                     <mat-card class="preview">
                         <mat-card-header>
                             <mat-card-title>
-                                {{'Информационное' + massPowerForm.value.level?.replace('P','П')}}
+                                Информационное
                             </mat-card-title>
                             <mat-card-title *ngIf="massPowerForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="massPowerForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
@@ -74,41 +63,18 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-            <!-- region -->
-            <mat-grid-tile colspan="6">
-                <mat-form-field class="margin-container">
-                    <mat-label>Регион</mat-label>
-                    <mat-select formControlName="region" [(ngModel)]="massPowerForm.value.region">
-                        <mat-option *ngFor="let reg of region" [value]="reg.value">
-                            {{reg.value}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- district -->
-            <mat-grid-tile colspan="6">
-                <mat-form-field class="margin-container">
-                    <mat-label>Район</mat-label>
-                    <mat-select formControlName="district" [(ngModel)]="massPowerForm.value.district"
-                        [disabled]="this.massPowerForm.value.region.value == 'Ташкент.обл'">
-                        <mat-option *ngFor="let dis of district" [value]="dis.value">
-                            {{dis.value}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="3">
-            </mat-grid-tile>
+           
+            
             <!-- problem -->
             <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
                     <textarea matInput type="text" formControlName="problem" [(ngModel)]="massPowerForm.value.problem"
-                        (ngModelChange)="findAndDisplayMax()" spellcheck="true"> </textarea>
+                        spellcheck="true"> </textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- reason -->
-            <mat-grid-tile colspan="6">
+            <mat-grid-tile colspan="7">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
                     <textarea matInput type="text" formControlName="reason" [(ngModel)]="massPowerForm.value.reason"
@@ -121,8 +87,6 @@
                     </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-            <mat-grid-tile colspan="3">
-            </mat-grid-tile>
             <!-- start Time -->
             <mat-grid-tile colspan="5">
                 <div class="margin-container">
@@ -132,19 +96,17 @@
                         [(ngModel)]="massPowerForm.value.startTime">
                 </div>
             </mat-grid-tile>
-            <mat-grid-tile colspan="9">
-            </mat-grid-tile>
             <!-- buttons -->
-            <mat-grid-tile colspan="2">
+            <mat-grid-tile colspan="2" style="margin-left: 25px;">
                 <button class="form-button" mat-raised-button type="button" *ngIf="newForm == false"
                     (click)="updateData()" style="position: absolute; bottom: 8px;">Обновить</button>
                 <button class="form-button" mat-raised-button type="button" *ngIf="newForm == true"
-                    [disabled]="massPowerForm.invalid" (click)="createData()" style="position: absolute; bottom: 0px;">Создать</button>
+                    [disabled]="massPowerForm.invalid" (click)="createData()" style="position: absolute; bottom: 0px;" >Создать</button>
             </mat-grid-tile>
-            <mat-grid-tile colspan="2">
+            <mat-grid-tile colspan="1">
                 
             </mat-grid-tile>
-            <mat-grid-tile colspan="3">
+            <mat-grid-tile colspan="4">
                 <mat-chip-listbox formControlName="AddOrCor" style="position: absolute; bottom: 8px;">
                     <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
                     <mat-chip-option value="Дополнения">Дополнения</mat-chip-option>

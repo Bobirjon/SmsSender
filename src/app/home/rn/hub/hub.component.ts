@@ -45,8 +45,8 @@ export class HubComponent implements OnInit {
     { value: 'P4', viewValue: 'П4' },
     { value: 'P5', viewValue: 'П5' },
   ];
-  
-  
+
+
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
     { value: 'ЭС и Клим', viewValue: 'ЭС и Клим' },
@@ -60,11 +60,17 @@ export class HubComponent implements OnInit {
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
 
-
   generator: { value: string; viewValue: string }[] = [
     { value: 'FG', viewValue: 'FG' },
     { value: '', viewValue: 'Empty' }
   ];
+
+  periodicity: { value: string; viewValue: string }[] = [
+    { value: '', viewValue: 'Оставить пустым' },
+    { value: 'периодически', viewValue: 'Периодически' },
+    { value: 'периодически и частично', viewValue: 'Периодически и частично' }
+  ];
+
   region: { value: string; viewValue: string }[] = [
     { value: 'Андижан', viewValue: 'Андижане' },
     { value: 'Бухара', viewValue: 'Бухаре' },
@@ -190,13 +196,12 @@ export class HubComponent implements OnInit {
       'level': ['', Validators.required],
       'categories_report': ['', Validators.required],
       'responsible_report': ['', Validators.required],
-      'problem': [' 2G,  3G,  4G сайтов', Validators.required],
       'reason': ['', Validators.required],
       'startTime': ['', Validators.required],
       'endTime': ['', this.endTimeValidation],
       'region': ['', Validators.required],
       'hubSite': [''],
-      'effectedSites': ['',Validators.required],
+      'effectedSites': ['', Validators.required],
       'generator': [''],
       'desc': [''],
       'informed': ['', Validators.required],
@@ -210,7 +215,12 @@ export class HubComponent implements OnInit {
       'battery_life_time': [''],
       'lowBatteryTime': [''],
       'dg_start_time': [''],
-      'district': ['']
+      'district': [''],
+      'twoG': ['',],
+      'threeG': ['',],
+      'fourG': ['',],
+      'fiveG': ['',],
+      'periodicity': ['',]
     })
 
     this.filteredOptionsReason = this.hubForm.controls.reason.valueChanges.pipe(
@@ -235,7 +245,7 @@ export class HubComponent implements OnInit {
   private extractNumbersFromString(input: string): number[] {
     const numberMatches: RegExpMatchArray | null = input.match(/\d+/g)
 
-    if(numberMatches) {
+    if (numberMatches) {
       return numberMatches.map(Number);
     } else {
       return []
@@ -245,13 +255,13 @@ export class HubComponent implements OnInit {
   endTimeValidation(control: any) {
     let endTime = new Date(control.value)
     const formGroup = control?.parent;
-    if(formGroup) {
+    if (formGroup) {
       const startTime = formGroup.get('startTime')
       const startTimeSelected = new Date(startTime.value)
       const difference = endTime.getTime() - startTimeSelected.getTime()
-      if(difference < 0) {
+      if (difference < 0) {
 
-        return { timeValid: true}
+        return { timeValid: true }
       } else {
         return null
       }
@@ -259,72 +269,77 @@ export class HubComponent implements OnInit {
     return null
   }
 
-  findAndDisplayMax() {
+  putLevel() {
+    let maxNumber: string
 
-    const numbers: number[] = this.extractNumbersFromString(this.hubForm.value.problem)
+    maxNumber = this.hubForm.value.twoG
 
-    if(numbers.length > 0) {
-      const maxNumber: number = Math.max(...numbers)
-      console.log('Maks Номера ', maxNumber);
-      if(this.hubForm.value.region == 'г.Ташкент' || this.hubForm.value.region == 'Ташкент.обл') {
-        if(this.hubForm.value.categories_report == 'ПР') {
-          if(maxNumber >= 4 && maxNumber <= 19) {
-            this.hubForm.value.level = 'P4'
-          } else if(maxNumber >= 20 && maxNumber <= 49) {
-            console.log('A3');
-            this.hubForm.value.level = 'P3'
-          } else if(maxNumber >= 50) {
-            console.log('A2');
-            this.hubForm.value.level = 'P2'
-          }
-        } else {
-          if(maxNumber >= 4 && maxNumber <= 19) {
-            console.log('A4');
-            this.hubForm.value.level = 'A4'
-          } else if(maxNumber >= 20 && maxNumber <= 49) {
-            console.log('A3');
-            this.hubForm.value.level = 'A3'
-          } else if(maxNumber >= 50) {
-            console.log('A2');
-            this.hubForm.value.level = 'A2'
-          }
-        }
-      } else {
-        if(this.hubForm.value.categories_report == 'ПР') {
-          if(maxNumber > 2 && maxNumber < 10) {
-            console.log('З4');
-            this.hubForm.value.level = 'P4'
-          } else if(maxNumber >= 10 && maxNumber < 30) {
-            console.log('A3');
-            this.hubForm.value.level = 'P3'
-          } else if(maxNumber >= 30) {
-            console.log('A2');
-            this.hubForm.value.level = 'P2'
-          }
-        } else {
-          if(maxNumber > 2 && maxNumber < 10){
-            console.log('A4');
-            this.hubForm.value.level = 'A4'
-          } else if(maxNumber >= 10 && maxNumber < 30) {
-            console.log('A3');
-            this.hubForm.value.level = 'A3'
-          } else if(maxNumber >= 30) {
-            console.log('A2');
-            this.hubForm.value.level = 'A2'
-          }
-        }
-      }
-      
-    } else {
-      console.log('non number detexted');
-      
+    if (this.hubForm.value.threeG >= maxNumber) {
+      maxNumber = this.hubForm.value.threeG
     }
 
+    if (this.hubForm.value.fiveG >= maxNumber) {
+      maxNumber = this.hubForm.value.fiveG
+    } 
+
+    if (this.hubForm.value.fourG >= maxNumber) {
+      maxNumber = this.hubForm.value.fourG
+    } 
+
+
+    if (this.hubForm.value.region == 'г.Ташкент' || this.hubForm.value.region == 'Ташкент.обл') {
+      if (this.hubForm.value.categories_report == 'ПР') {
+        if (parseInt(maxNumber) >= 4 && parseInt(maxNumber) <= 19) {
+          this.hubForm.value.level = 'P4'
+        } else if (parseInt(maxNumber) >= 20 && parseInt(maxNumber) <= 49) {
+          console.log('A3');
+          this.hubForm.value.level = 'P3'
+        } else if (parseInt(maxNumber) >= 50) {
+          console.log('A2');
+          this.hubForm.value.level = 'P2'
+        }
+      } else {
+        if (parseInt(maxNumber) >= 4 && parseInt(maxNumber) <= 19) {
+          console.log('A4');
+          this.hubForm.value.level = 'A4'
+        } else if (parseInt(maxNumber) >= 20 && parseInt(maxNumber) <= 49) {
+          console.log('A3');
+          this.hubForm.value.level = 'A3'
+        } else if (parseInt(maxNumber) >= 50) {
+          console.log('A2');
+          this.hubForm.value.level = 'A2'
+        }
+      }
+    } else {
+      if (this.hubForm.value.categories_report == 'ПР') {
+        if (parseInt(maxNumber) > 2 && parseInt(maxNumber) < 10) {
+          console.log('З4');
+          this.hubForm.value.level = 'P4'
+        } else if (parseInt(maxNumber) >= 10 && parseInt(maxNumber) < 30) {
+          console.log('A3');
+          this.hubForm.value.level = 'P3'
+        } else if (parseInt(maxNumber) >= 30) {
+          console.log('A2');
+          this.hubForm.value.level = 'P2'
+        }
+      } else {
+        if (parseInt(maxNumber) > 2 && parseInt(maxNumber) < 10) {
+          console.log('A4');
+          this.hubForm.value.level = 'A4'
+        } else if (parseInt(maxNumber) >= 10 && parseInt(maxNumber) < 30) {
+          console.log('A3');
+          this.hubForm.value.level = 'A3'
+        } else if (parseInt(maxNumber) >= 30) {
+          console.log('A2');
+          this.hubForm.value.level = 'A2'
+        }
+      }
+    }
   }
 
-  ngOnInit(): void {
-  
 
+
+  ngOnInit(): void {
     // get Current user
     this.authService.getUser()
       .subscribe(result => {
@@ -388,7 +403,6 @@ export class HubComponent implements OnInit {
             'level': [result['level'], Validators.required],
             'categories_report': [result['category'], Validators.required],
             'responsible_report': [result['responsible_area'], Validators.required],
-            'problem': [result['hub_problem'], Validators.required],
             'reason': [result['hub_reason'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [endTimeForUpdate, this.endTimeValidation],
@@ -403,6 +417,11 @@ export class HubComponent implements OnInit {
             'powerOffTime': [power_off_time],
             'hubBlockTime': [block_time],
             'district': [district],
+            'twoG': [result['count_2G'], Validators.required],
+            'threeG': [result['count_3G'], Validators.required],
+            'fourG': [result['count_4G'], Validators.required],
+            'fiveG': [result['count_5G'], Validators.required],
+            'periodicity': [result['flapping_type'],],
 
             'mw_link': [result['mw_link']],
             'mw_equipment': [result['mw_equipment']],
@@ -425,8 +444,10 @@ export class HubComponent implements OnInit {
       'level': this.hubForm.value.level,
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
-      'problem': this.hubForm.value.problem + ' не работают в регионе ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district],
-      'reason':  this.hubForm.value.reason + ' ' + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator,
+      'problem': this.hubForm.value.twoG + ' 2G,' + ' ' + this.hubForm.value.threeG + ' 3G,' + ' ' + this.hubForm.value.fourG + ' 4G,' + ' ' +
+        this.hubForm.value.fiveG + ' 5G,' + ' ' + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
+        this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district],
+      'reason': this.hubForm.value.reason + ' ' + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator,
       'effect': 'С влиянием',
       'start_time': this.hubForm.value.startTime,
       'region': this.hubForm.value.region,
@@ -437,9 +458,13 @@ export class HubComponent implements OnInit {
       'sender': this.user?.username,
       'hub_site': this.hubForm.value.hubSite,
       'fg_avb': this.hubForm.value.generator,
-      'hub_problem': this.hubForm.value.problem,
       'district': this.hubForm.value.district,
       'hub_reason': this.hubForm.value.reason,
+      'count_2G': this.hubForm.value.twoG,
+      'count_3G': this.hubForm.value.threeG,
+      'count_4G': this.hubForm.value.fourG,
+      'count_5G': this.hubForm.value.fiveG,
+      'flapping_type': this.hubForm.value.periodicity,
 
 
       'mw_link': this.hubForm.value.mw_link,
@@ -484,6 +509,19 @@ export class HubComponent implements OnInit {
   }
 
   smsSendBody(id?: number) {
+    let twoG, threeG, fourG, fiveG = ''
+    if (this.hubForm.value.twoG != '') {
+      twoG = this.hubForm.value.twoG + ' 2G '
+    }
+    if (this.hubForm.value.threeG != '') {
+      threeG = this.hubForm.value.threeG + ' 3G '
+    }
+    if (this.hubForm.value.fourG != '') {
+      fourG = this.hubForm.value.fourG + ' 4G '
+    }
+    if (this.hubForm.value.fiveG != '') {
+      fiveG = this.hubForm.value.fiveG + ' 5G сайтов '
+    }
 
     let addWord = this.storageService.additionWord(this.hubForm.value.level)
     let power_off_time
@@ -510,7 +548,8 @@ export class HubComponent implements OnInit {
       if (this.hubForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
-          this.hubForm.value.problem + ' не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          twoG + threeG + fourG + fiveG + this.hubForm.value.periodicity + ' не работают в регионе ' +
+          this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -523,7 +562,8 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n ' +
-          this.hubForm.value.problem + ' не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          twoG + threeG + fourG + fiveG + this.hubForm.value.periodicity + ' не работают в регионе ' +
+          this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -538,7 +578,8 @@ export class HubComponent implements OnInit {
       if (this.hubForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
-          this.hubForm.value.problem + ' не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          twoG + threeG + fourG + fiveG + this.hubForm.value.periodicity + ' не работают в регионе ' +
+          this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -552,7 +593,8 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n' +
-          this.hubForm.value.problem + ' не работают в ' + this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          twoG + threeG + fourG + fiveG + this.hubForm.value.periodicity + ' не работают в регионе ' +
+          this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -610,14 +652,14 @@ export class HubComponent implements OnInit {
 
   sendButton() {
     this.authService.sendSms(this.smsBody)
-    .subscribe(res => {
-      console.log(res);
-      this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-      this.router.navigate(['/home'])
-    }, error => {
-      console.log(error);
-      this.snackBar.open("Ошибка", '', { duration: 10000 })
-    })
+      .subscribe(res => {
+        console.log(res);
+        this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
+        this.router.navigate(['/home'])
+      }, error => {
+        console.log(error);
+        this.snackBar.open("Ошибка", '', { duration: 10000 })
+      })
   }
 
   onSubmitButtonProblem(smsType: string) {

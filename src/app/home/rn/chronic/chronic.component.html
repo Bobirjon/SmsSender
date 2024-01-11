@@ -225,7 +225,7 @@
                         *Время простоя не соответствует Началу времени*</span>
                     </p>
                     <input type="datetime-local" class="dateTime" formControlName="startTime"
-                        [(ngModel)]="chronicForm.value.startTime"
+                        [(ngModel)]="chronicForm.value.startTime" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
                         [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime')">
                 </div>
             </mat-grid-tile>

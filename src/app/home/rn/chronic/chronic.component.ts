@@ -23,6 +23,7 @@ export class ChronicComponent implements OnInit {
   timeValidation: boolean
   validationStyle: boolean = true
   hasError: boolean
+  time: Date = new Date()
   preview = false
   previewResheniya = false
   user: any

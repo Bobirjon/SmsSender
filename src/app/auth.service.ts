@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   getTemplateSMS() {
-    return this.http.get(this.URLsender + 'smssender/alarmreport/?is_send_sms=false&&is_complete=false')
+    return this.http.get(this.URLsender + 'smssender/alarmreport/?is_send_sms=false')
   }
 
   getDataTest( 
@@ -57,7 +57,7 @@ export class AuthService {
   }
 
   getFilteredData() {
-    return this.http.get(this.URLsender + 'smssender/alarmreport/?is_complete=false&limit=1000&offset=0')
+    return this.http.get(this.URLsender + 'smssender/alarmreport/?is_complete=false&is_send_sms=true')
   }
 
   getSms(id: number) {

@@ -1,12 +1,12 @@
 <div>
-    
     <form [formGroup]="hubForm" class="form-container">
         <mat-grid-list cols="25" rowHeight="85px">
-             <!-- level -->
-             <mat-grid-tile colspan="3">
+            <!-- level -->
+            <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="hubForm.value.level" (ngModelChange)="setDefault()">
+                    <mat-select formControlName="level" [(ngModel)]="hubForm.value.level"
+                        (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
@@ -17,7 +17,7 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Хаб Сайт</mat-label>
-                    <input matInput type="text" formControlName="hubSite" [(ngModel)]="hubForm.value.hubSite"/>
+                    <input matInput type="text" formControlName="hubSite" [(ngModel)]="hubForm.value.hubSite" />
                 </mat-form-field>
             </mat-grid-tile>
             <!-- Type of Generator -->
@@ -32,7 +32,6 @@
                 </mat-form-field>
             </mat-grid-tile>
             <!-- preview problem -->
-
             <mat-grid-tile colspan="5" rowspan="8">
                 <div class="grid-container">
                     <mat-card class="preview">
@@ -44,32 +43,41 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' не работают в ' + regions[this.hubForm.value.region] + ' ' +  dist[this.hubForm.value.district]}}</p>
-                            <p>{{'Эффект: Потеря покрытия и качества связи в ' + this.regions[this.hubForm.value.region]}}</p>
-                            <p>{{'Причина: ' + hubForm.value.reason }} <span *ngIf="hubForm.value.hubSite != ''">{{word}}</span> {{hubForm.value.hubSite + hubForm.value.generator}}</p>
+                            <!-- <p>{{hubForm.value.problem + ' не работают в ' + regions[this.hubForm.value.region] + ' ' +
+                                dist[this.hubForm.value.district]}}</p> -->
+                                <p><span *ngIf="hubForm.value.twoG !== ''">{{hubForm.value.twoG + ' 2G'}}</span> 
+                                    <span *ngIf="hubForm.value.threeG !== ''">{{", " +hubForm.value.threeG + ' 3G'}}</span> 
+                                    <span *ngIf="hubForm.value.fourG !== ''">{{", " + hubForm.value.fourG  + ' 4G'}}</span> 
+                                    <span *ngIf="hubForm.value.fiveG !== ''">{{", " + hubForm.value.fiveG + ' 5G'}}</span>
+                                    {{' сайтов ' + hubForm.value.periodicity + ' не работают в ' + 
+                                    regions[this.hubForm.value.region] + ' ' + dist[this.hubForm.value.district]}}</p>
+                            <p>{{'Эффект: Потеря покрытия и качества связи в ' +
+                                this.regions[this.hubForm.value.region]}}</p>
+                            <p>{{'Причина: ' + hubForm.value.reason }} <span
+                                    *ngIf="hubForm.value.hubSite != ''">{{word}}</span> {{hubForm.value.hubSite +
+                                hubForm.value.generator}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
                             <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
                             <p>{{'Начало: ' + hubForm.value.startTime.replace("T", " ")}}</p>
                             <p>{{'Оповещен: ' + hubForm.value.informed}}</p>
                             <p>{{ 'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
-                        
+
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
                                 [disabled]="hubForm.invalid || hubForm.value.endTime !==''">Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Проблема')" type="submit"
-                                *ngIf="newForm == false"
+                                (click)="onSubmitasNew('Проблема')" type="submit" *ngIf="newForm == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime !==''">
                                 Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                            (click)="forSmsTesting('Проблема')" type="submit" 
-                            [disabled]="hubForm.invalid || hubForm.value.endTime !==''">
-                            TEST SMS 
-                        </button>
+                                (click)="forSmsTesting('Проблема')" type="submit"
+                                [disabled]="hubForm.invalid || hubForm.value.endTime !==''">
+                                TEST SMS
+                            </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>
@@ -86,8 +94,15 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' не работают в ' + regions[this.hubForm.value.region] + ' ' + dist[this.hubForm.value.district]}}</p>
-                            <p>{{'Причина: ' + hubForm.value.reason}} <span *ngIf="hubForm.value.hubSite !== ''">{{word}}</span> {{hubForm.value.hubSite + hubForm.value.generator}}</p>
+                            <p><span *ngIf="hubForm.value.twoG !== ''">{{hubForm.value.twoG + ' 2G'}}</span> 
+                                <span *ngIf="hubForm.value.threeG !== ''">{{", " +hubForm.value.threeG + ' 3G'}}</span> 
+                                <span *ngIf="hubForm.value.fourG !== ''">{{", " + hubForm.value.fourG  + ' 4G'}}</span> 
+                                <span *ngIf="hubForm.value.fiveG !== ''">{{", " + hubForm.value.fiveG + ' 5G'}}</span>
+                                {{' сайтов ' + hubForm.value.periodicity + ' не работают в ' + 
+                                regions[this.hubForm.value.region] + ' ' + dist[this.hubForm.value.district]}}</p>
+                            <p>{{'Причина: ' + hubForm.value.reason}} <span
+                                    *ngIf="hubForm.value.hubSite !== ''">{{word}}</span> {{hubForm.value.hubSite +
+                                hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
                             <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
@@ -97,23 +112,22 @@
                             <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
                         </mat-card-content>
                         <mat-card-actions>
-                           <button class="form-button" mat-raised-button color="primary"
+                            <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Решения')" type="submit"
-                                *ngIf="newForm == false"
+                                (click)="onSubmitasNew('Решения')" type="submit" *ngIf="newForm == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">
                                 Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                            (click)="forSmsTesting('Решение')" type="submit" 
-                            [disabled]="hubForm.invalid || hubForm.value.endTime ==''">
-                            TEST SMS 
-                        </button>
+                                (click)="forSmsTesting('Решение')" type="submit"
+                                [disabled]="hubForm.invalid || hubForm.value.endTime ==''">
+                                TEST SMS
+                            </button>
                         </mat-card-actions>
-                    </mat-card>  
+                    </mat-card>
                 </div>
             </mat-grid-tile>
             <!-- preview infromacionoe-->
@@ -128,8 +142,15 @@
                             <mat-card-title *ngIf="hubForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{hubForm.value.problem + ' не работают ' + regions[this.hubForm.value.region] + ' ' +  dist[this.hubForm.value.district]}}</p>
-                            <p>{{'Причина: ' + hubForm.value.reason}} <span *ngIf="hubForm.value.hubSite != ''">{{word}}</span> {{hubForm.value.hubSite + ' ' + hubForm.value.generator}}</p>
+                            <p><span *ngIf="hubForm.value.twoG !== ''">{{hubForm.value.twoG + ' 2G'}}</span> 
+                                <span *ngIf="hubForm.value.threeG !== ''">{{", " +hubForm.value.threeG + ' 3G'}}</span> 
+                                <span *ngIf="hubForm.value.fourG !== ''">{{", " + hubForm.value.fourG  + ' 4G'}}</span> 
+                                <span *ngIf="hubForm.value.fiveG !== ''">{{", " + hubForm.value.fiveG + ' 5G'}}</span>
+                                {{' сайтов ' + hubForm.value.periodicity  + ' не работают в ' + 
+                                regions[this.hubForm.value.region] + ' ' + dist[this.hubForm.value.district]}}</p>
+                            <p>{{'Причина: ' + hubForm.value.reason}} <span
+                                    *ngIf="hubForm.value.hubSite != ''">{{word}}</span> {{hubForm.value.hubSite + ' ' +
+                                hubForm.value.generator}}</p>
                             <p>{{'Описание: ' + hubForm.value.desc}}</p>
                             <p>{{'Время отключения ЭП: ' + hubForm.value.powerOffTime.replace("T", " ")}}</p>
                             <p>{{'Время блокировки секторов: ' + hubForm.value.hubBlockTime.replace("T", " ")}}</p>
@@ -145,22 +166,21 @@
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Информационное')" type="submit"
-                                *ngIf="newForm == false"
+                                (click)="onSubmitasNew('Информационное')" type="submit" *ngIf="newForm == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">
                                 Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                            (click)="forSmsTesting('Информационное')" type="submit" 
-                            [disabled]="hubForm.invalid || hubForm.value.endTime ==''">
-                            TEST SMS 
-                        </button>
+                                (click)="forSmsTesting('Информационное')" type="submit"
+                                [disabled]="hubForm.invalid || hubForm.value.endTime ==''">
+                                TEST SMS
+                            </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>
             </mat-grid-tile>
             <!-- categories report -->
-            <mat-grid-tile colspan="5">
+            <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория для отчета</mat-label>
                     <mat-select formControlName="categories_report" [(ngModel)]="hubForm.value.categories_report">
@@ -171,7 +191,7 @@
                 </mat-form-field>
             </mat-grid-tile>
             <!-- responsible area -->
-            <mat-grid-tile colspan="5">
+            <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Ответственная Зона</mat-label>
                     <mat-select formControlName="responsible_report" [(ngModel)]="hubForm.value.responsible_report">
@@ -180,9 +200,20 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-            </mat-grid-tile> 
-             <!-- region -->
-             <mat-grid-tile colspan="5">
+            </mat-grid-tile>
+            <!-- Периодичность -->
+            <mat-grid-tile colspan="4">
+                <mat-form-field class="margin-container">
+                    <mat-label>Периодичность</mat-label>
+                    <mat-select formControlName="periodicity" [(ngModel)]="hubForm.value.periodicity">
+                        <mat-option *ngFor="let per of periodicity" [value]="per.value">
+                            {{per.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- region -->
+            <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
                     <mat-select formControlName="region" [(ngModel)]="hubForm.value.region">
@@ -192,60 +223,82 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-             <!-- district -->
-             <mat-grid-tile colspan="5">
+            <!-- district -->
+            <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Район</mat-label>
-                    <mat-select formControlName="district" [(ngModel)]="hubForm.value.district" [disabled]="this.hubForm.value.region.value == 'Ташкент.обл'">
+                    <mat-select formControlName="district" [(ngModel)]="hubForm.value.district"
+                        [disabled]="this.hubForm.value.region.value == 'Ташкент.обл'">
                         <mat-option *ngFor="let dis of district" [value]="dis.value">
                             {{dis.value}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- problem -->
-            <mat-grid-tile colspan="5">
-                <mat-form-field class="margin-container">
-                    <mat-label>Проблема</mat-label>
-                    <textarea matInput type="text" formControlName="problem" [(ngModel)]="hubForm.value.problem" (ngModelChange)="findAndDisplayMax()" spellcheck="true"> </textarea>
+            <!-- 2G -->
+            <mat-grid-tile colspan="1">
+                <mat-form-field class="miniFields" style="margin-left: 15px;">
+                    <mat-label>2G</mat-label>
+                    <input matInput (ngModelChange)="putLevel()" type="text" formControlName="twoG" [(ngModel)]="hubForm.value.twoG" style="padding: 10px;"/>
                 </mat-form-field>
             </mat-grid-tile>
-              <!-- reason -->
-              <mat-grid-tile colspan="5">
+            <!-- 3G -->
+            <mat-grid-tile colspan="1">
+                <mat-form-field class="miniFields">
+                    <mat-label>3G</mat-label>
+                    <input matInput type="text" (ngModelChange)="putLevel()" formControlName="threeG" [(ngModel)]="hubForm.value.threeG" style="padding: 10px;"/>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- 4G -->
+            <mat-grid-tile colspan="1">
+                <mat-form-field class="miniFields">
+                    <mat-label>4G</mat-label>
+                    <input matInput type="text" (ngModelChange)="putLevel()" formControlName="fourG" [(ngModel)]="hubForm.value.fourG" style="padding: 10px;" />
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- 5G -->
+            <mat-grid-tile colspan="1">
+                <mat-form-field class="miniFields">
+                    <mat-label>5G</mat-label>
+                    <input matInput type="text" (ngModelChange)="putLevel()" formControlName="fiveG" [(ngModel)]="hubForm.value.fiveG" style="padding: 10px;"/>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
-                    <textarea matInput type="text" formControlName="reason" 
-                            [(ngModel)]="hubForm.value.reason" spellcheck="true"
-                            [matAutocomplete]="autoReason">
+                    <textarea matInput type="text" formControlName="reason" [(ngModel)]="hubForm.value.reason"
+                        spellcheck="true" [matAutocomplete]="autoReason">
                     </textarea>
                     <mat-autocomplete #autoReason="matAutocomplete">
                         <mat-option *ngFor="let option of filteredOptionsReason | async" [value]="option">
-                          {{option}}
+                            {{option}}
                         </mat-option>
-                      </mat-autocomplete>
+                    </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-             <!-- desc -->
-             <mat-grid-tile colspan="5">
+            <!-- desc -->
+            <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="hubForm.value.desc" spellcheck="true"></textarea>
+                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="hubForm.value.desc"
+                        spellcheck="true"></textarea>
                 </mat-form-field>
-            </mat-grid-tile>   
+            </mat-grid-tile>
 
-             <!-- effected sites -->
-             <mat-grid-tile colspan="5">
+            <!-- effected sites -->
+            <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Затронутые сайты</mat-label>
-                    <textarea matInput type="text" formControlName="effectedSites" [(ngModel)]="hubForm.value.effectedSites" ></textarea>
+                    <textarea matInput type="text" formControlName="effectedSites"
+                        [(ngModel)]="hubForm.value.effectedSites"></textarea>
                 </mat-form-field>
-            </mat-grid-tile> 
-            
-             <!-- informed -->
-             <mat-grid-tile colspan="5">
+            </mat-grid-tile>
+
+            <!-- informed -->
+            <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Оповещен</mat-label>
-                    <input matInput type="text" formControlName="informed" [(ngModel)]="hubForm.value.informed"/>
+                    <input matInput type="text" formControlName="informed" [(ngModel)]="hubForm.value.informed" />
                 </mat-form-field>
             </mat-grid-tile>
             <!-- category -->
@@ -253,18 +306,18 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Категория</mat-label>
                     <mat-select formControlName="category" [(ngModel)]="hubForm.value.category">
-                        <mat-option *ngFor="let cat of category" [value]="cat.value" >
+                        <mat-option *ngFor="let cat of category" [value]="cat.value">
                             {{cat.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-              <!-- powerOff Time -->
-              <mat-grid-tile colspan="5">
+            <!-- powerOff Time -->
+            <mat-grid-tile colspan="5">
                 <div class="margin-container">
                     <p>Время отключения ЭП</p>
-                    <input type="datetime-local" class="dateTime" formControlName="powerOffTime"
-                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="hubForm.value.powerOffTime">
+                    <input type="datetime-local" class="dateTime" formControlName="powerOffTime" min="2023-01-01T00:00"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="hubForm.value.powerOffTime">
                 </div>
             </mat-grid-tile>
             <!-- HubSiteBlock Time -->
@@ -280,15 +333,18 @@
                 <div class="margin-container">
                     <p>Начало</p>
                     <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
-                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="hubForm.value.startTime">
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
+                        [(ngModel)]="hubForm.value.startTime">
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
             <mat-grid-tile colspan="5">
                 <div class="margin-container">
-                    <p>Конец<span *ngIf="hubForm.get('endTime').hasError('timeValid') && hubForm.get('startTime').touched"
-                        class="timeNotValid" > *Начало больше чем Конец времени</span></p>
-                    <input type="datetime-local" class="dateTime" formControlName="endTime" [(ngModel)]="hubForm.value.endTime">
+                    <p>Конец<span
+                            *ngIf="hubForm.get('endTime').hasError('timeValid') && hubForm.get('startTime').touched"
+                            class="timeNotValid"> *Начало больше чем Конец времени</span></p>
+                    <input type="datetime-local" class="dateTime" formControlName="endTime"
+                        [(ngModel)]="hubForm.value.endTime">
                 </div>
             </mat-grid-tile>
             <!-- buttons -->
@@ -354,9 +410,8 @@
                     <mat-grid-tile colspan="3">
                         <div class="margin-container">
                             <p>low baterry ttime</p>
-                            <input type="datetime-local" class="dateTime"
-                                formControlName="lowBatteryTime" min="2023-01-01T00:00"
-                                [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                            <input type="datetime-local" class="dateTime" formControlName="lowBatteryTime"
+                                min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                         </div>
                     </mat-grid-tile>
                     <!-- DG start Time -->

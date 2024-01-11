@@ -44,3 +44,8 @@ button:disabled {
     background-color: #572469d5 !important; 
     color: #FFFFFF !important; 
 }
+
+.miniFields {
+    margin: 5px;
+    
+}
