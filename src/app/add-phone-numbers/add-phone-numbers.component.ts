@@ -117,7 +117,6 @@ export class AddPhoneNumbersComponent implements OnInit {
     this.authService.postReceiverData(this.dataSend)
       .subscribe(res => {
         console.log(res);
-        window.location.reload()
       })
   }
 
@@ -127,7 +126,8 @@ export class AddPhoneNumbersComponent implements OnInit {
       .subscribe(res => {
         this.data = res
 
-        this.ActivePhoneNumberList = new MatTableDataSource(this.data)
+        this.ActivePhoneNumberList = new MatTableDataSource(this.data.results)
+        
         this.ActivePhoneNumberList.paginator = this.paginator;
         this.ActivePhoneNumberList.sort = this.sort;
         this.filterForAllCase()

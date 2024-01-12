@@ -10,6 +10,8 @@ import { AuthService } from 'src/app/auth.service';
 })
 export class EditPageComponent implements OnInit {
 
+  username: string
+
   editPageForm: FormGroup = this.fb.group({
     name: [this.data.text.name, Validators.required],
     description: [this.data.text.description, Validators.required],
@@ -25,6 +27,11 @@ export class EditPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.getUser().subscribe(
+      (res: any) => {
+        this.username = res.username
+      }
+    )
   }
 
   closepopup() {

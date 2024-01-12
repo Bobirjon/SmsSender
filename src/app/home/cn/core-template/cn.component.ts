@@ -296,7 +296,10 @@ export class CnComponent implements OnInit {
       }
     }
 
-    let smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor)
+    let smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, false)
+
+    console.log(smsType);
+    
 
     this.smsBody = {
       'source_addr': 'ncc-cn',
@@ -374,7 +377,6 @@ export class CnComponent implements OnInit {
   }
 
   sendButton() {
-
     // api for send SMS
     this.storageService.sendSms(this.smsBody)
   }
@@ -388,9 +390,8 @@ export class CnComponent implements OnInit {
 
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
-
     const dialogRef = this.dialog.open(areYouSure);
-
+    
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
         if (this.newForm == false) {

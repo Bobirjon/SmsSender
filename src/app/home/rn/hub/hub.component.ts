@@ -509,10 +509,11 @@ export class HubComponent implements OnInit {
   }
 
   smsSendBody(id?: number) {
-    let twoG, threeG, fourG, fiveG = ''
+    let twoG = '', threeG= '', fourG = '', fiveG = ''
+
     if (this.hubForm.value.twoG != '') {
       twoG = this.hubForm.value.twoG + ' 2G '
-    }
+    } 
     if (this.hubForm.value.threeG != '') {
       threeG = this.hubForm.value.threeG + ' 3G '
     }
@@ -520,7 +521,7 @@ export class HubComponent implements OnInit {
       fourG = this.hubForm.value.fourG + ' 4G '
     }
     if (this.hubForm.value.fiveG != '') {
-      fiveG = this.hubForm.value.fiveG + ' 5G сайтов '
+      fiveG = this.hubForm.value.fiveG + ' 5G '
     }
 
     let addWord = this.storageService.additionWord(this.hubForm.value.level)
@@ -548,7 +549,7 @@ export class HubComponent implements OnInit {
       if (this.hubForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
-          twoG + threeG + fourG + fiveG + this.hubForm.value.periodicity + ' не работают в регионе ' +
+          twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
           this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
@@ -562,7 +563,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n ' +
-          twoG + threeG + fourG + fiveG + this.hubForm.value.periodicity + ' не работают в регионе ' +
+          twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
           this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
@@ -578,7 +579,7 @@ export class HubComponent implements OnInit {
       if (this.hubForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
-          twoG + threeG + fourG + fiveG + this.hubForm.value.periodicity + ' не работают в регионе ' +
+          twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
           this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
@@ -593,7 +594,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n' +
-          twoG + threeG + fourG + fiveG + this.hubForm.value.periodicity + ' не работают в регионе ' +
+          twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
           this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
@@ -607,7 +608,13 @@ export class HubComponent implements OnInit {
       }
     }
 
-    let smsType = this.storageService.SmsType(this.requestType, this.hubForm.value.AddOrCor)
+    let smsType
+    if(this.hubForm.value.periodicity == '') {
+      smsType = this.storageService.SmsType(this.requestType, this.hubForm.value.AddOrCor, false)
+    } else {
+      smsType = this.storageService.SmsType(this.requestType, this.hubForm.value.AddOrCor, true)
+    }
+
 
     this.smsBody = {
       'source_addr': 'ncc-rn',

@@ -20,7 +20,7 @@ export interface NewData {
 
 export class NewIdeasComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'description', 'status', 'priority'];
+  displayedColumns: string[] = ['name', 'description', 'created_at', 'status', 'priority'];
   dataSource = new MatTableDataSource<NewData>([]);
   newIdeasForm: FormGroup
 
@@ -34,6 +34,7 @@ export class NewIdeasComponent implements OnInit {
       (res: any) => {
         console.log(res.results);
         this.dataSource = new MatTableDataSource(res.results)
+        
       }
     )
   }
@@ -45,9 +46,7 @@ export class NewIdeasComponent implements OnInit {
   createForm() {
     this.newIdeasForm = this.fb.group({
       name: ['', Validators.required],
-      description: ['', Validators.required],
-      status: ['', Validators.required],
-      priority: ['', Validators.required]
+      description: ['', Validators.required]
     });
   }
 
@@ -56,8 +55,8 @@ export class NewIdeasComponent implements OnInit {
       let dataBody = {
         'name': this.newIdeasForm.value.name,
         'description': this.newIdeasForm.value.description,
-        'status': this.newIdeasForm.value.status,
-        'priority': this.newIdeasForm.value.priority,
+        'status': 'Waiting',
+        'priority': 'Low',
       }
       this.authService.postNewIdeas(dataBody).subscribe(
         (res) => {
@@ -72,7 +71,7 @@ export class NewIdeasComponent implements OnInit {
       width: '400px', 
       data: {
         text: row,
-        title: 'Bu Testku'
+        title: 'Изменить'
       }
     });
 

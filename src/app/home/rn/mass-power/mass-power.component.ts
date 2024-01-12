@@ -228,8 +228,6 @@ export class MassPowerComponent implements OnInit {
         'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
     }
 
-    let smsType = this.storageService.SmsType(this.requestType, this.massPowerForm.value.AddOrCor)
-
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
@@ -237,7 +235,6 @@ export class MassPowerComponent implements OnInit {
       'notification': ['Hub'],
       'sms_text': this.SmsTextBody,
       'alarmreport_id': id,
-      'sms_type': smsType
     }
   }
 

@@ -9,24 +9,7 @@
         <mat-label>Описание</mat-label>
         <input matInput formControlName="description" required>
       </mat-form-field>
-      <mat-form-field class="input-style" style="width: 10%;">
-        <mat-label>Статус</mat-label>
-        <mat-select formControlName="status">
-          <mat-option value="Waiting">Waiting</mat-option>
-          <mat-option value="Process">Process</mat-option>
-          <mat-option value="Finished">Finished</mat-option>
-          <mat-option value="Canceled">Canceled</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="input-style" style="width: 10%;">
-        <mat-label>Приоритет</mat-label>
-        <mat-select formControlName="priority">
-          <mat-option value="High">High</mat-option>
-          <mat-option value="Medium">Medium</mat-option>
-          <mat-option value="Low">Low</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-button type="submit">Add</button>
+      <button mat-button type="submit">Добавить</button>
     </form>
   </div>
 
@@ -41,6 +24,11 @@
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>Описание</th>
         <td mat-cell *matCellDef="let row">{{row.description}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef>Создано</th>
+        <td mat-cell *matCellDef="let row">{{row.created_at.replace('T', ' ').substring('0','16')}}</td>
       </ng-container>
 
       <ng-container matColumnDef="status">

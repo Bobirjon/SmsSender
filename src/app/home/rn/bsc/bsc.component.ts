@@ -289,7 +289,7 @@ export class BscComponent implements OnInit {
       }
     }
 
-    let smsType = this.storageService.SmsType(this.requestType, this.bscForm.value.AddOrCor)
+    let smsType = this.storageService.SmsType(this.requestType, this.bscForm.value.AddOrCor, false)
     
     this.smsBody = {
       'source_addr': 'ncc-rn',

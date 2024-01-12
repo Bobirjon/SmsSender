@@ -1,16 +1,17 @@
 <form [formGroup]="editPageForm" (ngSubmit)="updateRow()">
     <h1 mat-dialog-title>{{data.title}}</h1>
     <div mat-dialog-content>
-        <mat-form-field>
-            <mat-label>name</mat-label>
+        <mat-form-field style="width: 100%;">
+            <mat-label>Наименование</mat-label>
             <input matInput formControlName="name" required>
         </mat-form-field>
-        <mat-form-field>
-            <mat-label>description</mat-label>
-            <input matInput formControlName="description" required>
+        <mat-form-field style="width: 100%;">
+            <mat-label>Описание</mat-label>
+            <textarea rows="5" matInput formControlName="description" required></textarea>
         </mat-form-field>
-        <mat-form-field>
-            <mat-label>status</mat-label>
+        <div *ngIf="username == 'admin'">
+             <mat-form-field>
+            <mat-label>Статус</mat-label>
             <mat-select formControlName="status">
                 <mat-option value="Waiting">В Ожидании</mat-option>
                 <mat-option value="Process">В Процессе</mat-option>
@@ -19,17 +20,19 @@
             </mat-select>
         </mat-form-field>
         <mat-form-field>
-            <mat-label>priority</mat-label>
+            <mat-label>Приоритет</mat-label>
             <mat-select formControlName="priority">
                 <mat-option value="High">Высокий</mat-option>
                 <mat-option value="Medium">Средний</mat-option>
                 <mat-option value="Low">Низкий</mat-option>
             </mat-select>
         </mat-form-field>
+        </div>
+       
     </div>
     <div mat-dialog-actions>
         <button mat-raised-button (click)="closepopup()" >Close</button>
         <button mat-raised-button color="primary" type="submit">Update</button>
-        <button mat-raised-button color="warn" (click)="deleteRow(this.data.text.id)">Delete</button>
+        <button *ngIf="username == 'admin'" mat-raised-button color="warn" (click)="deleteRow(this.data.text.id)">Delete</button>
     </div>
 </form>

@@ -204,9 +204,38 @@ export class StorageService {
     return this.addWord
   }
 
-  public SmsType(smsType: string, type: string) {
+  public SmsType(smsType: string, type: string, period: boolean) {
     let typeOfSms
-
+    if(period == true) {
+       if(smsType == 'Проблема' && type == null) {
+      typeOfSms = 'Проблема-периодически'
+      return typeOfSms
+    } else if(smsType == 'Проблема' && type == 'Дополнения') {
+      typeOfSms = 'Проблема-периодически-дополнение'
+      return typeOfSms
+    } else if(smsType == 'Проблема' && type == 'Коррекция') {
+      typeOfSms = 'Проблема-периодически-коррекция'
+      return typeOfSms
+    } else if(smsType == 'Решение' && type == null) {
+      typeOfSms = 'Решение-периодически'
+      return typeOfSms
+    } else if(smsType == 'Решение' && type == 'Дополнения') {
+      typeOfSms = 'Решение-периодически-дополнение'
+      return typeOfSms
+    } else if(smsType == 'Решение' && type == 'Коррекция') {
+      typeOfSms = 'Решение-периодически-коррекция'
+      return typeOfSms
+    }else if(smsType == 'Информационное' && type == null) {
+      typeOfSms = 'Информационное-периодически'
+      return typeOfSms
+    } else if(smsType == 'Информационное' && type == 'Дополнения') {
+      typeOfSms = 'Информационное-периодически-дополнение'
+      return typeOfSms
+    } else if(smsType == 'Информационное' && type == 'Коррекция') {
+      typeOfSms = 'Информационное-периодически-коррекция'
+      return typeOfSms
+    }
+    } else {
     if(smsType == 'Проблема' && type == null) {
       typeOfSms = 'Проблема'
       return typeOfSms
@@ -235,6 +264,7 @@ export class StorageService {
       typeOfSms = 'Информационное-коррекция'
       return typeOfSms
     }
+  }
   }
   
 }

@@ -447,7 +447,7 @@ export class ChronicComponent implements OnInit {
       }
     }
 
-    let smsType = this.storageService.SmsType(this.requestType, this.chronicForm.value.AddOrCor)
+    let smsType = this.storageService.SmsType(this.requestType, this.chronicForm.value.AddOrCor, false)
 
     this.smsBody = {
       'source_addr': 'ncc-rn',
