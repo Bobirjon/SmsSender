@@ -297,6 +297,8 @@ export class CnComponent implements OnInit {
     }
 
     let smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, false)
+    console.log(this.requestType);
+    
 
     console.log(smsType);
     
@@ -391,6 +393,7 @@ export class CnComponent implements OnInit {
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
     const dialogRef = this.dialog.open(areYouSure);
+    console.log(this.smsSendBody());
     
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {

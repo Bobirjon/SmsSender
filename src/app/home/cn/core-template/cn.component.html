@@ -102,17 +102,17 @@
                         </mat-card-content>
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button
-                                (click)="onSubmitButtonProblem('Решения')" type="submit"
+                                (click)="onSubmitButtonProblem('Решение')" type="submit"
                                 [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
                                 Отправить SMS
                             </button>
                             <button class="form-button" mat-raised-button
-                                (click)="onSubmitasNew('Решения')" type="submit"
+                                (click)="onSubmitasNew('Решение')" type="submit"
                                 *ngIf="newForm == false"
                                 [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
                                 Новое SMS
                             </button>
-                            <button class="form-button" mat-raised-button (click)="forTestSms('Решения')"
+                            <button class="form-button" mat-raised-button (click)="forTestSms('Решение')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
                                 TEST SMS
                             </button>
