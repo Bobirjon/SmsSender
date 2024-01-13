@@ -460,10 +460,10 @@ export class HubComponent implements OnInit {
       'fg_avb': this.hubForm.value.generator,
       'district': this.hubForm.value.district,
       'hub_reason': this.hubForm.value.reason,
-      'count_2G': this.hubForm.value.twoG,
-      'count_3G': this.hubForm.value.threeG,
-      'count_4G': this.hubForm.value.fourG,
-      'count_5G': this.hubForm.value.fiveG,
+      'count_2G': parseInt(this.hubForm.value.twoG),
+      'count_3G': parseInt(this.hubForm.value.threeG),
+      'count_4G': parseInt(this.hubForm.value.fourG),
+      'count_5G': parseInt(this.hubForm.value.fiveG),
       'flapping_type': this.hubForm.value.periodicity,
 
 
@@ -671,7 +671,8 @@ export class HubComponent implements OnInit {
 
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
-    this.smsSendBody()
+    console.log(this.hubForm.value.fiveG);
+    
 
     const dialogRef = this.dialog.open(areYouSure);
 

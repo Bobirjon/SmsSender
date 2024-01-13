@@ -56,6 +56,26 @@ export class AuthService {
 
   }
 
+  getRecievers(
+    nameFilter: string,
+    numberFilter: string,
+    networkFilter: string,
+    criteriaFilter: string,
+    notificationFilter: string,
+    regionFilter: string,
+    ordering: string,
+    order: string,
+    page: number,
+    perpage:number
+  ): Observable<any> {
+    const url = this.URLsender + `smssender/receiver/?name__contains=${nameFilter}
+      &number__icontains=${numberFilter}&network__icontains=${networkFilter}
+      &criteria__icontains=${criteriaFilter}&notification__icontains=${notificationFilter}
+      &region__icontains=${regionFilter}&ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
+
+    return this.http.get(url)
+  }
+
   getFilteredData() {
     return this.http.get(this.URLsender + 'smssender/alarmreport/?is_complete=false&is_send_sms=true')
   }

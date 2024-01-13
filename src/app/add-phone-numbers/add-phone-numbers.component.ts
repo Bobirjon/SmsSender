@@ -4,6 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from '../auth.service';
+import { catchError, map, merge, startWith, switchMap } from 'rxjs';
+
 
 @Component({
   selector: 'app-add-phone-numbers',
@@ -16,6 +18,11 @@ export class AddPhoneNumbersComponent implements OnInit {
   dataSend: any
   data: any
   AddPhoneNumber: FormGroup
+  pageSizes = [10, 25, 50];
+  resultsLength = 0;
+  isLoadingResults = true;
+  isRateLimitReached = false
+  @ViewChild('table2sort') public table2sort: MatSort;
 
   filteredValues = {
     nameFilter: '',
@@ -118,6 +125,7 @@ export class AddPhoneNumbersComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
       })
+
   }
 
   ngOnInit(): void {
@@ -140,6 +148,71 @@ export class AddPhoneNumbersComponent implements OnInit {
       console.log(res);
       window.location.reload()
     })
+  }
+
+  ngAfterViewInit() {
+
+    // If the user changes the sort order, reset back to the first page.
+    this.table2sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+
+    merge(
+      this.nameFilter.valueChanges,
+      this.numberFilter.valueChanges,
+      this.networkFilter.valueChanges,
+      this.criteriaFilter.valueChanges,
+      this.notificationFilter.valueChanges,
+      this.regionFilter.valueChanges,
+      this.paginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          var dir: string
+          var nameFilter = this.nameFilter.value == null ? '' : this.nameFilter.value;
+          var numberFilter = this.numberFilter.value == null ? '' : this.numberFilter.value;
+          var networkFilter = this.networkFilter.value == null ? '' : this.networkFilter.value;
+          var criteriaFilter = this.criteriaFilter.value == null ? '' : this.criteriaFilter.value;
+          var notificationFilter = this.notificationFilter.value == null ? '' : this.notificationFilter.value;
+          var regionFilter = this.regionFilter.value == null ? '' : this.regionFilter.value;
+          if (this.table2sort.direction == 'desc') {
+            dir = '-'
+          } else {
+            dir = ''
+          }
+
+          return this.authService
+            .getRecievers(
+              nameFilter, numberFilter, networkFilter, criteriaFilter, notificationFilter,
+              regionFilter,
+              this.table2sort.active,
+              dir,
+              this.paginator.pageIndex + 1,
+              this.paginator.pageSize
+            )
+            .pipe(catchError(() => observableOf(null)));
+        }),
+        map((data) => {
+          // Flip flag to show that loading has finished.
+          this.isLoadingResults = false;
+          this.isRateLimitReached = data === null;
+
+          if (data === null) {
+            return [];
+          }
+
+          // Only refresh the result length if there is new data. In case of rate
+          // limit errors, we do not want to reset the paginator to zero, as that
+          // would prevent users from re-triggering requests.
+          this.resultsLength = data.count;
+
+          return data;
+        })
+      )
+      .subscribe((data) => {
+        this.ActivePhoneNumberList = new MatTableDataSource(data.results)
+        console.log(data);
+
+      });
   }
 
   filterForAllCase() {
@@ -195,3 +268,7 @@ export class AddPhoneNumbersComponent implements OnInit {
   }
 
 }
+function observableOf(arg0: null): any {
+  throw new Error('Function not implemented.');
+}
+

@@ -70,7 +70,7 @@
     </form>
 </div>
 
-<div class="table-style">
+<!-- <div class="table-style">
     <table mat-table [dataSource]="ActivePhoneNumberList" matSort class="mat-elevation-z8">
 
         <ng-container matColumnDef="name">
@@ -134,4 +134,77 @@
     </table>
 
     <mat-paginator [pageSizeOptions]="[5,10,20,30,40,50]" aria-labels="select page"></mat-paginator>
-</div>
+</div> -->
+
+
+<div>
+    <div class="container-style mat-elevation-z8">
+       <table mat-table [dataSource]="ActivePhoneNumberList" matSort matSortActive="name" matSortDisableClear
+      matSortDirection="desc" #table2 #table2sort="matSort" class="table-style">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Наименование</th>
+        <td mat-cell *matCellDef="let row">{{row.name}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Тип" search
+            [formControl]="nameFilter"></td>
+      </ng-container>
+
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Номер Телефона</th>
+        <td mat-cell *matCellDef="let row">{{row.tel_number}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="number" search
+                [formControl]="numberFilter"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="network">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Сеть</th>
+        <td mat-cell *matCellDef="let row">{{row.network}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="network" search
+                [formControl]="networkFilter"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="criteria">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Критерия</th>
+        <td mat-cell *matCellDef="let row">{{row.criteria}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="description" search
+                [formControl]="criteriaFilter"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="notification">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Тип Запроса</th>
+        <td mat-cell *matCellDef="let row">{{row.notification}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="notification" search
+                [formControl]="notificationFilter"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="region">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Регион</th>
+        <td mat-cell *matCellDef="let row">{{row.region}}</td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="region" search
+                [formControl]="regionFilter"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
+        <td mat-cell *matCellDef="let element"><a style="text-decoration: none"
+            (click)="onDelete(element.id)">Delete</a></td>
+        <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="problem" search
+                [formControl]="nameFilter"></td>
+    </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns">
+      </tr>
+
+      <tr mat-footer-row *matFooterRowDef="displayedColumns" class="example-first-footer-row"></tr>
+
+      <tr *matNoDataRow>
+        <td class="mat-cell" colspan="4">The filter does not match any item in the data for this text</td>
+      </tr>
+    </table>
+    </div>
+  </div>
+  <mat-paginator #paginator [pageSizeOptions]="pageSizes" [length]="resultsLength"
+  showFirstLastButtons></mat-paginator>
+
+  <hr>

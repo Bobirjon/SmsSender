@@ -296,12 +296,8 @@ export class CnComponent implements OnInit {
       }
     }
 
-    let smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, false)
-    console.log(this.requestType);
-    
 
-    console.log(smsType);
-    
+    let smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, false)  
 
     this.smsBody = {
       'source_addr': 'ncc-cn',
@@ -311,6 +307,8 @@ export class CnComponent implements OnInit {
       'alarmreport_id': id,
       'sms_type': smsType
     }
+
+    console.log(this.smsBody);
 
     if (this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp')) {
       this.smsBody.notification = ['Power/HighTemp']
@@ -434,7 +432,7 @@ export class CnComponent implements OnInit {
 
   onSubmitasNew(smsType: string) {
     this.requestType = smsType
-
+    console.log(this.smsSendBody());
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
