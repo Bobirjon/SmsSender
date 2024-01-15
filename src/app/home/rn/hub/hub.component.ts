@@ -216,10 +216,10 @@ export class HubComponent implements OnInit {
       'lowBatteryTime': [''],
       'dg_start_time': [''],
       'district': [''],
-      'twoG': ['',],
-      'threeG': ['',],
-      'fourG': ['',],
-      'fiveG': ['',],
+      'twoG': [''],
+      'threeG': [''],
+      'fourG': [''],
+      'fiveG': [''],
       'periodicity': ['',]
     })
 
@@ -239,16 +239,6 @@ export class HubComponent implements OnInit {
     if (this.hubForm.value.level == 'P1' || this.hubForm.value.level == 'P2' ||
       this.hubForm.value.level == 'P3' || this.hubForm.value.level == 'P4' || this.hubForm.value.level == 'P5') {
       this.hubForm.value.categories_report = 'ПР'
-    }
-  }
-
-  private extractNumbersFromString(input: string): number[] {
-    const numberMatches: RegExpMatchArray | null = input.match(/\d+/g)
-
-    if (numberMatches) {
-      return numberMatches.map(Number);
-    } else {
-      return []
     }
   }
 
@@ -280,11 +270,11 @@ export class HubComponent implements OnInit {
 
     if (this.hubForm.value.fiveG >= maxNumber) {
       maxNumber = this.hubForm.value.fiveG
-    } 
+    }
 
     if (this.hubForm.value.fourG >= maxNumber) {
       maxNumber = this.hubForm.value.fourG
-    } 
+    }
 
 
     if (this.hubForm.value.region == 'г.Ташкент' || this.hubForm.value.region == 'Ташкент.обл') {
@@ -313,24 +303,18 @@ export class HubComponent implements OnInit {
     } else {
       if (this.hubForm.value.categories_report == 'ПР') {
         if (parseInt(maxNumber) > 2 && parseInt(maxNumber) < 10) {
-          console.log('З4');
           this.hubForm.value.level = 'P4'
         } else if (parseInt(maxNumber) >= 10 && parseInt(maxNumber) < 30) {
-          console.log('A3');
           this.hubForm.value.level = 'P3'
         } else if (parseInt(maxNumber) >= 30) {
-          console.log('A2');
           this.hubForm.value.level = 'P2'
         }
       } else {
         if (parseInt(maxNumber) > 2 && parseInt(maxNumber) < 10) {
-          console.log('A4');
           this.hubForm.value.level = 'A4'
         } else if (parseInt(maxNumber) >= 10 && parseInt(maxNumber) < 30) {
-          console.log('A3');
           this.hubForm.value.level = 'A3'
         } else if (parseInt(maxNumber) >= 30) {
-          console.log('A2');
           this.hubForm.value.level = 'A2'
         }
       }
@@ -362,6 +346,7 @@ export class HubComponent implements OnInit {
 
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
+
           if (result['end_time'] == null) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
@@ -398,6 +383,8 @@ export class HubComponent implements OnInit {
             district = result['district']
           }
 
+
+
           this.hubForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -417,10 +404,10 @@ export class HubComponent implements OnInit {
             'powerOffTime': [power_off_time],
             'hubBlockTime': [block_time],
             'district': [district],
-            'twoG': [result['count_2G'], Validators.required],
-            'threeG': [result['count_3G'], Validators.required],
-            'fourG': [result['count_4G'], Validators.required],
-            'fiveG': [result['count_5G'], Validators.required],
+            'twoG': [result['count_2G'], ],
+            'threeG': [result['count_3G'], ],
+            'fourG': [result['count_4G'], ],
+            'fiveG': [result['count_5G'], ],
             'periodicity': [result['flapping_type'],],
 
             'mw_link': [result['mw_link']],
@@ -438,14 +425,44 @@ export class HubComponent implements OnInit {
   }
 
   tableSendBody() {
+    let two: any, three, four, five: any
+
+    if (this.hubForm.value.twoG == '') {
+      two = ''
+    }  else {
+      two = this.hubForm.value.twoG + ' 2G '
+    } 
+
+    if (this.hubForm.value.threeG == '') {
+      three = ''
+    } else {
+      three = this.hubForm.value.threeG + ' 3G '
+    } 
+
+    if (this.hubForm.value.fourG == '') {
+      four = ''
+    } else {
+      four = this.hubForm.value.fourG + ' 4G '
+    } 
+
+    if (this.hubForm.value.fiveG == '') {
+      five = ''
+    } else {
+      five = this.hubForm.value.fiveG + ' 5G '
+    } 
+
+   
+    console.log(this.hubForm.value.twoG);
+    console.log(two);
+    console.log(this.hubForm.value.threeG);
+    console.log(three);
 
     this.tableBody = {
       'type': 'HUB',
       'level': this.hubForm.value.level,
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
-      'problem': this.hubForm.value.twoG + ' 2G,' + ' ' + this.hubForm.value.threeG + ' 3G,' + ' ' + this.hubForm.value.fourG + ' 4G,' + ' ' +
-        this.hubForm.value.fiveG + ' 5G,' + ' ' + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
+      'problem': two + three + four + five + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
         this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district],
       'reason': this.hubForm.value.reason + ' ' + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator,
       'effect': 'С влиянием',
@@ -460,10 +477,10 @@ export class HubComponent implements OnInit {
       'fg_avb': this.hubForm.value.generator,
       'district': this.hubForm.value.district,
       'hub_reason': this.hubForm.value.reason,
-      'count_2G': parseInt(this.hubForm.value.twoG),
-      'count_3G': parseInt(this.hubForm.value.threeG),
-      'count_4G': parseInt(this.hubForm.value.fourG),
-      'count_5G': parseInt(this.hubForm.value.fiveG),
+      'count_2G': this.hubForm.value.twoG,
+      'count_3G': this.hubForm.value.threeG,
+      'count_4G': this.hubForm.value.fourG,
+      'count_5G': this.hubForm.value.fiveG,
       'flapping_type': this.hubForm.value.periodicity,
 
 
@@ -471,6 +488,15 @@ export class HubComponent implements OnInit {
       'mw_equipment': this.hubForm.value.mw_equipment,
       'mw_vendor': this.hubForm.value.mw_vendor,
       'bts_vendor': this.hubForm.value.bts_vendor,
+    }
+
+    
+    if (this.hubForm.value.effectedSites !== '') {
+      if (Array.isArray(this.hubForm.value.effectedSites) == false) {
+        let splited: string[] = []
+        splited = this.hubForm.value.effectedSites.split((/\n|,/))
+        this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
+      }
     }
 
     if (this.hubForm.value.endTime !== '') {
@@ -493,14 +519,6 @@ export class HubComponent implements OnInit {
       this.tableBody.sector_block_time = this.hubForm.value.hubBlockTime
     }
 
-    if (this.hubForm.value.effectedSites !== '') {
-      if (Array.isArray(this.hubForm.value.effectedSites) == false) {
-        let splited: string[] = []
-        splited = this.hubForm.value.effectedSites.split((/\n|,/))
-        this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
-      }
-    }
-
     if ((this.hubForm.value.hubSite == '') || (this.hubForm.value.hubSite == undefined)) {
       this.word = ' '
     } else {
@@ -509,11 +527,11 @@ export class HubComponent implements OnInit {
   }
 
   smsSendBody(id?: number) {
-    let twoG = '', threeG= '', fourG = '', fiveG = ''
+    let twoG = '', threeG = '', fourG = '', fiveG = ''
 
     if (this.hubForm.value.twoG != '') {
       twoG = this.hubForm.value.twoG + ' 2G '
-    } 
+    }
     if (this.hubForm.value.threeG != '') {
       threeG = this.hubForm.value.threeG + ' 3G '
     }
@@ -609,7 +627,7 @@ export class HubComponent implements OnInit {
     }
 
     let smsType
-    if(this.hubForm.value.periodicity == '') {
+    if (this.hubForm.value.periodicity == '') {
       smsType = this.storageService.SmsType(this.requestType, this.hubForm.value.AddOrCor, false)
     } else {
       smsType = this.storageService.SmsType(this.requestType, this.hubForm.value.AddOrCor, true)
@@ -643,8 +661,6 @@ export class HubComponent implements OnInit {
   }
 
   createData() {
-
-
     this.tableSendBody()
 
     this.authService.postData(this.tableBody)
@@ -672,7 +688,7 @@ export class HubComponent implements OnInit {
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
     console.log(this.hubForm.value.fiveG);
-    
+
 
     const dialogRef = this.dialog.open(areYouSure);
 

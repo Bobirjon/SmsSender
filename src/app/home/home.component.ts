@@ -133,26 +133,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.Data.filterPredicate = this.customFilterPredicate();
 
         this.webSocketService.receiveMessage().subscribe((data) => {
-          console.log(data);
 
           const exist = this.Data.data.findIndex(
             (item: any) => item.id === data.id
           )
-          if (data.action == 'delete') {
-            console.log('dekete');
-
-            this.Data.data.splice(exist, 1)
-            this.Data.data = this.Data.data
-          }
-          
-          if (exist !== -1) {
-            //check if it is exist, update it
-            console.log('update');
-
-            this.Data.data[exist] = data
-            this.Data.data = this.Data.data
-          } else if(exist == -1 && data.action != 'delete' && data.is_send_sms== true) {
-            console.log('new');
+          if(exist !== -1) {
+            if(data.action == 'delete') {
+              this.Data.data.splice(exist, 1)
+              this.Data.data = this.Data.data
+            } else if (data.is_complete == true) {
+              this.Data.data.splice(exist, 1)
+              this.Data.data = this.Data.data
+            } else {
+              this.Data.data[exist] = data
+              this.Data.data = this.Data.data
+            }
+          } else if(data.is_complete == false && data.is_send_sms == true) {
             this.Data.data = [...this.Data.data, data]
           }
         })
@@ -163,7 +159,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.authService.getTemplateSMS()
       .subscribe((data: any) => {
         this.TemplateData = new MatTableDataSource(data.results)
-        console.log(data.results);
         
         this.webSocketService.receiveMessage().subscribe((data) => {
           console.log(data);
@@ -176,13 +171,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
             if (data.action == 'delete') {
               this.TemplateData.data.splice(exist, 1)
               this.TemplateData.data = this.TemplateData.data
-
+            } else if (data.is_send_sms == true) {
+              this.TemplateData.data.splice(exist, 1)
+              this.TemplateData.data = this.TemplateData.data
             } else {
               this.TemplateData.data[exist] = data
               this.TemplateData.data = this.TemplateData.data
             }
-          } else {
-            console.log(exist);
+          } else if(data.is_send_sms == false) {
             this.TemplateData.data = [...this.TemplateData.data, data]
           }
         })

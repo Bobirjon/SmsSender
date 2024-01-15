@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
 			this.router.navigate(['login'])
 			return false
 		} else {
-			console.log('heelo is auth');
 			return true
 			
 		}
