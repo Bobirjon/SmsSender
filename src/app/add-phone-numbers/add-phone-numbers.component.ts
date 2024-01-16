@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -74,19 +74,20 @@ export class AddPhoneNumbersComponent implements OnInit {
   ];
 
   region: { value: string; viewValue: string }[] = [
-    { value: 'Andijan', viewValue: 'Andijan' },
-    { value: 'Bukhara', viewValue: 'Bukhara' },
-    { value: 'Djizzakh', viewValue: 'Djizzakh' },
-    { value: 'Fergana', viewValue: 'Fergana' },
-    { value: 'Sirdarya', viewValue: 'Sirdarya' },
-    { value: 'Kashkadarya', viewValue: 'Kashkadarya' },
-    { value: 'Namangan', viewValue: 'Namangan' },
-    { value: 'Navoi', viewValue: 'Navoi' },
-    { value: 'Karakalpakstan', viewValue: 'Karakalpakstan' },
-    { value: 'Samarkand', viewValue: 'Bukhara' },
-    { value: 'Tashkent', viewValue: 'Tashkent' },
-    { value: 'Surkhandarya', viewValue: 'Surkhandarya' },
-    { value: 'Khorezm', viewValue: 'Khorezm' },
+    { value: 'Андижан', viewValue: 'Andijan' },
+    { value: 'Бухара', viewValue: 'Bukhara' },
+    { value: 'Джизак', viewValue: 'Djizzakh' },
+    { value: 'Фергана', viewValue: 'Fergana' },
+    { value: 'Сырдарья', viewValue: 'Sirdarya' },
+    { value: 'Кашкадарья', viewValue: 'Кашкадарья' },
+    { value: 'Наманган', viewValue: 'Наманган' },
+    { value: 'Навои', viewValue: 'Навои' },
+    { value: 'Каракалпакстан', viewValue: 'Каракалпакстан' },
+    { value: 'Самарканд', viewValue: 'Самарканд' },
+    { value: 'г.Ташкент', viewValue: 'г.Ташкент' },
+    { value: 'Ташкент.обл', viewValue: 'Ташкент.обл' },
+    { value: 'Сурхандарья', viewValue: 'Сурхандарья' },
+    { value: 'Хорезм', viewValue: 'Хорезм' },
   ];
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -94,12 +95,12 @@ export class AddPhoneNumbersComponent implements OnInit {
 
   createForm() {
     this.AddPhoneNumber = this.formBuilder.group({
-      'name': [null],
-      'number': [null],
-      'network': [null],
-      'criteria': [null],
-      'notification': [null],
-      'region': [null],
+      'name': [null, Validators.required],
+      'number': ['99893', Validators.required],
+      'network': [null, Validators.required],
+      'criteria': [null, Validators.required],
+      'notification': [null, Validators.required],
+      'region': [null, Validators.required],
     })
   }
 
@@ -117,6 +118,9 @@ export class AddPhoneNumbersComponent implements OnInit {
       'notification': this.AddPhoneNumber.value.notification,
     }
 
+    console.log(this.dataSend);
+    
+
     if(this.AddPhoneNumber.value.region != null || this.AddPhoneNumber.value.region != undefined) {
       this.dataSend.region = this.AddPhoneNumber.value.region
     }
@@ -124,6 +128,7 @@ export class AddPhoneNumbersComponent implements OnInit {
     this.authService.postReceiverData(this.dataSend)
       .subscribe(res => {
         console.log(res);
+        window.location.reload()
       })
 
   }

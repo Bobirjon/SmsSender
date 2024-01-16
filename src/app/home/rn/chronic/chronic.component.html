@@ -215,18 +215,17 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-
             <!-- start Time -->
             <mat-grid-tile colspan="6">
                 <div class="margin-container">
                     <p>Начало 
-                        <span *ngIf="validationStyle ? (chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched) :
+                        <span *ngIf="newForm ? (chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched) :
                         chronicForm.get('time').hasError('invalidDatetime') "  class="timeNotValid"> 
                         *Время простоя не соответствует Началу времени*</span>
                     </p>
                     <input type="datetime-local" class="dateTime" formControlName="startTime"
                         [(ngModel)]="chronicForm.value.startTime" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
-                        [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime')">
+                        [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched">
                 </div>
             </mat-grid-tile>
             <!-- end Time -->

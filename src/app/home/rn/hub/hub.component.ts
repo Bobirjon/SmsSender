@@ -736,11 +736,13 @@ export class HubComponent implements OnInit {
         this.tableSendBody()
 
         this.authService.postData(this.tableBody)
-          .subscribe((result) => {
+          .subscribe((res) => {
             this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-            this.smsSendBody(result.id)
+
+            this.smsSendBody(res.id)
             this.sendButton()
           }, error => {
+            console.log(error);
             this.snackBar.open("Ошибка", '', { duration: 10000 })
           })
       }

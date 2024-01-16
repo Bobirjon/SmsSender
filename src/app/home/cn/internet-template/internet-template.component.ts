@@ -54,7 +54,10 @@ export class InternetTemplateComponent {
       'responsible_area': 'Эксплуатация',
       'start_time': this.cnForm.value.startTime,
       'description': this.cnForm.value.desc,
-      'sender': this.user?.first_name + ' ' + this.user?.last_name
+      'sender': this.user?.first_name + ' ' + this.user?.last_name,
+      'effect': 'Без влияния',
+      'problem': '',
+      'reason': ''
     }
 
   }
