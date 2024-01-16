@@ -56,8 +56,8 @@ export class InternetTemplateComponent {
       'description': this.cnForm.value.desc,
       'sender': this.user?.first_name + ' ' + this.user?.last_name,
       'effect': 'Без влияния',
-      'problem': '',
-      'reason': ''
+      'problem': 'Core internet template',
+      'reason': 'Core internet template'
     }
 
   }
