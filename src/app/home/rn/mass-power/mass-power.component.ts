@@ -203,8 +203,10 @@ export class MassPowerComponent implements OnInit {
       'problem': this.massPowerForm.value.problem ,
       'reason': this.massPowerForm.value.reason ,
       'start_time': this.massPowerForm.value.startTime,
+      'end_time': this.massPowerForm.value.startTime,
       'region': this.massPowerForm.value.region,
       'sender': this.user?.username,
+      'effect': 'Без влияния',
     }
   }
 

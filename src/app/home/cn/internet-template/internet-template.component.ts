@@ -46,6 +46,7 @@ export class InternetTemplateComponent {
     })
   }
 
+  
   tableSendBody() {
     this.tableBody = {
       'type': 'CORE',

@@ -20,16 +20,9 @@ import { map, startWith } from 'rxjs/operators';
 export class ChronicComponent implements OnInit {
 
   chronicForm: FormGroup
-  timeValidation: boolean
-  validationStyle: boolean = true
-  hasError: boolean
   time: Date = new Date()
-  preview = false
-  previewResheniya = false
   user: any
   newForm: boolean
-  criteria_list: any
-  criteria: any
   SmsTextBody: any
   DateTime = new Date()
   requestType: any
@@ -40,6 +33,7 @@ export class ChronicComponent implements OnInit {
   filteredOptionsReason: Observable<string[]>;
 
   @ViewChild('item') item: any;
+
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A5', viewValue: 'A5' },
@@ -170,7 +164,6 @@ export class ChronicComponent implements OnInit {
     'Арендодатель отключил питание',
   ];
 
-
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -179,17 +172,13 @@ export class ChronicComponent implements OnInit {
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
 
-    if (this.timeValidation == undefined) {
-      this.timeValidation = true
-    }
-
     this.chronicForm = this.formBuilder.group({
       'AddOrCor': [null],
       'level': ['', Validators.required],
       'categories_report': ['', Validators.required],
       'responsible_report': ['', Validators.required],
       'reason': ['', Validators.required],
-      'startTime': ['', [Validators.required, this.startTimeSet]],
+      'startTime': ['', [Validators.required]],
       'endTime': ['', [this.endTimeValidation]],
       'region': ['', Validators.required],
       'siteName': [''],
@@ -231,7 +220,6 @@ export class ChronicComponent implements OnInit {
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
     } else {
-      this.validationStyle = false
       this.newForm = false
       let endTimeForUpdate: any
       let district: any
@@ -256,27 +244,37 @@ export class ChronicComponent implements OnInit {
             'responsible_report': [result['responsible_area'], Validators.required],
             'problem': [result['problem'], Validators.required],
             'reason': [result['hub_reason'], Validators.required],
-            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), [Validators.required]],
+            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [endTimeForUpdate, [this.endTimeValidation]],
             'region': [result['region'], Validators.required],
             'siteName': [result['chronic_site']],
             'district': [district],
-            'time': [result['chronic_hours'], [this.timeSetValidation]],
+            'time': [result['chronic_hours']],
             'hubSite': [result['hub_site']],
             'informed': [result['informed']],
             'desc': [result['description']],
             'category': [result['category_for_hub']],
             'sender': [result['sender']]
           })
-          
+          this.chronicForm.get('time').valueChanges.subscribe((value) => {
+            this.chronicForm.get('startTime').setValidators([Validators.required, this.startTimeSet])
+        
+            this.chronicForm.get('startTime').updateValueAndValidity();
+            console.log(true);
+            
+          })
         })
     }
+
+  this.chronicForm.get('time').valueChanges.subscribe((value) => {
+    this.chronicForm.get('startTime').setValidators([Validators.required, this.startTimeSet])
+
+    this.chronicForm.get('startTime').updateValueAndValidity();
+  })
   }
 
   timeSetValidation(control: any) {
 
-    console.log('time Validation wokrs');
-    
     let currentDate: Date = new Date()
     const formGroup = control?.parent;
   
@@ -296,17 +294,12 @@ export class ChronicComponent implements OnInit {
       } else {
         return { invalidDatetime: true }
       }
-
-      
-      
     }
     return null
     
   }
 
   startTimeSet(control: any) {
-    
-    
       let currentDate: Date = new Date()
       let startTime = new Date(control.value)
       const difference = currentDate.getTime() - startTime.getTime()
@@ -529,6 +522,8 @@ export class ChronicComponent implements OnInit {
 
         this.authService.postData(this.tableBody)
           .subscribe((result) => {
+            console.log(result);
+            
             this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
             this.smsSendBody(result.id)
             this.sendButton()

@@ -68,10 +68,10 @@ export class AuthService {
     page: number,
     perpage:number
   ): Observable<any> {
-    const url = this.URLsender + `smssender/receiver/?name__contains=${nameFilter}
-      &number__icontains=${numberFilter}&network__icontains=${networkFilter}
-      &criteria__icontains=${criteriaFilter}&notification__icontains=${notificationFilter}
-      &region__icontains=${regionFilter}&ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
+    const url = this.URLsender + `smssender/receiver/?name__icontains=${nameFilter}
+      &tel_number__icontains=${numberFilter}&network=${networkFilter}
+      &criteria=${criteriaFilter}&notification=${notificationFilter}
+      &region=${regionFilter}&ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
 
     return this.http.get(url)
   }

@@ -432,7 +432,6 @@ export class CnComponent implements OnInit {
 
   onSubmitasNew(smsType: string) {
     this.requestType = smsType
-    console.log(this.smsSendBody());
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
@@ -441,7 +440,6 @@ export class CnComponent implements OnInit {
 
         this.authService.postData(this.tableBody)
           .subscribe((result) => {
-            console.log(result);
             this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
             this.smsSendBody(result.id)
             this.sendButton()
