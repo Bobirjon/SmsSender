@@ -40,7 +40,7 @@
                     <mat-card class="preview">
                         <mat-card-header>
                             <mat-card-title>
-                                {{bscForm.value.level.replace('P', 'П') + ' BSC Проблема:'}}
+                                {{bscForm.value.level.replace('P', 'П') + ' BSC/RNC Проблема:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнения'">
                                 (Дополнения)
@@ -84,7 +84,7 @@
                     <mat-card class="preview">
                         <mat-card-header>
                             <mat-card-title>
-                                {{bscForm.value.level.replace('P', 'П') + ' BSC Решение:'}}
+                                {{bscForm.value.level.replace('P', 'П') + ' BSC/RNC Решение:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>

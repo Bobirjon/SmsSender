@@ -260,61 +260,75 @@ export class HubComponent implements OnInit {
   }
 
   putLevel() {
-    let maxNumber: string
+    let maxNumber: number
 
-    maxNumber = this.hubForm.value.twoG
+    maxNumber = parseInt(this.hubForm.value.twoG)
 
-    if (this.hubForm.value.threeG >= maxNumber) {
-      maxNumber = this.hubForm.value.threeG
+    if (parseInt(this.hubForm.value.threeG) >= maxNumber) {
+      maxNumber = parseInt(this.hubForm.value.threeG)
     }
 
-    if (this.hubForm.value.fiveG >= maxNumber) {
-      maxNumber = this.hubForm.value.fiveG
+    if (parseInt(this.hubForm.value.fourG) >= maxNumber) {
+      maxNumber = parseInt(this.hubForm.value.fourG)
     }
 
-    if (this.hubForm.value.fourG >= maxNumber) {
-      maxNumber = this.hubForm.value.fourG
+    if (parseInt(this.hubForm.value.fiveG) >= maxNumber) {
+      maxNumber = parseInt(this.hubForm.value.fiveG)
+    }
+    
+    if('15' > '10') {
+      console.log(true);
+      console.log('15 more than 10');
+      
     }
 
+    if('15' > '8') {
+      console.log(true);
+      console.log('15 more than 8');
+      
+    }    
+    
+    console.log(maxNumber);
+    
 
     if (this.hubForm.value.region == 'г.Ташкент' || this.hubForm.value.region == 'Ташкент.обл') {
       if (this.hubForm.value.categories_report == 'ПР') {
-        if (parseInt(maxNumber) >= 4 && parseInt(maxNumber) <= 19) {
+        if (maxNumber >= 4 && maxNumber <= 19) {
           this.hubForm.value.level = 'P4'
-        } else if (parseInt(maxNumber) >= 20 && parseInt(maxNumber) <= 49) {
+        } else if (maxNumber >= 20 && maxNumber <= 49) {
           console.log('A3');
           this.hubForm.value.level = 'P3'
-        } else if (parseInt(maxNumber) >= 50) {
+        } else if (maxNumber >= 50) {
           console.log('A2');
           this.hubForm.value.level = 'P2'
         }
       } else {
-        if (parseInt(maxNumber) >= 4 && parseInt(maxNumber) <= 19) {
+        if (maxNumber >= 4 && maxNumber <= 19) {
           console.log('A4');
           this.hubForm.value.level = 'A4'
-        } else if (parseInt(maxNumber) >= 20 && parseInt(maxNumber) <= 49) {
+        } else if (maxNumber >= 20 && maxNumber <= 49) {
           console.log('A3');
           this.hubForm.value.level = 'A3'
-        } else if (parseInt(maxNumber) >= 50) {
+        } else if (maxNumber >= 50) {
           console.log('A2');
           this.hubForm.value.level = 'A2'
         }
       }
     } else {
       if (this.hubForm.value.categories_report == 'ПР') {
-        if (parseInt(maxNumber) > 2 && parseInt(maxNumber) < 10) {
+        if (maxNumber > 2 && maxNumber < 10) {
           this.hubForm.value.level = 'P4'
-        } else if (parseInt(maxNumber) >= 10 && parseInt(maxNumber) < 30) {
+        } else if (maxNumber >= 10 && maxNumber < 30) {
           this.hubForm.value.level = 'P3'
-        } else if (parseInt(maxNumber) >= 30) {
+        } else if (maxNumber >= 30) {
           this.hubForm.value.level = 'P2'
         }
       } else {
-        if (parseInt(maxNumber) > 2 && parseInt(maxNumber) < 10) {
+        if (maxNumber > 2 && maxNumber < 10) {
           this.hubForm.value.level = 'A4'
-        } else if (parseInt(maxNumber) >= 10 && parseInt(maxNumber) < 30) {
+        } else if (maxNumber >= 10 && maxNumber < 30) {
           this.hubForm.value.level = 'A3'
-        } else if (parseInt(maxNumber) >= 30) {
+        } else if (maxNumber >= 30) {
           this.hubForm.value.level = 'A2'
         }
       }
