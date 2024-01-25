@@ -21,7 +21,7 @@
                             <mat-card-title>
                                 {{' Информационное:'}}
                             </mat-card-title>
-                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
+                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнение'">(Дополнения)</mat-card-title>
                             <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
@@ -76,7 +76,7 @@
             <mat-grid-tile colspan="2">
                 <mat-chip-listbox formControlName="AddOrCor">
                     <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
-                    <mat-chip-option value="Дополнения">Дополнения</mat-chip-option>
+                    <mat-chip-option value="Дополнения">Дополнение</mat-chip-option>
                 </mat-chip-listbox>
             </mat-grid-tile>
         </mat-grid-list>

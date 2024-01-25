@@ -239,7 +239,7 @@ export class BscComponent implements OnInit {
     if (this.requestType == 'Проблема') {
       if (this.bscForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
-          this.bscForm.value.level.replace('P', 'П') + ' BSC/RNC ' + this.requestType + ':\n' +
+          this.bscForm.value.level.replace('P', 'П') + ' ' + this.requestType + ':\n' +
           this.bscForm.value.problem + '\n' +
           'Причина: ' + this.bscForm.value.reason + '\n' +
           'Эффект: ' + this.bscForm.value.effect + '\n' +
@@ -249,7 +249,7 @@ export class BscComponent implements OnInit {
           addWord
       } else {
         this.SmsTextBody =
-          this.bscForm.value.level.replace('P', 'П') + ' BSC/RNC ' + this.requestType + ':\n' +
+          this.bscForm.value.level.replace('P', 'П') + ' ' + this.requestType + ':\n' +
           '(' + this.bscForm.value.AddOrCor + ')\n' +
           this.bscForm.value.problem + '\n' +
           'Причина: ' + this.bscForm.value.reason + '\n' +
@@ -263,7 +263,7 @@ export class BscComponent implements OnInit {
     else {
       if (this.bscForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
-          this.bscForm.value.level.replace('P', 'П') + ' BSC/RNC ' + this.requestType + ':\n' +
+          this.bscForm.value.level.replace('P', 'П') + ' ' + this.requestType + ':\n' +
           this.bscForm.value.problem + '\n' +
           'Причина: ' + this.bscForm.value.reason + '\n' +
           'Эффект: ' + this.bscForm.value.effect + '\n' +
@@ -275,7 +275,7 @@ export class BscComponent implements OnInit {
           addWord
       } else {
         this.SmsTextBody =
-          this.bscForm.value.level.replace('P', 'П') + ' BSC/RNC ' + this.requestType + ':\n' +
+          this.bscForm.value.level.replace('P', 'П') + ' ' + this.requestType + ':\n' +
           '(' + this.bscForm.value.AddOrCor + ')\n' +
           this.bscForm.value.problem + '\n' +
           'Причина: ' + this.bscForm.value.reason + '\n' +

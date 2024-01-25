@@ -45,7 +45,7 @@
                             <mat-card-title>{{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + '
                                 Проблема: '}}</mat-card-title>
                             <mat-card-title
-                                *ngIf="chronicForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
+                                *ngIf="chronicForm.value.AddOrCor == 'Дополнение'">(Дополнения)</mat-card-title>
                             <mat-card-title
                                 *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -90,7 +90,7 @@
                                 {{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт Решение:'}}
                             </mat-card-title>
                             <mat-card-title
-                                *ngIf="chronicForm.value.AddOrCor == 'Дополнения'">(Дополнения)</mat-card-title>
+                                *ngIf="chronicForm.value.AddOrCor == 'Дополнение'">(Дополнения)</mat-card-title>
                             <mat-card-title
                                 *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -250,7 +250,7 @@
             <mat-grid-tile colspan="6">
                 <mat-chip-listbox formControlName="AddOrCor">
                     <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
-                    <mat-chip-option value="Дополнения">Дополнения</mat-chip-option>
+                    <mat-chip-option value="Дополнения">Дополнение</mat-chip-option>
                 </mat-chip-listbox>
             </mat-grid-tile>
         </mat-grid-list>
