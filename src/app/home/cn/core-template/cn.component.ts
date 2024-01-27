@@ -73,6 +73,11 @@ export class CnComponent implements OnInit {
     { value: 'С влиянием', viewValue: 'С влиянием' },
     { value: 'Без влияния', viewValue: 'Без влияния' }
   ];
+  periodicity: { value: string; viewValue: string }[] = [
+    { value: '', viewValue: 'Оставить пустым' },
+    { value: 'периодически', viewValue: 'Периодически' },
+    { value: 'периодически и частично', viewValue: 'Периодически и частично' }
+  ];
   region: { value: string; viewValue: string }[] = [
     { value: 'Андижан', viewValue: 'Андижан' },
     { value: 'Бухара', viewValue: 'Бухара' },
@@ -158,7 +163,8 @@ export class CnComponent implements OnInit {
       'category': ['', Validators.required],
       'informed': ['', Validators.required],
       'desc': [''],
-      'sender': ['']
+      'sender': [''],
+      'periodicity': ['']
     })
 
     // option for input fields
@@ -296,8 +302,12 @@ export class CnComponent implements OnInit {
       }
     }
 
-
-    let smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, false)  
+    let smsType
+    if (this.cnForm.value.periodicity == '') {
+      smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, false)
+    } else {
+      smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, true)
+    }
 
     this.smsBody = {
       'source_addr': 'ncc-cn',
@@ -370,7 +380,6 @@ export class CnComponent implements OnInit {
   }
 
   updateData() {
-
     this.tableSendBody()
 
     this.storageService.updateData(this.route.snapshot.params.id, this.tableBody)

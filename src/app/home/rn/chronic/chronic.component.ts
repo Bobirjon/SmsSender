@@ -31,6 +31,7 @@ export class ChronicComponent implements OnInit {
   word: string = ' Узловой сайт '
   idAlarmReport: any
   filteredOptionsReason: Observable<string[]>;
+  filteredOptionsDesc: Observable<string[]>;
 
   @ViewChild('item') item: any;
 
@@ -155,13 +156,19 @@ export class ChronicComponent implements OnInit {
     'Чимбай': 'Чимбайском районе',
     '': ''
   }
-
   optionsReason: string[] = [
     'Выясняется ',
     'В связи с плановыми работами',
     'Проблема',
     'Нет питание',
     'Арендодатель отключил питание',
+  ];
+
+  optionsDesc: string[] = [
+    'Запустили МГ. Сайт поднялся. ',
+    'Включили питания. Сайт поднялся. ',
+    'Включили питания. Подняли AC автомат. ',
+    'Подняли AC автомат. Сайт поднялся. ',
   ];
 
   constructor(
@@ -194,6 +201,11 @@ export class ChronicComponent implements OnInit {
     this.filteredOptionsReason = this.chronicForm.controls.reason.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, this.optionsReason))
+    )
+
+    this.filteredOptionsDesc = this.chronicForm.controls.desc.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsDesc))
     )
   }
 

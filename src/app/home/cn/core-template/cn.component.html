@@ -163,7 +163,7 @@
                 </div>
             </mat-grid-tile>
             <!-- responsible area -->
-            <mat-grid-tile colspan="5" rowspan="1">
+            <mat-grid-tile colspan="3" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Ответственная Зона</mat-label>
                     <mat-select formControlName="responsible_report" [(ngModel)]="cnForm.value.responsible_report">
@@ -173,8 +173,19 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
+               <!-- Периодичность -->
+               <mat-grid-tile colspan="3">
+                <mat-form-field class="margin-container">
+                    <mat-label>Периодичность</mat-label>
+                    <mat-select formControlName="periodicity" [(ngModel)]="cnForm.value.periodicity">
+                        <mat-option *ngFor="let per of periodicity" [value]="per.value">
+                            {{per.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
             <!-- category -->
-            <mat-grid-tile colspan="5" rowspan="1">
+            <mat-grid-tile colspan="4" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория</mat-label>
                     <mat-select formControlName="category" [(ngModel)]="cnForm.value.category">

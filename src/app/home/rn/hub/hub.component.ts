@@ -18,8 +18,6 @@ import { map, startWith } from 'rxjs/operators';
 export class HubComponent implements OnInit {
 
   hubForm: FormGroup
-  preview = false
-  previewResheniya = false
   user: any
   newForm: boolean
   criteria_list: any
@@ -32,6 +30,7 @@ export class HubComponent implements OnInit {
   word: string = ' Узловой сайт '
   idAlarmReport: any
   filteredOptionsReason: Observable<string[]>;
+  filteredOptionsDesc: Observable<string[]>;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -183,6 +182,14 @@ export class HubComponent implements OnInit {
     'Нет питания. FG не завёлся. Узловой сайт',
   ];
 
+  optionsDesc: string[] = [
+    'Запустили МГ, сайты поднялись. ',
+    'Включили питания, сайты поднялись. ',
+    'Работа частично завершена, сайты поднялись. ',
+    'В ручную завели FG, сайты поднялись. ',
+    'Уровень сигнала стабилизировалась. Сайты работают в штатном режиме ',
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -228,6 +235,10 @@ export class HubComponent implements OnInit {
       map(value => this._filter(value, this.optionsReason))
     )
 
+    this.filteredOptionsDesc = this.hubForm.controls.desc.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.optionsDesc))
+    )
   }
 
   private _filter(value: string, options: string[]): string[] {

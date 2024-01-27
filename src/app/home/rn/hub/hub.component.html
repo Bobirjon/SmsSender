@@ -280,10 +280,14 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
                     <textarea matInput type="text" formControlName="desc" [(ngModel)]="hubForm.value.desc"
-                        spellcheck="true"></textarea>
+                    spellcheck="true" [matAutocomplete]="autoDesc"></textarea>
+                    <mat-autocomplete #autoDesc="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsDesc | async" [value]="option">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-
             <!-- effected sites -->
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
