@@ -25,6 +25,7 @@ export class HubComponent implements OnInit {
   SmsTextBody: any
   time = new Date()
   requestType: any
+  asNew: boolean = false
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
@@ -44,7 +45,6 @@ export class HubComponent implements OnInit {
     { value: 'P4', viewValue: 'П4' },
     { value: 'P5', viewValue: 'П5' },
   ];
-
 
   categories_report: { value: string; viewValue: string }[] = [
     { value: 'Тех проблема', viewValue: 'Тех проблема' },
@@ -286,21 +286,6 @@ export class HubComponent implements OnInit {
     if (parseInt(this.hubForm.value.fiveG) >= maxNumber) {
       maxNumber = parseInt(this.hubForm.value.fiveG)
     }
-    
-    if('15' > '10') {
-      console.log(true);
-      console.log('15 more than 10');
-      
-    }
-
-    if('15' > '8') {
-      console.log(true);
-      console.log('15 more than 8');
-      
-    }    
-    
-    console.log(maxNumber);
-    
 
     if (this.hubForm.value.region == 'г.Ташкент' || this.hubForm.value.region == 'Ташкент.обл') {
       if (this.hubForm.value.categories_report == 'ПР') {
@@ -315,13 +300,10 @@ export class HubComponent implements OnInit {
         }
       } else {
         if (maxNumber >= 4 && maxNumber <= 19) {
-          console.log('A4');
           this.hubForm.value.level = 'A4'
         } else if (maxNumber >= 20 && maxNumber <= 49) {
-          console.log('A3');
           this.hubForm.value.level = 'A3'
         } else if (maxNumber >= 50) {
-          console.log('A2');
           this.hubForm.value.level = 'A2'
         }
       }
@@ -368,6 +350,10 @@ export class HubComponent implements OnInit {
       let effected_sites: any
       let district: any
 
+      if(this.route.snapshot.url.toString().includes('update')) {
+        this.asNew = true
+      }
+
 
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
@@ -407,8 +393,6 @@ export class HubComponent implements OnInit {
           } else {
             district = result['district']
           }
-
-
 
           this.hubForm = this.formBuilder.group({
             'AddOrCor': [null],
@@ -476,12 +460,6 @@ export class HubComponent implements OnInit {
       five = this.hubForm.value.fiveG + ' 5G '
     } 
 
-   
-    console.log(this.hubForm.value.twoG);
-    console.log(two);
-    console.log(this.hubForm.value.threeG);
-    console.log(three);
-
     this.tableBody = {
       'type': 'HUB',
       'level': this.hubForm.value.level,
@@ -508,14 +486,12 @@ export class HubComponent implements OnInit {
       'count_5G': this.hubForm.value.fiveG,
       'flapping_type': this.hubForm.value.periodicity,
 
-
       'mw_link': this.hubForm.value.mw_link,
       'mw_equipment': this.hubForm.value.mw_equipment,
       'mw_vendor': this.hubForm.value.mw_vendor,
       'bts_vendor': this.hubForm.value.bts_vendor,
     }
 
-    
     if (this.hubForm.value.effectedSites !== '') {
       if (Array.isArray(this.hubForm.value.effectedSites) == false) {
         let splited: string[] = []
@@ -536,19 +512,19 @@ export class HubComponent implements OnInit {
       this.tableBody.dg_start_time = this.hubForm.value.dg_start_time
     }
 
-    if (this.hubForm.value.powerOffTime !== '') {
+    
+    if(this.hubForm.value.powerOffTime !== '') {
       this.tableBody.power_off_time = this.hubForm.value.powerOffTime
-    }
-
-    if (this.hubForm.value.hubBlockTime !== '') {
-      this.tableBody.sector_block_time = this.hubForm.value.hubBlockTime
-    }
-
-    if ((this.hubForm.value.hubSite == '') || (this.hubForm.value.hubSite == undefined)) {
-      this.word = ' '
     } else {
-      this.word = ' Узловой сайт '
+      this.tableBody.power_off_time = null
     }
+
+    if(this.hubForm.value.hubBlockTime !== '') {
+      this.tableBody.sector_block_time = this.hubForm.value.hubBlockTime
+    } else {
+      this.tableBody.sector_block_time = null
+    }
+
   }
 
   smsSendBody(id?: number) {
@@ -681,6 +657,7 @@ export class HubComponent implements OnInit {
         console.log(result);
         this.snackBar.open('Обновлено', '', { duration: 10000 })
       }, error => {
+        console.log(error);
         this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
       })
   }

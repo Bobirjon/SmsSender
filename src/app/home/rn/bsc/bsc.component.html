@@ -12,6 +12,7 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
+
             <!-- categories report -->
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
@@ -60,12 +61,13 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Проблема')" type="submit"
-                                *ngIf="newForm == false"
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="(bscForm.invalid) || bscForm.value.endTime !==''">
                                 Новое SMS
                             </button>
@@ -102,12 +104,13 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="(bscForm.invalid) || bscForm.value.endTime==''">
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Решение')" type="submit"
-                                *ngIf="newForm == false"
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
                                 Новое SMS
                             </button>
@@ -263,9 +266,9 @@
             </mat-grid-tile>
             <!-- buttons -->
             <mat-grid-tile colspan="2">
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false && asNew == false"
                     (click)="updateData()" [disabled]="bscForm.invalid">Обновить </button>
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true || asNew == true"
                     [disabled]="bscForm.invalid" (click)="createData()">Создать</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="4">

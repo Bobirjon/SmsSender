@@ -25,6 +25,7 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
+
             <!-- effect option -->
             <mat-grid-tile colspan="3" rowspan="1">
                 <mat-form-field class="margin-container">
@@ -62,16 +63,16 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
                                 Отправить SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Проблема')" type="submit"
-                                *ngIf="newForm == false"
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
                                 Новое SMS
                             </button>
-                            
                             <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Проблема')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
                                 TEST SMS
@@ -104,12 +105,13 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
                                 Отправить SMS
                             </button>
                             <button class="form-button" mat-raised-button
                                 (click)="onSubmitasNew('Решение')" type="submit"
-                                *ngIf="newForm == false"
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
                                 Новое SMS
                             </button>
@@ -145,12 +147,13 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
                                 Отправить SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Информационное')" type="submit"
-                                *ngIf="newForm == false"
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
                                 Новое SMS
                             </button>
@@ -293,9 +296,9 @@
                 </div>
             </mat-grid-tile>
             <mat-grid-tile colspan="2">
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false && asNew == false"
                     (click)="updateData()">Обновить</button>
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true || asNew == true"
                     [disabled]="cnForm.invalid" (click)="onSubmit()">Добавить</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="6">

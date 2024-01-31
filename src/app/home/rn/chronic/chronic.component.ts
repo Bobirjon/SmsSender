@@ -29,6 +29,7 @@ export class ChronicComponent implements OnInit {
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
+  asNew: boolean = false
   idAlarmReport: any
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsDesc: Observable<string[]>;
@@ -160,7 +161,7 @@ export class ChronicComponent implements OnInit {
     'Выясняется ',
     'В связи с плановыми работами',
     'Проблема',
-    'Нет питание',
+    'Нет питания.',
     'Арендодатель отключил питание',
   ];
 
@@ -235,6 +236,10 @@ export class ChronicComponent implements OnInit {
       this.newForm = false
       let endTimeForUpdate: any
       let district: any
+
+      if(this.route.snapshot.url.toString().includes('update')) {
+        this.asNew = true
+      }
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
           

@@ -394,6 +394,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.router.navigate(['home/newIdeas'])
   }
 
+
   onDelete(id: number) {
     const dialogRef = this.dialog.open(areYouSure);
 

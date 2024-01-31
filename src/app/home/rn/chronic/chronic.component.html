@@ -2,7 +2,6 @@
     <form [formGroup]="chronicForm" class="form-container">
         <mat-grid-list cols="24" rowHeight="85px">
             <!-- level -->
-
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
@@ -45,7 +44,7 @@
                             <mat-card-title>{{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + '
                                 Проблема: '}}</mat-card-title>
                             <mat-card-title
-                                *ngIf="chronicForm.value.AddOrCor == 'Дополнение'">(Дополнения)</mat-card-title>
+                                *ngIf="chronicForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
                             <mat-card-title
                                 *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -64,11 +63,13 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Проблема')" type="submit" *ngIf="newForm == false"
+                                (click)="onSubmitasNew('Проблема')" type="submit" 
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
                                 Новое SMS
                             </button>
@@ -90,7 +91,7 @@
                                 {{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт Решение:'}}
                             </mat-card-title>
                             <mat-card-title
-                                *ngIf="chronicForm.value.AddOrCor == 'Дополнение'">(Дополнения)</mat-card-title>
+                                *ngIf="chronicForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
                             <mat-card-title
                                 *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
@@ -111,11 +112,13 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="(chronicForm.invalid) || chronicForm.value.endTime=='' ">
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Решения')" type="submit" *ngIf="newForm == false"
+                                (click)="onSubmitasNew('Решения')" type="submit"
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="(chronicForm.invalid) || chronicForm.value.endTime=='' ">
                                 Новое SMS
                             </button>
@@ -141,7 +144,7 @@
                     </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-            
+
             <!-- reason -->
             <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
@@ -248,15 +251,15 @@
             </mat-grid-tile>
             <!-- button -->
             <mat-grid-tile colspan="2">
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false && asNew == false"
                     (click)="updateData()">Обновить</button>
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true || asNew == true"
                     (click)="createData()">Создать</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="6">
                 <mat-chip-listbox formControlName="AddOrCor">
                     <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
-                    <mat-chip-option value="Дополнения">Дополнение</mat-chip-option>
+                    <mat-chip-option value="Дополнение">Дополнение</mat-chip-option>
                 </mat-chip-listbox>
             </mat-grid-tile>
         </mat-grid-list>

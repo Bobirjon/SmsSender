@@ -14,7 +14,6 @@
                 </mat-form-field>
             </mat-grid-tile>
             <!-- Hub site -->
-            
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Хаб Сайт</mat-label>
@@ -65,10 +64,12 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="hubForm.invalid || hubForm.value.endTime !==''">Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Проблема')" type="submit" *ngIf="newForm == false"
+                                (click)="onSubmitasNew('Проблема')" type="submit"
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime !==''">
                                 Новое SMS
                             </button>
@@ -113,10 +114,12 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Решения')" type="submit" *ngIf="newForm == false"
+                                (click)="onSubmitasNew('Решения')" type="submit" 
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">
                                 Новое SMS
                             </button>
@@ -161,11 +164,13 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
+                                *ngIf="asNew == false && newForm == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Информационное')" type="submit" *ngIf="newForm == false"
+                                (click)="onSubmitasNew('Информационное')" type="submit"
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">
                                 Новое SMS
                             </button>
@@ -296,7 +301,6 @@
                         [(ngModel)]="hubForm.value.effectedSites"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
-
             <!-- informed -->
             <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
@@ -320,7 +324,7 @@
                 <div class="margin-container">
                     <p>Время отключения ЭП</p>
                     <input type="datetime-local" class="dateTime" formControlName="powerOffTime" min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="hubForm.value.powerOffTime">
+                        [max]="time | date: 'YYYY-MM-DDThh:mm'" [(ngModel)]="hubForm.value.powerOffTime">
                 </div>
             </mat-grid-tile>
             <!-- HubSiteBlock Time -->
@@ -328,7 +332,7 @@
                 <div class="margin-container">
                     <p>Время блокировки секторов</p>
                     <input type="datetime-local" class="dateTime" formControlName="hubBlockTime" min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="hubForm.value.hubBlockTime">
+                        [max]="time | date: 'YYYY-MM-DDThh:mm'" [(ngModel)]="hubForm.value.hubBlockTime">
                 </div>
             </mat-grid-tile>
             <!-- start Time -->
@@ -350,11 +354,12 @@
                         [(ngModel)]="hubForm.value.endTime">
                 </div>
             </mat-grid-tile>
+            
             <!-- buttons -->
             <mat-grid-tile colspan="2">
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false && asNew == false"
                     (click)="updateData()">Обновить</button>
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true || asNew == true"
                     [disabled]="hubForm.invalid" (click)="createData()">Создать</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="6">

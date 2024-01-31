@@ -26,6 +26,7 @@ export class BscComponent implements OnInit {
   requestType: any
   tableBody: any    
   smsBody: any
+  asNew: boolean = false
   idAlarmReport: any
   filteredOptionsProblem: Observable<string[]>;
   filteredOptionsReason: Observable<string[]>;
@@ -182,6 +183,11 @@ export class BscComponent implements OnInit {
     } else {
       this.newForm = false
       let endTimeForUpdate: any
+
+      if(this.route.snapshot.url.toString().includes('update')) {
+        this.asNew = true
+      }
+      
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
           if (result['end_time'] == null) {

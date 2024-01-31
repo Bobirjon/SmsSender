@@ -11,7 +11,6 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { StorageService } from 'src/app/storage.service';
 
-
 @Component({
   selector: 'app-cn',
   templateUrl: './cn.component.html',
@@ -29,6 +28,7 @@ export class CnComponent implements OnInit {
   SmsTextBody: any
   time = new Date()
   requestType: any
+  asNew: boolean = false
   tableBody: any
   smsBody: any
   criteriaArray: any
@@ -78,6 +78,7 @@ export class CnComponent implements OnInit {
     { value: 'периодически', viewValue: 'Периодически' },
     { value: 'периодически и частично', viewValue: 'Периодически и частично' }
   ];
+  
   region: { value: string; viewValue: string }[] = [
     { value: 'Андижан', viewValue: 'Андижан' },
     { value: 'Бухара', viewValue: 'Бухара' },
@@ -344,6 +345,11 @@ export class CnComponent implements OnInit {
       let isDisabled: any
       let endTimeForUpdate: any
       this.newForm = false
+      console.log(this.route.snapshot.url.toString().includes('update'));
+      
+      if(this.route.snapshot.url.toString().includes('update')) {
+        this.asNew = true
+      }
       
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
