@@ -61,7 +61,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
-                                *ngIf="asNew == false && newForm == false"
+                                *ngIf="asNew == false"
                                 [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
                                 Отправить Сообщения
                             </button>
@@ -104,7 +104,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                *ngIf="asNew == false && newForm == false"
+                                *ngIf="asNew == false"
                                 [disabled]="(bscForm.invalid) || bscForm.value.endTime==''">
                                 Отправить Сообщения
                             </button>
@@ -147,12 +147,13 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
+                                *ngIf="asNew == false"
                                 [disabled]="(bscForm.invalid) || bscForm.value.endTime==''">
                                 Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Информационное')" type="submit"
-                                *ngIf="newForm == false"
+                                *ngIf="asNew == true && newForm == false"
                                 [disabled]="bscForm.invalid || bscForm.value.endTime !==''">
                                 Новое SMS
                             </button>

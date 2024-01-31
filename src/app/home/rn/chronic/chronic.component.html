@@ -63,7 +63,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
-                                *ngIf="asNew == false && newForm == false"
+                                *ngIf="asNew == false"
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
                                 Отправить Сообщения
                             </button>
@@ -112,7 +112,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                *ngIf="asNew == false && newForm == false"
+                                *ngIf="asNew == false"
                                 [disabled]="(chronicForm.invalid) || chronicForm.value.endTime=='' ">
                                 Отправить Сообщения
                             </button>

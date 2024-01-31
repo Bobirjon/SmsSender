@@ -64,7 +64,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
-                                *ngIf="asNew == false && newForm == false"
+                                *ngIf="asNew == false "
                                 [disabled]="hubForm.invalid || hubForm.value.endTime !==''">Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
@@ -114,7 +114,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                *ngIf="asNew == false && newForm == false"
+                                *ngIf="asNew == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">Отправить Сообщения
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
@@ -164,7 +164,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
-                                *ngIf="asNew == false && newForm == false"
+                                *ngIf="asNew == false"
                                 [disabled]="(hubForm.invalid) || hubForm.value.endTime==''">
                                 Отправить Сообщения
                             </button>
