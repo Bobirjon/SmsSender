@@ -36,7 +36,6 @@
                 </mat-form-field>
             </mat-grid-tile>
             <!-- preview problem -->
-
             <mat-grid-tile colspan="6" rowspan="5">
                 <div class="grid-container">
                     <mat-card class="preview">
@@ -63,16 +62,15 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
-                                *ngIf="asNew == false"
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
                                 Отправить Сообщения
                             </button>
-                            <button class="form-button" mat-raised-button color="primary"
+                            <!-- <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Проблема')" type="submit" 
                                 *ngIf="asNew == true && newForm == false"
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
                                 Новое SMS
-                            </button>
+                            </button> -->
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="forSmsTesting('Проблема')" type="submit"
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
@@ -112,16 +110,15 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                *ngIf="asNew == false"
                                 [disabled]="(chronicForm.invalid) || chronicForm.value.endTime=='' ">
                                 Отправить Сообщения
                             </button>
-                            <button class="form-button" mat-raised-button color="primary"
+                            <!-- <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitasNew('Решения')" type="submit"
                                 *ngIf="asNew == true && newForm == false"
                                 [disabled]="(chronicForm.invalid) || chronicForm.value.endTime=='' ">
                                 Новое SMS
-                            </button>
+                            </button> -->
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="forSmsTesting('Решение')" type="submit"
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime ==''">

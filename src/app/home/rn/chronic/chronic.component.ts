@@ -215,8 +215,6 @@ export class ChronicComponent implements OnInit {
     return options.filter(option => option.toLocaleLowerCase().includes(filterValue))
   }
 
-
-
   setDefault() {
     if (this.chronicForm.value.level == 'P1' || this.chronicForm.value.level == 'P2' ||
       this.chronicForm.value.level == 'P3' || this.chronicForm.value.level == 'P4' || this.chronicForm.value.level == 'P5') {
@@ -291,7 +289,6 @@ export class ChronicComponent implements OnInit {
   }
 
   timeSetValidation(control: any) {
-
     let currentDate: Date = new Date()
     const formGroup = control?.parent;
   
@@ -495,7 +492,6 @@ export class ChronicComponent implements OnInit {
     this.tableSendBody()
 
     this.storageService.createToTable(this.tableBody)
-
   }
 
   sendButton() {
@@ -505,13 +501,12 @@ export class ChronicComponent implements OnInit {
   onSubmitButtonProblem(smsType: string) {
 
     this.requestType = smsType
-    this.smsSendBody()
 
     const dialogRef = this.dialog.open(areYouSure);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-        if (this.newForm == false) {
+        if (this.newForm == false && this.asNew == false) {
           this.tableSendBody()
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
@@ -539,29 +534,30 @@ export class ChronicComponent implements OnInit {
     })
   }
 
-  onSubmitasNew(smsType: string) {
-    this.requestType = smsType
-    this.smsSendBody()
+  // onSubmitasNew(smsType: string) {
+  //   this.requestType = smsType
+  //   this.smsSendBody()
 
-    const dialogRef = this.dialog.open(areYouSure);
+  //   const dialogRef = this.dialog.open(areYouSure);
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
-        this.tableSendBody()
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result == true) {
+  //       this.tableSendBody()
 
-        this.authService.postData(this.tableBody)
-          .subscribe((result) => {
-            console.log(result);
+      
+  //       this.authService.postData(this.tableBody)
+  //         .subscribe((result) => {
+  //           console.log(result);
             
-            this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-            this.smsSendBody(result.id)
-            this.sendButton()
-          }, error => {
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
-      }
-    })
-  }
+  //           this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
+  //           this.smsSendBody(result.id)
+  //           this.sendButton()
+  //         }, error => {
+  //           this.snackBar.open("Ошибка", '', { duration: 10000 })
+  //         })
+  //     }
+  //   })
+  // }
 
   forSmsTesting(smsType: string) {
     this.requestType = smsType
