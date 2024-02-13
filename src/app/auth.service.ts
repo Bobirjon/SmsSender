@@ -53,7 +53,6 @@ export class AuthService {
       &level__icontains=${level}&type__icontains=${type}&description__icontains=${description}&reason__icontains=${reason}
       &problem__icontains=${problem}&createdat_in=${createdAt}&starttime_in=${startTime}&endtime_in=${endTime}
       &region__icontains=${region}&informed__icontains=${informed}`
-    console.log(url);
     
     return this.http.get(url)
   }

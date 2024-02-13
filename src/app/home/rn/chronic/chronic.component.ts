@@ -471,8 +471,6 @@ export class ChronicComponent implements OnInit {
     }
 
     let smsType = this.storageService.SmsType(this.requestType, this.chronicForm.value.AddOrCor, false)
-    console.log(smsType);
-    
 
     this.smsBody = {
       'source_addr': 'ncc-rn',
@@ -484,9 +482,6 @@ export class ChronicComponent implements OnInit {
       'alarmreport_id': id,
       'sms_type': smsType
     }
-
-    console.log(this.smsBody);
-
 
   }
 
@@ -530,12 +525,12 @@ export class ChronicComponent implements OnInit {
         } else {
           this.tableSendBody()
 
-
           this.authService.postData(this.tableBody)
             .subscribe((result) => {
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-              this.smsSendBody(result.id)
+              
               this.sendButton()
+              this.smsSendBody(result.id)
             }, error => {
               this.snackBar.open("Ошибка", '', { duration: 10000 })
             })
@@ -546,6 +541,7 @@ export class ChronicComponent implements OnInit {
 
   onSubmitasNew(smsType: string) {
     this.requestType = smsType
+    this.smsSendBody()
 
     const dialogRef = this.dialog.open(areYouSure);
 

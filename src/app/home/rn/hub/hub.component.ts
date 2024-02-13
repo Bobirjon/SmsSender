@@ -293,9 +293,6 @@ export class HubComponent implements OnInit {
       maxNumber = this.hubForm.value.fiveG
     }
 
-    console.log(Number(maxNumber));
-    
-
     if (this.hubForm.value.region == 'г.Ташкент' || this.hubForm.value.region == 'Ташкент.обл') {
       if (this.hubForm.value.categories_report == 'ПР') {
         if (maxNumber >= 4 && maxNumber <= 19) {
@@ -352,17 +349,17 @@ export class HubComponent implements OnInit {
       let dg_start_time: any
       let power_off_time: any
       let block_time: any
-      let effected_sites: any
+      let effectedSites: any
       let district: any
 
       if(this.route.snapshot.url.toString().includes('update')) {
         this.asNew = true
       }
 
-
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-
+          console.log(result['effected_sites']);
+          
           if (result['end_time'] == null) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
@@ -389,9 +386,9 @@ export class HubComponent implements OnInit {
             power_off_time = formatDate(result['power_off_time'], 'yyyy-MM-ddTHH:mm', 'en')
           }
           if (result['effected_sites'] == null) {
-            effected_sites = ''
+            effectedSites = ''
           } else {
-            effected_sites = result['effected_sites']
+            effectedSites = result['effected_sites']
           }
           if (result['district'] == null || result['district'] == undefined) {
             district = ''
@@ -408,7 +405,7 @@ export class HubComponent implements OnInit {
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [endTimeForUpdate, this.endTimeValidation],
             'region': [result['region'], Validators.required],
-            'effectedSites': [result['effected_sites'], Validators.required],
+            'effectedSites': [effectedSites, Validators.required],
             'hubSite': [result['hub_site']],
             'generator': [result['fg_avb']],
             'desc': [result['description']],
@@ -506,6 +503,9 @@ export class HubComponent implements OnInit {
         let splited: string[] = []
         splited = this.hubForm.value.effectedSites.split((/\n|,/))
         this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
+      }
+      else {
+        this.tableBody.effected_sites = this.hubForm.value.effectedSites  
       }
     } else {
       this.tableBody.effected_sites = this.hubForm.value.effectedSites
@@ -654,7 +654,8 @@ export class HubComponent implements OnInit {
       smsType = this.storageService.SmsType(this.requestType, this.hubForm.value.AddOrCor, true)
     }
 
-
+    console.log(smsType);
+    
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],

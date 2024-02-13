@@ -36,6 +36,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   dataTable = new MatTableDataSource<DataTable>()
   Data = new MatTableDataSource<DataTable>()
   TemplateData = new MatTableDataSource<DataTable>()
+  kpiTable = new MatTableDataSource<any>()
+   dataSource = [
+    { column1: 'A', column2: 'B', mergedCell: 'C' },
+    // Add more data as needed
+  ];
   userName: any
   isAdmin = localStorage.getItem('role')
   pageSizes = [10, 25, 50];
@@ -84,6 +89,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
     'description',
     'region',
     'informed',
+  ]
+
+  displayedColumnsKpiUsers: string[] = [
+    'type',
+    'level',
+    'created_at',
+    'start_time',
+    'problem',
+    'reason',
+    'description',
+    'region',
+    'informed',
+    'action'
   ]
 
   @ViewChild(MatPaginator) paginator: MatPaginator
