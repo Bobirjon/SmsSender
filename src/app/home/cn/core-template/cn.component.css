@@ -1,33 +1,38 @@
-.form-container {
-    margin-top: 50px;
- }
 .margin-container {
     margin: 15px;
     width: 100%;
 }
+
 .dateTime {
     padding: 10px;
-    width: 100%;
+    border: none;
+    border-bottom: 2px solid #999999;
+    background-color: #f2f2f2;
+    width: 90%;
 }
-.form-button {
-    margin: 10px;
-    width: 100%;
-}
-.grid-container {
-   display:contents
-}
-.preview {
-   width: 100%;
-   height: 100%;
-   height: fit-content;
-   position: absolute;
-   top: 1px;
 
+.form-button {
+    width: fit-content;
+    margin: 5px
 }
+
+.form-container {
+    margin-top: 50px;
+}
+
+.grid-container {
+    display: contents
+}
+
+.preview {
+    width: 100%;
+    height: 100%;
+}
+
 .timeNotValid {
     border-color: red;
     color: red;
- }
+}
 
 button {
     background-color: #572469d5 !important;
@@ -41,6 +46,67 @@ button:disabled {
 }
 
 .mat-mdc-chip-selected {
-    background-color: #572469d5 !important; 
-    color: #FFFFFF !important; 
+    background-color: #572469d5 !important;
+    color: #FFFFFF !important;
+}
+
+
+
+
+
+
+
+
+
+
+.grid-preview {
+    align-self: flex-start;
+    display: inline-flex;
+    width: 100%;
+    margin: 5px 15px;
+}
+
+.grid-preview-item {
+    margin-left: 15px;
+    width: 100%
+}
+
+.grid-form {
+    flex-direction: column;
+    margin-left: 15px;
+    width: 100%;
+    align-self: flex-start;
+}
+
+.grid-form-item {
+    margin: 0px 5px;
+}
+
+.first-row {
+    display: grid;
+    grid-template-columns: 20% 30% 25% 25%
+}
+
+.second-row {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+}
+
+.third-row {
+    display: grid;
+    grid-template-columns: 50% 50%
+}
+
+@media (max-width: 1300px) {
+    .first-row,
+    .second-row,
+    .third-row {
+        grid-template-columns: 100% /* Make each item span two columns on smaller screens */
+    }
+}
+
+@media (max-width: 1300px) {
+    .grid-preview {
+        display: inline /* Make each item span two columns on smaller screens */
+    }
 }

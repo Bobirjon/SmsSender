@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl, FormsModule, NgForm } from '@angular/forms';
-import { Subscription, catchError, map, merge, startWith, switchMap } from 'rxjs';
+import { Subscription, catchError, map, of, merge, startWith, switchMap } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
 import * as XLSX from 'xlsx';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isLoadingResults = true;
   isRateLimitReached = false;
   globalFilter = '';
+  isLoading: boolean = true
 
   displayedColumnsTemplate: string[] = [
     'type',
@@ -132,77 +133,77 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.Data.sort = this.table1sort;
         this.Data.filterPredicate = this.customFilterPredicate();
 
-        this.webSocketService.receiveMessage().subscribe((data) => {
+        this.webSocketService.receiveMessage().subscribe(
+          (data) => {
 
-          const exist = this.Data.data.findIndex(
-            (item: any) => item.id === data.id
-          )
-          if(exist !== -1) {
-            if(data.action == 'delete') {
-              this.Data.data.splice(exist, 1)
-              this.Data.data = this.Data.data
-            } else if (data.is_complete == true) {
-              this.Data.data.splice(exist, 1)
-              this.Data.data = this.Data.data
-            } else {
-              this.Data.data[exist] = data
-              this.Data.data = this.Data.data
+            const exist = this.Data.data.findIndex(
+              (item: any) => item.id === data.id
+            )
+            if (exist !== -1) {
+              if (data.action == 'delete') {
+                this.Data.data.splice(exist, 1)
+                this.Data.data = this.Data.data
+              } else if (data.is_complete == true) {
+                this.Data.data.splice(exist, 1)
+                this.Data.data = this.Data.data
+              } else {
+                this.Data.data[exist] = data
+                this.Data.data = this.Data.data
+              }
+            } else if (data.is_complete == false && data.is_send_sms == true) {
+              this.Data.data = [...this.Data.data, data]
             }
-          } else if(data.is_complete == false && data.is_send_sms == true) {
-            this.Data.data = [...this.Data.data, data]
-          }
-        })
-      })
+          })
+      }),
 
 
-    // Template table
-    this.authService.getTemplateSMS()
-      .subscribe((data: any) => {
-        this.TemplateData = new MatTableDataSource(data.results)
-        
-        this.webSocketService.receiveMessage().subscribe((data) => {
-          console.log(data);
 
-          const exist = this.TemplateData.data.findIndex(
-            (item: any) => item.id === data.id
-          )
+      // Template table
+      this.authService.getTemplateSMS()
+        .subscribe((data: any) => {
+          this.TemplateData = new MatTableDataSource(data.results)
 
-          if (exist !== -1) {
-            if (data.action == 'delete') {
-              this.TemplateData.data.splice(exist, 1)
-              this.TemplateData.data = this.TemplateData.data
-            } else if (data.is_send_sms == true) {
-              this.TemplateData.data.splice(exist, 1)
-              this.TemplateData.data = this.TemplateData.data
-            } else {
-              this.TemplateData.data[exist] = data
-              this.TemplateData.data = this.TemplateData.data
+          this.webSocketService.receiveMessage().subscribe((data) => {
+
+            const exist = this.TemplateData.data.findIndex(
+              (item: any) => item.id === data.id
+            )
+
+            if (exist !== -1) {
+              if (data.action == 'delete') {
+                this.TemplateData.data.splice(exist, 1)
+                this.TemplateData.data = this.TemplateData.data
+              } else if (data.is_send_sms == true) {
+                this.TemplateData.data.splice(exist, 1)
+                this.TemplateData.data = this.TemplateData.data
+              } else {
+                this.TemplateData.data[exist] = data
+                this.TemplateData.data = this.TemplateData.data
+              }
+            } else if (data.is_send_sms == false) {
+              this.TemplateData.data = [...this.TemplateData.data, data]
             }
-          } else if(data.is_send_sms == false) {
-            this.TemplateData.data = [...this.TemplateData.data, data]
-          }
+          })
         })
-      })
   }
 
   // All Cases table with backend pagination
 
   ngAfterViewInit() {
 
-    // If the user changes the sort order, reset back to the first page.
     this.table2sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(
-      this.level.valueChanges,
-      this.type.valueChanges,
-      this.description.valueChanges,
-      this.reason.valueChanges,
-      this.problem.valueChanges,
-      this.createdAt.valueChanges,
-      this.startTime.valueChanges,
-      this.endTime.valueChanges,
-      this.region.valueChanges,
-      this.informed.valueChanges,
+       this.level.valueChanges,
+       this.type.valueChanges,
+       this.description.valueChanges,
+       this.reason.valueChanges,
+       this.problem.valueChanges,
+       this.createdAt.valueChanges,
+       this.startTime.valueChanges,
+       this.endTime.valueChanges,
+       this.region.valueChanges,
+       this.informed.valueChanges,
       this.table2sort.sortChange,
       this.paginator.page)
       .pipe(
@@ -211,31 +212,31 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.isLoadingResults = true;
           var dir: string
           var level = this.level.value == null ? '' : this.level.value;
-          var type = this.type.value == null ? '' : this.type.value;
-          var description = this.description.value == null ? '' : this.description.value;
-          var reason = this.reason.value == null ? '' : this.reason.value;
-          var problem = this.problem.value == null ? '' : this.problem.value;
-          var createdAt = this.createdAt.value == null ? '' : this.createdAt.value;
-          var startTime = this.startTime.value == null ? '' : this.startTime.value;
-          var endTime = this.endTime.value == null ? '' : this.endTime.value;
-          var region = this.region.value == null ? '' : this.region.value;
-          var informed = this.informed.value == null ? '' : this.informed.value;
+           var type = this.type.value == null ? '' : this.type.value;
+           var description = this.description.value == null ? '' : this.description.value;
+           var reason = this.reason.value == null ? '' : this.reason.value;
+           var problem = this.problem.value == null ? '' : this.problem.value;
+           var createdAt = this.createdAt.value == null ? '' : this.createdAt.value;
+           var startTime = this.startTime.value == null ? '' : this.startTime.value;
+           var endTime = this.endTime.value == null ? '' : this.endTime.value;
+           var region = this.region.value == null ? '' : this.region.value;
+           var informed = this.informed.value == null ? '' : this.informed.value;
           if (this.table2sort.direction == 'desc') {
             dir = '-'
           } else {
             dir = ''
           }
 
+
           return this.authService
             .getDataTest(
-              level, type, description, reason, problem,
-              createdAt, startTime, endTime, region, informed,
+              level, type, description, reason, problem, createdAt,
+              startTime, endTime, region, informed, dir,
               this.table2sort.active,
-              dir,
               this.paginator.pageIndex + 1,
               this.paginator.pageSize
             )
-            .pipe(catchError(() => observableOf(null)));
+            .pipe(catchError(() => of(null)));
         }),
         map((data) => {
           // Flip flag to show that loading has finished.
@@ -246,17 +247,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
             return [];
           }
 
-          // Only refresh the result length if there is new data. In case of rate
-          // limit errors, we do not want to reset the paginator to zero, as that
-          // would prevent users from re-triggering requests.
           this.resultsLength = data.count;
 
           return data;
         })
       )
-      .subscribe((data) => {
+      .subscribe(data => {
         this.dataTable = new MatTableDataSource(data.results)
-
+        this.isLoading = false
         this.webSocketService.receiveMessage().subscribe((data) => {
           const exist = this.dataTable.data.findIndex(
             (item: any) => item.id === data.id
@@ -277,6 +275,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
         })
       });
+
+
   }
 
   ngOnInit(): void {
@@ -460,7 +460,6 @@ export class exportExcel {
 })
 export class areYouSure { }
 
-function observableOf(arg0: null): any {
-  throw new Error('Function not implemented.');
-}
+
+
 

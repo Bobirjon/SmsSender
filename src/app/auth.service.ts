@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, filter } from 'rxjs';
 import { SortDirection } from '@angular/material/sort';
 
 
@@ -8,7 +8,7 @@ import { SortDirection } from '@angular/material/sort';
   providedIn: 'root',
 })
 export class AuthService {
-  
+
   URLsender = 'http://10.7.119.12/api/';
 
   constructor(private http: HttpClient) {
@@ -17,7 +17,7 @@ export class AuthService {
 
   login(username: string, password: string): Observable<any> {
     localStorage.setItem('role', username)
-    return this.http.post(this.URLsender + 'auth/token/login/', { username, password } );
+    return this.http.post(this.URLsender + 'auth/token/login/', { username, password });
   }
 
   logout() {
@@ -32,29 +32,32 @@ export class AuthService {
     return this.http.get(this.URLsender + 'smssender/alarmreport/?is_send_sms=false')
   }
 
-  getDataTest( 
-    level: string, 
-    type: string, 
-    description: string, reason: string, 
-    problem: string, createdAt: any, startTime: any, 
-    endTime: any, 
+  getDataTest(
+    level: string,
+    type: string,
+    description: string,
+    reason: string,
+    problem: string,
+    createdAt: string,
+    startTime: string,
+    endTime: string,
     region: string,
     informed: string,
-    ordering: string,
     order: string,
+    ordering: string,
     page: number,
-    perpage: number,): Observable<any> {
+    perpage: number,
+  ): Observable<any> {
 
-    const url = this.URLsender + `smssender/alarmreport/?level__icontains=${level}
-      &type__icontains=${type}&description__icontains=${description}
-      &region__icontains=${region}&createdat_in=${createdAt}
-      &starttime_in=${startTime}&endtime_in=${endTime}&informed__icontains=${informed}
-      &problem__icontains=${problem}&reason__icontains=${reason}
-      &ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
-
+    const url = this.URLsender + `smssender/alarmreport/?ordering=${order}${ordering}&page=${page}&page_size=${perpage}
+      &level__icontains=${level}&type__icontains=${type}&description__icontains=${description}&reason__icontains=${reason}
+      &problem__icontains=${problem}&createdat_in=${createdAt}&starttime_in=${startTime}&endtime_in=${endTime}
+      &region__icontains=${region}&informed__icontains=${informed}`
+    console.log(url);
+    
     return this.http.get(url)
-
   }
+
 
   getRecievers(
     nameFilter: string,
@@ -66,7 +69,7 @@ export class AuthService {
     ordering: string,
     order: string,
     page: number,
-    perpage:number
+    perpage: number
   ): Observable<any> {
     const url = this.URLsender + `smssender/receiver/?name__icontains=${nameFilter}
       &tel_number__icontains=${numberFilter}&network=${networkFilter}
@@ -91,7 +94,7 @@ export class AuthService {
   postData(body: any): Observable<any> {
     return this.http.post(this.URLsender + 'smssender/alarmreport/', body)
   }
-  
+
   getUser() {
     return this.http.get(this.URLsender + 'auth/users/me')
   }
@@ -113,16 +116,16 @@ export class AuthService {
   }
 
   sendTestSMS(body: any) {
-    return this.http.post(this.URLsender + 'smssender/sendsms/', body) 
+    return this.http.post(this.URLsender + 'smssender/sendsms/', body)
   }
 
   exportExcel(startTime: any, endTime: any) {
     console.log((`${this.URLsender + 'smssender/alarmreport/'}?
     end_time__range=${startTime},${endTime}&page_size=1000`));
 
-    const url = this.URLsender + 
-            `smssender/alarmreport/?end_time__range=${startTime},${endTime}&page_size=1000`
-    
+    const url = this.URLsender +
+      `smssender/alarmreport/?end_time__range=${startTime},${endTime}&page_size=1000`
+
     return this.http.get(url)
   }
 
@@ -139,7 +142,7 @@ export class AuthService {
   }
 
   updateNewIdeas(id: number, data: any) {
-      return this.http.put(`${this.URLsender + 'smssender/newtask'}/${id}/`, data)
+    return this.http.put(`${this.URLsender + 'smssender/newtask'}/${id}/`, data)
   }
 
   deleteNewIdeas(id: number) {

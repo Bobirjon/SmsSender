@@ -5,19 +5,18 @@
             <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="bscForm.value.level" (ngModelChange)="setDefault()">
+                    <mat-select formControlName="level" (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-
             <!-- categories report -->
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория для отчета</mat-label>
-                    <mat-select formControlName="categories_report" [(ngModel)]="bscForm.value.categories_report">
+                    <mat-select formControlName="categories_report">
                         <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
                             {{cat_rep.viewValue}}
                         </mat-option>
@@ -28,7 +27,7 @@
             <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Ответственная Зона</mat-label>
-                    <mat-select formControlName="responsible_report" [(ngModel)]="bscForm.value.responsible_report">
+                    <mat-select formControlName="responsible_report" >
                         <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
                             {{res_rep.viewValue}}
                         </mat-option>
@@ -44,7 +43,7 @@
                                 {{bscForm.value.level.replace('P', 'П') + ' BSC/RNC Проблема:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнение'">
-                                (Дополнения)
+                                (Дополнение)
                             </mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Коррекция'">
                                 (Коррекция)
@@ -88,7 +87,7 @@
                             <mat-card-title>
                                 {{bscForm.value.level.replace('P', 'П') + ' BSC/RNC Решение:'}}
                             </mat-card-title>
-                            <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнение'">(Дополнения)</mat-card-title>
+                            <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
@@ -131,7 +130,7 @@
                             <mat-card-title>
                                 {{bscForm.value.level.replace('P', 'П') + ' BSC/RNC Информационное:'}}
                             </mat-card-title>
-                            <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнение'">(Дополнения)</mat-card-title>
+                            <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
                             <mat-card-title *ngIf="bscForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
@@ -171,7 +170,7 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
                     <textarea matInput type="text" formControlName="problem"
-                        [(ngModel)]="bscForm.value.problem" spellcheck="true"
+                        spellcheck="true"
                         [matAutocomplete]="autoProblem">
                     </textarea>
                     <mat-autocomplete #autoProblem="matAutocomplete">
@@ -186,7 +185,7 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
                     <textarea matInput type="text" formControlName="reason"
-                        [(ngModel)]="bscForm.value.reason" spellcheck="true"
+                        spellcheck="true"
                         [matAutocomplete]="autoReason">
                     </textarea>
                     <mat-autocomplete #autoReason="matAutocomplete">
@@ -201,7 +200,7 @@
                 <mat-form-field class="margin-container">
                     <mat-label>Эффект</mat-label>
                     <textarea matInput type="text" formControlName="effect"
-                        [(ngModel)]="bscForm.value.effect" spellcheck="true"
+                        spellcheck="true"
                         [matAutocomplete]="autoEffect">
                     </textarea>
                     <mat-autocomplete #autoEffect="matAutocomplete">
@@ -215,14 +214,14 @@
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="bscForm.value.desc" spellcheck="true"></textarea>
+                    <textarea matInput type="text" formControlName="desc" spellcheck="true"></textarea>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- effect option -->
             <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Эффект</mat-label>
-                    <mat-select formControlName="effect_option" [(ngModel)]="bscForm.value.effect_option">
+                    <mat-select formControlName="effect_option" >
                         <mat-option *ngFor="let eff_rep of effect_option" [value]="eff_rep.value">
                             {{eff_rep.viewValue}}
                         </mat-option>
@@ -233,7 +232,7 @@
             <mat-grid-tile colspan="3" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
-                    <mat-select formControlName="region" [(ngModel)]="bscForm.value.region">
+                    <mat-select formControlName="region" >
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
                             {{reg.viewValue}}
                         </mat-option>
@@ -244,7 +243,7 @@
             <mat-grid-tile colspan="4" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Оповещен</mat-label>
-                    <input matInput type="text" formControlName="informed" [(ngModel)]="bscForm.value.informed" />
+                    <input matInput type="text" formControlName="informed"/>
                 </mat-form-field>
             </mat-grid-tile>
             <!-- start Time -->
@@ -252,8 +251,7 @@
                 <div class="margin-container">
                     <p>Начало</p>
                     <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
-                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
-                        [(ngModel)]="bscForm.value.startTime" />
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" />
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
@@ -262,7 +260,7 @@
                     <p>Конец<span *ngIf="bscForm.get('endTime').hasError('timeValid') && bscForm.get('startTime').touched"
                         class="timeNotValid" > *Начало больше чем Конец времени</span></p>
                     <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="bscForm.value.endTime">
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" >
                 </div>
             </mat-grid-tile>
             <!-- buttons -->
@@ -275,9 +273,10 @@
             <mat-grid-tile colspan="4">
                 <mat-chip-listbox formControlName="AddOrCor">
                     <mat-chip-option color="#572469d5" value="Коррекция">Коррекция</mat-chip-option>
-                    <mat-chip-option color="#572469d5" value="Дополнения">Дополнение</mat-chip-option>
+                    <mat-chip-option color="#572469d5" value="Дополнение">Дополнение</mat-chip-option>
                 </mat-chip-listbox>
             </mat-grid-tile>
+
         </mat-grid-list>
     </form>
 </div>

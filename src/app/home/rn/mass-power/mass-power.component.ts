@@ -23,6 +23,7 @@ export class MassPowerComponent implements OnInit {
   SmsTextBody: any
   time = new Date()
   requestType: any
+  asNew: boolean = false
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
@@ -91,6 +92,7 @@ export class MassPowerComponent implements OnInit {
     '': ''
   }
 
+
   district: { value: string; viewValue: string }[] = [
     { value: 'Аккурган', viewValue: 'Аккурган' },
     { value: 'Ахангаран', viewValue: 'Ахангаран' },
@@ -148,11 +150,15 @@ export class MassPowerComponent implements OnInit {
     public dialog: MatDialog) {
     this.massPowerForm = this.formBuilder.group({
       'AddOrCor': [null],
-      'problem': [' 2G,  3G,  4G сайтов', Validators.required],
+      'level': [''],
+      'problem': ['', Validators.required],
       'reason': ['', Validators.required],
+      'effect': [''],
+      'informed': [''],
+      'desc': [''],
+      'endTime' : [''],
       'startTime': ['', Validators.required],
       'region': ['', Validators.required],
-      'district' : ['', Validators.required]
     })
 
   }
@@ -170,7 +176,9 @@ export class MassPowerComponent implements OnInit {
     } else {
       this.newForm = false
       let district: any
-
+      if(this.route.snapshot.url.toString().includes('update')) {
+        this.asNew = true
+      }
 
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
@@ -182,8 +190,13 @@ export class MassPowerComponent implements OnInit {
 
           this.massPowerForm = this.formBuilder.group({
             'AddOrCor': [null],
+            'level': [result['level']],
             'problem': [result['hub_problem'], Validators.required],
             'reason': [result['hub_reason'], Validators.required],
+            'effect': [result['influency']],
+            'infromed': [result['informed']],
+            'desc': [result['description']],
+            'endTime' : [result['end_time']],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'region': [result['region'], Validators.required],
             'district': [result['district']]
@@ -213,22 +226,32 @@ export class MassPowerComponent implements OnInit {
   smsSendBody(id?: number) {
 
 
-    if (this.massPowerForm.value.AddOrCor == (null || undefined)) {
-      this.SmsTextBody =
-        this.requestType + '\n' +
-        this.massPowerForm.value.problem + ' не работают в ' + this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
-        'Причина: ' + this.massPowerForm.value.reason + ' Массовое отключения ЭП '+  this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
-        'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
-        'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
-    } else {
-      this.SmsTextBody =
-      this.requestType + '\n' +
-        '(' + this.massPowerForm.value.AddOrCor + ')\n' +
-        this.massPowerForm.value.problem + ' не работают в ' + this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
-        'Причина: ' + this.massPowerForm.value.reason + ' Массовое отключения ЭП '+  this.regions[this.massPowerForm.value.region] + ' ' + this.dist[this.massPowerForm.value.district] + '\n' +
-        'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
-        'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' 
-    }
+      if (this.massPowerForm.value.AddOrCor == (null || undefined)) {
+        this.SmsTextBody =
+          this.massPowerForm.value.level.replace('P', 'П') + ' ' + this.requestType + ':\n' +
+          this.massPowerForm.value.problem + '\n' +
+          'Причина: ' + this.massPowerForm.value.reason + '\n' +
+          'Эффект: ' + this.massPowerForm.value.effect + '\n' +
+          'Описание: ' + this.massPowerForm.value.desc + '\n' +
+          'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
+          'Конец: ' + this.massPowerForm.value.endTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.massPowerForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name 
+          
+      } else {
+        this.SmsTextBody =
+          this.massPowerForm.value.level.replace('P', 'П') + ' ' + this.requestType + ':\n' +
+          '(' + this.massPowerForm.value.AddOrCor + ')\n' +
+          this.massPowerForm.value.problem + '\n' +
+          'Причина: ' + this.massPowerForm.value.reason + '\n' +
+          'Эффект: ' + this.massPowerForm.value.effect + '\n' +
+          'Описание: ' + this.massPowerForm.value.desc + '\n' +
+          'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
+          'Конец: ' + this.massPowerForm.value.endTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.massPowerForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          
+      }
 
     this.smsBody = {
       'source_addr': 'ncc-rn',

@@ -30,12 +30,12 @@ export class ChronicComponent implements OnInit {
   smsBody: any
   word: string = ' Узловой сайт '
   asNew: boolean = false
+  disableDistrict: boolean = false
   idAlarmReport: any
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsDesc: Observable<string[]>;
 
   @ViewChild('item') item: any;
-
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A5', viewValue: 'A5' },
@@ -361,7 +361,18 @@ export class ChronicComponent implements OnInit {
     return null
   }
 
+  districtDisabling() {
+    if(this.chronicForm.value.region !== 'Ташкент.обл') {
+      this.disableDistrict = true
+    this.chronicForm.value.district = ''
+    } else {
+      this.disableDistrict = false
+    }
+  }
+
   tableSendBody() {
+    const pattern = /[.,\s]+/
+
     this.tableBody = {
       'type': 'CHRONIC',
       'level': this.chronicForm.value.level,
@@ -384,11 +395,14 @@ export class ChronicComponent implements OnInit {
       'description': this.chronicForm.value.desc,
       'informed': this.chronicForm.value.informed,
       'influence': this.chronicForm.value.effect,
-      'sender': this.user?.username
+      'sender': this.user?.username,
+      'effected_sites': this.chronicForm.value.siteName.split(pattern)
     }
 
     if (this.chronicForm.value.endTime !== '') {
       this.tableBody.end_time = this.chronicForm.value.endTime
+    } else {
+      this.tableBody.end_time = null
     }
 
     if ((this.chronicForm.value.hubSite == '') || (this.chronicForm.value.hubSite == undefined)) {
@@ -406,7 +420,6 @@ export class ChronicComponent implements OnInit {
     } else {
       this.word = ' Узловой сайт '
     }
-
 
     if (this.requestType == 'Проблема') {
       if (this.chronicForm.value.AddOrCor == (undefined || null)) {
@@ -458,6 +471,8 @@ export class ChronicComponent implements OnInit {
     }
 
     let smsType = this.storageService.SmsType(this.requestType, this.chronicForm.value.AddOrCor, false)
+    console.log(smsType);
+    
 
     this.smsBody = {
       'source_addr': 'ncc-rn',
@@ -514,6 +529,7 @@ export class ChronicComponent implements OnInit {
             })
         } else {
           this.tableSendBody()
+
 
           this.authService.postData(this.tableBody)
             .subscribe((result) => {
@@ -587,7 +603,6 @@ export class fortesting {
     public dialogRef: MatDialogRef<fortesting>,
     @Inject(MAT_DIALOG_DATA) public smsbody: any,
   ) { }
-
 
   onSubmit(form: NgForm) {
     let tel_list = form.value.field.split('\n')

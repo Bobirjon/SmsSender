@@ -70,6 +70,11 @@ export class HubComponent implements OnInit {
     { value: 'периодически и частично', viewValue: 'Периодически и частично' }
   ];
 
+  intervalFlapTime : { value: boolean; viewValue: string }[] = [
+    { value: true, viewValue: 'Меньше 5мин' },
+    { value: false, viewValue: 'Больше 5мин' }
+  ];
+
   region: { value: string; viewValue: string }[] = [
     { value: 'Андижан', viewValue: 'Андижане' },
     { value: 'Бухара', viewValue: 'Бухаре' },
@@ -213,6 +218,7 @@ export class HubComponent implements OnInit {
       'desc': [''],
       'informed': ['', Validators.required],
       'category': ['', Validators.required],
+      'interval': [false],
       'powerOffTime': [''],
       'hubBlockTime': [''],
       'mw_link': [''],
@@ -273,62 +279,61 @@ export class HubComponent implements OnInit {
   putLevel() {
     let maxNumber: number
 
-    maxNumber = parseInt(this.hubForm.value.twoG)
+    maxNumber = this.hubForm.value.twoG
 
     if (parseInt(this.hubForm.value.threeG) >= maxNumber) {
-      maxNumber = parseInt(this.hubForm.value.threeG)
+      maxNumber =this.hubForm.value.threeG
     }
 
-    if (parseInt(this.hubForm.value.fourG) >= maxNumber) {
-      maxNumber = parseInt(this.hubForm.value.fourG)
+    if (this.hubForm.value.fourG >= maxNumber) {
+      maxNumber = this.hubForm.value.fourG
     }
 
-    if (parseInt(this.hubForm.value.fiveG) >= maxNumber) {
-      maxNumber = parseInt(this.hubForm.value.fiveG)
+    if (this.hubForm.value.fiveG >= maxNumber) {
+      maxNumber = this.hubForm.value.fiveG
     }
+
+    console.log(Number(maxNumber));
+    
 
     if (this.hubForm.value.region == 'г.Ташкент' || this.hubForm.value.region == 'Ташкент.обл') {
       if (this.hubForm.value.categories_report == 'ПР') {
         if (maxNumber >= 4 && maxNumber <= 19) {
-          this.hubForm.value.level = 'P4'
+          this.hubForm.get('level').setValue('P4')
         } else if (maxNumber >= 20 && maxNumber <= 49) {
-          console.log('A3');
-          this.hubForm.value.level = 'P3'
+          this.hubForm.get('level').setValue('P3')
         } else if (maxNumber >= 50) {
-          console.log('A2');
-          this.hubForm.value.level = 'P2'
+          this.hubForm.get('level').setValue('P2')
         }
       } else {
         if (maxNumber >= 4 && maxNumber <= 19) {
-          this.hubForm.value.level = 'A4'
+          this.hubForm.get('level').setValue('A4')
         } else if (maxNumber >= 20 && maxNumber <= 49) {
-          this.hubForm.value.level = 'A3'
+          this.hubForm.get('level').setValue('A3')
         } else if (maxNumber >= 50) {
-          this.hubForm.value.level = 'A2'
+          this.hubForm.get('level').setValue('A2')
         }
       }
     } else {
       if (this.hubForm.value.categories_report == 'ПР') {
         if (maxNumber > 2 && maxNumber < 10) {
-          this.hubForm.value.level = 'P4'
+          this.hubForm.get('level').setValue('P4')
         } else if (maxNumber >= 10 && maxNumber < 30) {
-          this.hubForm.value.level = 'P3'
+          this.hubForm.get('level').setValue('P3')
         } else if (maxNumber >= 30) {
-          this.hubForm.value.level = 'P2'
+          this.hubForm.get('level').setValue('P3')
         }
       } else {
         if (maxNumber > 2 && maxNumber < 10) {
-          this.hubForm.value.level = 'A4'
+          this.hubForm.get('level').setValue('A4')
         } else if (maxNumber >= 10 && maxNumber < 30) {
-          this.hubForm.value.level = 'A3'
+          this.hubForm.get('level').setValue('A3')
         } else if (maxNumber >= 30) {
-          this.hubForm.value.level = 'A2'
+          this.hubForm.get('level').setValue('A2')
         }
       }
     }
   }
-
-
 
   ngOnInit(): void {
     // get Current user
@@ -418,7 +423,7 @@ export class HubComponent implements OnInit {
             'fourG': [result['count_4G'], ],
             'fiveG': [result['count_5G'], ],
             'periodicity': [result['flapping_type'],],
-
+            'interval': [result['flapping_time_lth_5min']],
             'mw_link': [result['mw_link']],
             'mw_equipment': [result['mw_equipment']],
             'mw_vendor': [result['mw_vendor']],
@@ -460,6 +465,10 @@ export class HubComponent implements OnInit {
       five = this.hubForm.value.fiveG + ' 5G '
     } 
 
+    if(this.hubForm.value.region !== 'Ташкент.обл') {
+      this.dist[this.hubForm.value.district] = ''
+    }
+
     this.tableBody = {
       'type': 'HUB',
       'level': this.hubForm.value.level,
@@ -485,7 +494,7 @@ export class HubComponent implements OnInit {
       'count_4G': this.hubForm.value.fourG,
       'count_5G': this.hubForm.value.fiveG,
       'flapping_type': this.hubForm.value.periodicity,
-
+      'flapping_time_lth_5min': this.hubForm.value.interval,
       'mw_link': this.hubForm.value.mw_link,
       'mw_equipment': this.hubForm.value.mw_equipment,
       'mw_vendor': this.hubForm.value.mw_vendor,
@@ -498,20 +507,27 @@ export class HubComponent implements OnInit {
         splited = this.hubForm.value.effectedSites.split((/\n|,/))
         this.tableBody.effected_sites = splited.filter((element) => element.trim() !== '')
       }
+    } else {
+      this.tableBody.effected_sites = this.hubForm.value.effectedSites
     }
 
     if (this.hubForm.value.endTime !== '') {
       this.tableBody.end_time = this.hubForm.value.endTime
+    } else {
+      this.tableBody.end_time = null
     }
 
     if (this.hubForm.value.lowBatteryTime !== '') {
       this.tableBody.lowBatteryTime = this.hubForm.value.lowBatteryTime
+    } else {
+      this.tableBody.lowBatteryTime = null
     }
 
     if (this.hubForm.value.dg_start_time !== '') {
       this.tableBody.dg_start_time = this.hubForm.value.dg_start_time
+    } else {
+      this.tableBody.dg_start_time = null
     }
-
     
     if(this.hubForm.value.powerOffTime !== '') {
       this.tableBody.power_off_time = this.hubForm.value.powerOffTime
@@ -562,6 +578,10 @@ export class HubComponent implements OnInit {
       this.word = ' '
     } else {
       this.word = ' Узловой сайт '
+    }
+    
+    if(this.hubForm.value.region !== 'Ташкент.обл') {
+      this.dist[this.hubForm.value.district] = ''
     }
 
     if (this.requestType == 'Проблема') {
@@ -647,7 +667,6 @@ export class HubComponent implements OnInit {
     }
   }
 
-
   updateData() {
 
     this.tableSendBody()
@@ -674,6 +693,15 @@ export class HubComponent implements OnInit {
         this.snackBar.open("Ошибка", '', { duration: 10000 })
       })
   }
+  
+
+  districtDisabling() {
+    if(this.hubForm.value.region !== 'Ташкент.обл') {
+      this.hubForm.get('district').disable()
+    } else {
+      this.hubForm.get('district').enable()
+    }
+  }
 
   sendButton() {
     this.authService.sendSms(this.smsBody)
@@ -689,8 +717,6 @@ export class HubComponent implements OnInit {
 
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
-    console.log(this.hubForm.value.fiveG);
-
 
     const dialogRef = this.dialog.open(areYouSure);
 
@@ -792,7 +818,6 @@ export class fortesting {
 
   onSubmit(form: NgForm) {
     let tel_list = form.value.field.split('\n')
-    console.log(this.smsbody.text);
 
     let smsTXTBody = {
       'source_addr': 'ncc-rn',
@@ -804,7 +829,5 @@ export class fortesting {
       .subscribe(res => {
         console.log(res);
       })
-    console.log(this.smsbody);
-
   }
 }

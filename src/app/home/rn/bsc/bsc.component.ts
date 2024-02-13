@@ -227,7 +227,6 @@ export class BscComponent implements OnInit {
       'influence': this.bscForm.value.effect,
       'start_time': this.bscForm.value.startTime,
       'region': this.bscForm.value.region,
-
       'informed': this.bscForm.value.informed,
       'description': this.bscForm.value.desc,
       'sender': this.user?.username
@@ -235,6 +234,8 @@ export class BscComponent implements OnInit {
 
     if (this.bscForm.value.endTime != '') {
       this.tableBody.end_time = this.bscForm.value.endTime
+    } else {
+      this.tableBody.end_time = null
     }
   }
 
@@ -327,9 +328,7 @@ export class BscComponent implements OnInit {
   }
 
   sendButton() {
-    
     this.storageService.sendSms(this.smsBody)
-
   }
 
   onSubmitButtonProblem(smsType: string) {

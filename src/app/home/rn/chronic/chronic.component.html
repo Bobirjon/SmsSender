@@ -5,7 +5,7 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="chronicForm.value.level"
+                    <mat-select formControlName="level"
                         (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
@@ -17,7 +17,7 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория для отчета</mat-label>
-                    <mat-select formControlName="categories_report" [(ngModel)]="chronicForm.value.categories_report">
+                    <mat-select formControlName="categories_report" >
                         <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
                             {{cat_rep.viewValue}}
                         </mat-option>
@@ -28,7 +28,7 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Ответственная Зона</mat-label>
-                    <mat-select formControlName="responsible_report" [(ngModel)]="chronicForm.value.responsible_report">
+                    <mat-select formControlName="responsible_report" >
                         <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
                             {{res_rep.viewValue}}
                         </mat-option>
@@ -135,7 +135,7 @@
             <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="chronicForm.value.desc"
+                    <textarea matInput type="text" formControlName="desc" 
                     spellcheck="true" [matAutocomplete]="autoDesc"></textarea>
                     <mat-autocomplete #autoDesc="matAutocomplete">
                         <mat-option *ngFor="let option of filteredOptionsDesc | async" [value]="option">
@@ -149,7 +149,7 @@
             <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
-                    <textarea matInput type="text" formControlName="reason" [(ngModel)]="chronicForm.value.reason"
+                    <textarea matInput type="text" formControlName="reason"
                         spellcheck="true" [matAutocomplete]="autoReason">
                     </textarea>
                     <mat-autocomplete #autoReason="matAutocomplete">
@@ -163,21 +163,21 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Название сайта</mat-label>
-                    <input matInput type="text" formControlName="siteName" [(ngModel)]="chronicForm.value.siteName" />
+                    <input matInput type="text" formControlName="siteName" />
                 </mat-form-field>
             </mat-grid-tile>
             <!-- Hub site -->
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Название хаб-сайта</mat-label>
-                    <input matInput type="text" formControlName="hubSite" [(ngModel)]="chronicForm.value.hubSite" />
+                    <input matInput type="text" formControlName="hubSite"  />
                 </mat-form-field>
             </mat-grid-tile>
             <!-- category -->
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория</mat-label>
-                    <mat-select formControlName="category" [(ngModel)]="chronicForm.value.category">
+                    <mat-select formControlName="category" >
                         <mat-option *ngFor="let cat of category" [value]="cat.value">
                             {{cat.viewValue}}
                         </mat-option>
@@ -188,7 +188,7 @@
             <mat-grid-tile colspan="2">
                 <mat-form-field class="margin-container">
                     <mat-label>Время Простоя</mat-label>
-                    <mat-select formControlName="time" [(ngModel)]="chronicForm.value.time">
+                    <mat-select formControlName="time" >
                         <mat-option *ngFor="let hours of chronicHours" [value]="hours">
                             {{hours}}
                         </mat-option>
@@ -199,14 +199,15 @@
             <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Оповещен</mat-label>
-                    <input matInput type="text" formControlName="informed" [(ngModel)]="chronicForm.value.informed" />
+                    <input matInput type="text" formControlName="informed" />
                 </mat-form-field>
             </mat-grid-tile>
+            
             <!-- region -->
             <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
-                    <mat-select formControlName="region" [(ngModel)]="chronicForm.value.region">
+                    <mat-select formControlName="region" (ngModelChange)="districtDisabling()">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
                             {{reg.value}}
                         </mat-option>
@@ -217,8 +218,7 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Район</mat-label>
-                    <mat-select formControlName="district" [(ngModel)]="chronicForm.value.district"
-                        [disabled]="this.chronicForm.value.region.value == 'Ташкент.обл'">
+                    <mat-select formControlName="district" [disabled]="disableDistrict">
                         <mat-option *ngFor="let dis of district" [value]="dis.value">
                             {{dis.value}}
                         </mat-option>
@@ -235,7 +235,7 @@
                         *Время простоя не соответствует Началу времени*</span>
                     </p>
                     <input type="datetime-local" class="dateTime" formControlName="startTime"
-                        [(ngModel)]="chronicForm.value.startTime" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
+                         [max]="time | date: 'yyyy-MM-ddTHH:mm'"
                         [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched">
                 </div>
             </mat-grid-tile>
@@ -246,7 +246,7 @@
                             *ngIf="chronicForm.get('endTime').hasError('timeValid') && chronicForm.get('startTime').touched"
                             class="timeNotValid"> *Начало больше чем Конец времени</span></p>
                     <input type="datetime-local" class="dateTime" formControlName="endTime"
-                        [(ngModel)]="chronicForm.value.endTime">
+                       >
                 </div>
             </mat-grid-tile>
             <!-- button -->

@@ -7,7 +7,7 @@
              <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="cnForm.value.desc"
+                    <textarea matInput type="text" formControlName="desc"
                         spellcheck="true">
                     </textarea>
                 </mat-form-field>
@@ -58,8 +58,7 @@
                 <div class="margin-container">
                     <p>Начало</p>
                     <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
-                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
-                        [(ngModel)]="cnForm.value.startTime" />
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" />
                 </div>
 
             </mat-grid-tile>

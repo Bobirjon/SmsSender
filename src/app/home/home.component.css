@@ -115,3 +115,11 @@ tr:nth-child(even):hover {background-color: #a06ea80a;}
     box-shadow: #4b365f74 0px 1px 2px 0px, #4b365f88 0px 2px 6px 2px;
     margin-left: 10px;
 }
+
+  .center-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+

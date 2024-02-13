@@ -2,23 +2,24 @@
     <h1 style="margin: 30px;">Core SMS</h1>
     <!-- form Filling -->
     <form [formGroup]="cnForm" class="form-container">
-        <mat-grid-list cols="25" rowHeight="85px">
-            <!-- level -->
+
+        <!-- <mat-grid-list cols="25" rowHeight="85px">
+
             <mat-grid-tile colspan="3" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" [(ngModel)]="cnForm.value.level" (ngModelChange)="setDefault()">
+                    <mat-select formControlName="level" (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- categories report -->
+            
             <mat-grid-tile colspan="4" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория для отчета</mat-label>
-                    <mat-select formControlName="categories_report" [(ngModel)]="cnForm.value.categories_report">
+                    <mat-select formControlName="categories_report">
                         <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
                             {{cat_rep.viewValue}}
                         </mat-option>
@@ -26,18 +27,17 @@
                 </mat-form-field>
             </mat-grid-tile>
 
-            <!-- effect option -->
             <mat-grid-tile colspan="3" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Эффект</mat-label>
-                    <mat-select formControlName="effect_option" [(ngModel)]="cnForm.value.effect_option">
+                    <mat-select formControlName="effect_option" >
                         <mat-option *ngFor="let eff_rep of effect_option" [value]="eff_rep.value">
                             {{eff_rep.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- preview problem -->
+            
             <mat-grid-tile colspan="5" rowspan="8">
                 <div class="grid-container" >
                     <mat-card class="preview cont">
@@ -46,7 +46,7 @@
                                 {{cnForm.value.level.replace('P', 'П') + ' Проблема:'}}
                             </mat-card-title>
                             <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнение'">
-                                (Дополнения)
+                                (Дополнение)
                             </mat-card-title>
                             <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Коррекция'">
                                 (Коррекция)
@@ -63,25 +63,18 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
-                                *ngIf="asNew == false"
-                                [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
+                                [disabled]="cnForm.invalid && cnForm.value.endTime !== ''">
                                 Отправить SMS
                             </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Проблема')" type="submit"
-                                *ngIf="asNew == true && newForm == false"
-                                [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
-                                Новое SMS
-                            </button>
                             <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Проблема')"
-                                type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
+                                type="submit" [disabled]="cnForm.invalid && cnForm.value.endTime !== ''">
                                 TEST SMS
                             </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>
             </mat-grid-tile>
-            <!-- preview resheniya-->
+            
             <mat-grid-tile colspan="5" rowspan="8">
                 <div class="grid-container">
                     <mat-card class="preview cont">
@@ -105,15 +98,8 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                *ngIf="asNew == false"
-                                [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
+                                [disabled]="(cnForm.invalid) || cnForm.value.endTime ==''">
                                 Отправить SMS
-                            </button>
-                            <button class="form-button" mat-raised-button
-                                (click)="onSubmitasNew('Решение')" type="submit"
-                                *ngIf="asNew == true && newForm == false"
-                                [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
-                                Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button (click)="forTestSms('Решение')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
@@ -123,7 +109,7 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-            <!-- preview infromacionoe-->
+            
             <mat-grid-tile colspan="5" rowspan="8" >
                 <div class="grid-container" >
                     <mat-card class="preview">
@@ -147,15 +133,8 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
-                                *ngIf="asNew == false"
                                 [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
                                 Отправить SMS
-                            </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Информационное')" type="submit"
-                                *ngIf="asNew == true && newForm == false"
-                                [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
-                                Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary" (click)="forTestSms('Информационное')"
                                 type="submit" [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
@@ -165,65 +144,74 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-            <!-- responsible area -->
+            
             <mat-grid-tile colspan="3" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Ответственная Зона</mat-label>
-                    <mat-select formControlName="responsible_report" [(ngModel)]="cnForm.value.responsible_report">
+                    <mat-select formControlName="responsible_report">
                         <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
                             {{res_rep.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-               <!-- Периодичность -->
-               <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>Периодичность</mat-label>
-                    <mat-select formControlName="periodicity" [(ngModel)]="cnForm.value.periodicity">
-                        <mat-option *ngFor="let per of periodicity" [value]="per.value">
-                            {{per.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- category -->
+ 
             <mat-grid-tile colspan="4" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория</mat-label>
-                    <mat-select formControlName="category" [(ngModel)]="cnForm.value.category">
+                    <mat-select formControlName="category" (ngModelChange)="regionDisabled()">
                         <mat-option *ngFor="let cat of category" [value]="cat.value">
                             {{cat.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- informed -->
-            <mat-grid-tile colspan="5" rowspan="1">
+
+            <mat-grid-tile colspan="3" rowspan="1">
                 <mat-form-field class="margin-container">
-                    <mat-label>Оповещен</mat-label>
-                    <input matInput type="text" formControlName="informed" [(ngModel)]="cnForm.value.informed" />
+                    <mat-label>Периодичность</mat-label>
+                    <mat-select formControlName="periodicity" >
+                        <mat-option *ngFor="let per of periodicity" [value]="per.value">
+                            {{per.viewValue}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- region -->
-            <mat-grid-tile colspan="5" rowspan="1">
+            
+            <mat-grid-tile colspan="4" rowspan="1">
+                <mat-form-field class="margin-container">
+                    <mat-label>Оповещен</mat-label>
+                    <input matInput type="text" formControlName="informed"  />
+                </mat-form-field>
+            </mat-grid-tile>
+            
+            <mat-grid-tile colspan="3" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
-                    <mat-select formControlName="region" [(ngModel)]="cnForm.value.region" [disabled]="cnForm.value.category == ('Roaming') || 
-                    cnForm.value.category == ('Core') || cnForm.value.category == ('GPRS')">
+                    <mat-select formControlName="region">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
                             {{reg.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- problem -->
+
+            <mat-grid-tile colspan="3" rowspan="1">
+                <mat-form-field class="margin-container">
+                    <mat-label>Даун Интервал</mat-label>
+                    <mat-select formControlName="interval" >
+                        <mat-option *ngFor="let int of intervalFlapTime" [value]="int.value">
+                            {{int.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
             
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Проблема</mat-label>
                     <textarea matInput type="text" formControlName="problem" 
-                            [(ngModel)]="cnForm.value.problem" spellcheck="true"
+                            spellcheck="true"
                             [matAutocomplete]="autoProblem">
                     </textarea>
                     <mat-autocomplete #autoProblem="matAutocomplete">
@@ -233,12 +221,12 @@
                       </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- reason -->
+            
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
                     <textarea matInput type="text" formControlName="reason" 
-                            [(ngModel)]="cnForm.value.reason" spellcheck="true"
+                           spellcheck="true"
                             [matAutocomplete]="autoReason">
                     </textarea>
                     <mat-autocomplete #autoReason="matAutocomplete">
@@ -248,12 +236,12 @@
                       </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- effect -->
+            
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Эффект</mat-label>
                     <textarea matInput type="text" formControlName="effect" 
-                        [(ngModel)]="cnForm.value.effect" spellcheck="true"
+                         spellcheck="true"
                         [matAutocomplete]="autoEffect">
                     </textarea>
                     <mat-autocomplete #autoEffect="matAutocomplete">
@@ -263,11 +251,11 @@
                       </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- Description -->
+            
             <mat-grid-tile colspan="5" rowspan="1">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" [(ngModel)]="cnForm.value.desc"
+                    <textarea matInput type="text" formControlName="desc"
                         spellcheck="true" [matAutocomplete]="autoDesc">
                     </textarea>
                     <mat-autocomplete #autoDesc="matAutocomplete">
@@ -277,35 +265,296 @@
                       </mat-autocomplete>
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- start Time -->
+            
             <mat-grid-tile colspan="5" rowspan="1">
                 <div class="margin-container">
                     <p>Начало</p>
                     <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
                         min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'"
-                        [(ngModel)]="cnForm.value.startTime" />
+                        />
                 </div>
             </mat-grid-tile>
-            <!-- end Time -->
+            
             <mat-grid-tile colspan="5" rowspan="1">
                 <div class="margin-container">
                     <p>Конец<span *ngIf="cnForm.get('endTime').hasError('timeValid') && cnForm.get('startTime').touched"
                         class="timeNotValid" > *Начало больше чем Конец времени</span></p>
                     <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'" [(ngModel)]="cnForm.value.endTime">
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
             <mat-grid-tile colspan="2">
                 <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false && asNew == false"
                     (click)="updateData()">Обновить</button>
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true || asNew == false"
+                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true || asNew == true"
                     [disabled]="cnForm.invalid" (click)="onSubmit()">Добавить</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="6">
                 <mat-chip-listbox formControlName="AddOrCor">
                     <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
-                    <mat-chip-option value="Дополнения">Дополнение</mat-chip-option>
+                    <mat-chip-option value="Дополнение">Дополнение</mat-chip-option>
                 </mat-chip-listbox>
+            </mat-grid-tile>
+
+        </mat-grid-list> -->
+
+        <mat-grid-list cols="25" rowHeight="1000px">
+            <mat-grid-tile colspan="10">
+                <div class="grid-form">
+                    <div class="first-row">
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Уровень</mat-label>
+                            <mat-select formControlName="level" (ngModelChange)="setDefault()">
+                                <mat-option *ngFor="let lev of level" [value]="lev.value">
+                                    {{lev.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Категория для отчета</mat-label>
+                            <mat-select formControlName="categories_report">
+                                <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
+                                    {{cat_rep.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Ответственная Зона</mat-label>
+                            <mat-select formControlName="responsible_report">
+                                <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
+                                    {{res_rep.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Эффект</mat-label>
+                            <mat-select formControlName="effect_option">
+                                <mat-option *ngFor="let eff_rep of effect_option" [value]="eff_rep.value">
+                                    {{eff_rep.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="second-row">
+
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Категория</mat-label>
+                            <mat-select formControlName="category" (ngModelChange)="regionDisabled()">
+                                <mat-option *ngFor="let cat of category" [value]="cat.value">
+                                    {{cat.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Периодичность</mat-label>
+                            <mat-select formControlName="periodicity">
+                                <mat-option *ngFor="let per of periodicity" [value]="per.value">
+                                    {{per.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Оповещен</mat-label>
+                            <input matInput type="text" formControlName="informed" />
+                        </mat-form-field>
+
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Регион</mat-label>
+                            <mat-select formControlName="region">
+                                <mat-option *ngFor="let reg of region" [value]="reg.value">
+                                    {{reg.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="third-row">
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Проблема</mat-label>
+                            <textarea matInput type="text" formControlName="problem" spellcheck="true"
+                                [matAutocomplete]="autoProblem">
+                        </textarea>
+                            <mat-autocomplete #autoProblem="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOptionsProblem | async" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Причина</mat-label>
+                            <textarea matInput type="text" formControlName="reason" spellcheck="true"
+                                [matAutocomplete]="autoReason">
+                        </textarea>
+                            <mat-autocomplete #autoReason="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOptionsReason | async" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="third-row">
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Эффект</mat-label>
+                            <textarea matInput type="text" formControlName="effect" spellcheck="true"
+                                [matAutocomplete]="autoEffect">
+                        </textarea>
+                            <mat-autocomplete #autoEffect="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOptionsEffect | async" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+
+                        <mat-form-field class="grid-form-item">
+                            <mat-label>Описание</mat-label>
+                            <textarea matInput type="text" formControlName="desc" spellcheck="true"
+                                [matAutocomplete]="autoDesc">
+                        </textarea>
+                            <mat-autocomplete #autoDesc="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOptionsDesc | async" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="third-row">
+                        <div class="grid-form-item">
+                            <p style="margin-left: 5px;">Начало</p>
+                            <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
+                                min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" />
+                        </div>
+
+                        <div class="grid-form-item">
+                            <p style="margin-left: 5px;">Конец<span
+                                    *ngIf="cnForm.get('endTime').hasError('timeValid') && cnForm.get('startTime').touched"
+                                    class="timeNotValid"> *Начало больше чем Конец времени</span></p>
+                            <input type="datetime-local" class="dateTime" formControlName="endTime"
+                                min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                        </div>
+                    </div>
+
+
+                    <div class="third-row" style="margin-top: 30px;">
+                        <div class="grid-form-item">
+                            <button mat-raised-button color="primary" type="button"
+                                *ngIf="newForm == false && asNew == false" (click)="updateData()">Обновить</button>
+                            <button mat-raised-button color="primary" type="button"
+                                *ngIf="newForm == true || asNew == true" [disabled]="cnForm.invalid"
+                                (click)="onSubmit()">Добавить</button>
+                        </div>
+                        <div class="grid-form-item">
+                            <mat-chip-listbox formControlName="AddOrCor">
+                                <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
+                                <mat-chip-option value="Дополнение">Дополнение</mat-chip-option>
+                            </mat-chip-listbox>
+                        </div>
+                    </div>
+
+
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="15">
+                <div class="grid-preview">
+
+                    <mat-card class="grid-preview-item">
+                        <mat-card-header>
+                            <mat-card-title>
+                                {{cnForm.value.level.replace('P', 'П') + ' Проблема:'}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнение'">
+                                (Дополнение)
+                            </mat-card-title>
+                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Коррекция'">
+                                (Коррекция)
+                            </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{cnForm.value.problem}}</p>
+                            <p>{{'Причина: ' + cnForm.value.reason}}</p>
+                            <p>{{'Эффект: ' + cnForm.value.effect}}</p>
+                            <p>{{'Оповещен: ' + cnForm.value.informed}}</p>
+                            <p>{{'Начало: ' + cnForm.value.startTime.replace('T', ' ')}}</p>
+                            <p>{{'Отправил: ' + user?.first_name + ' ' + user?.last_name}}</p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button 
+                                (click)="onSubmitButtonProblem('Проблема')" type="submit"
+                                [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
+                                Отправить SMS
+                            </button>
+                            <button class="form-button" mat-raised-button
+                                (click)="forTestSms('Проблема')" type="submit"
+                                [disabled]="cnForm.invalid || cnForm.value.endTime !==''">
+                                TEST SMS
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="grid-preview-item">
+                        <mat-card-header>
+                            <mat-card-title>
+                                {{cnForm.value.level.replace('P', 'П') + ' Решение:'}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
+                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{cnForm.value.problem}}</p>
+                            <p>{{'Причина: ' + cnForm.value.reason}}</p>
+                            <p>{{'Эффект: ' + cnForm.value.effect}}</p>
+                            <p>{{'Описание: ' + cnForm.value.desc}}</p>
+                            <p>{{'Оповещен: ' + cnForm.value.informed}}</p>
+                            <p>{{'Начало: ' + cnForm.value.startTime.replace("T", " ")}}</p>
+                            <p>{{'Конец: ' + cnForm.value.endTime.replace("T", " ")}}</p>
+                            <p>{{'Отправил: ' + user?.first_name + ' ' + user?.last_name}}</p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button (click)="onSubmitButtonProblem('Решение')"
+                                [disabled]="(cnForm.invalid) || cnForm.value.endTime==''">
+                                Отправить SMS
+                            </button>
+                            <button class="form-button" mat-raised-button (click)="forTestSms('Решение')" type="submit"
+                                [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
+                                TEST SMS
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="grid-preview-item">
+                        <mat-card-header>
+                            <mat-card-title>
+                                {{cnForm.value.level.replace('P', 'П') + ' Информационное:'}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
+                            <mat-card-title *ngIf="cnForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{cnForm.value.problem}}</p>
+                            <p>{{'Причина: ' + cnForm.value.reason}}</p>
+                            <p>{{'Эффект: ' + cnForm.value.effect}}</p>
+                            <p>{{'Описание: ' + cnForm.value.desc}}</p>
+                            <p>{{'Оповещен: ' + cnForm.value.informed}}</p>
+                            <p>{{'Начало: ' + cnForm.value.startTime.replace("T", " ")}}</p>
+                            <p>{{'Конец: ' + cnForm.value.endTime.replace("T", " ")}}</p>
+                            <p>{{'Отправил: ' + user?.first_name + ' ' + user?.last_name}}</p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button 
+                                (click)="onSubmitButtonProblem('Информационное')"
+                                [disabled]="(cnForm.value.startTime == '' || cnForm.value.endTime == '')">
+                                Отправить SMS
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="forTestSms('Информационное')" type="submit"
+                                [disabled]="cnForm.invalid || cnForm.value.endTime ==''">
+                                TEST SMS
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
             </mat-grid-tile>
         </mat-grid-list>
     </form>

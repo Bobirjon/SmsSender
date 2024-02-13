@@ -29,6 +29,9 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
@@ -103,7 +106,8 @@ import { EditPageComponent } from './home/new-ideas/edit-page/edit-page.componen
     MatButtonToggleModule,
     MatAutocompleteModule,
     MatMenuModule,
-
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
   ],
   providers: [ AuthGuard, DatePipe,
     {

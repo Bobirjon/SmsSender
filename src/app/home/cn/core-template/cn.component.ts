@@ -31,6 +31,7 @@ export class CnComponent implements OnInit {
   asNew: boolean = false
   tableBody: any
   smsBody: any
+  isDisabled: boolean
   criteriaArray: any
   idAlarmReport: any
   filteredOptionsProblem: Observable<string[]>;
@@ -59,8 +60,10 @@ export class CnComponent implements OnInit {
   ];
   category: { value: string; viewValue: string }[] = [
     { value: 'Core', viewValue: 'Core' },
+    { value: 'Core-NetAct', viewValue: 'Core-NetAct' },
     { value: 'GPRS', viewValue: 'GPRS' },
     { value: 'Roaming', viewValue: 'Roaming' },
+    { value: 'MPLS', viewValue: 'MPLS' },
     { value: 'Power', viewValue: 'Power' },
     { value: 'High Temp', viewValue: 'High Temp' },
   ];
@@ -77,6 +80,11 @@ export class CnComponent implements OnInit {
     { value: '', viewValue: 'Оставить пустым' },
     { value: 'периодически', viewValue: 'Периодически' },
     { value: 'периодически и частично', viewValue: 'Периодически и частично' }
+  ];
+
+  intervalFlapTime : { value: boolean; viewValue: string }[] = [
+    { value: true, viewValue: 'Меньше 5мин' },
+    { value: false, viewValue: 'Больше 5мин' }
   ];
   
   region: { value: string; viewValue: string }[] = [
@@ -159,6 +167,7 @@ export class CnComponent implements OnInit {
       'startTime': ['', Validators.required],
       'endTime': ['', this.endTimeValidation],
       'region': [''],
+      'interval': [false],
       'effect': ['', Validators.required],
       'effect_option': ['', Validators.required],
       'category': ['', Validators.required],
@@ -167,7 +176,6 @@ export class CnComponent implements OnInit {
       'sender': [''],
       'periodicity': ['']
     })
-
     // option for input fields
 
     this.filteredOptionsProblem = this.cnForm.controls.problem.valueChanges.pipe(
@@ -234,6 +242,7 @@ export class CnComponent implements OnInit {
       'description': this.cnForm.value.desc,
       'informed': this.cnForm.value.informed,
       'influence': this.cnForm.value.effect,
+      'flapping_time_lth_5min': this.cnForm.value.interval,
       'sender': this.user?.first_name + ' ' + this.user?.last_name
     }
 
@@ -242,8 +251,11 @@ export class CnComponent implements OnInit {
     } else {
       this.tableBody.region = ''
     }
+
     if (this.cnForm.value.endTime !== '') {
       this.tableBody.end_time = this.cnForm.value.endTime
+    } else {
+      this.tableBody.end_time = null
     }
   }
 
@@ -342,24 +354,21 @@ export class CnComponent implements OnInit {
       this.newForm = true
 
     } else {
-      let isDisabled: any
+    
       let endTimeForUpdate: any
       this.newForm = false
-      console.log(this.route.snapshot.url.toString().includes('update'));
       
       if(this.route.snapshot.url.toString().includes('update')) {
         this.asNew = true
       }
+
+      this.regionDisabled()
       
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          if (result['category_for_core'] == 'Core' || result['category_for_core'] == 'Roaming' || result['category_for_core'] == 'GPRS') {
-            isDisabled = true
-          } else {
-            isDisabled = false
-          }
+          
           if (result['end_time'] == null) {
-            endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
+            endTimeForUpdate = (result['end_time'], '')
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
           }
@@ -373,15 +382,24 @@ export class CnComponent implements OnInit {
             'effect_option': [result['effect'], Validators.required],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'endTime': [endTimeForUpdate, this.endTimeValidation],
-            'region': [{ value: result['region'], disabled: isDisabled }, Validators.required],
+            'region': [result['region'], Validators.required],
             'effect': [result['influence']],
+            'periodicity' : [result['flapping_type']],
+            'interval': [result['flapping_time_lth_5min']],
             'category': [result['category_for_core']],
             'informed': [result['informed']],
             'desc': [result['description']],
             'sender': [result['sender']]
           })
-        })
 
+          if(result['category_for_core'] == 'Core' ||
+             result['category_for_core'] == 'GPRS' ||
+             result['category_for_core'] == 'Roaming') {
+            this.cnForm.get('region').disable()
+          } else {
+            this.cnForm.get('region').enable()
+          }
+        })
     }
   }
 
@@ -396,6 +414,17 @@ export class CnComponent implements OnInit {
     this.storageService.sendSms(this.smsBody)
   }
 
+  regionDisabled() {
+    
+    if(this.cnForm.value.category == ('Roaming') || 
+      this.cnForm.value.category == ('Core') || 
+      this.cnForm.value.category == ('GPRS')) {
+        this.cnForm.get('region').disable()
+      } else {
+        this.cnForm.get('region').enable()
+      }
+  }
+
   onSubmit() {
     this.tableSendBody()
 
@@ -406,11 +435,10 @@ export class CnComponent implements OnInit {
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
     const dialogRef = this.dialog.open(areYouSure);
-    console.log(this.smsSendBody());
     
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-        if (this.newForm == false) {
+        if (this.newForm == false && this.asNew == false) {
           this.tableSendBody()
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
@@ -443,27 +471,6 @@ export class CnComponent implements OnInit {
       }
     })
 
-  }
-
-  onSubmitasNew(smsType: string) {
-    this.requestType = smsType
-    const dialogRef = this.dialog.open(areYouSure);
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
-        this.tableSendBody()
-
-        this.authService.postData(this.tableBody)
-          .subscribe((result) => {
-            this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-            this.smsSendBody(result.id)
-            this.sendButton()
-          }, error => {
-            console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
-      }
-    })
   }
 
   forTestSms(smsType: string) {
