@@ -411,6 +411,7 @@ export class ChronicComponent implements OnInit {
 
   smsSendBody(id?: number) {
     let addWord = this.storageService.additionWord(this.chronicForm.value.level)
+    let smsType = this.storageService.SmsType(this.requestType, this.chronicForm.value.AddOrCor, false)
 
     if ((this.chronicForm.value.hubSite == '') || (this.chronicForm.value.hubSite == undefined)) {
       this.word = ' '
@@ -467,8 +468,6 @@ export class ChronicComponent implements OnInit {
       }
     }
 
-    let smsType = this.storageService.SmsType(this.requestType, this.chronicForm.value.AddOrCor, false)
-
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
@@ -479,6 +478,9 @@ export class ChronicComponent implements OnInit {
       'alarmreport_id': id,
       'sms_type': smsType
     }
+
+    console.log(this.smsBody);
+    
 
   }
 
@@ -523,9 +525,8 @@ export class ChronicComponent implements OnInit {
           this.authService.postData(this.tableBody)
             .subscribe((result) => {
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-              
-              this.sendButton()
               this.smsSendBody(result.id)
+              this.sendButton()
             }, error => {
               this.snackBar.open("Ошибка", '', { duration: 10000 })
             })

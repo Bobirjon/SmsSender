@@ -444,7 +444,6 @@ export class CnComponent implements OnInit {
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
             .subscribe((result) => {
               this.idAlarmReport = result
-              console.log(this.idAlarmReport.id);
 
               this.snackBar.open('Обновлено', '', { duration: 10000 })
               this.smsSendBody(this.idAlarmReport.id)
