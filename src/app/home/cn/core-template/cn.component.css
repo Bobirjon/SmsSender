@@ -87,9 +87,9 @@ button:disabled {
     grid-template-columns: 20% 30% 25% 25%
 }
 
-.second-row {
+.second2-row {
     display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-columns: 30% 40% 30%;
 }
 
 .third-row {
@@ -99,7 +99,7 @@ button:disabled {
 
 @media (max-width: 1300px) {
     .first-row,
-    .second-row,
+    .second2-row,
     .third-row {
         grid-template-columns: 100% /* Make each item span two columns on smaller screens */
     }

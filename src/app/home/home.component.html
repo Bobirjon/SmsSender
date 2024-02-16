@@ -294,7 +294,7 @@
 
           <tr mat-header-row *matHeaderRowDef="displayedColumnsForAllCases" class="tableHeader"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumnsForAllCases"
-            [ngClass]="((row.reason.includes('Выясняется')) ? 'reason' : 'fail')">
+            [ngClass]="((row.reason?.includes('Выясняется')) ? 'reason' : 'fail')">
           </tr>
 
           <tr mat-footer-row *matFooterRowDef="displayedColumnsForAllCases" class="example-first-footer-row"></tr>

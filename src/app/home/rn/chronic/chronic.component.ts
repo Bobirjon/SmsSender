@@ -106,7 +106,7 @@ export class ChronicComponent implements OnInit {
     'Хорезм': 'Хорезме',
     '': ''
   }
-
+  
   chronicHours: number[] = [12, 24, 36, 48]
 
   district: { value: string; viewValue: string }[] = [

@@ -176,7 +176,6 @@ export class CnComponent implements OnInit {
       'sender': [''],
       'periodicity': ['']
     })
-    // option for input fields
 
     this.filteredOptionsProblem = this.cnForm.controls.problem.valueChanges.pipe(
       startWith(''),
@@ -229,6 +228,7 @@ export class CnComponent implements OnInit {
   }
 
   tableSendBody() {
+
     this.tableBody = {
       'type': 'CORE',
       'level': this.cnForm.value.level,

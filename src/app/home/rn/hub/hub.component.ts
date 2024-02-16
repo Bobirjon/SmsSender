@@ -20,8 +20,8 @@ export class HubComponent implements OnInit {
   hubForm: FormGroup
   user: any
   newForm: boolean
-  criteria_list: any
-  criteria: any
+  // criteria_list: any
+  //criteria: any
   SmsTextBody: any
   time = new Date()
   requestType: any
@@ -29,7 +29,9 @@ export class HubComponent implements OnInit {
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
-  idAlarmReport: any
+  //idAlarmReport: any
+  selectedRegion: string = ''
+  selectedDistrict: string = ''
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsDesc: Observable<string[]>;
 
@@ -75,90 +77,49 @@ export class HubComponent implements OnInit {
     { value: false, viewValue: 'Больше 5мин' }
   ];
 
-  region: { value: string; viewValue: string }[] = [
-    { value: 'Андижан', viewValue: 'Андижане' },
-    { value: 'Бухара', viewValue: 'Бухаре' },
-    { value: 'Джизак', viewValue: 'Джизаке' },
-    { value: 'Фергана', viewValue: 'Фергане' },
-    { value: 'Сырдарья', viewValue: 'Сырдарье' },
-    { value: 'Кашкадарья', viewValue: 'Кашкадарье' },
-    { value: 'Наманган', viewValue: 'Намангане' },
-    { value: 'Навои', viewValue: 'Навои' },
-    { value: 'Каракалпакстан', viewValue: 'Каракалпакстане' },
-    { value: 'Самарканд', viewValue: 'Самарканде' },
-    { value: 'г.Ташкент', viewValue: 'г.Ташкенте' },
-    { value: 'Ташкент.обл', viewValue: 'Ташкентской области' },
-    { value: 'Сурхандарья', viewValue: 'Сурхандарье' },
-    { value: 'Хорезм', viewValue: 'Хорезме' },
+  region = [ 
+    { value: '', display: ''},
+    { value: 'Андижан', display: 'Андижане' },
+    { value: 'Бухара', display: 'Бухаре' },
+    { value: 'Джизак', display: 'Джизаке' },
+    { value: 'Фергана', display: 'Фергане' },
+    { value: 'Сырдарья', display: 'Сырдарье' },
+    { value: 'Кашкадарья', display: 'Кашкадарье' },
+    { value: 'Наманган', display: 'Намангане' },
+    { value: 'Навои', display: 'Навои' },
+    { value: 'Каракалпакстан', display: 'Каракалпакстане' },
+    { value: 'Самарканд', display: 'Самарканде' },
+    { value: 'г.Ташкент', display: 'г.Ташкенте' },
+    { value: 'Ташкент.обл', display: 'Ташкентской области' },
+    { value: 'Сурхандарья', display: 'Сурхандарье' },
+    { value: 'Хорезм', display: 'Хорезме' },
   ];
 
-  regions = {
-    'Андижан': 'Андижане',
-    'Бухара': 'Бухаре',
-    'Джизак': 'Джизаке',
-    'Фергана': 'Фергане',
-    'Сырдарья': 'Сырдарье',
-    'Кашкадарья': 'Кашкадарье',
-    'Наманган': 'Намангане',
-    'Навои': 'Навои',
-    'Каракалпакстан': 'Каракалпакстане',
-    'Самарканд': 'Самарканде',
-    'г.Ташкент': 'г.Ташкент',
-    'Ташкент.обл': 'Ташкентской области',
-    'Сурхандарья': 'Сурхандарье',
-    'Хорезм': 'Хорезме',
-    '': ''
-  }
+  district = [
+    { value: '', display: ''},
+    { value: 'Аккурган', display: 'Аккурганском районе'},
+    { value: 'Ахангаран', display: 'Ахангаранском районе'},
+    { value: 'Бекабад', display: 'Бекабадском районе'},
+    { value: 'Бустонлик', display: 'Бустанликском районе'},
+    { value: 'Бука', display: 'Букинском районе'},
+    { value: 'Зангиота', display: 'Зангиотинском районе'},
+    { value: 'Кибрай', display: 'Кибрайском районе'},
+    { value: 'Куйичирчик', display: 'Куйичирчикском районе'},
+    { value: 'Паркент', display: 'Паркентском районе'},
+    { value: 'Пскент', display: 'Пскентском районе'},
+    { value: 'Ташкент', display: 'Ташкентском районе'},
+    { value: 'Уртачирчик', display: 'Уртачирчикском районе'},
+    { value: 'Чиназ', display: 'Чиназском районе'},
+    { value: 'Юкоричирчик', display: 'Юкоричирчикском районе'},
+    { value: 'Янгиюль', display: 'Янгиюльском районе'},
+    { value: 'Алмалык', display: 'Алмалыкском районе'},
+    { value: 'Чирчик', display: 'город Чирчик'},
+    { value: 'Ангрен', display: 'Ангренском районе'},
+    { value: 'Нурафшон', display: 'город Нурафшон'},
+    { value: 'Чимбай', display: 'Чимбайском районе'},
 
-  district: { value: string; viewValue: string }[] = [
-    { value: 'Аккурган', viewValue: 'Аккурган' },
-    { value: 'Ахангаран', viewValue: 'Ахангаран' },
-    { value: 'Бекабад', viewValue: 'Бекабад' },
-    { value: 'Бустонлик', viewValue: 'Бустонлик' },
-    { value: 'Бука', viewValue: 'Бука' },
-    { value: 'Зангиота', viewValue: 'Зангиота' },
-    { value: 'Кибрай', viewValue: 'Кибрай' },
-    { value: 'Куйичирчик', viewValue: 'Куйичирчик' },
-    { value: 'Паркент', viewValue: 'Паркент' },
-    { value: 'Пскент', viewValue: 'Пскент' },
-    { value: 'Ташкент', viewValue: 'Ташкент' },
-    { value: 'Уртачирчик', viewValue: 'Уртачирчик' },
-    { value: 'Чиназ', viewValue: 'Чиназ' },
-    { value: 'Юкоричирчик', viewValue: 'Юкоричирчик' },
-    { value: 'Янгиюль', viewValue: 'Янгиюль' },
-    { value: 'Алмалык', viewValue: 'Алмалык' },
-    { value: 'Чирчик', viewValue: 'Чирчик' },
-    { value: 'Ангрен', viewValue: 'Ангрен' },
-    { value: 'Нурафшон', viewValue: 'Нурафшон' },
-    { value: 'Чимбай', viewValue: 'Чимбай' },
 
   ]
-
-  dist = {
-    'Аккурган': 'Аккурганском районе',
-    'Ахангаран': 'Ахангаранском районе',
-    'Бекабад': 'Бекабадском районе',
-    'Бустонлик': 'Бустанликском районе',
-    'Бука': 'Букинском районе',
-    'Зангиота': 'Зангиотинском районе',
-    'Кибрай': 'Кибрайском районе',
-    'Куйичирчик': 'Куйичирчикском районе',
-    'Паркент': 'Паркентском районе',
-    'Пскент': 'Пскентском районе',
-    'Ташкент': 'Ташкентском районе',
-    'Уртачирчик': 'Уртачирчикском районе',
-    'Чиназ': 'Чиназском районе',
-    'Юкоричирчик': 'Юкоричирчикском районе',
-    'Янгиюль': 'Янгиюльском районе',
-    'Алмалык': 'Алмалыкском районе',
-    'Чирчик': 'город Чирчик',
-    'Ангрен': 'Ангренском районе',
-    'Нурафшон': 'город Нурафшон',
-    'Чимбай': 'Чимбайском районе',
-    '': ''
-  }
-
-
   category: { value: string; viewValue: string }[] = [
     { value: 'AC/DC breaker', viewValue: 'AC/DC breaker' },
     { value: 'Bad RX level', viewValue: 'Bad RX level' },
@@ -211,7 +172,7 @@ export class HubComponent implements OnInit {
       'reason': ['', Validators.required],
       'startTime': ['', Validators.required],
       'endTime': ['', this.endTimeValidation],
-      'region': ['', Validators.required],
+      'region': [this.region[0], Validators.required],
       'hubSite': [''],
       'effectedSites': ['', Validators.required],
       'generator': [''],
@@ -228,12 +189,12 @@ export class HubComponent implements OnInit {
       'battery_life_time': [''],
       'lowBatteryTime': [''],
       'dg_start_time': [''],
-      'district': [''],
+      'district': [this.district[0]],
       'twoG': [''],
       'threeG': [''],
       'fourG': [''],
       'fiveG': [''],
-      'periodicity': ['',]
+      'periodicity': ['']
     })
 
     this.filteredOptionsReason = this.hubForm.controls.reason.valueChanges.pipe(
@@ -333,6 +294,10 @@ export class HubComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    var isDisabled: boolean = this.hubForm.value.district.isDisabled ? true : false
+
+    console.log(isDisabled);
+    
     // get Current user
     this.authService.getUser()
       .subscribe(result => {
@@ -357,8 +322,15 @@ export class HubComponent implements OnInit {
       }
 
       this.authService.getSms(this.route.snapshot.params.id)
-        .subscribe(result => {
-          console.log(result['effected_sites']);
+        .subscribe((result) => {
+
+          const selectedOptionReg = this.region.find(region => region.value === result['region'])
+          this.selectedRegion = selectedOptionReg ? selectedOptionReg.display : ''
+          
+
+          const selectedOptionDis = this.district.find(dis => dis.value === result['district'])
+          this.selectedDistrict = selectedOptionDis ? selectedOptionDis.display : ''
+          
           
           if (result['end_time'] == null) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
@@ -390,12 +362,6 @@ export class HubComponent implements OnInit {
           } else {
             effectedSites = result['effected_sites']
           }
-          if (result['district'] == null || result['district'] == undefined) {
-            district = ''
-          } else {
-            district = result['district']
-          }
-
           this.hubForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -414,7 +380,7 @@ export class HubComponent implements OnInit {
             'category': [result['category_for_hub']],
             'powerOffTime': [power_off_time],
             'hubBlockTime': [block_time],
-            'district': [district],
+            'district': [result['district']],
             'twoG': [result['count_2G'], ],
             'threeG': [result['count_3G'], ],
             'fourG': [result['count_4G'], ],
@@ -460,10 +426,6 @@ export class HubComponent implements OnInit {
       five = ''
     } else {
       five = this.hubForm.value.fiveG + ' 5G '
-    } 
-
-    if(this.hubForm.value.region !== 'Ташкент.обл') {
-      this.dist[this.hubForm.value.district] = ''
     }
 
     this.tableBody = {
@@ -472,7 +434,7 @@ export class HubComponent implements OnInit {
       'category': this.hubForm.value.categories_report,
       'responsible_area': this.hubForm.value.responsible_report,
       'problem': two + three + four + five + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
-        this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district],
+        this.selectedRegion + ' ' + this.selectedDistrict,
       'reason': this.hubForm.value.reason + ' ' + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator,
       'effect': 'С влиянием',
       'start_time': this.hubForm.value.startTime,
@@ -480,7 +442,7 @@ export class HubComponent implements OnInit {
       'category_for_hub': this.hubForm.value.category,
       'description': this.hubForm.value.desc,
       'informed': this.hubForm.value.informed,
-      'influence': 'Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region],
+      'influence': 'Потеря покрытия и качество связи в ' +  this.selectedRegion,
       'sender': this.user?.username,
       'hub_site': this.hubForm.value.hubSite,
       'fg_avb': this.hubForm.value.generator,
@@ -579,18 +541,14 @@ export class HubComponent implements OnInit {
     } else {
       this.word = ' Узловой сайт '
     }
-    
-    if(this.hubForm.value.region !== 'Ташкент.обл') {
-      this.dist[this.hubForm.value.district] = ''
-    }
 
     if (this.requestType == 'Проблема') {
       if (this.hubForm.value.AddOrCor == (undefined || null)) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
-          this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
-          'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
+          this.selectedRegion + ' ' + this.selectedDistrict + '\n' +
+          'Эффект: Потеря покрытия и качество связи в ' + this.selectedRegion + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
@@ -603,8 +561,8 @@ export class HubComponent implements OnInit {
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n ' +
           twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
-          this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
-          'Эффект: Потеря покрытия и качество связи в ' + this.regions[this.hubForm.value.region] + '\n' +
+          this.selectedRegion + ' ' + this.selectedDistrict + '\n' +
+          'Эффект: Потеря покрытия и качество связи в ' + this.selectedRegion + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
           'Время блокировки секторов: ' + block_time + '\n' +
@@ -619,7 +577,7 @@ export class HubComponent implements OnInit {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
-          this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          this.selectedRegion + ' ' + this.selectedDistrict + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -634,7 +592,7 @@ export class HubComponent implements OnInit {
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           '(' + this.hubForm.value.AddOrCor + ')\n' +
           twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
-          this.regions[this.hubForm.value.region] + ' ' + this.dist[this.hubForm.value.district] + '\n' +
+          this.selectedRegion + ' ' + this.selectedDistrict + '\n' +
           'Причина: ' + this.hubForm.value.reason + this.word + this.hubForm.value.hubSite + ' ' + this.hubForm.value.generator + '\n' +
           'Описание: ' + this.hubForm.value.desc + '\n' +
           'Время отключения ЭП: ' + power_off_time + '\n' +
@@ -653,9 +611,7 @@ export class HubComponent implements OnInit {
     } else {
       smsType = this.storageService.SmsType(this.requestType, this.hubForm.value.AddOrCor, true)
     }
-
-    console.log(smsType);
-    
+ 
     this.smsBody = {
       'source_addr': 'ncc-rn',
       'network': ['RN'],
@@ -694,14 +650,20 @@ export class HubComponent implements OnInit {
         this.snackBar.open("Ошибка", '', { duration: 10000 })
       })
   }
-  
 
-  districtDisabling() {
+  regionSelect(event: any) {
+    const selectedOption = this.region.find(region => region.value === event.value)
+    this.selectedRegion = selectedOption ? selectedOption.display : ''
     if(this.hubForm.value.region !== 'Ташкент.обл') {
       this.hubForm.get('district').disable()
     } else {
       this.hubForm.get('district').enable()
     }
+  }
+
+  districtSelect(event: any) {
+    const selectedOption = this.district.find(dis => dis.value === event.value)
+    this.selectedDistrict = selectedOption ? selectedOption.display : ''
   }
 
   sendButton() {
@@ -728,11 +690,11 @@ export class HubComponent implements OnInit {
           this.tableSendBody()
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-            .subscribe((result) => {
+            .subscribe((result: any) => {
               this.snackBar.open('Обновлено', '', { duration: 10000 })
 
-              this.idAlarmReport = result
-              this.smsSendBody(this.idAlarmReport.id)
+              // this.idAlarmReport = result
+              this.smsSendBody(result.id)
               this.sendButton()
             }, error => {
               this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
