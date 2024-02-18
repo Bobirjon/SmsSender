@@ -30,6 +30,7 @@ export class HubComponent implements OnInit {
   smsBody: any
   word: string = ' Узловой сайт '
   //idAlarmReport: any
+  isDisabledDistrict: boolean = true
   selectedRegion: string = ''
   selectedDistrict: string = ''
   filteredOptionsReason: Observable<string[]>;
@@ -189,7 +190,7 @@ export class HubComponent implements OnInit {
       'battery_life_time': [''],
       'lowBatteryTime': [''],
       'dg_start_time': [''],
-      'district': [this.district[0]],
+      'district': [{value: this.district[0], disabled: this.isDisabledDistrict}],
       'twoG': [''],
       'threeG': [''],
       'fourG': [''],
@@ -380,7 +381,7 @@ export class HubComponent implements OnInit {
             'category': [result['category_for_hub']],
             'powerOffTime': [power_off_time],
             'hubBlockTime': [block_time],
-            'district': [result['district']],
+            'district': [{value: result['district'], disabled: this.isDisabledDistrict}],
             'twoG': [result['count_2G'], ],
             'threeG': [result['count_3G'], ],
             'fourG': [result['count_4G'], ],
@@ -652,6 +653,7 @@ export class HubComponent implements OnInit {
   }
 
   regionSelect(event: any) {
+    this.isDisabledDistrict = false
     const selectedOption = this.region.find(region => region.value === event.value)
     this.selectedRegion = selectedOption ? selectedOption.display : ''
     if(this.hubForm.value.region !== 'Ташкент.обл') {
@@ -692,8 +694,6 @@ export class HubComponent implements OnInit {
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
             .subscribe((result: any) => {
               this.snackBar.open('Обновлено', '', { duration: 10000 })
-
-              // this.idAlarmReport = result
               this.smsSendBody(result.id)
               this.sendButton()
             }, error => {
@@ -705,7 +705,6 @@ export class HubComponent implements OnInit {
           this.authService.postData(this.tableBody)
             .subscribe((res) => {
               this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-
               this.smsSendBody(res.id)
               this.sendButton()
             }, error => {

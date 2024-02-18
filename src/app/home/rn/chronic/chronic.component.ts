@@ -275,7 +275,6 @@ export class ChronicComponent implements OnInit {
             this.chronicForm.get('startTime').setValidators([Validators.required, this.startTimeSet])
         
             this.chronicForm.get('startTime').updateValueAndValidity();
-            console.log(true);
             
           })
         })

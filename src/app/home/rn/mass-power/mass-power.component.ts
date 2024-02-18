@@ -225,7 +225,30 @@ export class MassPowerComponent implements OnInit {
 
   smsSendBody(id?: number) {
 
-
+    if(this.requestType == 'Проблема') {
+      if (this.massPowerForm.value.AddOrCor == (null || undefined)) {
+        this.SmsTextBody =
+          this.massPowerForm.value.level.replace('P', 'П') + ' ' + this.requestType + ':\n' +
+          this.massPowerForm.value.problem + '\n' +
+          'Причина: ' + this.massPowerForm.value.reason + '\n' +
+          'Эффект: ' + this.massPowerForm.value.effect + '\n' +
+          'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.massPowerForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name 
+          
+      } else {
+        this.SmsTextBody =
+          this.massPowerForm.value.level.replace('P', 'П') + ' ' + this.requestType + ':\n' +
+          '(' + this.massPowerForm.value.AddOrCor + ')\n' +
+          this.massPowerForm.value.problem + '\n' +
+          'Причина: ' + this.massPowerForm.value.reason + '\n' +
+          'Эффект: ' + this.massPowerForm.value.effect + '\n' +
+          'Начало: ' + this.massPowerForm.value.startTime.replace("T", " ") + '\n' +
+          'Оповещен: ' + this.massPowerForm.value.informed + '\n' +
+          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
+          
+      }
+    } else {
       if (this.massPowerForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
           this.massPowerForm.value.level.replace('P', 'П') + ' ' + this.requestType + ':\n' +
@@ -252,6 +275,7 @@ export class MassPowerComponent implements OnInit {
           'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name
           
       }
+    }
 
     this.smsBody = {
       'source_addr': 'ncc-rn',
