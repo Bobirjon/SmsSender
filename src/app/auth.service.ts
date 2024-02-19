@@ -53,7 +53,7 @@ export class AuthService {
       &level__icontains=${level}&type__icontains=${type}&description__icontains=${description}&reason__icontains=${reason}
       &problem__icontains=${problem}&createdat_in=${createdAt}&starttime_in=${startTime}&endtime_in=${endTime}
       &region__icontains=${region}&informed__icontains=${informed}`
-    
+
     return this.http.get(url)
   }
 
@@ -79,7 +79,7 @@ export class AuthService {
   }
 
   getFilteredData() {
-    return this.http.get(this.URLsender + 'smssender/alarmreport/?is_complete=false&is_send_sms=true')
+    return this.http.get(this.URLsender + 'smssender/alarmreport/?is_complete=false&is_send_sms=true&page_size=500')
   }
 
   getSms(id: number) {

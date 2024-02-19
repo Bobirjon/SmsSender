@@ -20,6 +20,7 @@ import { StorageService } from 'src/app/storage.service';
 export class CnComponent implements OnInit {
 
   cnForm: FormGroup
+  test: string = 'tedsf'
   preview = false
   user: any
   newForm: boolean
@@ -105,7 +106,7 @@ export class CnComponent implements OnInit {
   ];
 
   optionsProblem: string[] = [
-    'Отсутствие основного электропитания на ',
+    'Отсутствие основного электропитания в ',
     'Высокая температура в комнате на',
     'GPRS трафик от',
     'IP MPLS канал',
@@ -146,6 +147,7 @@ export class CnComponent implements OnInit {
     'Включили основное питание',
     'Работа частично завершена',
   ]
+  
 
   constructor(
     private formBuilder: FormBuilder,
@@ -394,7 +396,8 @@ export class CnComponent implements OnInit {
 
           if(result['category_for_core'] == 'Core' ||
              result['category_for_core'] == 'GPRS' ||
-             result['category_for_core'] == 'Roaming') {
+             result['category_for_core'] == 'Roaming' ||
+             result['category_for_core'] == 'MPLS') {
             this.cnForm.get('region').disable()
           } else {
             this.cnForm.get('region').enable()
@@ -418,7 +421,8 @@ export class CnComponent implements OnInit {
     
     if(this.cnForm.value.category == ('Roaming') || 
       this.cnForm.value.category == ('Core') || 
-      this.cnForm.value.category == ('GPRS')) {
+      this.cnForm.value.category == ('GPRS') ||
+      this.cnForm.value.category == ('MPLS')) {
         this.cnForm.get('region').disable()
       } else {
         this.cnForm.get('region').enable()

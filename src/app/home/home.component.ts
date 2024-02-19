@@ -37,13 +37,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
   Data = new MatTableDataSource<DataTable>()
   TemplateData = new MatTableDataSource<DataTable>()
   kpiTable = new MatTableDataSource<any>()
-   dataSource = [
+  dataSource = [
     { column1: 'A', column2: 'B', mergedCell: 'C' },
     // Add more data as needed
   ];
   userName: any
   isAdmin = localStorage.getItem('role')
   pageSizes = [10, 25, 50];
+  pageSize2 = 10
   filterInput: string
   selectedLevel: string
   selectedType: string
@@ -105,8 +106,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ]
 
   @ViewChild(MatPaginator) paginator: MatPaginator
-
-  @ViewChild('table1sort') public table1sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
+  //@ViewChild('table1sort') public table1sort: MatSort;
   @ViewChild('table2sort') public table2sort: MatSort;
 
   filteredValuesForOpenCases = {
@@ -142,18 +143,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private snackBar: MatSnackBar,
     public dialog: MatDialog,) {
 
+  }
+
+  // All Cases table with backend pagination
+
+  ngAfterViewInit() {
+
     // Open Cases table
     this.authService.getFilteredData()
       .subscribe((data: any) => {
 
-        this.Data = new MatTableDataSource(data.results)
+        this.Data.data = data.results
+        this.Data.sort = this.sort;
 
-        this.Data.sort = this.table1sort;
+        this.Data.paginator = this.paginator
+
+
         this.Data.filterPredicate = this.customFilterPredicate();
 
         this.webSocketService.receiveMessage().subscribe(
           (data) => {
-
             const exist = this.Data.data.findIndex(
               (item: any) => item.id === data.id
             )
@@ -174,12 +183,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
           })
       }),
 
-
-
       // Template table
       this.authService.getTemplateSMS()
         .subscribe((data: any) => {
-          this.TemplateData = new MatTableDataSource(data.results)
+          this.TemplateData.data = data.results
 
           this.webSocketService.receiveMessage().subscribe((data) => {
 
@@ -203,25 +210,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
             }
           })
         })
-  }
 
-  // All Cases table with backend pagination
-
-  ngAfterViewInit() {
 
     this.table2sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(
-       this.level.valueChanges,
-       this.type.valueChanges,
-       this.description.valueChanges,
-       this.reason.valueChanges,
-       this.problem.valueChanges,
-       this.createdAt.valueChanges,
-       this.startTime.valueChanges,
-       this.endTime.valueChanges,
-       this.region.valueChanges,
-       this.informed.valueChanges,
+      this.level.valueChanges,
+      this.type.valueChanges,
+      this.description.valueChanges,
+      this.reason.valueChanges,
+      this.problem.valueChanges,
+      this.createdAt.valueChanges,
+      this.startTime.valueChanges,
+      this.endTime.valueChanges,
+      this.region.valueChanges,
+      this.informed.valueChanges,
       this.table2sort.sortChange,
       this.paginator.page)
       .pipe(
@@ -230,15 +233,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.isLoadingResults = true;
           var dir: string
           var level = this.level.value == null ? '' : this.level.value;
-           var type = this.type.value == null ? '' : this.type.value;
-           var description = this.description.value == null ? '' : this.description.value;
-           var reason = this.reason.value == null ? '' : this.reason.value;
-           var problem = this.problem.value == null ? '' : this.problem.value;
-           var createdAt = this.createdAt.value == null ? '' : this.createdAt.value;
-           var startTime = this.startTime.value == null ? '' : this.startTime.value;
-           var endTime = this.endTime.value == null ? '' : this.endTime.value;
-           var region = this.region.value == null ? '' : this.region.value;
-           var informed = this.informed.value == null ? '' : this.informed.value;
+          var type = this.type.value == null ? '' : this.type.value;
+          var description = this.description.value == null ? '' : this.description.value;
+          var reason = this.reason.value == null ? '' : this.reason.value;
+          var problem = this.problem.value == null ? '' : this.problem.value;
+          var createdAt = this.createdAt.value == null ? '' : this.createdAt.value;
+          var startTime = this.startTime.value == null ? '' : this.startTime.value;
+          var endTime = this.endTime.value == null ? '' : this.endTime.value;
+          var region = this.region.value == null ? '' : this.region.value;
+          var informed = this.informed.value == null ? '' : this.informed.value;
           if (this.table2sort.direction == 'desc') {
             dir = '-'
           } else {
@@ -266,12 +269,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
           }
 
           this.resultsLength = data.count;
-
           return data;
         })
       )
       .subscribe(data => {
-        this.dataTable = new MatTableDataSource(data.results)
+        this.dataTable.data = data.results
         this.isLoading = false
         this.webSocketService.receiveMessage().subscribe((data) => {
           const exist = this.dataTable.data.findIndex(
