@@ -30,7 +30,7 @@ export class HubComponent implements OnInit {
   smsBody: any
   word: string = ' Узловой сайт '
   //idAlarmReport: any
-  isDisabledDistrict: boolean = true
+  //isDisabledDistrict: boolean = true
   selectedRegion: string = ''
   selectedDistrict: string = ''
   filteredOptionsReason: Observable<string[]>;
@@ -190,7 +190,7 @@ export class HubComponent implements OnInit {
       'battery_life_time': [''],
       'lowBatteryTime': [''],
       'dg_start_time': [''],
-      'district': [{value: this.district[0], disabled: this.isDisabledDistrict}],
+      'district': [this.district[0],],
       'twoG': [''],
       'threeG': [''],
       'fourG': [''],
@@ -381,7 +381,7 @@ export class HubComponent implements OnInit {
             'category': [result['category_for_hub']],
             'powerOffTime': [power_off_time],
             'hubBlockTime': [block_time],
-            'district': [{value: result['district'], disabled: this.isDisabledDistrict}],
+            'district': [result['district']],
             'twoG': [result['count_2G'], ],
             'threeG': [result['count_3G'], ],
             'fourG': [result['count_4G'], ],
@@ -653,7 +653,7 @@ export class HubComponent implements OnInit {
   }
 
   regionSelect(event: any) {
-    this.isDisabledDistrict = false
+    //this.isDisabledDistrict = false
     const selectedOption = this.region.find(region => region.value === event.value)
     this.selectedRegion = selectedOption ? selectedOption.display : ''
     if(this.hubForm.value.region !== 'Ташкент.обл') {
