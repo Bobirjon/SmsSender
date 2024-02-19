@@ -333,11 +333,12 @@ export class CnComponent implements OnInit {
       'sms_type': smsType
     }
 
-    console.log(this.smsBody);
-
     if (this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp')) {
       this.smsBody.notification = ['Power/HighTemp']
       this.smsBody.region = [this.cnForm.value.region]
+      
+    } else if (this.cnForm.value.category == ('MPLS') || this.cnForm.value.category == ('Core-NetAct')) {
+      this.smsBody.notification = ['Core']
     }
     else {
       this.smsBody.notification = [this.cnForm.value.category]
