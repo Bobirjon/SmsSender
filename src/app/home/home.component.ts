@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   userName: any
   isAdmin = localStorage.getItem('role')
   pageSizes = [10, 25, 50];
-  pageSize2 = 10
+  pageSize2 = 50
   filterInput: string
   selectedLevel: string
   selectedType: string
@@ -53,6 +53,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isRateLimitReached = false;
   globalFilter = '';
   isLoading: boolean = true
+  KPI: any
+  LOG: any
+  USERS: any
+  resultArray: any
 
   displayedColumnsTemplate: string[] = [
     'type',
@@ -108,6 +112,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort;
   //@ViewChild('table1sort') public table1sort: MatSort;
+  @ViewChild('table2paginator') public table2paginator: MatPaginator
   @ViewChild('table2sort') public table2sort: MatSort;
 
   filteredValuesForOpenCases = {
@@ -212,7 +217,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         })
 
 
-    this.table2sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    this.table2sort.sortChange.subscribe(() => (this.table2paginator.pageIndex = 0));
 
     merge(
       this.level.valueChanges,
@@ -226,7 +231,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.region.valueChanges,
       this.informed.valueChanges,
       this.table2sort.sortChange,
-      this.paginator.page)
+      this.table2paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -254,8 +259,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
               level, type, description, reason, problem, createdAt,
               startTime, endTime, region, informed, dir,
               this.table2sort.active,
-              this.paginator.pageIndex + 1,
-              this.paginator.pageSize
+              this.table2paginator.pageIndex + 1,
+              this.table2paginator.pageSize
             )
             .pipe(catchError(() => of(null)));
         }),
@@ -301,10 +306,47 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.authService.getUser().subscribe((data: any) => {
+      console.log(data);
+      
       this.userName = data.first_name + ' ' + data.last_name
     })
 
+    this.authService.getKPI().subscribe((data:any) => {
+      this.KPI = data
+      
+      this.authService.getUsers().subscribe((data: any) => {
+        this.USERS = data.results
+
+        this.resultArray = this.mergeArrays(this.KPI, this.USERS)
+        console.log(this.resultArray);
+        
+      })
+      
+    })
+
+    this.authService.getLog().subscribe((data:any) => {
+      this.LOG = data.user
+      console.log(data);
+    })
+    
   }
+
+  mergeArrays(KPI: any, USERS: any) {
+    return USERS.map((user: any) => {
+      console.log(this.KPI);
+      
+      const matchingItem = KPI.find(({ user }:any) => user == user.id);
+      console.log(matchingItem);
+      
+      return {
+        name: user.username,
+        type: matchingItem.type,
+        level: matchingItem.level,
+        avg_send_dur: matchingItem.avg_send_duration
+      };
+    });
+  }
+
 
   applyFilter(filter: string) {
     this.globalFilter = filter;

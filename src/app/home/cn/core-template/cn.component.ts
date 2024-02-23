@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -20,10 +20,10 @@ import { StorageService } from 'src/app/storage.service';
 export class CnComponent implements OnInit {
 
   cnForm: FormGroup
-  test: string = 'tedsf'
   preview = false
   user: any
   newForm: boolean
+  optionRegion : string = ''
   criteria_list: any
   criteria: any
   SmsTextBody: any
@@ -106,7 +106,8 @@ export class CnComponent implements OnInit {
   ];
 
   optionsProblem: string[] = [
-    'Отсутствие основного электропитания в ',
+    //'Отсутствие основного электропитания на Core Site ',
+    
     'Высокая температура в комнате на',
     'GPRS трафик от',
     'IP MPLS канал',
@@ -155,6 +156,7 @@ export class CnComponent implements OnInit {
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private router: Router,
+    private cdr: ChangeDetectorRef,
     private storageService: StorageService,
     public dialog: MatDialog) {
 
@@ -336,7 +338,7 @@ export class CnComponent implements OnInit {
     if (this.cnForm.value.category == ('Power') || this.cnForm.value.category == ('High Temp')) {
       this.smsBody.notification = ['Power/HighTemp']
       this.smsBody.region = [this.cnForm.value.region]
-      
+
     } else if (this.cnForm.value.category == ('MPLS') || this.cnForm.value.category == ('Core-NetAct')) {
       this.smsBody.notification = ['Core']
     }
@@ -428,6 +430,13 @@ export class CnComponent implements OnInit {
       } else {
         this.cnForm.get('region').enable()
       }
+  }
+
+  onSelectRegion() {
+    this.optionsProblem.unshift('Отсутствие основного электропитания на Core Site '+this.cnForm.value.region)
+    console.log(this.optionsProblem);
+    
+    this.cnForm.get('problem').setValue('')
   }
 
   onSubmit() {

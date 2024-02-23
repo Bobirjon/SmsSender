@@ -147,4 +147,16 @@ export class AuthService {
   deleteNewIdeas(id: number) {
     return this.http.delete(`${this.URLsender + 'smssender/newtask'}/${id}/`)
   }
+
+  getKPI() {
+    return this.http.get(this.URLsender + 'smssender/userkpi/kpi')
+  }
+
+  getLog() {
+    return this.http.get(this.URLsender + 'smssender/userkpi/log')
+  }
+
+  getUsers() {
+    return this.http.get(this.URLsender + 'auth/users/')
+  }
 }

@@ -77,13 +77,14 @@
 
                         <mat-form-field class="grid-form-item">
                             <mat-label>Регион</mat-label>
-                            <mat-select formControlName="region">
+                            <mat-select formControlName="region" (selectionChange)="onSelectRegion()">
                                 <mat-option *ngFor="let reg of region" [value]="reg.value">
                                     {{reg.viewValue}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
+                    
                     <div class="third-row">
                         <mat-form-field class="grid-form-item">
                             <mat-label>Проблема</mat-label>

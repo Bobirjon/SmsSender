@@ -197,7 +197,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumnsNew"
           [ngClass]="((row.chronic_hours >= '48') ? 'chronicHours' : 'fail')"></tr>
       </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 25]" [pageSize]="pageSize2" showFirstLastButtons></mat-paginator>
+      <mat-paginator [pageSizeOptions]="[25, 50, 100]" [pageSize]="pageSize2" showFirstLastButtons></mat-paginator>
     </div>
   </div>
   <hr>
@@ -299,16 +299,14 @@
           </tr>
 
           <tr mat-footer-row *matFooterRowDef="displayedColumnsForAllCases" class="example-first-footer-row"></tr>
-
           <tr *matNoDataRow>
             <td class="mat-cell" colspan="4">The filter does not match any item in the data for this text</td>
           </tr>
         </table>
       </div>
-
     </div>
   </div>
-  <mat-paginator #paginator [pageSizeOptions]="pageSizes" [length]="resultsLength" showFirstLastButtons></mat-paginator>
+  <mat-paginator #table2paginator [pageSizeOptions]="pageSizes" [length]="resultsLength" showFirstLastButtons></mat-paginator>
 
   <hr>
 

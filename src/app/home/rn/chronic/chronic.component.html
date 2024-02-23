@@ -5,8 +5,7 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level"
-                        (ngModelChange)="setDefault()">
+                    <mat-select formControlName="level" (ngModelChange)="setDefault()">
                         <mat-option *ngFor="let lev of level" [value]="lev.value">
                             {{lev.viewValue}}
                         </mat-option>
@@ -17,7 +16,7 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория для отчета</mat-label>
-                    <mat-select formControlName="categories_report" >
+                    <mat-select formControlName="categories_report">
                         <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
                             {{cat_rep.viewValue}}
                         </mat-option>
@@ -28,7 +27,7 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Ответственная Зона</mat-label>
-                    <mat-select formControlName="responsible_report" >
+                    <mat-select formControlName="responsible_report">
                         <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
                             {{res_rep.viewValue}}
                         </mat-option>
@@ -110,7 +109,7 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                [disabled]="(chronicForm.invalid) || chronicForm.value.endTime=='' ">
+                                [disabled]=" chronicForm.value.endTime =='' ">
                                 Отправить Сообщения
                             </button>
                             <!-- <button class="form-button" mat-raised-button color="primary"
@@ -121,7 +120,7 @@
                             </button> -->
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="forSmsTesting('Решение')" type="submit"
-                                [disabled]="chronicForm.invalid || chronicForm.value.endTime ==''">
+                                [disabled]=" chronicForm.value.endTime ==''">
                                 TEST SMS
                             </button>
                         </mat-card-actions>
@@ -132,8 +131,8 @@
             <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
                     <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" 
-                    spellcheck="true" [matAutocomplete]="autoDesc"></textarea>
+                    <textarea matInput type="text" formControlName="desc" spellcheck="true"
+                        [matAutocomplete]="autoDesc"></textarea>
                     <mat-autocomplete #autoDesc="matAutocomplete">
                         <mat-option *ngFor="let option of filteredOptionsDesc | async" [value]="option">
                             {{option}}
@@ -146,8 +145,8 @@
             <mat-grid-tile colspan="6">
                 <mat-form-field class="margin-container">
                     <mat-label>Причина</mat-label>
-                    <textarea matInput type="text" formControlName="reason"
-                        spellcheck="true" [matAutocomplete]="autoReason">
+                    <textarea matInput type="text" formControlName="reason" spellcheck="true"
+                        [matAutocomplete]="autoReason">
                     </textarea>
                     <mat-autocomplete #autoReason="matAutocomplete">
                         <mat-option *ngFor="let option of filteredOptionsReason | async" [value]="option">
@@ -167,14 +166,14 @@
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Название хаб-сайта</mat-label>
-                    <input matInput type="text" formControlName="hubSite"  />
+                    <input matInput type="text" formControlName="hubSite" />
                 </mat-form-field>
             </mat-grid-tile>
             <!-- category -->
             <mat-grid-tile colspan="4">
                 <mat-form-field class="margin-container">
                     <mat-label>Категория</mat-label>
-                    <mat-select formControlName="category" >
+                    <mat-select formControlName="category">
                         <mat-option *ngFor="let cat of category" [value]="cat.value">
                             {{cat.viewValue}}
                         </mat-option>
@@ -185,7 +184,7 @@
             <mat-grid-tile colspan="2">
                 <mat-form-field class="margin-container">
                     <mat-label>Время Простоя</mat-label>
-                    <mat-select formControlName="time" >
+                    <mat-select formControlName="time">
                         <mat-option *ngFor="let hours of chronicHours" [value]="hours">
                             {{hours}}
                         </mat-option>
@@ -199,7 +198,7 @@
                     <input matInput type="text" formControlName="informed" />
                 </mat-form-field>
             </mat-grid-tile>
-            
+
             <!-- region -->
             <mat-grid-tile colspan="3">
                 <mat-form-field class="margin-container">
@@ -225,7 +224,7 @@
             <!-- start Time -->
             <mat-grid-tile colspan="6">
                 <div class="margin-container">
-                    <p>Начало 
+                    <!-- <p>Начало 
                         <span *ngIf="this.newForm == true ? chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched :
                             chronicForm.get('startTime').hasError('invalidDatetime')" 
                             class="timeNotValid"> 
@@ -233,7 +232,15 @@
                     </p>
                     <input type="datetime-local" class="dateTime" formControlName="startTime"
                          [max]="time | date: 'yyyy-MM-ddTHH:mm'"
-                        [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched">
+                        [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched"> -->
+                    <p>Начало
+                        <span
+                            *ngIf="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched"
+                            class="timeNotValid">
+                            *Время простоя не соответствует Началу времени*</span>
+                    </p>
+                    <input type="datetime-local" class="dateTime" formControlName="startTime"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
             <!-- end Time -->
@@ -242,16 +249,16 @@
                     <p>Конец<span
                             *ngIf="chronicForm.get('endTime').hasError('timeValid') && chronicForm.get('startTime').touched"
                             class="timeNotValid"> *Начало больше чем Конец времени</span></p>
-                    <input type="datetime-local" class="dateTime" formControlName="endTime"
-                       >
+                    <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
             <!-- button -->
             <mat-grid-tile colspan="2">
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == false && asNew == false"
-                    (click)="updateData()">Обновить</button>
-                <button class="form-button" mat-raised-button color="primary" type="button" *ngIf="newForm == true || asNew == true"
-                    (click)="createData()">Создать</button>
+                <button class="form-button" mat-raised-button color="primary" type="button"
+                    *ngIf="newForm == false && asNew == false" (click)="updateData()">Обновить</button>
+                <button class="form-button" mat-raised-button color="primary" type="button"
+                    *ngIf="newForm == true || asNew == true" (click)="createData()">Создать</button>
             </mat-grid-tile>
             <mat-grid-tile colspan="6">
                 <mat-chip-listbox formControlName="AddOrCor">

@@ -1,6 +1,6 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, NgForm, AbstractControl } from '@angular/forms';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +23,7 @@ export class ChronicComponent implements OnInit {
   time: Date = new Date()
   user: any
   newForm: boolean
+  isTimeValidation: boolean
   SmsTextBody: any
   DateTime = new Date()
   requestType: any
@@ -106,7 +107,7 @@ export class ChronicComponent implements OnInit {
     'Хорезм': 'Хорезме',
     '': ''
   }
-  
+
   chronicHours: number[] = [12, 24, 36, 48]
 
   district: { value: string; viewValue: string }[] = [
@@ -186,7 +187,7 @@ export class ChronicComponent implements OnInit {
       'categories_report': ['', Validators.required],
       'responsible_report': ['', Validators.required],
       'reason': ['', Validators.required],
-      'startTime': ['', [Validators.required]],
+      'startTime': ['', [this.startTimeSet]],
       'endTime': ['', [this.endTimeValidation]],
       'region': ['', Validators.required],
       'siteName': [''],
@@ -227,20 +228,26 @@ export class ChronicComponent implements OnInit {
     this.authService.getUser()
       .subscribe(result => {
         this.user = result
+        console.log(result);
+
       })
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
+
+      this.chronicForm.get('time').valueChanges.subscribe(() => {
+        this.chronicForm.get('startTime').updateValueAndValidity()
+      })
     } else {
       this.newForm = false
       let endTimeForUpdate: any
       let district: any
 
-      if(this.route.snapshot.url.toString().includes('update')) {
+      if (this.route.snapshot.url.toString().includes('update')) {
         this.asNew = true
       }
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          
+
           if (result['end_time'] == null) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
@@ -259,7 +266,7 @@ export class ChronicComponent implements OnInit {
             'responsible_report': [result['responsible_area'], Validators.required],
             'problem': [result['problem'], Validators.required],
             'reason': [result['hub_reason'], Validators.required],
-            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
+            'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), [this.startTimeSet]],
             'endTime': [endTimeForUpdate, [this.endTimeValidation]],
             'region': [result['region'], Validators.required],
             'siteName': [result['chronic_site']],
@@ -271,73 +278,79 @@ export class ChronicComponent implements OnInit {
             'category': [result['category_for_hub']],
             'sender': [result['sender']]
           })
-          this.chronicForm.get('time').valueChanges.subscribe((value) => {
-            this.chronicForm.get('startTime').setValidators([Validators.required, this.startTimeSet])
-        
-            this.chronicForm.get('startTime').updateValueAndValidity();
-            
+
+          this.chronicForm.get('time').valueChanges.subscribe(() => {
+            this.chronicForm.get('startTime').updateValueAndValidity()
           })
-        })
+        }
+        )
     }
-
-  this.chronicForm.get('time').valueChanges.subscribe((value) => {
-    this.chronicForm.get('startTime').setValidators([Validators.required, this.startTimeSet])
-
-    this.chronicForm.get('startTime').updateValueAndValidity();
-  })
   }
 
-  timeSetValidation(control: any) {
+  startTimeAndTimeValidation(group: FormGroup): any {
+    const time = group.get('time')
+    const startTime = group.get('startTime')
+    console.log('it is work');
+    console.log(startTime);
+
+    return null
+
+  }
+
+  // timeStartTimeValidation() {
+
+  //     this.chronicForm.get('time').valueChanges.subscribe(value => {
+  //         this.chronicForm.get('startTime').setValidators([this.startTimeSet])
+  //         this.chronicForm.get('startTime').updateValueAndValidity();
+  //     })
+  //     this.chronicForm.get('time').updateValueAndValidity()
+  // }
+
+  startTimeSet(control: AbstractControl): { [key: string]: any } | null {
     let currentDate: Date = new Date()
+    let startTime = new Date(control.value)
+    const difference = currentDate.getTime() - startTime.getTime()
+    const timedif: number = difference / (1000 * 60 * 60)
     const formGroup = control?.parent;
-  
+
     if (formGroup) {
-      const selectedTimeControl = formGroup.get('startTime')
-      let startTime = new Date(selectedTimeControl.value)
-      const difference = currentDate.getTime() - startTime.getTime()
-      const timedif: number = difference / (1000 * 60 * 60)
-      if (control.value == 12 && 12 <= timedif && timedif < 24) {
-        return null
-      } else if (control.value == 24 && 24 <= timedif && timedif < 36) {
-        return null
-      } else if (control.value == 36 && 36 <= timedif && timedif < 48) {
-        return null
-      } else if (control.value == 48 && 48 <= timedif) {
-        return null
-      } else {
-        return { invalidDatetime: true }
+      const selectedTimeControl = formGroup.get('time')
+      if (selectedTimeControl) {
+        const selectedTime = selectedTimeControl.value
+      
+        if (selectedTime == 12 && 12 <= timedif && timedif < 24) {
+          return null
+        } else if (selectedTime == 24 && 24 <= timedif && timedif < 36) {
+          return null
+        } else if (selectedTime == 36 && 36 <= timedif && timedif < 48) {
+          return null
+        } else if (selectedTime == 48 && 48 <= timedif) {
+          return null
+        } else {
+          return { invalidDatetime: true }
+        }
       }
     }
     return null
-    
   }
 
-  startTimeSet(control: any) {
-      let currentDate: Date = new Date()
-      let startTime = new Date(control.value)
-      const difference = currentDate.getTime() - startTime.getTime()
-      const timedif: number = difference / (1000 * 60 * 60)
-      const formGroup = control?.parent;
-      
-      if (formGroup) {
-        const selectedTimeControl = formGroup.get('time')
-        if (selectedTimeControl) {
-          const selectedTime = selectedTimeControl.value
+  testSubmit() {
+    if (this.chronicForm.valid) {
+      // Handle form submission here
+      console.log('Form submitted:', this.chronicForm.value);
+    } else {
+      // Mark all fields as touched to display validation errors
+      this.chronicForm.markAllAsTouched();
 
-          if (selectedTime == 12 && 12 <= timedif && timedif < 24) {
-            return null
-          } else if (selectedTime == 24 && 24 <= timedif && timedif < 36) {
-            return null
-          } else if (selectedTime == 36 && 36 <= timedif && timedif < 48) {
-            return null
-          } else if (selectedTime == 48 && 48 <= timedif) {
-            return null
-          } else {
-            return { invalidDatetime: true }
-          }
+      // Log validation errors for each control
+      Object.keys(this.chronicForm.controls).forEach(controlName => {
+        const control = this.chronicForm.get(controlName);
+
+        if (control && control.invalid) {
+          console.log(`Validation errors for ${controlName}:`, control.errors);
         }
-      }
-      return null
+      });
+    }
   }
 
   endTimeValidation(control: any) {
@@ -358,9 +371,9 @@ export class ChronicComponent implements OnInit {
   }
 
   districtDisabling() {
-    if(this.chronicForm.value.region !== 'Ташкент.обл') {
+    if (this.chronicForm.value.region !== 'Ташкент.обл') {
       this.disableDistrict = true
-    this.chronicForm.value.district = ''
+      this.chronicForm.value.district = ''
     } else {
       this.disableDistrict = false
     }
@@ -479,7 +492,7 @@ export class ChronicComponent implements OnInit {
     }
 
     console.log(this.smsBody);
-    
+
 
   }
 
@@ -544,11 +557,11 @@ export class ChronicComponent implements OnInit {
   //     if (result == true) {
   //       this.tableSendBody()
 
-      
+
   //       this.authService.postData(this.tableBody)
   //         .subscribe((result) => {
   //           console.log(result);
-            
+
   //           this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
   //           this.smsSendBody(result.id)
   //           this.sendButton()
@@ -610,4 +623,4 @@ export class fortesting {
         console.log(res);
       })
   }
-}
+} 
