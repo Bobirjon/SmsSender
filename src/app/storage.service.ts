@@ -134,7 +134,6 @@ export class StorageService {
   public createToTable(data: any) {
     return this.authService.postData(data)
       .subscribe((result) => {
-        console.log(result);
         this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
         return result
       }, error => {

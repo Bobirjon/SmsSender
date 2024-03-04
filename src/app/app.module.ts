@@ -53,6 +53,7 @@ import { DatePipe } from '@angular/common';
 import { NewIdeasComponent } from './home/new-ideas/new-ideas.component';
 import { InternetTemplateComponent } from './home/cn/internet-template/internet-template.component';
 import { EditPageComponent } from './home/new-ideas/edit-page/edit-page.component';
+import { KpiLogsComponent } from './home/kpi-logs/kpi-logs.component';
 
 
 
@@ -74,7 +75,8 @@ import { EditPageComponent } from './home/new-ideas/edit-page/edit-page.componen
     StartComponent,
     AddPhoneNumbersComponent,
     NewIdeasComponent,
-    EditPageComponent
+    EditPageComponent,
+    KpiLogsComponent
   ],
   imports: [
     BrowserModule,

@@ -61,6 +61,7 @@ button {
 .table-style {
     width: 2500px;
 }
+
 .mat-column-type {
     max-width: 130px;
 }
@@ -69,13 +70,16 @@ button {
     max-width: 70px;
 }
 
-.mat-column-created_at, .mat-column-start_time, .mat-column-end_time {
+.mat-column-created_at,
+.mat-column-start_time,
+.mat-column-end_time {
     max-width: 100px;
 }
 
-.mat-column-problem{
+.mat-column-problem {
     max-width: 800px;
 }
+
 .mat-column-reason {
     max-width: 900px;
 }
@@ -92,14 +96,19 @@ button {
     max-width: 200px;
 }
 
-th, td {
+th,
+td {
     text-align: left;
     padding: 8px;
-  }
+}
 
-tr:nth-child(even) {background-color: #a06ea80a;}
+tr:nth-child(even) {
+    background-color: #a06ea80a;
+}
 
-tr:nth-child(even):hover {background-color: #a06ea80a;}
+tr:nth-child(even):hover {
+    background-color: #a06ea80a;
+}
 
 .tableHeader {
     background-color: #86449c42 !important;
@@ -116,10 +125,23 @@ tr:nth-child(even):hover {background-color: #a06ea80a;}
     margin-left: 10px;
 }
 
-  .center-spinner {
+.center-spinner {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
+}
 
+.example-element-detail {
+    overflow: hidden;
+    display: flex;
+}
+
+tr.example-detail-row {
+    height: 0;
+}
+
+.kpiTable th,
+.kpiTable td {
+    text-align: center;
+}

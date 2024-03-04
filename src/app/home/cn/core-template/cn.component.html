@@ -6,7 +6,7 @@
         <mat-grid-list cols="25" rowHeight="1000px">
             <mat-grid-tile colspan="10">
                 <div class="grid-form">
-                    <div class="first-row">
+                    <div class="second2-row">
                         <mat-form-field class="grid-form-item">
                             <mat-label>Уровень</mat-label>
                             <mat-select formControlName="level" (ngModelChange)="setDefault()">
@@ -28,14 +28,6 @@
                             <mat-select formControlName="responsible_report">
                                 <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
                                     {{res_rep.viewValue}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field class="grid-form-item">
-                            <mat-label>Эффект</mat-label>
-                            <mat-select formControlName="effect_option">
-                                <mat-option *ngFor="let eff_rep of effect_option" [value]="eff_rep.value">
-                                    {{eff_rep.viewValue}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -61,10 +53,10 @@
                         </mat-form-field>
 
                         <mat-form-field class="grid-form-item">
-                            <mat-label>Даун Интервал</mat-label>
-                            <mat-select formControlName="interval">
-                                <mat-option *ngFor="let int of intervalFlapTime" [value]="int.value">
-                                    {{int.viewValue}}
+                            <mat-label>Эффект</mat-label>
+                            <mat-select formControlName="effect_option">
+                                <mat-option *ngFor="let eff_rep of effect_option" [value]="eff_rep.value">
+                                    {{eff_rep.viewValue}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -142,7 +134,7 @@
                             <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
                                 min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" />
                         </div>
-
+                        
                         <div class="grid-form-item">
                             <p style="margin-left: 5px;">Конец<span
                                     *ngIf="cnForm.get('endTime').hasError('timeValid') && cnForm.get('startTime').touched"

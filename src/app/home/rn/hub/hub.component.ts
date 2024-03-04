@@ -73,11 +73,6 @@ export class HubComponent implements OnInit {
     { value: 'периодически и частично', viewValue: 'Периодически и частично' }
   ];
 
-  intervalFlapTime : { value: boolean; viewValue: string }[] = [
-    { value: true, viewValue: 'Меньше 5мин' },
-    { value: false, viewValue: 'Больше 5мин' }
-  ];
-
   region = [ 
     { value: '', display: ''},
     { value: 'Андижан', display: 'Андижане' },
@@ -180,7 +175,6 @@ export class HubComponent implements OnInit {
       'desc': [''],
       'informed': ['', Validators.required],
       'category': ['', Validators.required],
-      'interval': [false],
       'powerOffTime': [''],
       'hubBlockTime': [''],
       'mw_link': [''],
@@ -387,7 +381,6 @@ export class HubComponent implements OnInit {
             'fourG': [result['count_4G'], ],
             'fiveG': [result['count_5G'], ],
             'periodicity': [result['flapping_type'],],
-            'interval': [result['flapping_time_lth_5min']],
             'mw_link': [result['mw_link']],
             'mw_equipment': [result['mw_equipment']],
             'mw_vendor': [result['mw_vendor']],
@@ -454,7 +447,6 @@ export class HubComponent implements OnInit {
       'count_4G': this.hubForm.value.fourG,
       'count_5G': this.hubForm.value.fiveG,
       'flapping_type': this.hubForm.value.periodicity,
-      'flapping_time_lth_5min': this.hubForm.value.interval,
       'mw_link': this.hubForm.value.mw_link,
       'mw_equipment': this.hubForm.value.mw_equipment,
       'mw_vendor': this.hubForm.value.mw_vendor,

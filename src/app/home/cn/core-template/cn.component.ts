@@ -1,10 +1,10 @@
 import { formatDate } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -17,24 +17,20 @@ import { StorageService } from 'src/app/storage.service';
   styleUrls: ['./cn.component.css'],
 })
 
+
 export class CnComponent implements OnInit {
 
   cnForm: FormGroup
-  preview = false
   user: any
   newForm: boolean
   optionRegion : string = ''
-  criteria_list: any
-  criteria: any
   SmsTextBody: any
   time = new Date()
   requestType: any
   asNew: boolean = false
   tableBody: any
   smsBody: any
-  isDisabled: boolean
-  criteriaArray: any
-  idAlarmReport: any
+  //idAlarmReport: any
   filteredOptionsProblem: Observable<string[]>;
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsEffect: Observable<string[]>;
@@ -82,11 +78,6 @@ export class CnComponent implements OnInit {
     { value: 'периодически', viewValue: 'Периодически' },
     { value: 'периодически и частично', viewValue: 'Периодически и частично' }
   ];
-
-  intervalFlapTime : { value: boolean; viewValue: string }[] = [
-    { value: true, viewValue: 'Меньше 5мин' },
-    { value: false, viewValue: 'Больше 5мин' }
-  ];
   
   region: { value: string; viewValue: string }[] = [
     { value: 'Андижан', viewValue: 'Андижан' },
@@ -106,7 +97,6 @@ export class CnComponent implements OnInit {
   ];
 
   optionsProblem: string[] = [
-    //'Отсутствие основного электропитания на Core Site ',
     
     'Высокая температура в комнате на',
     'GPRS трафик от',
@@ -134,7 +124,7 @@ export class CnComponent implements OnInit {
 
   optionsEffect: string[] = [
     'Нет эффекта на сервис ',
-    'Нет эффекта на сервис, кор сайт работает на ДГ, остаток ДТ на',
+    'Нет эффекта на сервис, Core site работает на ДГ, остаток ДТ на',
     'Трафик переключился на альтернативные каналы',
     'Нет эффект на услугу роуминга',
     'Сервис 4G не был доступен для абонентов в роуминге',
@@ -155,8 +145,6 @@ export class CnComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private router: Router,
-    private cdr: ChangeDetectorRef,
     private storageService: StorageService,
     public dialog: MatDialog) {
 
@@ -171,7 +159,6 @@ export class CnComponent implements OnInit {
       'startTime': ['', Validators.required],
       'endTime': ['', this.endTimeValidation],
       'region': [''],
-      'interval': [false],
       'effect': ['', Validators.required],
       'effect_option': ['', Validators.required],
       'category': ['', Validators.required],
@@ -246,7 +233,6 @@ export class CnComponent implements OnInit {
       'description': this.cnForm.value.desc,
       'informed': this.cnForm.value.informed,
       'influence': this.cnForm.value.effect,
-      'flapping_time_lth_5min': this.cnForm.value.interval,
       'sender': this.user?.first_name + ' ' + this.user?.last_name
     }
 
@@ -266,7 +252,7 @@ export class CnComponent implements OnInit {
   smsSendBody(id?: number) {
 
     let addWord = this.storageService.additionWord(this.cnForm.value.level)
-
+  
     if (this.requestType == 'Проблема') {
       if (this.cnForm.value.AddOrCor == (null || undefined)) {
         this.SmsTextBody =
@@ -357,7 +343,6 @@ export class CnComponent implements OnInit {
     //is it new request or update mode
     if (this.route.snapshot.params.id == null) {
       this.newForm = true
-
     } else {
     
       let endTimeForUpdate: any
@@ -367,16 +352,19 @@ export class CnComponent implements OnInit {
         this.asNew = true
       }
 
-      this.regionDisabled()
+      // this.regionDisabled()
       
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
+          console.log( formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en'));
+          console.log(result['end_time']);
           
           if (result['end_time'] == null) {
-            endTimeForUpdate = (result['end_time'], '')
+            endTimeForUpdate = ''
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
           }
+
           this.cnForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -390,7 +378,6 @@ export class CnComponent implements OnInit {
             'region': [result['region'], Validators.required],
             'effect': [result['influence']],
             'periodicity' : [result['flapping_type']],
-            'interval': [result['flapping_time_lth_5min']],
             'category': [result['category_for_core']],
             'informed': [result['informed']],
             'desc': [result['description']],
@@ -421,21 +408,17 @@ export class CnComponent implements OnInit {
   }
 
   regionDisabled() {
-    
-    if(this.cnForm.value.category == ('Roaming') || 
-      this.cnForm.value.category == ('Core') || 
-      this.cnForm.value.category == ('GPRS') ||
-      this.cnForm.value.category == ('MPLS')) {
-        this.cnForm.get('region').disable()
-      } else {
-        this.cnForm.get('region').enable()
-      }
+    const cases = ['Power', 'High Temp']
+
+    if(cases.includes(this.cnForm.value.category)) {
+      this.cnForm.get('region').enable()
+    } else {
+      this.cnForm.get('region').disable()
+    }
   }
 
   onSelectRegion() {
-    this.optionsProblem.unshift('Отсутствие основного электропитания на Core Site '+this.cnForm.value.region)
-    console.log(this.optionsProblem);
-    
+    this.optionsProblem.unshift('Отсутствие основного электропитания на' +this.cnForm.value.region +' Core Site ')
     this.cnForm.get('problem').setValue('')
   }
 
@@ -456,11 +439,10 @@ export class CnComponent implements OnInit {
           this.tableSendBody()
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
-            .subscribe((result) => {
-              this.idAlarmReport = result
+            .subscribe((result: any) => {
 
               this.snackBar.open('Обновлено', '', { duration: 10000 })
-              this.smsSendBody(this.idAlarmReport.id)
+              this.smsSendBody(result.id)
               this.sendButton()
             }, error => {
               console.log(error);
@@ -496,10 +478,10 @@ export class CnComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-        // this.smsSendBody()
-        // console.log(this.smsBody);
+        this.smsSendBody()
+        console.log(this.smsBody);
 
-        // this.sendButton()
+        this.sendButton()
       }
     })
   }

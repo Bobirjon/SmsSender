@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Inject } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
@@ -8,9 +8,10 @@ import { FormControl, FormsModule, NgForm } from '@angular/forms';
 import { Subscription, catchError, map, of, merge, startWith, switchMap } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
 import * as XLSX from 'xlsx';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { KpiLogsComponent } from './kpi-logs/kpi-logs.component';
 
 export interface DataTable {
   informed: string,
@@ -24,7 +25,10 @@ export interface DataTable {
   description: string,
   reason: string,
   problem: string
+  id: string
 }
+
+
 
 @Component({
   selector: 'app-home',
@@ -33,18 +37,24 @@ export interface DataTable {
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
+
+
+
+  kpiColumns: string[] = ['name',
+    'chronicDuration', 'chronicCount','chronicCorrection', 'coreDurationA', 
+    'coreCountA', 'coreCorrectionA','coreDurationP', 'coreCountP', 
+    'coreCorrectionP' ,'hubBscDurationA', 'hubBscCountA', 'hubBscCorrectionA',
+    'hubBscDurationP', 'hubBscCountP','hubBscCorrectionP']
+  KPIDataSource = new MatTableDataSource<any>()
+
+
+
+
   dataTable = new MatTableDataSource<DataTable>()
   Data = new MatTableDataSource<DataTable>()
   TemplateData = new MatTableDataSource<DataTable>()
-  kpiTable = new MatTableDataSource<any>()
-  dataSource = [
-    { column1: 'A', column2: 'B', mergedCell: 'C' },
-    // Add more data as needed
-  ];
   userName: any
-  isAdmin = localStorage.getItem('role')
-  pageSizes = [10, 25, 50];
-  pageSize2 = 50
+  pageViewSize = [10, 25, 50];
   filterInput: string
   selectedLevel: string
   selectedType: string
@@ -52,7 +62,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isLoadingResults = true;
   isRateLimitReached = false;
   globalFilter = '';
-  isLoading: boolean = true
   KPI: any
   LOG: any
   USERS: any
@@ -94,6 +103,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     'description',
     'region',
     'informed',
+    'id'
   ]
 
   displayedColumnsKpiUsers: string[] = [
@@ -139,6 +149,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   region = new FormControl()
   informed = new FormControl()
   username = new FormControl()
+  id = new FormControl()
 
 
   constructor(
@@ -146,9 +157,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private router: Router,
     private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog,) {
-
-  }
+    public dialog: MatDialog,) { }
 
   // All Cases table with backend pagination
 
@@ -163,7 +172,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
         this.Data.paginator = this.paginator
 
-
+        // Open cases filter
         this.Data.filterPredicate = this.customFilterPredicate();
 
         this.webSocketService.receiveMessage().subscribe(
@@ -279,7 +288,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       )
       .subscribe(data => {
         this.dataTable.data = data.results
-        this.isLoading = false
         this.webSocketService.receiveMessage().subscribe((data) => {
           const exist = this.dataTable.data.findIndex(
             (item: any) => item.id === data.id
@@ -300,59 +308,86 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
         })
       });
-
-
   }
 
   ngOnInit(): void {
+
+
     this.authService.getUser().subscribe((data: any) => {
-      console.log(data);
-      
       this.userName = data.first_name + ' ' + data.last_name
     })
 
-    this.authService.getKPI().subscribe((data:any) => {
+    this.authService.getKPI().subscribe((data: any) => {
+      console.log(data);
       this.KPI = data
-      
+
       this.authService.getUsers().subscribe((data: any) => {
         this.USERS = data.results
+        console.log(data);
 
-        this.resultArray = this.mergeArrays(this.KPI, this.USERS)
-        console.log(this.resultArray);
-        
+        this.gettingUsername(this.USERS, this.KPI)
+        this.KPIDataSource.data = this.nullItemReplacing(this.resultArray)
+
       })
-      
-    })
 
-    this.authService.getLog().subscribe((data:any) => {
-      this.LOG = data.user
-      console.log(data);
     })
-    
   }
 
-  mergeArrays(KPI: any, USERS: any) {
-    return USERS.map((user: any) => {
-      console.log(this.KPI);
-      
-      const matchingItem = KPI.find(({ user }:any) => user == user.id);
-      console.log(matchingItem);
-      
-      return {
-        name: user.username,
-        type: matchingItem.type,
-        level: matchingItem.level,
-        avg_send_dur: matchingItem.avg_send_duration
-      };
-    });
+  nullItemReplacing(data: any[]): any[] {
+    return data.map(item => ({
+      ...item,
+      avg_send_duration_chronic: item.avg_send_duration_chronic !== null ? item.avg_send_duration_chronic : '--:--:--',
+      avg_send_duration_core_a: item.avg_send_duration_core_a !== null ? item.avg_send_duration_core_a : '--:--:--',
+      avg_send_duration_core_p: item.avg_send_duration_core_p !== null ? item.avg_send_duration_core_p : '--:--:--',
+      avg_send_duration_hub_bscrnc_a: item.avg_send_duration_hub_bscrnc_a !== null ? item.avg_send_duration_hub_bscrnc_a : '--:--:--',
+      avg_send_duration_hub_bscrnc_p: item.avg_send_duration_hub_bscrnc_p !== null ? item.avg_send_duration_hub_bscrnc_p : '--:--:--',
+    }))
   }
+
+  gettingUsername(usernames: any, kpis: any) {
+    this.resultArray = usernames.map((user: any) => {
+      const kpiValue = kpis.find((value: any) => value.user === user.id)
+
+      if (kpiValue) {
+        return {
+          id: user.id,
+          username: user.username,
+          avg_send_duration_chronic: kpiValue.avg_send_duration_chronic,
+          avg_send_duration_core_a: kpiValue.avg_send_duration_core_a,
+          avg_send_duration_core_p: kpiValue.avg_send_duration_core_p,
+          avg_send_duration_hub_bscrnc_a: kpiValue.avg_send_duration_hub_bscrnc_a,
+          avg_send_duration_hub_bscrnc_p: kpiValue.avg_send_duration_hub_bscrnc_p,
+          count_chronic: kpiValue.count_chronic,
+          count_core_a: kpiValue.count_core_a,
+          count_core_p: kpiValue.count_core_p,
+          count_hub_bscrnc_a: kpiValue.count_hub_bscrnc_a,
+          count_hub_bscrnc_p: kpiValue.count_hub_bscrnc_p,
+          count_correction_chronic: kpiValue.count_correction_chronic,
+          count_correction_core_a: kpiValue.count_correction_core_a,
+          count_correction_core_p: kpiValue.count_correction_core_p,
+          count_correction_hub_bscrnc_a: kpiValue.count_correction_hub_bscrnc_a,
+          count_correction_hub_bscrnc_p: kpiValue.count_correction_hub_bscrnc_p
+        }
+      }
+    }).filter(Boolean)
+    console.log(this.resultArray);
+
+  }
+
+
+  onRowClick(row: any) {
+    this.dialog.open(KpiLogsComponent, {
+      width: '60%',
+      height: '90%',
+      data: row
+    })
+  }
+
 
 
   applyFilter(filter: string) {
     this.globalFilter = filter;
     this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases)
-    console.log(this.Data.filter);
-
   }
 
   onSelectLevel() {
@@ -521,7 +556,6 @@ export class exportExcel {
   imports: [MatDialogModule, MatButtonModule],
 })
 export class areYouSure { }
-
 
 
 
