@@ -30,7 +30,6 @@ export class CnComponent implements OnInit {
   asNew: boolean = false
   tableBody: any
   smsBody: any
-  //idAlarmReport: any
   filteredOptionsProblem: Observable<string[]>;
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsEffect: Observable<string[]>;
@@ -97,7 +96,6 @@ export class CnComponent implements OnInit {
   ];
 
   optionsProblem: string[] = [
-    
     'Высокая температура в комнате на',
     'GPRS трафик от',
     'IP MPLS канал',
@@ -109,7 +107,6 @@ export class CnComponent implements OnInit {
     'Резервная плата недоступна',
     'Увеличена'
   ];
-
 
   optionsReason: string[] = [
     'Выясняется ',
@@ -139,7 +136,6 @@ export class CnComponent implements OnInit {
     'Работа частично завершена',
   ]
   
-
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -252,65 +248,86 @@ export class CnComponent implements OnInit {
   smsSendBody(id?: number) {
 
     let addWord = this.storageService.additionWord(this.cnForm.value.level)
-  
-    if (this.requestType == 'Проблема') {
-      if (this.cnForm.value.AddOrCor == (null || undefined)) {
-        this.SmsTextBody =
-          this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
-          this.cnForm.value.problem + '\n' +
-          'Причина: ' + this.cnForm.value.reason + '\n' +
-          'Эффект: ' + this.cnForm.value.effect + '\n' +
-          'Оповещен: ' + this.cnForm.value.informed + '\n' +
-          'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          addWord
-      } else {
-        this.SmsTextBody =
-          this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
-          '(' + this.cnForm.value.AddOrCor + ') ' + '\n' +
-          this.cnForm.value.problem + '\n' +
-          'Причина: ' + this.cnForm.value.reason + '\n' +
-          'Эффект: ' + this.cnForm.value.effect + '\n' +
-          'Оповещен: ' + this.cnForm.value.informed + '\n' +
-          'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          addWord
-      }
-    } else {
-      if (this.cnForm.value.AddOrCor == (null || undefined)) {
-        this.SmsTextBody =
-          this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
-          this.cnForm.value.problem + '\n' +
-          'Причина: ' + this.cnForm.value.reason + '\n' +
-          'Эффект: ' + this.cnForm.value.effect + '\n' +
-          'Описание: ' + this.cnForm.value.desc + '\n' +
-          'Оповещен: ' + this.cnForm.value.informed + '\n' +
-          'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          addWord
-      } else {
-        this.SmsTextBody =
-          this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
-          '(' + this.cnForm.value.AddOrCor + ') ' + '\n' +
-          this.cnForm.value.problem + '\n' +
-          'Причина: ' + this.cnForm.value.reason + '\n' +
-          'Эффект: ' + this.cnForm.value.effect + '\n' +
-          'Описание: ' + this.cnForm.value.desc + '\n' +
-          'Оповещен: ' + this.cnForm.value.informed + '\n' +
-          'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
-          'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
-          'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
-          addWord
-      }
-    }
 
-    let smsType
-    if (this.cnForm.value.periodicity == '') {
-      smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, false)
-    } else {
-      smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, true)
-    }
+    this.SmsTextBody = 
+    `${this.cnForm.value.level.replace('P', 'П')+ ' ' + this.requestType}\n` +
+    `${(this.cnForm.value.AddOrCor != null || this.cnForm.value.AddOrCor != undefined) ? '(' + this.cnForm.value.AddOrCor + ')\n' : ''}` +
+    `${this.cnForm.value.problem}\n` +
+    `${'Причина: ' + this.cnForm.value.reason}\n` +
+    `${'Эффект: ' + this.cnForm.value.effect}\n` +
+    `${this.requestType !== 'Проблема' ?  'Описание: ' + this.cnForm.value.desc+'\n': ''}` +
+    `${'Оповещен: ' + this.cnForm.value.informed }\n` +
+    `${'Начало: ' + this.cnForm.value.startTime.replace("T", " ")}\n`+
+    `${this.requestType !== 'Проблема' ?  'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n': ''}` +
+    `${'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}\n` +
+    `${addWord}`
+    
+    console.log(this.SmsTextBody);
+    
+
+    // if (this.requestType == 'Проблема') {
+    //   if (this.cnForm.value.AddOrCor == (null || undefined)) {
+    //     this.SmsTextBody =
+    //       this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
+    //       this.cnForm.value.problem + '\n' +
+    //       'Причина: ' + this.cnForm.value.reason + '\n' +
+    //       'Эффект: ' + this.cnForm.value.effect + '\n' +
+    //       'Оповещен: ' + this.cnForm.value.informed + '\n' +
+    //       'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
+    //       'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+    //       addWord
+    //   } else {
+    //     this.SmsTextBody =
+    //       this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
+    //       '(' + this.cnForm.value.AddOrCor + ') ' + '\n' +
+    //       this.cnForm.value.problem + '\n' +
+    //       'Причина: ' + this.cnForm.value.reason + '\n' +
+    //       'Эффект: ' + this.cnForm.value.effect + '\n' +
+    //       'Оповещен: ' + this.cnForm.value.informed + '\n' +
+    //       'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
+    //       'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+    //       addWord
+    //   }
+    // } else {
+    //   if (this.cnForm.value.AddOrCor == (null || undefined)) {
+    //     this.SmsTextBody =
+    //       this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
+    //       this.cnForm.value.problem + '\n' +
+    //       'Причина: ' + this.cnForm.value.reason + '\n' +
+    //       'Эффект: ' + this.cnForm.value.effect + '\n' +
+    //       'Описание: ' + this.cnForm.value.desc + '\n' +
+    //       'Оповещен: ' + this.cnForm.value.informed + '\n' +
+    //       'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
+    //       'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
+    //       'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+    //       addWord
+    //   } else {
+    //     this.SmsTextBody =
+    //       this.cnForm.value.level.replace('P', 'П') + ' ' + this.requestType + '\n' +
+    //       '(' + this.cnForm.value.AddOrCor + ') ' + '\n' +
+    //       this.cnForm.value.problem + '\n' +
+    //       'Причина: ' + this.cnForm.value.reason + '\n' +
+    //       'Эффект: ' + this.cnForm.value.effect + '\n' +
+    //       'Описание: ' + this.cnForm.value.desc + '\n' +
+    //       'Оповещен: ' + this.cnForm.value.informed + '\n' +
+    //       'Начало: ' + this.cnForm.value.startTime.replace("T", " ") + '\n' +
+    //       'Конец: ' + this.cnForm.value.endTime.replace("T", " ") + '\n' +
+    //       'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name + '\n' +
+    //       addWord
+    //   }
+    // }
+
+    let smsType = this.cnForm.value.periodicity == '' ? 
+      this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, false) : 
+      this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, true)
+
+    // let smsType
+    // if (this.cnForm.value.periodicity == '') {
+    //   smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, false)
+    // } else {
+    //   smsType = this.storageService.SmsType(this.requestType, this.cnForm.value.AddOrCor, true)
+    // }
+
 
     this.smsBody = {
       'source_addr': 'ncc-cn',
@@ -359,7 +376,7 @@ export class CnComponent implements OnInit {
           console.log( formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en'));
           console.log(result['end_time']);
           
-          if (result['end_time'] == null) {
+          if (result['end_time'] == null || this.asNew == true) {
             endTimeForUpdate = ''
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
@@ -431,6 +448,8 @@ export class CnComponent implements OnInit {
 
   onSubmitButtonProblem(smsType: string) {
     this.requestType = smsType
+
+  
     const dialogRef = this.dialog.open(areYouSure);
     
     dialogRef.afterClosed().subscribe(result => {
@@ -471,17 +490,12 @@ export class CnComponent implements OnInit {
   forTestSms(smsType: string) {
     this.requestType = smsType
     this.smsSendBody()
-
     const dialogRef = this.dialog.open(fortesting, {
       data: { text: this.SmsTextBody }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
-        this.smsSendBody()
-        console.log(this.smsBody);
-
-        this.sendButton()
       }
     })
   }

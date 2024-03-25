@@ -1,4 +1,4 @@
-import { DatePipe, formatDate } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, NgForm, AbstractControl } from '@angular/forms';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -35,8 +35,6 @@ export class ChronicComponent implements OnInit {
   idAlarmReport: any
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsDesc: Observable<string[]>;
-
-  @ViewChild('item') item: any;
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A5', viewValue: 'A5' },
@@ -228,7 +226,6 @@ export class ChronicComponent implements OnInit {
     this.authService.getUser()
       .subscribe(result => {
         this.user = result
-        console.log(result);
 
       })
     if (this.route.snapshot.params.id == null) {
@@ -237,6 +234,7 @@ export class ChronicComponent implements OnInit {
       this.chronicForm.get('time').valueChanges.subscribe(() => {
         this.chronicForm.get('startTime').updateValueAndValidity()
       })
+
     } else {
       this.newForm = false
       let endTimeForUpdate: any
@@ -287,25 +285,6 @@ export class ChronicComponent implements OnInit {
     }
   }
 
-  startTimeAndTimeValidation(group: FormGroup): any {
-    const time = group.get('time')
-    const startTime = group.get('startTime')
-    console.log('it is work');
-    console.log(startTime);
-
-    return null
-
-  }
-
-  // timeStartTimeValidation() {
-
-  //     this.chronicForm.get('time').valueChanges.subscribe(value => {
-  //         this.chronicForm.get('startTime').setValidators([this.startTimeSet])
-  //         this.chronicForm.get('startTime').updateValueAndValidity();
-  //     })
-  //     this.chronicForm.get('time').updateValueAndValidity()
-  // }
-
   startTimeSet(control: AbstractControl): { [key: string]: any } | null {
     let currentDate: Date = new Date()
     let startTime = new Date(control.value)
@@ -332,25 +311,6 @@ export class ChronicComponent implements OnInit {
       }
     }
     return null
-  }
-
-  testSubmit() {
-    if (this.chronicForm.valid) {
-      // Handle form submission here
-      console.log('Form submitted:', this.chronicForm.value);
-    } else {
-      // Mark all fields as touched to display validation errors
-      this.chronicForm.markAllAsTouched();
-
-      // Log validation errors for each control
-      Object.keys(this.chronicForm.controls).forEach(controlName => {
-        const control = this.chronicForm.get(controlName);
-
-        if (control && control.invalid) {
-          console.log(`Validation errors for ${controlName}:`, control.errors);
-        }
-      });
-    }
   }
 
   endTimeValidation(control: any) {
@@ -490,10 +450,6 @@ export class ChronicComponent implements OnInit {
       'alarmreport_id': id,
       'sms_type': smsType
     }
-
-    console.log(this.smsBody);
-
-
   }
 
   updateData() {
@@ -546,31 +502,6 @@ export class ChronicComponent implements OnInit {
       }
     })
   }
-
-  // onSubmitasNew(smsType: string) {
-  //   this.requestType = smsType
-  //   this.smsSendBody()
-
-  //   const dialogRef = this.dialog.open(areYouSure);
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result == true) {
-  //       this.tableSendBody()
-
-
-  //       this.authService.postData(this.tableBody)
-  //         .subscribe((result) => {
-  //           console.log(result);
-
-  //           this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-  //           this.smsSendBody(result.id)
-  //           this.sendButton()
-  //         }, error => {
-  //           this.snackBar.open("Ошибка", '', { duration: 10000 })
-  //         })
-  //     }
-  //   })
-  // }
 
   forSmsTesting(smsType: string) {
     this.requestType = smsType

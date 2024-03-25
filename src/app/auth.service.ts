@@ -159,4 +159,9 @@ export class AuthService {
   getUsers() {
     return this.http.get(this.URLsender + 'auth/users/')
   }
+
+  testting(data: any ) {
+
+    return this.http.get("http://10.7.119.12/api/smssender/effectedsites  ", data)
+  }
 }

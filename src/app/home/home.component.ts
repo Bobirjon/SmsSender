@@ -317,13 +317,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.userName = data.first_name + ' ' + data.last_name
     })
 
+
     this.authService.getKPI().subscribe((data: any) => {
-      console.log(data);
       this.KPI = data
 
       this.authService.getUsers().subscribe((data: any) => {
         this.USERS = data.results
-        console.log(data);
 
         this.gettingUsername(this.USERS, this.KPI)
         this.KPIDataSource.data = this.nullItemReplacing(this.resultArray)
@@ -332,7 +331,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     })
   }
-
+  
   nullItemReplacing(data: any[]): any[] {
     return data.map(item => ({
       ...item,
@@ -345,6 +344,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   gettingUsername(usernames: any, kpis: any) {
+    
     this.resultArray = usernames.map((user: any) => {
       const kpiValue = kpis.find((value: any) => value.user === user.id)
 
@@ -370,19 +370,33 @@ export class HomeComponent implements OnInit, AfterViewInit {
         }
       }
     }).filter(Boolean)
-    console.log(this.resultArray);
 
   }
 
-
-  onRowClick(row: any) {
+  onRowClick(type: string, user: string, level: string) {
     this.dialog.open(KpiLogsComponent, {
       width: '60%',
-      height: '90%',
-      data: row
+      maxHeight: '90vh',
+      data: {
+        type: type,
+        userInfo: user,
+        level: level,
+      }
     })
   }
 
+
+  logExport(name: string) {
+    this.authService.getLog().subscribe((data: any) => {
+      const result = data.filter((res: any) => res.user == name)
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(result);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+      XLSX.writeFile(wb, name + '.xlsx');
+      
+    })
+       
+  }
 
 
   applyFilter(filter: string) {

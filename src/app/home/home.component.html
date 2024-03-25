@@ -5,88 +5,93 @@
       <table mat-table [dataSource]="KPIDataSource" class="kpiTable">
 
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Пользователь</th>
-          <td mat-cell *matCellDef="let element">{{ element.username.replace('_', ' ') }}</td>
+          <th mat-header-cell *matHeaderCellDef style="text-align: left;"> Пользователь</th>
+          <td mat-cell *matCellDef="let element" style="text-align: left;">
+            <a (click)="logExport(element.id)"><mat-icon>download</mat-icon></a>
+            <span><a (click)="onRowClick('', element, '')"> {{element.username.replace('_', ' ') }} </a></span>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="chronicDuration">
           <th mat-header-cell *matHeaderCellDef>Среднее время Chronic</th>
-          <td mat-cell *matCellDef="let element">{{ element.avg_send_duration_chronic.substring('0','8') }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('CHRONIC', element, '')">{{ element.avg_send_duration_chronic.substring('0','8') }}</td>
         </ng-container>
 
         <ng-container matColumnDef="chronicCount">
           <th mat-header-cell *matHeaderCellDef>Количество Chronic</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_chronic }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('CHRONIC', element, '')">{{ element.count_chronic }}</td>
         </ng-container>
 
         <ng-container matColumnDef="chronicCorrection">
-          <th mat-header-cell *matHeaderCellDef>Коррекция Chronic</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_correction_chronic}}</td>
+          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Chronic</th>
+          <td mat-cell *matCellDef="let element" class="line">
+            {{element.count_correction_chronic}}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="coreDurationA">
           <th mat-header-cell *matHeaderCellDef>Среднее время Core (А)</th>
-          <td mat-cell *matCellDef="let element">{{ element.avg_send_duration_core_a.substring('0','8') }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('CORE', element, 'A')">{{ element.avg_send_duration_core_a.substring('0','8') }}</td>
         </ng-container>
 
         <ng-container matColumnDef="coreCountA">
           <th mat-header-cell *matHeaderCellDef>Количество Core (А)</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_core_a }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('CORE', element, 'A')">{{ element.count_core_a }}</td>
         </ng-container>
 
         <ng-container matColumnDef="coreCorrectionA">
-          <th mat-header-cell *matHeaderCellDef>Коррекция Core (А)</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_correction_core_a }}</td>
+          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Core (А)</th>
+          <td mat-cell *matCellDef="let element"class="line">{{ element.count_correction_core_a }}</td>
         </ng-container>
 
         <ng-container matColumnDef="coreDurationP">
           <th mat-header-cell *matHeaderCellDef>Среднее время Core (П)</th>
-          <td mat-cell *matCellDef="let element">{{ element.avg_send_duration_core_p.substring('0','8') }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('CORE', element, 'P')">{{ element.avg_send_duration_core_p.substring('0','8') }}</td>
         </ng-container>
 
         <ng-container matColumnDef="coreCountP">
           <th mat-header-cell *matHeaderCellDef>Количество Core (П)</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_core_p }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('CORE', element, 'P')">{{ element.count_core_p }}</td>
         </ng-container>
 
         <ng-container matColumnDef="coreCorrectionP">
-          <th mat-header-cell *matHeaderCellDef>Коррекция Core (П)</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_correction_core_p }}</td>
+          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Core (П)</th>
+          <td mat-cell *matCellDef="let element" class="line">{{ element.count_correction_core_p }}</td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscDurationA">
           <th mat-header-cell *matHeaderCellDef>Среднее время Hub и BSC (А)</th>
-          <td mat-cell *matCellDef="let element">{{ element.avg_send_duration_hub_bscrnc_a.substring('0','8') }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('HUB', element, 'A')">{{ element.avg_send_duration_hub_bscrnc_a.substring('0','8') }}</td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscCountA">
           <th mat-header-cell *matHeaderCellDef>Количество Hub и BSC (А)</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_hub_bscrnc_a }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('HUB', element, 'A')">{{ element.count_hub_bscrnc_a }}</td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscCorrectionA">
-          <th mat-header-cell *matHeaderCellDef>Коррекция Hub и BSC (А)</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_correction_hub_bscrnc_a }}</td>
+          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Hub и BSC (А)</th>
+          <td mat-cell *matCellDef="let element" class="line">{{ element.count_correction_hub_bscrnc_a }}</td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscDurationP">
           <th mat-header-cell *matHeaderCellDef>Среднее время Hub и BSC (П)</th>
-          <td mat-cell *matCellDef="let element">{{ element.avg_send_duration_hub_bscrnc_p.substring('0','8') }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('HUB', element, 'P')">{{ element.avg_send_duration_hub_bscrnc_p.substring('0','8') }}</td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscCountP">
           <th mat-header-cell *matHeaderCellDef>Количество Hub и BSC (П)</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_hub_bscrnc_p }}</td>
+          <td mat-cell *matCellDef="let element" (click)="onRowClick('HUB', element, 'P')">{{ element.count_hub_bscrnc_p }}</td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscCorrectionP">
-          <th mat-header-cell *matHeaderCellDef>Коррекция Hub и BSC (П)</th>
-          <td mat-cell *matCellDef="let element">{{ element.count_correction_hub_bscrnc_p }}</td>
+          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Hub и BSC (П)</th>
+          <td mat-cell *matCellDef="let element" class="line">{{ element.count_correction_hub_bscrnc_p }}</td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="kpiColumns" class="tableHeader"></tr>
-        <tr mat-row *matRowDef="let row; columns: kpiColumns;" (click)="onRowClick(row)"></tr>
-
+        <tr mat-row *matRowDef="let row; columns: kpiColumns;" ></tr>
+        <mat-divider [vertical]="true"></mat-divider>
       </table>
     </div>
   </div>

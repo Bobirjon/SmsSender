@@ -13,26 +13,50 @@ import { MatSort } from '@angular/material/sort';
 export class KpiLogsComponent {
   LogData = new MatTableDataSource<any>()
   LogColumns: string[] = [
-    'name', 'alarmreport', 'level', 'sent_time', 
-    'send_duration','type', 'sms_type'
+    'name', 'alarmreport', 'level', 'sent_time',
+    'send_duration', 'type', 'sms_type'
   ]
   @ViewChild(MatSort) sort: MatSort;
+
+  result: any
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private authservice: AuthService
-    ) {
+  ) {
+
+    this.authservice.getLog().subscribe((response: any) => {
+
+      this.filterItems(response, data)
+      console.log(this.result);
       
-      this.authservice.getLog().subscribe((response: any) => {
-        console.log(response);
-        
-        const result = response.filter((res: any) =>
-          res.user == data.id 
-        )
-        this.LogData.data = result
-        this.LogData.sort = this.sort
-      })   
+      this.LogData.data = this.result
+      this.LogData.sort = this.sort
+    })
   }
-  
-  
+
+  filterItems(response: any, data: any) {
+    if (data.level == '' && data.type != '') {
+      
+      this.result = response.filter((res: any) =>
+        res.user == data.userInfo.id &&
+        res.type == data.type
+      )
+    } else if (data.level == '' && data.type == '') {
+      this.result = response.filter((res: any) =>
+        res.user == data.userInfo.id
+      )
+    }
+     else {
+      this.result = response.filter((res: any) =>
+        res.user == data.userInfo.id &&
+        res.type == data.type && res.level == data.level
+      )
+    }
+    
+    return this.result
+
+  }
+
+
 }

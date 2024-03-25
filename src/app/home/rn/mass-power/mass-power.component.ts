@@ -92,54 +92,6 @@ export class MassPowerComponent implements OnInit {
     '': ''
   }
 
-
-  district: { value: string; viewValue: string }[] = [
-    { value: 'Аккурган', viewValue: 'Аккурган' },
-    { value: 'Ахангаран', viewValue: 'Ахангаран' },
-    { value: 'Бекабад', viewValue: 'Бекабад' },
-    { value: 'Бустонлик', viewValue: 'Бустонлик' },
-    { value: 'Бука', viewValue: 'Бука' },
-    { value: 'Зангиота', viewValue: 'Зангиота' },
-    { value: 'Кибрай', viewValue: 'Кибрай' },
-    { value: 'Куйичирчик', viewValue: 'Куйичирчик' },
-    { value: 'Паркент', viewValue: 'Паркент' },
-    { value: 'Пскент', viewValue: 'Пскент' },
-    { value: 'Ташкент', viewValue: 'Ташкент' },
-    { value: 'Уртачирчик', viewValue: 'Уртачирчик' },
-    { value: 'Чиназ', viewValue: 'Чиназ' },
-    { value: 'Юкоричирчик', viewValue: 'Юкоричирчик' },
-    { value: 'Янгиюль', viewValue: 'Янгиюль' },
-    { value: 'Алмалык', viewValue: 'Алмалык' },
-    { value: 'Чирчик', viewValue: 'Чирчик' },
-    { value: 'Ангрен', viewValue: 'Ангрен' },
-    { value: 'Нурафшон', viewValue: 'Нурафшон' },
-    { value: 'Чимбай', viewValue: 'Чимбай' },
-
-  ]
-
-  dist = {
-    'Аккурган': 'Аккурганском районе',
-    'Ахангаран': 'Ахангаранском районе',
-    'Бекабад': 'Бекабадском районе',
-    'Бустонлик': 'Бустанликском районе',
-    'Бука': 'Букинском районе',
-    'Зангиота': 'Зангиотинском районе',
-    'Кибрай': 'Кибрайском районе',
-    'Куйичирчик': 'Куйичирчикском районе',
-    'Паркент': 'Паркентском районе',
-    'Пскент': 'Пскентском районе',
-    'Ташкент': 'Ташкентском районе',
-    'Уртачирчик': 'Уртачирчикском районе',
-    'Чиназ': 'Чиназском районе',
-    'Юкоричирчик': 'Юкоричирчикском районе',
-    'Янгиюль': 'Янгиюльском районе',
-    'Алмалык': 'Алмалыкском районе',
-    'Чирчик': 'город Чирчик',
-    'Ангрен': 'Ангренском районе',
-    'Нурафшон': 'город Нурафшон',
-    'Чимбай': 'Чимбайском районе',
-    '': ''
-  }
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -175,18 +127,13 @@ export class MassPowerComponent implements OnInit {
 
     } else {
       this.newForm = false
-      let district: any
       if(this.route.snapshot.url.toString().includes('update')) {
         this.asNew = true
       }
 
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          if (result['district'] == null || result['district'] == undefined) {
-            district = ''
-          } else {
-            district = result['district']
-          }
+         
 
           this.massPowerForm = this.formBuilder.group({
             'AddOrCor': [null],
@@ -199,7 +146,6 @@ export class MassPowerComponent implements OnInit {
             'endTime' : [result['end_time']],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'region': [result['region'], Validators.required],
-            'district': [result['district']]
           })
 
         })
@@ -337,7 +283,7 @@ export class MassPowerComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       if (res == true) {
 
-        if (this.newForm == false) {
+        if (this.newForm == false && this.asNew == false) {
           this.tableSendBody()
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
@@ -364,27 +310,6 @@ export class MassPowerComponent implements OnInit {
               this.snackBar.open("Ошибка", '', { duration: 10000 })
             })
         }
-      }
-    })
-  }
-
-  onSubmitasNew(smsType: string) {
-    this.requestType = smsType
-
-    const dialogRef = this.dialog.open(areYouSure);
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
-        this.tableSendBody()
-
-        this.authService.postData(this.tableBody)
-          .subscribe((result) => {
-            this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-            this.smsSendBody(result.id)
-            this.sendButton()
-          }, error => {
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
       }
     })
   }

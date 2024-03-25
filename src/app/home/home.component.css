@@ -145,3 +145,37 @@ tr.example-detail-row {
 .kpiTable td {
     text-align: center;
 }
+
+.line {  
+    border-right: 1px solid #3a004f20
+}
+
+.mat-column-name {
+    max-width: 100px;
+}
+
+.mat-column-chronicDuration,
+.mat-column-coreDurationA,
+.mat-column-coreDurationP,
+.mat-column-hubBscDurationA,
+.mat-column-hubBscDurationP {
+    max-width: 50px;
+}
+
+.mat-column-chronicCount,
+.mat-column-chronicCorrection,
+.mat-column-coreCountA,
+.mat-column-coreCorrectionA,
+.mat-column-coreCountP,
+.mat-column-coreCorrectionP,
+.mat-column-hubBscCountA,
+.mat-column-hubBscCorrectionA,
+.mat-column-hubBscCountP,
+.mat-column-hubBscCorrectionP {
+    max-width: 40px;
+}
+
+.material-icons {
+    margin-right: 5px;
+    
+}

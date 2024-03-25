@@ -64,12 +64,6 @@
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
                                 Отправить Сообщения
                             </button>
-                            <!-- <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Проблема')" type="submit" 
-                                *ngIf="asNew == true && newForm == false"
-                                [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
-                                Новое SMS
-                            </button> -->
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="forSmsTesting('Проблема')" type="submit"
                                 [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
@@ -112,12 +106,6 @@
                                 [disabled]=" chronicForm.value.endTime =='' ">
                                 Отправить Сообщения
                             </button>
-                            <!-- <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Решения')" type="submit"
-                                *ngIf="asNew == true && newForm == false"
-                                [disabled]="(chronicForm.invalid) || chronicForm.value.endTime=='' ">
-                                Новое SMS
-                            </button> -->
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="forSmsTesting('Решение')" type="submit"
                                 [disabled]=" chronicForm.value.endTime ==''">

@@ -54,15 +54,8 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Проблема')" type="submit"
-                                *ngIf="asNew == false"
                                 [disabled]="massPowerForm.invalid || massPowerForm.value.endTime !==''">
                                 Отправить Сообщения
-                            </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Проблема')" type="submit"
-                                *ngIf="asNew == true && newForm == false"
-                                [disabled]="(massPowerForm.invalid) || massPowerForm.value.endTime !==''">
-                                Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="forSmsTesting('Проблема')" type="submit"
@@ -99,15 +92,8 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                *ngIf="asNew == false"
                                 [disabled]="massPowerForm.invalid || massPowerForm.value.endTime ==''">
                                 Отправить Сообщения
-                            </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Решение')" type="submit"
-                                *ngIf="asNew == true && newForm == false"
-                                [disabled]="(massPowerForm.invalid) || massPowerForm.value.endTime ==''">
-                                Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="forSmsTesting('Решение')" type="submit"
@@ -144,15 +130,8 @@
                         <mat-card-actions>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="onSubmitButtonProblem('Информационное')" type="submit"
-                                *ngIf="asNew == false"
                                 [disabled]="massPowerForm.invalid || massPowerForm.value.endTime ==''">
                                 Отправить Сообщения
-                            </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitasNew('Информационное')" type="submit"
-                                *ngIf="asNew == true && newForm == false"
-                                [disabled]="(massPowerForm.invalid) || massPowerForm.value.endTime ==''">
-                                Новое SMS
                             </button>
                             <button class="form-button" mat-raised-button color="primary"
                                 (click)="forSmsTesting('Информационное')" type="submit"

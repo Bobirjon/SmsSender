@@ -20,8 +20,6 @@ export class HubComponent implements OnInit {
   hubForm: FormGroup
   user: any
   newForm: boolean
-  // criteria_list: any
-  //criteria: any
   SmsTextBody: any
   time = new Date()
   requestType: any
@@ -29,8 +27,6 @@ export class HubComponent implements OnInit {
   tableBody: any
   smsBody: any
   word: string = ' Узловой сайт '
-  //idAlarmReport: any
-  //isDisabledDistrict: boolean = true
   selectedRegion: string = ''
   selectedDistrict: string = ''
   filteredOptionsReason: Observable<string[]>;
@@ -56,6 +52,7 @@ export class HubComponent implements OnInit {
     { value: 'Провайдер', viewValue: 'Провайдер' },
     { value: 'Выясняется', viewValue: 'Выясняется' },
   ];
+  
   responsible_report: { value: string; viewValue: string }[] = [
     { value: 'Другие ЗО', viewValue: 'Другие ЗО' },
     { value: 'Эксплуатация', viewValue: 'Эксплуатация' },
@@ -116,6 +113,7 @@ export class HubComponent implements OnInit {
 
 
   ]
+
   category: { value: string; viewValue: string }[] = [
     { value: 'AC/DC breaker', viewValue: 'AC/DC breaker' },
     { value: 'Bad RX level', viewValue: 'Bad RX level' },
@@ -160,6 +158,7 @@ export class HubComponent implements OnInit {
     private storageService: StorageService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
+
     this.hubForm = this.formBuilder.group({
       'AddOrCor': [null],
       'level': ['', Validators.required],
@@ -223,7 +222,6 @@ export class HubComponent implements OnInit {
       const startTimeSelected = new Date(startTime.value)
       const difference = endTime.getTime() - startTimeSelected.getTime()
       if (difference < 0) {
-
         return { timeValid: true }
       } else {
         return null
@@ -289,9 +287,7 @@ export class HubComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    var isDisabled: boolean = this.hubForm.value.district.isDisabled ? true : false
-
-    console.log(isDisabled);
+   
     
     // get Current user
     this.authService.getUser()
@@ -322,10 +318,8 @@ export class HubComponent implements OnInit {
           const selectedOptionReg = this.region.find(region => region.value === result['region'])
           this.selectedRegion = selectedOptionReg ? selectedOptionReg.display : ''
           
-
           const selectedOptionDis = this.district.find(dis => dis.value === result['district'])
           this.selectedDistrict = selectedOptionDis ? selectedOptionDis.display : ''
-          
           
           if (result['end_time'] == null) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
@@ -645,7 +639,7 @@ export class HubComponent implements OnInit {
   }
 
   regionSelect(event: any) {
-    //this.isDisabledDistrict = false
+    
     const selectedOption = this.region.find(region => region.value === event.value)
     this.selectedRegion = selectedOption ? selectedOption.display : ''
     if(this.hubForm.value.region !== 'Ташкент.обл') {
@@ -680,7 +674,7 @@ export class HubComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       if (res == true) {
 
-        if (this.newForm == false) {
+        if (this.newForm == false && this.asNew == false) {
           this.tableSendBody()
 
           this.authService.updateSms(this.route.snapshot.params.id, this.tableBody)
@@ -704,29 +698,6 @@ export class HubComponent implements OnInit {
               this.snackBar.open("Ошибка", '', { duration: 10000 })
             })
         }
-      }
-    })
-  }
-
-  onSubmitasNew(smsType: string) {
-    this.requestType = smsType
-
-    const dialogRef = this.dialog.open(areYouSure);
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
-        this.tableSendBody()
-
-        this.authService.postData(this.tableBody)
-          .subscribe((res) => {
-            this.snackBar.open('Добавлен в таблицу', '', { duration: 10000 })
-
-            this.smsSendBody(res.id)
-            this.sendButton()
-          }, error => {
-            console.log(error);
-            this.snackBar.open("Ошибка", '', { duration: 10000 })
-          })
       }
     })
   }
