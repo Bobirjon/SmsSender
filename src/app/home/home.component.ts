@@ -37,9 +37,6 @@ export interface DataTable {
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
-
-
-
   kpiColumns: string[] = ['name',
     'chronicDuration', 'chronicCount','chronicCorrection', 'coreDurationA', 
     'coreCountA', 'coreCorrectionA','coreDurationP', 'coreCountP', 
@@ -239,6 +236,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.endTime.valueChanges,
       this.region.valueChanges,
       this.informed.valueChanges,
+      this.id.valueChanges,
       this.table2sort.sortChange,
       this.table2paginator.page)
       .pipe(
@@ -256,6 +254,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           var endTime = this.endTime.value == null ? '' : this.endTime.value;
           var region = this.region.value == null ? '' : this.region.value;
           var informed = this.informed.value == null ? '' : this.informed.value;
+          var id = this.id.value == null ? '' : this.id.value;
           if (this.table2sort.direction == 'desc') {
             dir = '-'
           } else {
@@ -266,7 +265,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           return this.authService
             .getDataTest(
               level, type, description, reason, problem, createdAt,
-              startTime, endTime, region, informed, dir,
+              startTime, endTime, region, informed, id, dir,
               this.table2sort.active,
               this.table2paginator.pageIndex + 1,
               this.table2paginator.pageSize
@@ -532,6 +531,7 @@ export class exportExcel {
     private authService: AuthService,
   ) { }
   onSubmit(form: NgForm) {
+
     this.authService.exportExcel(form.value.starttime, form.value.endtime)
       .subscribe(res => {
         console.log(res);

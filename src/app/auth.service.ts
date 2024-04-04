@@ -43,6 +43,7 @@ export class AuthService {
     endTime: string,
     region: string,
     informed: string,
+    id: string,
     order: string,
     ordering: string,
     page: number,
@@ -52,7 +53,7 @@ export class AuthService {
     const url = this.URLsender + `smssender/alarmreport/?ordering=${order}${ordering}&page=${page}&page_size=${perpage}
       &level__icontains=${level}&type__icontains=${type}&description__icontains=${description}&reason__icontains=${reason}
       &problem__icontains=${problem}&createdat_in=${createdAt}&starttime_in=${startTime}&endtime_in=${endTime}
-      &region__icontains=${region}&informed__icontains=${informed}`
+      &region__icontains=${region}&informed__icontains=${informed}&id=${id}`
 
     return this.http.get(url)
   }
@@ -160,7 +161,7 @@ export class AuthService {
     return this.http.get(this.URLsender + 'auth/users/')
   }
 
-  testting(data: any ) {
+  testting(data: any) {
 
     return this.http.get("http://10.7.119.12/api/smssender/effectedsites  ", data)
   }
