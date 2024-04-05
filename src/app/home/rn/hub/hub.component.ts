@@ -233,17 +233,17 @@ export class HubComponent implements OnInit {
   putLevel() {
     let maxNumber: number
 
-    maxNumber = this.hubForm.value.twoG
+    maxNumber = parseInt(this.hubForm.value.twoG)
 
     if (parseInt(this.hubForm.value.threeG) >= maxNumber) {
       maxNumber =this.hubForm.value.threeG
     }
 
-    if (this.hubForm.value.fourG >= maxNumber) {
+    if (parseInt(this.hubForm.value.fourG) >= maxNumber) {
       maxNumber = this.hubForm.value.fourG
     }
 
-    if (this.hubForm.value.fiveG >= maxNumber) {
+    if (parseInt(this.hubForm.value.fiveG) >= maxNumber) {
       maxNumber = this.hubForm.value.fiveG
     }
 
