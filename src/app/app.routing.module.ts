@@ -15,6 +15,7 @@ import { NewIdeasComponent } from "./home/new-ideas/new-ideas.component";
 import { CoreTemplateComponent } from "./home/cn/core-template.component";
 import { InternetTemplateComponent } from "./home/cn/internet-template/internet-template.component";
 import { MassPowerComponent } from "./home/rn/mass-power/mass-power.component";
+import { RingComponent } from "./home/rn/ring/ring.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
@@ -34,21 +35,24 @@ const routes: Routes = [
             { path: 'bsc', component: BscComponent },
             { path: 'chronic', component: ChronicComponent },
             { path: 'hub', component: HubComponent },
+            { path: 'ring', component: RingComponent },
         ] , canActivate:[AuthGuard]
     },
     { path: 'home/HUB/:id', component: HubComponent, canActivate:[AuthGuard]  },
     { path: 'home/CORE/:id', component: CnComponent  , canActivate:[AuthGuard]},
-    { path: 'home/InternetCases/:id', component: InternetTemplateComponent, canActivate:[AuthGuard]},
-    { path: 'home/MassPower/:id', component: MassPowerComponent , canActivate:[AuthGuard]},
+    { path: 'home/INTERNET/:id', component: InternetTemplateComponent, canActivate:[AuthGuard]},
+    { path: 'home/MASSPOWER/:id', component: MassPowerComponent , canActivate:[AuthGuard]},
     { path: 'home/CHRONIC/:id', component: ChronicComponent , canActivate:[AuthGuard] },
     { path: 'home/BSC/RNC/:id', component: BscComponent , canActivate:[AuthGuard] },
+    { path: 'home/RING/:id', component: RingComponent , canActivate:[AuthGuard] },
 
     { path: 'home/HUB/update/:id', component: HubComponent, canActivate:[AuthGuard]  },
     { path: 'home/CORE/update/:id', component: CnComponent  , canActivate:[AuthGuard]},
-    { path: 'home/InternetCases/update/:id', component: InternetTemplateComponent, canActivate:[AuthGuard]},
-    { path: 'home/MassPower/update/:id', component: MassPowerComponent , canActivate:[AuthGuard]},
+    { path: 'home/INTERNET/update/:id', component: InternetTemplateComponent, canActivate:[AuthGuard]},
+    { path: 'home/MASSPOWER/update/:id', component: MassPowerComponent , canActivate:[AuthGuard]},
     { path: 'home/CHRONIC/update/:id', component: ChronicComponent , canActivate:[AuthGuard] },
     { path: 'home/BSC/RNC/update/:id', component: BscComponent , canActivate:[AuthGuard] },
+    { path: 'home/RING/update/:id', component: RingComponent , canActivate:[AuthGuard] },
 
     {
         path: 'add',

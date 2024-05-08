@@ -1,0 +1,51 @@
+.form-container {
+    margin-top: 50px;
+}
+.margin-container {
+    margin: 15px;
+    width: 100%;
+}
+.dateTime {
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #999999;
+    background-color: #f2f2f2;
+    width: 100%;
+}
+.form-button {
+    margin: 10px; 
+    width: 100%;  
+}
+.grid-container {
+    display:contents
+}
+.preview {
+    width: 100%;
+    height: 100%;
+ }
+
+ .timeNotValid {
+    border-color: red;
+    color: red;
+ }
+
+ button {
+    background-color: #572469d5 !important;
+    color: white !important;
+}
+
+button:disabled {
+    background-color: #ececec !important;
+    color: rgb(29, 29, 29) !important;
+    border: 1px rgba(128, 128, 128, 0.448) solid;
+}
+
+.mat-mdc-chip-selected {
+    background-color: #572469d5 !important; 
+    color: #FFFFFF !important; 
+}
+
+.miniFields {
+    margin: 5px;
+    
+}

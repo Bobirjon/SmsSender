@@ -54,6 +54,7 @@ import { NewIdeasComponent } from './home/new-ideas/new-ideas.component';
 import { InternetTemplateComponent } from './home/cn/internet-template/internet-template.component';
 import { EditPageComponent } from './home/new-ideas/edit-page/edit-page.component';
 import { KpiLogsComponent } from './home/kpi-logs/kpi-logs.component';
+import { RingComponent } from './home/rn/ring/ring.component';
 
 
 
@@ -76,6 +77,7 @@ import { KpiLogsComponent } from './home/kpi-logs/kpi-logs.component';
     AddPhoneNumbersComponent,
     NewIdeasComponent,
     EditPageComponent,
+    RingComponent,
     KpiLogsComponent
   ],
   imports: [

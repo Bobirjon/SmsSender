@@ -155,7 +155,7 @@ export class MassPowerComponent implements OnInit {
   tableSendBody() {
 
     this.tableBody = {
-      'type': 'HUB',
+      'type': 'MASSPOWER',
       'level': this.massPowerForm.value.level,
       'category': this.massPowerForm.value.categories_report,
       'responsible_area': this.massPowerForm.value.responsible_report,

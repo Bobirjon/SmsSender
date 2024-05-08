@@ -1,0 +1,278 @@
+<div>
+    <form [formGroup]="ringForm" class="form-container">
+        <mat-grid-list cols="25" rowHeight="85px">
+            <!-- level -->
+            <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Уровень</mat-label>
+                    <mat-select formControlName="level" (ngModelChange)="setDefault()">
+                        <mat-option *ngFor="let lev of level" [value]="lev.value">
+                            {{lev.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- category -->
+             <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Категория</mat-label>
+                    <mat-select formControlName="category">
+                        <mat-option *ngFor="let cat of category" [value]="cat.value">
+                            {{cat.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- preview problem -->
+             <mat-grid-tile colspan="5" rowspan="8">
+                <div class="grid-container">
+                    <mat-card class="preview">
+                        <mat-card-header>
+                            <mat-card-title>
+                                {{ringForm.value.level.replace('P','П') + ' Проблема'}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="ringForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
+                            <mat-card-title *ngIf="ringForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{ringForm.value.problem }}</p>
+                            <p>{{'Причина: ' + ringForm.value.reason }}</p>
+                             <p>{{'Эффект: ' + ringForm.value.effect }}</p>
+                            <p>{{'Время отключения ЭП: ' + ringForm.value.powerOffTime.replace("T", " ")}}</p>
+                            <p>{{'Начало: ' + ringForm.value.startTime.replace("T", " ")}}</p>
+                            <p>{{'Оповещен: ' + ringForm.value.informed}}</p>
+                            <p>{{ 'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
+                        </mat-card-content>
+
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Проблема')" type="submit"
+                                [disabled]="ringForm.invalid || ringForm.value.endTime !==''">Отправить Сообщения
+                            </button>
+                           
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="forSmsTesting('Проблема')" type="submit"
+                                [disabled]="ringForm.invalid || ringForm.value.endTime !==''">
+                                TEST SMS
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </mat-grid-tile>
+            <!-- preview resheniya-->
+            <mat-grid-tile colspan="5" rowspan="8">
+                <div class="grid-container">
+                    <mat-card class="preview">
+                        <mat-card-header>
+                            <mat-card-title>
+                                {{ringForm.value.level?.replace('P', 'П') + ' Решение:'}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="ringForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
+                            <mat-card-title *ngIf="ringForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{ringForm.value.problem }}</p>
+                            <p>{{'Причина: ' + ringForm.value.reason }}</p>
+                             <p>{{'Эффект: ' + ringForm.value.effect }}</p>
+                            <p>{{'Описание: ' + ringForm.value.desc}}</p>
+                            <p>{{'Время отключения ЭП: ' + ringForm.value.powerOffTime.replace("T", " ")}}</p>
+                            <p>{{'Начало: ' + ringForm.value.startTime.replace("T", " ")}}</p>
+                            <p>{{'Конец: ' + ringForm.value.endTime?.replace("T", " ")}}</p>
+                            <p>{{'Оповещен: ' + ringForm.value.informed}}</p>
+                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Решение')" type="submit"
+                                [disabled]="(ringForm.invalid) || ringForm.value.endTime==''">Отправить Сообщения
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="forSmsTesting('Решение')" type="submit"
+                                [disabled]="ringForm.invalid || ringForm.value.endTime ==''">
+                                TEST SMS
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </mat-grid-tile>
+            <!-- preview infromacionoe-->
+            <mat-grid-tile colspan="5" rowspan="8">
+                <div class="grid-container">
+                    <mat-card class="preview">
+                        <mat-card-header>
+                            <mat-card-title>
+                                {{ringForm.value.level?.replace('P','П') + ' Информационное:'}}
+                            </mat-card-title>
+                            <mat-card-title *ngIf="ringForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
+                            <mat-card-title *ngIf="ringForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{ringForm.value.problem }}</p>
+                            <p>{{'Причина: ' + ringForm.value.reason }}</p>
+                             <p>{{'Эффект: ' + ringForm.value.effect }}</p>
+                            <p>{{'Описание: ' + ringForm.value.desc}}</p>
+                            <p>{{'Время отключения ЭП: ' + ringForm.value.powerOffTime.replace("T", " ")}}</p>
+                          
+                            <p>{{'Начало: ' + ringForm.value.startTime.replace("T", " ")}}</p>
+                            <p>{{'Конец: ' + ringForm.value.endTime?.replace("T", " ")}}</p>
+                            <p>{{'Оповещен: ' + ringForm.value.informed}}</p>
+                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="onSubmitButtonProblem('Информационное')" type="submit"
+                                [disabled]="(ringForm.invalid) || ringForm.value.endTime==''">
+                                Отправить Сообщения
+                            </button>
+                            <button class="form-button" mat-raised-button color="primary"
+                                (click)="forSmsTesting('Информационное')" type="submit"
+                                [disabled]="ringForm.invalid || ringForm.value.endTime ==''">
+                                TEST SMS
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </mat-grid-tile>
+            <!-- categories report -->
+            <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Категория для отчета</mat-label>
+                    <mat-select formControlName="categories_report">
+                        <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
+                            {{cat_rep.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- responsible area -->
+            <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Ответственная Зона</mat-label>
+                    <mat-select formControlName="responsible_report">
+                        <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
+                            {{res_rep.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- problem -->
+            <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Проблем</mat-label>
+                    <textarea matInput type="text" formControlName="problem" spellcheck="true"
+                        [matAutocomplete]="autoReason">
+                    </textarea>
+                    <mat-autocomplete #autoReason="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsReason | async" [value]="option">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </mat-grid-tile>
+              <!-- reason -->
+              <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Причина</mat-label>
+                    <textarea matInput type="text" formControlName="reason" spellcheck="true"
+                        [matAutocomplete]="autoReason">
+                    </textarea>
+                    <mat-autocomplete #autoReason="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsReason | async" [value]="option">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- desc -->
+            <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Описание</mat-label>
+                    <textarea matInput type="text" formControlName="desc" spellcheck="true"
+                        [matAutocomplete]="autoDesc"></textarea>
+                    <mat-autocomplete #autoDesc="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsDesc | async" [value]="option">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- effect -->
+             <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Эффект</mat-label>
+                    <textarea matInput type="text" formControlName="effect" spellcheck="true"
+                        [matAutocomplete]="autoDesc"></textarea>
+                    <mat-autocomplete #autoDesc="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptionsDesc | async" [value]="option">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </mat-grid-tile>
+             <!-- region -->
+             <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container">
+                    <mat-label>Регион</mat-label>
+                    <mat-select formControlName="region">
+                        <mat-option *ngFor="let reg of region" [value]="reg.value">
+                            {{reg.value}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+          
+            <!-- informed -->
+            <mat-grid-tile colspan="5">
+                <mat-form-field class="margin-container"> 
+                    <mat-label>Оповещен</mat-label>
+                    <input matInput type="text" formControlName="informed" />
+                </mat-form-field>
+            </mat-grid-tile>
+           
+            
+           
+           
+            <!-- powerOff Time -->
+            <mat-grid-tile colspan="3">
+                <div class="margin-container">
+                    <p>Время отключения ЭП</p>
+                    <input type="datetime-local" class="dateTime" formControlName="powerOffTime" min="2023-01-01T00:00"
+                       [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                </div>
+            </mat-grid-tile>
+            <!-- start Time -->
+            <mat-grid-tile colspan="4">
+                <div class="margin-container">
+                    <p>Начало</p>
+                    <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
+                        min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                </div>
+            </mat-grid-tile>
+            <!-- end Time -->
+            <mat-grid-tile colspan="3">
+                <div class="margin-container">
+                    <p>Конец<span
+                            *ngIf="ringForm.get('endTime').hasError('timeValid') && ringForm.get('startTime').touched"
+                            class="timeNotValid"> *Начало больше чем Конец времени</span></p>
+                    <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
+                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
+                </div>
+            </mat-grid-tile>
+
+            <!-- buttons -->
+            <mat-grid-tile colspan="2">
+                <button class="form-button" mat-raised-button color="primary" type="button"
+                    *ngIf="newForm == false && asNew == false" (click)="updateData()">Обновить</button>
+                <button class="form-button" mat-raised-button color="primary" type="button"
+                    *ngIf="newForm == true || asNew == true" [disabled]="ringForm.invalid"
+                    (click)="createData()">Создать</button>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="6">
+                <mat-chip-listbox formControlName="AddOrCor">
+                    <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
+                    <mat-chip-option value="Дополнение">Дополнение</mat-chip-option>
+                </mat-chip-listbox>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </form>
+</div>

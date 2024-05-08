@@ -48,7 +48,7 @@ export class InternetTemplateComponent {
 
   tableSendBody() {
     this.tableBody = {
-      'type': 'CORE',
+      'type': 'INTERNET',
       'level': 'A5',
       'category': 'ЭС и Клим',
       'responsible_area': 'Эксплуатация',
