@@ -16,6 +16,8 @@ import { CoreTemplateComponent } from "./home/cn/core-template.component";
 import { InternetTemplateComponent } from "./home/cn/internet-template/internet-template.component";
 import { MassPowerComponent } from "./home/rn/mass-power/mass-power.component";
 import { RingComponent } from "./home/rn/ring/ring.component";
+import { SelectedCasesComponent } from "./home/selected-cases/selected-cases.component";
+import { CorrectionComponent } from "./home/correction/correction.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
@@ -23,6 +25,8 @@ const routes: Routes = [
     { path: 'home', component: HomeComponent, canActivate:[AuthGuard]  },
     { path: 'home/dashboard', component: DashboardComponent , canActivate:[AuthGuard]},
     { path: 'home/newIdeas', component: NewIdeasComponent , canActivate:[AuthGuard]},
+    { path: 'home/selectedCases', component: SelectedCasesComponent , canActivate:[AuthGuard]},
+    { path: 'home/correctionList', component: CorrectionComponent , canActivate:[AuthGuard]},
     //{ path: 'home/cn', component: CnComponent , canActivate:[AuthGuard]},
     {
         path: 'home/cn', component: CoreTemplateComponent, children: [

@@ -55,6 +55,9 @@ import { InternetTemplateComponent } from './home/cn/internet-template/internet-
 import { EditPageComponent } from './home/new-ideas/edit-page/edit-page.component';
 import { KpiLogsComponent } from './home/kpi-logs/kpi-logs.component';
 import { RingComponent } from './home/rn/ring/ring.component';
+import { SelectedCasesComponent } from './home/selected-cases/selected-cases.component';
+import { EditCommentComponent } from './home/selected-cases/edit-comment/edit-comment.component';
+import { CorrectionComponent } from './home/correction/correction.component';
 
 
 
@@ -78,7 +81,10 @@ import { RingComponent } from './home/rn/ring/ring.component';
     NewIdeasComponent,
     EditPageComponent,
     RingComponent,
-    KpiLogsComponent
+    SelectedCasesComponent,
+    KpiLogsComponent,
+    EditCommentComponent,
+    CorrectionComponent 
   ],
   imports: [
     BrowserModule,

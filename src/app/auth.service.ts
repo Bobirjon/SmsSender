@@ -150,11 +150,11 @@ export class AuthService {
   }
 
   getKPI() {
-    return this.http.get(this.URLsender + 'smssender/userkpi/kpi')
+    return this.http.get(this.URLsender + 'smssender/userkpi2/kpi2')
   }
 
   getLog() {
-    return this.http.get(this.URLsender + 'smssender/userkpi/log')
+    return this.http.get(this.URLsender + 'smssender/userkpi2/log2')
   }
 
   getUsers() {
@@ -162,7 +162,27 @@ export class AuthService {
   }
 
   testting(data: any) {
-
     return this.http.get("http://10.7.119.12/api/smssender/effectedsites  ", data)
+    
   }
+
+  PostSelectedCase(data: any) {
+    return this.http.post(this.URLsender + 'smssender/selectedcase/add/', data)
+  }
+
+  GetSelectedCase( page: number, perpage: number) {
+    const url = this.URLsender + `smssender/selectedcase/list/?page=${page}&page_size=${perpage}`
+    return this.http.get(url)
+  }
+
+  updateComment(id: number, data: any) {
+    return this.http.put(`${this.URLsender + 'smssender/selectedcase'}/${id}/`, data)
+  }
+
+  getCorrection( page: number, perpage: number) {
+    const url = this.URLsender + `smssender/smslog/?page=${page}&page_size=${perpage}`
+    return this.http.get(url)
+  }
+
+
 }

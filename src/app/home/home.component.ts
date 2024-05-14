@@ -28,8 +28,6 @@ export interface DataTable {
   id: string
 }
 
-
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -311,7 +309,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-
     this.authService.getUser().subscribe((data: any) => {
       this.userName = data.first_name + ' ' + data.last_name
     })
@@ -319,6 +316,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.authService.getKPI().subscribe((data: any) => {
       this.KPI = data
+      console.log(this.KPI);
+      
 
       this.authService.getUsers().subscribe((data: any) => {
         this.USERS = data.results
@@ -502,6 +501,30 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   dashBorad() {
     this.router.navigate(['home/newIdeas'])
+  }
+
+  selectedCase (row: any) {
+    this.snackBar.open('Saved', '', { duration: 10000 })
+    console.log(row);
+    let body = {
+      'alarmreport' : row.id,
+      'comment': ''
+    }
+    console.log(body);
+    
+    this.authService.PostSelectedCase(body).subscribe((res)=> {
+      console.log(res);
+      
+    })
+  }
+  
+
+  getSelectedCases() {
+    this.router.navigate(['home/selectedCases'])
+  }
+
+  correctionList() {
+    this.router.navigate(['home/correctionList'])
   }
 
 

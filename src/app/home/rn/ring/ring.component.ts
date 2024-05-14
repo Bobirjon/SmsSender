@@ -270,9 +270,7 @@ export class RingComponent implements OnInit {
 
   smsSendBody(id?: number) {
 
-
     let addWord = this.storageService.additionWord(this.ringForm.value.level)
-
 
     let powerOffTime = this.ringForm.value.powerOffTime == '' ? 'Н\Д' : this.ringForm.value.powerOffTime.replace("T", " ")
 

@@ -404,7 +404,8 @@ export class CnComponent implements OnInit {
           if(result['category_for_core'] == 'Core' ||
              result['category_for_core'] == 'GPRS' ||
              result['category_for_core'] == 'Roaming' ||
-             result['category_for_core'] == 'MPLS') {
+             result['category_for_core'] == 'MPLS' ||
+             result['category_for_core'] == 'Core-NetAct') {
             this.cnForm.get('region').disable()
           } else {
             this.cnForm.get('region').enable()

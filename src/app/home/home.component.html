@@ -121,16 +121,21 @@
         </button>
       </mat-grid-tile>
       <mat-grid-tile colspan="1">
-        <button mat-raised-button (click)="dashBorad()">
-          Dashboard
-        </button><span class="tag">testing</span>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1">
         <button mat-raised-button (click)="dashBorad()" class="buttonStyle">
           Новые Идеи
         </button><span class="tag">testing</span>
       </mat-grid-tile>
-      <mat-grid-tile colspan="3">
+      <mat-grid-tile colspan="1">
+        <button mat-raised-button (click)="getSelectedCases()" class="buttonStyle">
+          Избранные случаи
+        </button><span class="tag">testing</span>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1">
+        <button mat-raised-button (click)="correctionList()" class="buttonStyle">
+          Коррекции
+        </button><span class="tag">testing</span>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="">
 
       </mat-grid-tile>
     </mat-grid-list>
@@ -306,7 +311,7 @@
       <div class="example-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
         <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
         <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
-          Идет Загрузка , , , ,
+          Идет Загрузка . . . . . . . . 
         </div>
       </div>
       <div>
@@ -320,6 +325,9 @@
                 <mat-icon style="color: #572469d5; ">library_add</mat-icon>
               </a>
               <span>
+                <a style="cursor: pointer; text-decoration: none;" (click)="selectedCase(row)">
+                  <mat-icon style="color: #572469d5; ">star</mat-icon>
+                </a>
                 <a class="edit" routerLink="/home/{{row.type}}/{{row.id}}">{{row.type}}</a>
               </span>
             </td>
