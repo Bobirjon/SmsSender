@@ -34,7 +34,7 @@ export class CorrectionComponent implements OnInit, AfterViewInit {
     .pipe(
       startWith({}),
       switchMap(() => {
-        this.isLoading = true;
+        Promise.resolve().then(()=> this.isLoading = true)
         return this.getCorrectionList(
           this.paginator.pageIndex + 1,
           this.paginator.pageSize
@@ -43,14 +43,21 @@ export class CorrectionComponent implements OnInit, AfterViewInit {
       map((corList: any) => {
         if (corList == null) return [];
         this.totalItems = corList.count;
-        this.isLoading = false;
+        console.log(corList);
+        
+        Promise.resolve().then(()=> this.isLoading = false)
+        
         return corList.results;
         
       })
     )
     .subscribe((corData: any) => {
-      this.resultArray = corData;
-      this.dataSource = new MatTableDataSource(this.resultArray);
+      
+      this.authService.getUsers().subscribe((users: any)=> {
+        this.gettingUsername(users, corData)
+        this.dataSource = new MatTableDataSource(this.resultArray);
+      })
+      
     });
   }
 
@@ -62,12 +69,13 @@ export class CorrectionComponent implements OnInit, AfterViewInit {
   gettingUsername(usernames: any, kpis: any) {
 
     this.resultArray = kpis.map((kpi: any) => {
- 
-      const userName = usernames.find((value: any) => value.id == kpi.user)
+      
+      const userName = usernames.results.find((value: any) => value.id == kpi.user)
      
       if (userName) {
         return {
           id: userName.id,
+          smsLogId: kpi.id,
           username: userName.username,
           sentTime: kpi.sent_time,
           alarmreport: kpi.alarmreport,
@@ -75,6 +83,18 @@ export class CorrectionComponent implements OnInit, AfterViewInit {
         }
       }
     }).filter(Boolean)
+  }
+
+  changeCorrectionType(row: any) {
+
+    let body = { 
+      sms_type: row.smsType.replace('коррекция', 'коррекИнформатор')
+    }
+    this.authService.changeCorrectionType(row.smsLogId, body).subscribe((res: any) => {
+      console.log(res);
+    
+      
+    })
     
   }
 

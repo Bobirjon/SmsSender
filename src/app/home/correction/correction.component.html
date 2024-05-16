@@ -1,33 +1,33 @@
-<p>correction works!</p>
+
 <!-- Material table with specified columns -->
 <table mat-table [dataSource]="dataSource" matSort>
     <!-- Define column for 'ID' -->
     <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Icon</th>
-        <td mat-cell *matCellDef="let element">icon</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Действие</th>
+        <td mat-cell *matCellDef="let element"> <button mat-flat-button (click)="changeCorrectionType(element)">Изменить тип</button></td>
     </ng-container>
 
     <!-- Define column for 'Name' -->
     <ng-container matColumnDef="username">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>username</th>
-        <td mat-cell *matCellDef="let element">{{ element.username }}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Имя Пользователя</th>
+        <td mat-cell *matCellDef="let element">{{ element.username.replace('_', ' ') }}</td>
     </ng-container>
 
     <!-- Define column for 'Description' -->
     <ng-container matColumnDef="sentTime">
-        <th mat-header-cell *matHeaderCellDef>sentTime</th>
-        <td mat-cell *matCellDef="let element">{{ element.sentTime }}</td>
+        <th mat-header-cell *matHeaderCellDef>Время отправки</th>
+        <td mat-cell *matCellDef="let element">{{ element.sentTime.replace('T', ' ').substring('0','16') }}</td>
     </ng-container>
 
     <!-- Define column for 'Description' -->
     <ng-container matColumnDef="alarmreportID">
-        <th mat-header-cell *matHeaderCellDef>alarmreportID</th>
+        <th mat-header-cell *matHeaderCellDef>ID аварии</th>
         <td mat-cell *matCellDef="let element">{{ element.alarmreport }}</td>
     </ng-container>
 
     <!-- Define column for 'Description' -->
     <ng-container matColumnDef="smsType">
-        <th mat-header-cell *matHeaderCellDef>smsType</th>
+        <th mat-header-cell *matHeaderCellDef>Тип сообшения</th>
         <td mat-cell *matCellDef="let element">{{ element.smsType }}</td>
     </ng-container>
 
@@ -35,14 +35,6 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-
-<!-- Material paginator -->
-<!-- <mat-paginator
-    [length]="totalItems"
-    [pageSize]="10"
-    [pageSizeOptions]="[50, 100, 200]"
-    (page)="handlePageEvent($event)" 
-  ></mat-paginator> -->
 
 <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
 <mat-paginator #paginator [length]="totalItems" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>

@@ -25,6 +25,7 @@ export class SelectedCasesComponent implements OnInit, AfterViewInit  {
     this.fetchData(0, this.paginator.pageSize);
   }
 
+
   ngOnInit() {}
 
   fetchData(pageIndex: number, pageSize: number) {
@@ -62,15 +63,9 @@ export class SelectedCasesComponent implements OnInit, AfterViewInit  {
           'alarmreport' : row.alarmreport.id,
           'comment' : result.comment
         }
-        console.log(data);
-        
-        
         this.authService.updateComment(row.id, data).subscribe((res) => {
-          // If successful, update the local data to reflect the change
-          // row.comment = result.comment;
           console.log(res);
-          
-          
+          window.location.reload()
         });
       }
     });

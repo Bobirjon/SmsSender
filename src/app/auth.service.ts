@@ -184,5 +184,9 @@ export class AuthService {
     return this.http.get(url)
   }
 
+  changeCorrectionType(id: number, data: any) {
+    return this.http.put(`${this.URLsender + 'smssender/smslog'}/${id}/`, data)
+  }
+
 
 }
