@@ -186,10 +186,10 @@
             <mat-grid-tile colspan="5">
                 <div class="margin-container">
                     <p>Конец<span
-                            *ngIf="massPowerForm.get('endTime').hasError('timeValid') && massPowerForm.get('startTime').touched"
-                            class="timeNotValid"> *Начало больше чем Конец времени</span></p>
-                    <input type="datetime-local" class="dateTime" formControlName="endTime"
-                       >
+                        *ngIf="massPowerForm.get('endTime').hasError('timeValid') && massPowerForm.get('startTime').touched"
+                        class="timeNotValid"> *Начало больше чем Конец времени</span></p>
+                <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
+                    [max]="time | date: 'yyyy-MM-ddTHH:mm'">
                 </div>
             </mat-grid-tile>
             <!-- buttons -->

@@ -127,6 +127,7 @@ export class MassPowerComponent implements OnInit {
 
     } else {
       this.newForm = false
+      let endTimeForUpdate: any
       if(this.route.snapshot.url.toString().includes('update')) {
         this.asNew = true
       }
@@ -134,16 +135,22 @@ export class MassPowerComponent implements OnInit {
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
           console.log(result);
+
+          if (result['end_time'] == null || this.asNew == true) {
+            endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
+          } else {
+            endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
+          }
           
           this.massPowerForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level']],
             'problem': [result['problem'], Validators.required],
             'reason': [result['reason'], Validators.required],
-            'effect': [result['influency']],
-            'infromed': [result['informed']],
+            'effect': [result['influence']],
+            'informed': [result['informed']],
             'desc': [result['description']],
-            'endTime' : [result['end_time']],
+            'endTime' : [endTimeForUpdate],
             'startTime': [formatDate(result['start_time'], 'yyyy-MM-ddTHH:mm', 'en'), Validators.required],
             'region': [result['region'], Validators.required],
           })
@@ -161,12 +168,18 @@ export class MassPowerComponent implements OnInit {
       'responsible_area': this.massPowerForm.value.responsible_report,
       'problem': this.massPowerForm.value.problem ,
       'reason': this.massPowerForm.value.reason ,
-      'influency': this.massPowerForm.value.effect,
+      'influence': this.massPowerForm.value.effect,
+      'informed': this.massPowerForm.value.informed,
       'start_time': this.massPowerForm.value.startTime,
-      'end_time': this.massPowerForm.value.startTime,
       'region': this.massPowerForm.value.region,
       'sender': this.user?.username,
       'effect': 'Без влияния',
+    }
+
+    if (this.massPowerForm.value.endTime !== '') {
+      this.tableBody.end_time = this.massPowerForm.value.endTime
+    } else {
+      this.tableBody.end_time = null
     }
   }
 
