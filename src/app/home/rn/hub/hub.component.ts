@@ -306,7 +306,6 @@ export class HubComponent implements OnInit {
       let power_off_time: any
       let block_time: any
       let effectedSites: any
-      let district: any
 
       if(this.route.snapshot.url.toString().includes('update')) {
         this.asNew = true
@@ -321,7 +320,7 @@ export class HubComponent implements OnInit {
           const selectedOptionDis = this.district.find(dis => dis.value === result['district'])
           this.selectedDistrict = selectedOptionDis ? selectedOptionDis.display : ''
           
-          if (result['end_time'] == null) {
+          if (result['end_time'] == null || this.asNew == true) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
@@ -351,6 +350,7 @@ export class HubComponent implements OnInit {
           } else {
             effectedSites = result['effected_sites']
           }
+
           this.hubForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level'], Validators.required],
@@ -716,7 +716,6 @@ export class HubComponent implements OnInit {
       }
     })
   }
-
 }
 
 @Component({

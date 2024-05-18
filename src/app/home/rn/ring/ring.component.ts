@@ -197,7 +197,7 @@ export class RingComponent implements OnInit {
           this.selectedRegion = selectedOptionReg ? selectedOptionReg.display : ''
 
 
-          if (result['end_time'] == null) {
+          if (result['end_time'] == null|| this.asNew == true ) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')

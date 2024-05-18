@@ -246,7 +246,7 @@ export class ChronicComponent implements OnInit {
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
 
-          if (result['end_time'] == null) {
+          if (result['end_time'] == null || this.asNew == true) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
@@ -485,6 +485,7 @@ export class ChronicComponent implements OnInit {
               this.smsSendBody(result.id)
               this.sendButton()
             }, error => {
+              console.log(error);
               this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
             })
         } else {
@@ -496,6 +497,7 @@ export class ChronicComponent implements OnInit {
               this.smsSendBody(result.id)
               this.sendButton()
             }, error => {
+              console.log(error);
               this.snackBar.open("Ошибка", '', { duration: 10000 })
             })
         }

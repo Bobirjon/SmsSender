@@ -133,13 +133,13 @@ export class MassPowerComponent implements OnInit {
 
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-         
-
+          console.log(result);
+          
           this.massPowerForm = this.formBuilder.group({
             'AddOrCor': [null],
             'level': [result['level']],
-            'problem': [result['hub_problem'], Validators.required],
-            'reason': [result['hub_reason'], Validators.required],
+            'problem': [result['problem'], Validators.required],
+            'reason': [result['reason'], Validators.required],
             'effect': [result['influency']],
             'infromed': [result['informed']],
             'desc': [result['description']],
@@ -161,6 +161,7 @@ export class MassPowerComponent implements OnInit {
       'responsible_area': this.massPowerForm.value.responsible_report,
       'problem': this.massPowerForm.value.problem ,
       'reason': this.massPowerForm.value.reason ,
+      'influency': this.massPowerForm.value.effect,
       'start_time': this.massPowerForm.value.startTime,
       'end_time': this.massPowerForm.value.startTime,
       'region': this.massPowerForm.value.region,
@@ -243,6 +244,7 @@ export class MassPowerComponent implements OnInit {
         console.log(result);
         this.snackBar.open('Обновлено', '', { duration: 10000 })
       }, error => {
+        console.log(error);
         this.snackBar.open('Ошибка при обновлении', '', { duration: 10000 })
       })
   }

@@ -190,7 +190,7 @@ export class BscComponent implements OnInit {
       
       this.authService.getSms(this.route.snapshot.params.id)
         .subscribe(result => {
-          if (result['end_time'] == null) {
+          if (result['end_time'] == null || this.asNew == true) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
