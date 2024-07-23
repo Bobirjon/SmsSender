@@ -1,0 +1,38 @@
+<div class="container text-center">
+  <h2 style="margin-top: 20px;">Please select </h2>
+  <div class="row justify-content-center">
+    <div class="col-lg-3 col-md-6 col-sm-12 d-flex justify-content-center">
+      <div class="card card-style" style="margin: 20px;" (click)="smsSender()">
+        <div class="card-body">
+          <h5 class="card-title">SMS Sender</h5>
+          <p class="card-text">Allow users to send SMS notification and Monitoring the sended cases</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12 d-flex justify-content-center" >
+      <div class="card card-style" style="margin: 20px;" (click)="doorAlarm()">
+        <div class="card-body" >
+          <h5 class="card-title">Door Alarm Registration</h5>
+          <p class="card-text">Allow users to register the Door Alarm to journal</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12 d-flex justify-content-center">
+      <div class="card card-style" style="margin: 20px;"  (click)="cellDown()">
+        <div class="card-body" >
+          <h5 class="card-title">Cell down</h5>
+          <p class="card-text">Allow users to see degraded cell in network</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12 d-flex justify-content-center">
+      <div class="card card-style" style="margin: 20px;">
+        <div class="card-body" >
+          <h5 class="card-title">Chronic notification</h5>
+          <p class="card-text">Allow users to see which cases were sent automaticaly</p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>

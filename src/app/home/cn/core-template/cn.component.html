@@ -2,7 +2,6 @@
     <h1 style="margin: 30px;">Core SMS</h1>
     <!-- form Filling -->
     <form [formGroup]="cnForm" class="form-container">
-
         <mat-grid-list cols="25" rowHeight="1000px">
             <mat-grid-tile colspan="10">
                 <div class="grid-form">
@@ -132,7 +131,7 @@
                         <div class="grid-form-item">
                             <p style="margin-left: 5px;">Начало</p>
                             <input type="datetime-local" class="dateTime" name="startTime" formControlName="startTime"
-                                min="2023-01-01T00:00" [max]="time | date: 'yyyy-MM-ddTHH:mm'" />
+                                min="2023-01-01T00:00" />
                         </div>
                         
                         <div class="grid-form-item">

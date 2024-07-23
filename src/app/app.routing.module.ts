@@ -18,11 +18,18 @@ import { MassPowerComponent } from "./home/rn/mass-power/mass-power.component";
 import { RingComponent } from "./home/rn/ring/ring.component";
 import { SelectedCasesComponent } from "./home/selected-cases/selected-cases.component";
 import { CorrectionComponent } from "./home/correction/correction.component";
+import { MainHomeComponent } from "./main-home/main-home.component";
+import { AlarmMonitorComponent } from "./alarm-monitor/alarm-monitor.component";
+import { DoorAlarmComponent } from "./door-alarm/door-alarm.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
     { path: 'login', component: LoginComponent },
-    { path: 'home', component: HomeComponent, canActivate:[AuthGuard]  },
+    { path: 'home', component: MainHomeComponent, canActivate:[AuthGuard]  },
+    { path: 'senderHome', component: HomeComponent, canActivate:[AuthGuard]  },
+    { path: 'alarmMonitor', component: AlarmMonitorComponent, canActivate:[AuthGuard]  },
+    { path: 'doorAlarm', component: DoorAlarmComponent, canActivate:[AuthGuard]  },
+
     { path: 'home/dashboard', component: DashboardComponent , canActivate:[AuthGuard]},
     { path: 'home/newIdeas', component: NewIdeasComponent , canActivate:[AuthGuard]},
     { path: 'home/selectedCases', component: SelectedCasesComponent , canActivate:[AuthGuard]},

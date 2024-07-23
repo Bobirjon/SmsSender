@@ -3,11 +3,73 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
+  level: string[] = [
+    'A1', 'A2', 'A3', 'A4', 'A5',
+    'P1', 'P2', 'P3', 'P4', 'P5',
+  ]
+
+  categories_report: string[] = [
+    'Тех проблема',
+    'ЭС и Клим',
+    'Провайдер',
+    'ПР',
+    'Выясняется',
+  ]
+
+  category: string[] = [
+    'Core',
+    'Core-NetAct',
+    'GPRS',
+    'Roaming',
+    'MPLS',
+    'Power',
+    'High Temp',
+  ];
+
+  responsible_report: string[] = [
+    'Другие ЗО',
+    'Эксплуатация',
+    'Выясняется',
+  ];
+
+  effect_option: string[] = [
+    'С влиянием',
+    'Без влияния',
+  ];
+
+  periodicity: string[] = [
+    '',
+    'периодически',
+    'периодически и частично',
+  ];
+
+  region: string[] = [
+    'Андижан',
+    'Бухара',
+    'Джизак',
+    'Фергана',
+    'Сырдарья',
+    'Кашкадарья',
+    'Наманган',
+    'Навои',
+    'Каракалпакстан',
+    'Самарканд',
+    'г.Ташкент',
+    'Ташкент.обл',
+    'Сурхандарья',
+    'Хорезм',
+  ];
+
+
+
+
+
 
   addWordA3 = [
     'Ucell - предотвращение таких аварий зависит от тебя!',
@@ -33,6 +95,7 @@ export class StorageService {
   ]
   addWord = ''
   textIndex = 0;
+  form: FormGroup
 
   private isAuthSubject: BehaviorSubject<boolean>;
   private usernameSubject: BehaviorSubject<string | null>
@@ -46,7 +109,9 @@ export class StorageService {
   constructor(
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private router: Router,) {
+    private router: Router,
+    private formBuilder: FormBuilder) {
+
     this.isAuthSubject = new BehaviorSubject<boolean>(false)
     this.usernameSubject = new BehaviorSubject<string | null>(null)
 
@@ -59,6 +124,44 @@ export class StorageService {
       this.isAuthenticated = authData.isAuthenticated;
       this.userNameTest = authData.userName;
     }
+
+    this.form = this.formBuilder.group({
+      'battery_life_time': [''],
+      'bts_vendor': [''],
+      'categories_report': [''],
+      'category': [''],
+      'desc': [''],
+      'dg_start_time': [''],
+      'district': [''],
+      'effect': [''],
+      'effect_option': ['C Влиянием'],
+      'effectedSites': [''],
+      'endTime': [''],
+      'fiveG': [''],
+      'fourG': [''],
+      'generator': [''],
+      'hubBlockTime': [''],
+      'hubSite': [''],
+      'informed': [''],
+      'level': [''],
+      'lowBatteryTime': [''],
+      'mw_equipment': [''],
+      'mw_link': [''],
+      'mw_vendor': [''],
+      'periodicity': [''],
+      'powerOffTime': [''],
+      'problem': [''],
+      'reason': [''],
+      'region': [''],
+      'responsible_report': [''],
+      'sender': [''],'siteName': [''],
+      'startTime': [''],
+      'threeG': [''],
+      'time': [''],
+      'twoG': [''],
+      'AddOrCor': [null],
+
+    })
   }
 
   login(name: string) {

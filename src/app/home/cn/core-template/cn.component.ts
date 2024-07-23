@@ -214,6 +214,7 @@ export class CnComponent implements OnInit {
     return null
   }
 
+  
   tableSendBody() {
 
     this.tableBody = {
@@ -372,7 +373,7 @@ export class CnComponent implements OnInit {
       // this.regionDisabled()
       
       this.authService.getSms(this.route.snapshot.params.id)
-        .subscribe(result => {
+        .subscribe((result: any) => {
           console.log( formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en'));
           console.log(result['end_time']);
           

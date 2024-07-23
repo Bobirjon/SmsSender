@@ -58,6 +58,9 @@ import { RingComponent } from './home/rn/ring/ring.component';
 import { SelectedCasesComponent } from './home/selected-cases/selected-cases.component';
 import { EditCommentComponent } from './home/selected-cases/edit-comment/edit-comment.component';
 import { CorrectionComponent } from './home/correction/correction.component';
+import { MainHomeComponent } from './main-home/main-home.component';
+import { AlarmMonitorComponent } from './alarm-monitor/alarm-monitor.component';
+import { DoorAlarmComponent } from './door-alarm/door-alarm.component';
 
 
 
@@ -84,7 +87,10 @@ import { CorrectionComponent } from './home/correction/correction.component';
     SelectedCasesComponent,
     KpiLogsComponent,
     EditCommentComponent,
-    CorrectionComponent 
+    CorrectionComponent ,
+    MainHomeComponent,
+    AlarmMonitorComponent,
+    DoorAlarmComponent
   ],
   imports: [
     BrowserModule,

@@ -23,6 +23,7 @@
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
+
              <!-- preview problem -->
              <mat-grid-tile colspan="5" rowspan="8">
                 <div class="grid-container">
@@ -213,7 +214,7 @@
              <mat-grid-tile colspan="5">
                 <mat-form-field class="margin-container">
                     <mat-label>Регион</mat-label>
-                    <mat-select formControlName="region">
+                    <mat-select formControlName="region" (selectionChange)="OnSelectRegion($event)">
                         <mat-option *ngFor="let reg of region" [value]="reg.value">
                             {{reg.value}}
                         </mat-option>
@@ -227,11 +228,7 @@
                     <mat-label>Оповещен</mat-label>
                     <input matInput type="text" formControlName="informed" />
                 </mat-form-field>
-            </mat-grid-tile>
-           
-            
-           
-           
+            </mat-grid-tile>       
             <!-- powerOff Time -->
             <mat-grid-tile colspan="3">
                 <div class="margin-container">

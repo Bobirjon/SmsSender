@@ -1,0 +1,32 @@
+<div style="margin: 20px;">
+    <div><button></button></div>
+    <table class="table table-bordered caption-top ">
+        <caption>Block Type without External Alarms</caption>
+        <thead>
+          <tr>
+            <th scope="col">Region</th>
+            <th scope="col">Site name</th>
+            <th scope="col">Enter time</th>
+            <th scope="col">Exit time</th>
+            <th scope="col">Responsible Engineer</th>
+            <th scope="col">Organization</th>
+            <th scope="col">Reason to Visit</th>
+            <th scope="col">Work Type</th>
+            <th scope="col">WB</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of data">
+            <th scope="row">{{item.region}}</th>
+            <td>{{item.siteName}}</td>
+            <td>{{item.enterTime}}</td>
+            <td>{{item.exitTime}}</td>
+            <td>{{item.responsibleEngineer}}</td>
+            <td>{{item.organization}}</td>
+            <td>{{item.reasonToVisit}}</td>
+            <td>{{item.workType}}</td>
+            <td>{{item.WB}}</td>
+          </tr>
+        </tbody>
+      </table>
+</div>

@@ -1,0 +1,157 @@
+<div style="margin: 20px;">
+
+</div>
+<div style="margin: 20px;">
+  <form [formGroup]="cellDownFilter">
+    <div class="d-flex">
+      <div class="filter">
+        <label for="power">Питание</label>
+        <select class="form-select" id="power" formControlName="power">
+          <option selected value="">Все</option>
+          <option value="True">Без питания</option>
+          <option value="False">С питанием</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="dg">ДГ</label>
+        <select class="form-select" id="dg" formControlName="dg" >
+          <option selected value="">Все</option>
+          <option value="True">Без ДГ</option>
+          <option value="False">С ДГ</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="battery">Батарея</label>
+        <select class="form-select" id="battery" formControlName="battery" >
+          <option selected value="">Все</option>
+          <option value="True">Без Батареи</option>
+          <option value="False">С Батарей</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="comment">Comment</label>
+        <select class="form-select" id="comment" formControlName="comment" >
+          <option selected value="">Все</option>
+          <option value="True">Без коммента</option>
+          <option value="False">С</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="alarmType">Тип Аварии</label>
+        <input class="form-control" type="text" formControlName="alarmType">
+      </div>
+      <div class="filter">
+        <label for="siteName">Имя сайта</label>
+        <input class="form-control" type="text" formControlName="siteName">
+      </div>
+    </div>
+    <table class="table table-bordered caption-top ">
+      <caption>Cell Down Filter</caption>
+      <thead>
+        <tr>
+          <th scope="col">Alarm Code</th>
+          <th scope="col">Alarm Object Name</th>
+          <th scope="col">Alarm Raised Time</th>
+          <th scope="col">Alarm Type</th>
+          <th scope="col">Battery</th>
+          <th scope="col">Code Name</th>
+          <th scope="col">Comment</th>
+          <th scope="col">DG</th>
+          <th scope="col">Power Alarm Time</th>
+          <th scope="col">Site Name</th>
+          <th scope="col">Vendor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of cellDown">
+          <th scope="row">{{item.alarmcode}}</th>
+          <td>{{item.alarmobjectname}}</td>
+          <td>{{item.alarmraisedtime?.replace('T', ' ').substring('0','16')}}</td>
+          <td>{{item.alarmtype}}</td>
+          <td>{{item.battery?.replace('T', ' ').substring('0','16')}}</td>
+          <td>{{item.codename}}</td>
+          <td>{{item.comment}}</td>
+          <td>{{item.dg?.replace('T', ' ').substring('0','16')}}</td>
+          <td>{{item.power?.replace('T', ' ').substring('0','16')}}</td>
+          <td>{{item.site}}</td>
+          <td>{{item.vendor}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+
+
+<div style="margin: 20px;">
+  <table class="table table-bordered caption-top ">
+    <caption>Cell Down Filter</caption>
+    <thead>
+      <tr>
+        <th scope="col">Site name</th>
+        <th scope="col">Alarm time</th>
+        <th scope="col">Alarm number</th>
+        <th scope="col">Alarm Text</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data">
+        <th scope="row">{{item.siteName}}</th>
+        <td>{{item.alarmTime}}</td>
+        <td>{{item.alarmNumber}}</td>
+        <td>{{item.alarmText}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="margin: 20px;">
+  <table class="table table-bordered caption-top ">
+    <caption>Block Type without External Alarms</caption>
+    <thead>
+      <tr>
+        <th scope="col">Site name</th>
+        <th scope="col">Alarm time</th>
+        <th scope="col">Alarm number</th>
+        <th scope="col">Alarm Text</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data">
+        <th scope="row">{{item.siteName}}</th>
+        <td>{{item.alarmTime}}</td>
+        <td>{{item.alarmNumber}}</td>
+        <td>{{item.alarmText}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table table-bordered caption-top ">
+    <caption>Block Type without External Alarms</caption>
+    <thead>
+      <tr>
+        <th scope="col">Site name</th>
+        <th scope="col">Alarm object name</th>
+        <th scope="col">Alarm number</th>
+        <th scope="col">Alarm Text</th>
+        <th scope="col">Rise time</th>
+        <th scope="col">Comment</th>
+        <th scope="col">Alarm Type</th>
+        <th scope="col">Alarm ID</th>
+        <th scope="col">Vendor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of CurrentAlarm">
+        <th scope="row">{{item.site}}</th>
+        <td>{{item.alarmobjectname}}</td>
+        <td>{{item.alarmcode}}</td>
+        <td>{{item.codename}}</td>
+        <td>{{item.alarmraisedtime}}</td>
+        <td>{{item.comment}}</td>
+        <td>{{item.alarmtype}}</td>
+        <td>{{item.alarmid}}</td>
+        <td>{{item.vendor}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

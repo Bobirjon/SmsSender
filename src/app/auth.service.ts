@@ -58,7 +58,6 @@ export class AuthService {
     return this.http.get(url)
   }
 
-
   getRecievers(
     nameFilter: string,
     numberFilter: string,
@@ -188,5 +187,20 @@ export class AuthService {
     return this.http.put(`${this.URLsender + 'smssender/smslog'}/${id}/`, data)
   }
 
+  getCurrentAlarm() {
+    return this.http.get('http://10.7.119.12/api2/umbrella/activealarm/')
+  }
+
+  getCellDown(power:string, dg:string, battery: string, comment: string, alarmType: string, siteName: string) {
+    let url = 'http://10.7.119.12/api2/umbrella/celldown/' +
+              `?dg_empty=${dg}&power_empty=${power}&battery_empty=${battery}` +
+              `&comment_empty=${comment}&alarmtype=${alarmType}&site=${siteName}`
+              
+    return this.http.get(url)
+  }
+
+  getChronicSites() {
+    return this.http.get('http://10.7.119.12/api2/umbrella/chronicsite/')
+  }
 
 }

@@ -9,6 +9,7 @@ import { StorageService } from 'src/app/storage.service';
 import { AuthService } from 'src/app/auth.service';
 import { Observable, range } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-ring',
@@ -30,6 +31,16 @@ export class RingComponent implements OnInit {
   selectedRegion: string = ''
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsDesc: Observable<string[]>;
+  
+  regionCity: any = [
+    'в городе Андижан', 'в городе Ханабад', 'в городе Бухара', 'в городе Каган', 'в городе Джизак',
+    'в городе Фергана', 'в городе Коканд', 'в городе Кувасай', 'в городе Маргилан', 'в городе Ургенч',
+    'в городе Хива', 'в городе Нукус', 'в городе Карши', 'в городе Шахрисабз', 'в городе Наманган', 'в городе Навои',
+    'в городе Зарафшан', 'в городе Газган', 'в городе Самарканд', 'в городе Каттакурган', 'в городе Гулистан', 
+    'в городе Ширин','в городе Янгиер', 'в городе Термез', 'в городе Чирчик', 'в городе Алмалык', 'в городе Ангрен', 
+    'в городе Янгиюль', 'в городе Бекабад', 'в городе Ахангаран',
+
+  ]
 
   level: { value: string; viewValue: string }[] = [
     { value: 'A1', viewValue: 'A1' },
@@ -168,9 +179,11 @@ export class RingComponent implements OnInit {
     return null
   }
 
-  ngOnInit(): void {
+  OnSelectRegion(event: MatSelectChange) {
+    console.log(event.value);
+  }
 
-    console.log(this.ringForm.value.powerOffTime);
+  ngOnInit(): void {
 
     // get Current user
     this.authService.getUser()
@@ -197,7 +210,7 @@ export class RingComponent implements OnInit {
           this.selectedRegion = selectedOptionReg ? selectedOptionReg.display : ''
 
 
-          if (result['end_time'] == null|| this.asNew == true ) {
+          if (result['end_time'] == null || this.asNew == true) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')
           } else {
             endTimeForUpdate = formatDate(result['end_time'], 'yyyy-MM-ddTHH:mm', 'en')
@@ -205,7 +218,7 @@ export class RingComponent implements OnInit {
           if (result['power_off_time'] == null) {
             power_off_time = (result['power_off_time'], 'yyyy-MM-ddTHH:mm', '')
             console.log(power_off_time);
-            
+
           } else {
             power_off_time = formatDate(result['power_off_time'], 'yyyy-MM-ddTHH:mm', 'en')
             console.log(power_off_time);
@@ -250,22 +263,20 @@ export class RingComponent implements OnInit {
       'influence': this.ringForm.value.effect,
       'sender': this.user?.username,
       'effect': 'С влиянием',
-    
+
     }
 
     if (this.ringForm.value.endTime !== '') {
       this.tableBody.end_time = this.ringForm.value.endTime
     } else {
       this.tableBody.end_time = null
-    } 
+    }
     if (this.ringForm.value.powerOffTime !== '') {
       this.tableBody.power_off_time = this.ringForm.value.powerOffTime
     } else {
-    
-     this.tableBody.power_off_time = null
+
+      this.tableBody.power_off_time = null
     }
-
-
   }
 
   smsSendBody(id?: number) {
