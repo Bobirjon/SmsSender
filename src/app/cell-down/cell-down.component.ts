@@ -63,48 +63,45 @@ export class CellDownComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.socketSubscription = this.websocket.listen()
-      .subscribe((message: any) => {
-        this.isLoading = false;
-        this.cellDownTable.data = message
+    .subscribe((message: any) => {
+      this.isLoading = false;
+      this.cellDownTable.data = message
+      this.cellDownTable.paginator = this.paginator
+      this.cellDownTable.sort = this.sort
+      this.cellDownFilterForm.valueChanges.subscribe(filters => {
 
-        this.cellDownFilterForm.valueChanges.subscribe(filters => {
-
-          this.cellDownTable.data = message.filter((res: any) => {
-            return (
-              (filters.selectedRegion == 0 || filters.selectedRegion.some((reigon: any) => res.region.includes(reigon.value))) &&
-              (!filters.site || res.site.toLowerCase().includes(filters.site.toLowerCase())) &&
-              (!filters.alarmtype || res.alarmtype.toLowerCase().includes(filters.alarmtype.toLowerCase())) &&
-              (!filters.sitesbehind || res.sitesbehind?.toLowerCase().includes(filters.sitesbehind?.toLowerCase())) &&
-              (
-                filters.comment === 'all' ||
-                (filters.comment === 'empty' && (!res.comment || res.comment.trim() === '')) ||
-                (filters.comment === 'withValue' && res.comment && res.comment.trim() !== '')
-              ) &&
-              (
-                filters.power === 'all' ||
-                (filters.power === 'empty' && (!res.power || res.power.trim() === '')) ||
-                (filters.power === 'withValue' && res.power && res.power.trim() !== '')
-              ) &&
-              (
-                filters.dg === 'all' ||
-                (filters.dg === 'empty' && (!res.dg || res.dg.trim() === '')) ||
-                (filters.dg === 'withValue' && res.dg && res.dg.trim() !== '')
-              ) &&
-              (
-                filters.battery === 'all' ||
-                (filters.battery === 'empty' && (!res.battery || res.battery.trim() === '')) ||
-                (filters.battery === 'withValue' && res.battery && res.battery.trim() !== '')
-              )
+        this.cellDownTable.data = message.filter((res: any) => {
+          return (
+            (filters.selectedRegion == 0 || filters.selectedRegion.some((reigon: any) => res.region.includes(reigon.value))) &&
+            (!filters.site || res.site.toLowerCase().includes(filters.site.toLowerCase())) &&
+            (!filters.alarmtype || res.alarmtype.toLowerCase().includes(filters.alarmtype.toLowerCase())) &&
+            (!filters.sitesbehind || res.sitesbehind?.toLowerCase().includes(filters.sitesbehind?.toLowerCase())) &&
+            (
+              filters.comment === 'all' ||
+              (filters.comment === 'empty' && (!res.comment || res.comment.trim() === '')) ||
+              (filters.comment === 'withValue' && res.comment && res.comment.trim() !== '')
+            ) &&
+            (
+              filters.power === 'all' ||
+              (filters.power === 'empty' && (!res.power || res.power.trim() === '')) ||
+              (filters.power === 'withValue' && res.power && res.power.trim() !== '')
+            ) &&
+            (
+              filters.dg === 'all' ||
+              (filters.dg === 'empty' && (!res.dg || res.dg.trim() === '')) ||
+              (filters.dg === 'withValue' && res.dg && res.dg.trim() !== '')
+            ) &&
+            (
+              filters.battery === 'all' ||
+              (filters.battery === 'empty' && (!res.battery || res.battery.trim() === '')) ||
+              (filters.battery === 'withValue' && res.battery && res.battery.trim() !== '')
             )
-          })
+          )
         })
-      });
+      })
+    });
   }
 
-  ngAfterViewInit() {
-    this.cellDownTable.paginator = this.paginator
-    this.cellDownTable.sort = this.sort
-  }
 
   ngOnDestroy() {
     this.websocket.close();
