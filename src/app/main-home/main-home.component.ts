@@ -15,12 +15,16 @@ export class MainHomeComponent {
     this.router.navigate(['senderHome'])
   }
 
-  cellDown() {
+  cellDownBybands() {
     this.router.navigate(['alarmMonitor'])
   }
 
   doorAlarm() {
     this.router.navigate(['doorAlarm'])
+  }
+
+  cellDown() {
+    this.router.navigate(['cellDown'])
   }
 
 }

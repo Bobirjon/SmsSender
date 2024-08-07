@@ -386,7 +386,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   logExport(name: string) {
     this.authService.getLog().subscribe((data: any) => {
-      const result = data.filter((res: any) => res.user == name)
+      console.log(data);
+      
+      const result = data.filter((res: any) => res.user_id == name)
       const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(result);
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
@@ -557,7 +559,7 @@ export class exportExcel {
 
     this.authService.exportExcel(form.value.starttime, form.value.endtime)
       .subscribe(res => {
-        console.log(res);
+        
         this.posttest = res
         this.convertToXLSX(this.posttest.results, 'data')
       })
@@ -565,6 +567,7 @@ export class exportExcel {
 
 
   convertToXLSX(data: any, filename: string): void {
+    
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
     const workbook: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');

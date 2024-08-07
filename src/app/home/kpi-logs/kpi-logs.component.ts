@@ -24,38 +24,35 @@ export class KpiLogsComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private authservice: AuthService
   ) {
-
     this.authservice.getLog().subscribe((response: any) => {
 
       this.filterItems(response, data)
-      console.log(this.result);
-      
+
       this.LogData.data = this.result
       this.LogData.sort = this.sort
     })
   }
 
   filterItems(response: any, data: any) {
+    
     if (data.level == '' && data.type != '') {
-      
+
       this.result = response.filter((res: any) =>
-        res.user == data.userInfo.id &&
+        res.user_id == data.userInfo.id &&
         res.type == data.type
       )
     } else if (data.level == '' && data.type == '') {
       this.result = response.filter((res: any) =>
-        res.user == data.userInfo.id
+        res.user_id == data.userInfo.id
       )
     }
-     else {
+    else {
       this.result = response.filter((res: any) =>
-        res.user == data.userInfo.id &&
+        res.user_id == data.userInfo.id &&
         res.type == data.type && res.level == data.level
       )
     }
-    
     return this.result
-
   }
 
 

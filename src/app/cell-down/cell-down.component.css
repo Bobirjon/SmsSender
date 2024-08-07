@@ -1,0 +1,19 @@
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+  }
+
+  .box {
+    margin: 15px;
+  }
+
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  mat-form-field {
+    margin-right: 16px;
+  }

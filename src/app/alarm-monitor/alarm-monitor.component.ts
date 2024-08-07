@@ -17,6 +17,7 @@ export class AlarmMonitorComponent implements OnInit {
 
   displayedData: any[] = [];
 
+
   CurrentAlarm: any[] = []
   cellDown: any[] = []
   chronicSites: any[] = []
@@ -37,12 +38,13 @@ export class AlarmMonitorComponent implements OnInit {
     this.cellDownFilter.valueChanges.subscribe((res: any) => {
       this.fetchApi(res.power, res.dg, res.battery, res.comment, res.alarmType, res.siteName)
     })
-
   }
 
   fetchApi(power: string, dg: string, battery: string, comment: string, alarmType: string, siteName: string) {
     this.authService.getCellDown(power, dg, battery, comment, alarmType, siteName).subscribe((res: any) => {
       this.cellDown = res
+      console.log(res);
+      
     })
   }
 

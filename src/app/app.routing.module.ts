@@ -21,6 +21,7 @@ import { CorrectionComponent } from "./home/correction/correction.component";
 import { MainHomeComponent } from "./main-home/main-home.component";
 import { AlarmMonitorComponent } from "./alarm-monitor/alarm-monitor.component";
 import { DoorAlarmComponent } from "./door-alarm/door-alarm.component";
+import { CellDownComponent } from "./cell-down/cell-down.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
@@ -29,6 +30,7 @@ const routes: Routes = [
     { path: 'senderHome', component: HomeComponent, canActivate:[AuthGuard]  },
     { path: 'alarmMonitor', component: AlarmMonitorComponent, canActivate:[AuthGuard]  },
     { path: 'doorAlarm', component: DoorAlarmComponent, canActivate:[AuthGuard]  },
+    { path: 'cellDown', component: CellDownComponent, canActivate:[AuthGuard]  },
 
     { path: 'home/dashboard', component: DashboardComponent , canActivate:[AuthGuard]},
     { path: 'home/newIdeas', component: NewIdeasComponent , canActivate:[AuthGuard]},

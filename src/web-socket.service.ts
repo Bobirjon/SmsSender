@@ -13,7 +13,6 @@ export class WebSocketService {
   }
 
   sendMessage(message: any): void {
-    
     this.socket$.next(message);
   }
 

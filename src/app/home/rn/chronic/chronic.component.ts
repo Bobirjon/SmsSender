@@ -244,7 +244,7 @@ export class ChronicComponent implements OnInit {
         this.asNew = true
       }
       this.authService.getSms(this.route.snapshot.params.id)
-        .subscribe(result => {
+        .subscribe((result :any) => {
 
           if (result['end_time'] == null || this.asNew == true) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '')

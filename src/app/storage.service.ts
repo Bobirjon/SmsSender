@@ -276,7 +276,7 @@ export class StorageService {
       .subscribe(res => {
         console.log(res);
         this.snackBar.open('Сообщения отправлено', '', { duration: 10000 })
-        this.router.navigate(['/home'])
+        this.router.navigate(['/senderHome'])
       }, error => {
         console.log(error);
         this.snackBar.open("Ошибка при отправлении сообщения", '', { duration: 10000 })

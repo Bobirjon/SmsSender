@@ -61,8 +61,8 @@ import { CorrectionComponent } from './home/correction/correction.component';
 import { MainHomeComponent } from './main-home/main-home.component';
 import { AlarmMonitorComponent } from './alarm-monitor/alarm-monitor.component';
 import { DoorAlarmComponent } from './door-alarm/door-alarm.component';
-
-
+import { CellDownComponent } from './cell-down/cell-down.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -90,7 +90,8 @@ import { DoorAlarmComponent } from './door-alarm/door-alarm.component';
     CorrectionComponent ,
     MainHomeComponent,
     AlarmMonitorComponent,
-    DoorAlarmComponent
+    DoorAlarmComponent,
+    CellDownComponent
   ],
   imports: [
     BrowserModule,
@@ -124,6 +125,7 @@ import { DoorAlarmComponent } from './door-alarm/door-alarm.component';
     MatMenuModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
+    NgxPaginationModule
   ],
   providers: [ AuthGuard, DatePipe,
     {

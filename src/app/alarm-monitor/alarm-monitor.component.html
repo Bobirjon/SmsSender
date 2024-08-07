@@ -1,6 +1,4 @@
-<div style="margin: 20px;">
 
-</div>
 <div style="margin: 20px;">
   <form [formGroup]="cellDownFilter">
     <div class="d-flex">
@@ -59,7 +57,7 @@
           <th scope="col">DG</th>
           <th scope="col">Power Alarm Time</th>
           <th scope="col">Site Name</th>
-          <th scope="col">Vendor</th>
+          <th scope="col">Сайты за ним</th>
         </tr>
       </thead>
       <tbody>
@@ -74,13 +72,12 @@
           <td>{{item.dg?.replace('T', ' ').substring('0','16')}}</td>
           <td>{{item.power?.replace('T', ' ').substring('0','16')}}</td>
           <td>{{item.site}}</td>
-          <td>{{item.vendor}}</td>
+          <td>{{item.sitesbehind}}</td>
         </tr>
       </tbody>
     </table>
   </form>
 </div>
-
 
 <div style="margin: 20px;">
   <table class="table table-bordered caption-top ">

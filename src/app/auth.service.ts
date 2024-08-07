@@ -153,6 +153,8 @@ export class AuthService {
   }
 
   getLog() {
+    console.log(this.URLsender + 'smssender/userkpi2/log2');
+    
     return this.http.get(this.URLsender + 'smssender/userkpi2/log2')
   }
 
@@ -202,5 +204,7 @@ export class AuthService {
   getChronicSites() {
     return this.http.get('http://10.7.119.12/api2/umbrella/chronicsite/')
   }
+
+  
 
 }
