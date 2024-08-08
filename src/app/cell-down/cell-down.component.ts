@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { WebsocketService } from './web-socket-cell-down';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -27,6 +27,10 @@ export class CellDownComponent implements OnInit, OnDestroy {
 
   cellDownFilterForm: FormGroup
 
+  filterDataTable: any
+
+  isChanged: boolean = false
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -51,7 +55,7 @@ export class CellDownComponent implements OnInit, OnDestroy {
     this.cellDownFilterForm = this.fb.group({
       site: [''],
       start_time: [''],
-      sitesbehind: [''],
+      sitesbehind: ['all'],
       comment: ['all'],
       alarmtype: [''],
       power: ['all'],
@@ -61,44 +65,57 @@ export class CellDownComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnInit() {
-    this.socketSubscription = this.websocket.listen()
-    .subscribe((message: any) => {
-      this.isLoading = false;
-      this.cellDownTable.data = message
-      this.cellDownTable.paginator = this.paginator
-      this.cellDownTable.sort = this.sort
-      this.cellDownFilterForm.valueChanges.subscribe(filters => {
+  applyFilter(message: any) {
+    this.cellDownTable.data = message.filter((res: any) => {
 
-        this.cellDownTable.data = message.filter((res: any) => {
           return (
-            (filters.selectedRegion == 0 || filters.selectedRegion.some((reigon: any) => res.region.includes(reigon.value))) &&
-            (!filters.site || res.site.toLowerCase().includes(filters.site.toLowerCase())) &&
-            (!filters.alarmtype || res.alarmtype.toLowerCase().includes(filters.alarmtype.toLowerCase())) &&
-            (!filters.sitesbehind || res.sitesbehind?.toLowerCase().includes(filters.sitesbehind?.toLowerCase())) &&
+            (this.cellDownFilterForm.value.selectedRegion == 0 || this.cellDownFilterForm.value.selectedRegion.some((reigon: any) => res.region.includes(reigon.value))) &&
+            (!this.cellDownFilterForm.value.site || res.site.toLowerCase().includes(this.cellDownFilterForm.value.site.toLowerCase())) &&
+            (!this.cellDownFilterForm.value.alarmtype || res.alarmtype.toLowerCase().includes(this.cellDownFilterForm.value.alarmtype.toLowerCase())) &&
             (
-              filters.comment === 'all' ||
-              (filters.comment === 'empty' && (!res.comment || res.comment.trim() === '')) ||
-              (filters.comment === 'withValue' && res.comment && res.comment.trim() !== '')
+              this.cellDownFilterForm.value.sitesbehind === 'all' ||
+              (this.cellDownFilterForm.value.sitesbehind === 'empty' && (!res.sitesbehind || res.sitesbehind.trim() === '')) ||
+              (this.cellDownFilterForm.value.sitesbehind === 'withValue' && res.sitesbehind && res.sitesbehind.trim() !== '')
             ) &&
             (
-              filters.power === 'all' ||
-              (filters.power === 'empty' && (!res.power || res.power.trim() === '')) ||
-              (filters.power === 'withValue' && res.power && res.power.trim() !== '')
+              this.cellDownFilterForm.value.comment === 'all' ||
+              (this.cellDownFilterForm.value.comment === 'empty' && (!res.comment || res.comment.trim() === '')) ||
+              (this.cellDownFilterForm.value.comment === 'withValue' && res.comment && res.comment.trim() !== '')
             ) &&
             (
-              filters.dg === 'all' ||
-              (filters.dg === 'empty' && (!res.dg || res.dg.trim() === '')) ||
-              (filters.dg === 'withValue' && res.dg && res.dg.trim() !== '')
+              this.cellDownFilterForm.value.power === 'all' ||
+              (this.cellDownFilterForm.value.power === 'empty' && (!res.power || res.power.trim() === '')) ||
+              (this.cellDownFilterForm.value.power === 'withValue' && res.power && res.power.trim() !== '')
             ) &&
             (
-              filters.battery === 'all' ||
-              (filters.battery === 'empty' && (!res.battery || res.battery.trim() === '')) ||
-              (filters.battery === 'withValue' && res.battery && res.battery.trim() !== '')
+              this.cellDownFilterForm.value.dg === 'all' ||
+              (this.cellDownFilterForm.value.dg === 'empty' && (!res.dg || res.dg.trim() === '')) ||
+              (this.cellDownFilterForm.value.dg === 'withValue' && res.dg && res.dg.trim() !== '')
+            ) &&
+            (
+              this.cellDownFilterForm.value.battery === 'all' ||
+              (this.cellDownFilterForm.value.battery === 'empty' && (!res.battery || res.battery.trim() === '')) ||
+              (this.cellDownFilterForm.value.battery === 'withValue' && res.battery && res.battery.trim() !== '')
             )
           )
         })
+  }
+
+  ngOnInit() {
+
+    this.socketSubscription = this.websocket.listen()
+    .subscribe((message: any) => {
+      console.log(message);
+    
+      this.applyFilter(message)
+      this.cellDownFilterForm.valueChanges.subscribe(() => {
+        this.applyFilter(message)
+        
       })
+      
+      this.isLoading = false;
+      this.cellDownTable.paginator = this.paginator
+      this.cellDownTable.sort = this.sort
     });
   }
 
