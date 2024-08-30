@@ -54,7 +54,8 @@ export class AuthService {
       &level__icontains=${level}&type__icontains=${type}&description__icontains=${description}&reason__icontains=${reason}
       &problem__icontains=${problem}&createdat_in=${createdAt}&starttime_in=${startTime}&endtime_in=${endTime}
       &region__icontains=${region}&informed__icontains=${informed}&id=${id}`
-
+    console.log(url);
+    
     return this.http.get(url)
   }
 
@@ -74,7 +75,8 @@ export class AuthService {
       &tel_number__icontains=${numberFilter}&network=${networkFilter}
       &criteria=${criteriaFilter}&notification=${notificationFilter}
       &region=${regionFilter}&ordering=${order}${ordering}&page=${page}&page_size=${perpage}`
-
+    console.log(url);
+    
     return this.http.get(url)
   }
 
@@ -118,14 +120,24 @@ export class AuthService {
     return this.http.post(this.URLsender + 'smssender/sendsms/', body)
   }
 
-  exportExcel(startTime: any, endTime: any) {
-    console.log((`${this.URLsender + 'smssender/alarmreport/'}?
-    end_time__range=${startTime},${endTime}&page_size=1000`));
+  // exportExcel(startTime: any, endTime: any) {
+  //   const url = this.URLsender +
+  //     `smssender/alarmreport/?end_time__range=${startTime},${endTime}&page=${page}&page_size=${perpage}`
 
+  //   return this.http.get(url)
+  // }
+
+  exportExcel(startTime: any, endTime: any, page: any, perpage: any) {
+    const dataAll = startTime + ',' + endTime
+    const params = {
+      end_time__range: dataAll,
+      page: page,
+      page_size: perpage
+    }
     const url = this.URLsender +
-      `smssender/alarmreport/?end_time__range=${startTime},${endTime}&page_size=1000`
+      `smssender/alarmreport`
 
-    return this.http.get(url)
+    return this.http.get(url, { params })
   }
 
   deleteData(id: number) {
@@ -205,6 +217,34 @@ export class AuthService {
     return this.http.get('http://10.7.119.12/api2/umbrella/chronicsite/')
   }
 
-  
+  getDoorOpen(
+    sitename: string, worktype: string, entertime: string, 
+    username: string, organization : string, number: string, regions: any,
+    sort: string, order: SortDirection, page: number, pageSize: any
+  ) {
+    const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/'
+    const requestUrl = `${url}?ordering=${order}${sort}&page=${page}&page_size=${pageSize}&visitor__username__icontains=${username}&visitor__phonenumber__icontains=${number}&sitename__icontains=${sitename}&worktype__icontains=${worktype}&entertime__gte=${entertime}&region__icontains=${regions}`
+    console.log(requestUrl);
+    
+    return this.http.get(requestUrl)
+  }
+
+
+  updateExitDoorOpen(id: any, body: any) {
+    const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/'
+    const requestUrl = `${url}${id}/`
+    return this.http.patch(requestUrl ,body)
+  }
+
+  updateCommentDoorOpen(id: any, body: any) {
+    console.log(id);
+    console.log(body);
+    
+    const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/'
+    const requestUrl = `${url}${id.id}/`
+    console.log(requestUrl);
+    
+    return this.http.patch(requestUrl ,body)
+  }
 
 }

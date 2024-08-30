@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { WebsocketService } from './web-socket-cell-down';
-import { filter, Subscription } from 'rxjs';
+import { filter, Subject, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -29,10 +29,12 @@ export class CellDownComponent implements OnInit, OnDestroy {
 
   filterDataTable: any
 
-  isChanged: boolean = false
+  mode: boolean
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('element') element: ElementRef
 
   region: { value: string; viewValue: string }[] = [
     { value: 'ANDIJAN', viewValue: 'Андижан' },
@@ -61,68 +63,68 @@ export class CellDownComponent implements OnInit, OnDestroy {
       power: ['all'],
       dg: ['all'],
       battery: ['all'],
+      mode: [false],
       selectedRegion: [[]],
     })
+
+    this.cellDownFilterForm.valueChanges.subscribe((res: any) => {
+      this.mode = this.cellDownFilterForm.value.mode
+    })
+
   }
 
-  applyFilter(message: any) {
-    this.cellDownTable.data = message.filter((res: any) => {
+  applyFilter(message?: any) {
 
-          return (
-            (this.cellDownFilterForm.value.selectedRegion == 0 || this.cellDownFilterForm.value.selectedRegion.some((reigon: any) => res.region.includes(reigon.value))) &&
-            (!this.cellDownFilterForm.value.site || res.site.toLowerCase().includes(this.cellDownFilterForm.value.site.toLowerCase())) &&
-            (!this.cellDownFilterForm.value.alarmtype || res.alarmtype.toLowerCase().includes(this.cellDownFilterForm.value.alarmtype.toLowerCase())) &&
-            (
-              this.cellDownFilterForm.value.sitesbehind === 'all' ||
-              (this.cellDownFilterForm.value.sitesbehind === 'empty' && (!res.sitesbehind || res.sitesbehind.trim() === '')) ||
-              (this.cellDownFilterForm.value.sitesbehind === 'withValue' && res.sitesbehind && res.sitesbehind.trim() !== '')
-            ) &&
-            (
-              this.cellDownFilterForm.value.comment === 'all' ||
-              (this.cellDownFilterForm.value.comment === 'empty' && (!res.comment || res.comment.trim() === '')) ||
-              (this.cellDownFilterForm.value.comment === 'withValue' && res.comment && res.comment.trim() !== '')
-            ) &&
-            (
-              this.cellDownFilterForm.value.power === 'all' ||
-              (this.cellDownFilterForm.value.power === 'empty' && (!res.power || res.power.trim() === '')) ||
-              (this.cellDownFilterForm.value.power === 'withValue' && res.power && res.power.trim() !== '')
-            ) &&
-            (
-              this.cellDownFilterForm.value.dg === 'all' ||
-              (this.cellDownFilterForm.value.dg === 'empty' && (!res.dg || res.dg.trim() === '')) ||
-              (this.cellDownFilterForm.value.dg === 'withValue' && res.dg && res.dg.trim() !== '')
-            ) &&
-            (
-              this.cellDownFilterForm.value.battery === 'all' ||
-              (this.cellDownFilterForm.value.battery === 'empty' && (!res.battery || res.battery.trim() === '')) ||
-              (this.cellDownFilterForm.value.battery === 'withValue' && res.battery && res.battery.trim() !== '')
-            )
-          )
-        })
+    this.cellDownTable.filterPredicate = (data: any, filter: any) => {
+      return (
+        (this.cellDownFilterForm.value.selectedRegion == 0 || this.cellDownFilterForm.value.selectedRegion.some((reigon: any) => data.region.includes(reigon.value))) &&
+        (!this.cellDownFilterForm.value.site || data.site.toLowerCase().includes(this.cellDownFilterForm.value.site.toLowerCase())) &&
+        (!this.cellDownFilterForm.value.alarmtype || data.alarmtype.toLowerCase().includes(this.cellDownFilterForm.value.alarmtype.toLowerCase())) &&
+        (
+          this.cellDownFilterForm.value.sitesbehind === 'all' ||
+          (this.cellDownFilterForm.value.sitesbehind === 'empty' && (!data.sitesbehind || data.sitesbehind.trim() === '')) ||
+          (this.cellDownFilterForm.value.sitesbehind === 'withValue' && data.sitesbehind && data.sitesbehind.trim() !== '')
+        ) &&
+        (
+          this.cellDownFilterForm.value.comment === 'all' ||
+          (this.cellDownFilterForm.value.comment === 'empty' && (!data.comment || data.comment.trim() === '')) ||
+          (this.cellDownFilterForm.value.comment === 'withValue' && data.comment && data.comment.trim() !== '')
+        ) &&
+        (
+          this.cellDownFilterForm.value.power === 'all' ||
+          (this.cellDownFilterForm.value.power === 'empty' && (!data.power || data.power.trim() === '')) ||
+          (this.cellDownFilterForm.value.power === 'withValue' && data.power && data.power.trim() !== '')
+        ) &&
+        (
+          this.cellDownFilterForm.value.dg === 'all' ||
+          (this.cellDownFilterForm.value.dg === 'empty' && (!data.dg || data.dg.trim() === '')) ||
+          (this.cellDownFilterForm.value.dg === 'withValue' && data.dg && data.dg.trim() !== '')
+        ) &&
+        (
+          this.cellDownFilterForm.value.battery === 'all' ||
+          (this.cellDownFilterForm.value.battery === 'empty' && (!data.battery || data.battery.trim() === '')) ||
+          (this.cellDownFilterForm.value.battery === 'withValue' && data.battery && data.battery.trim() !== '')
+        )
+      )
+    }
+    this.cellDownTable.filter = JSON.stringify(this.cellDownFilterForm.value);
   }
 
   ngOnInit() {
 
-    this.socketSubscription = this.websocket.listen()
-    .subscribe((message: any) => {
-      console.log(message);
-    
-      this.applyFilter(message)
-      this.cellDownFilterForm.valueChanges.subscribe(() => {
-        this.applyFilter(message)
-        
-      })
-      
-      this.isLoading = false;
+    this.socketSubscription = this.websocket.getDataStream().subscribe((message: any) => {
+      this.cellDownTable.data = [...this.cellDownTable.data, ...message]
+      this.isLoading = false
+      this.applyFilter()
       this.cellDownTable.paginator = this.paginator
       this.cellDownTable.sort = this.sort
     });
-  }
 
+    this.cellDownFilterForm.valueChanges.subscribe(() => { this.applyFilter() })
+  }
 
   ngOnDestroy() {
-    this.websocket.close();
-    this.socketSubscription.unsubscribe();
+    this.websocket.closeConnection()
+    this.socketSubscription.unsubscribe()
   }
-
 }

@@ -63,6 +63,9 @@ import { AlarmMonitorComponent } from './alarm-monitor/alarm-monitor.component';
 import { DoorAlarmComponent } from './door-alarm/door-alarm.component';
 import { CellDownComponent } from './cell-down/cell-down.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { DialogExitContentComponent } from './door-alarm/dialogExit';
+import { DialogCommentContentComponent } from './door-alarm/dialogComment';
 
 @NgModule({
   declarations: [
@@ -91,7 +94,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
     MainHomeComponent,
     AlarmMonitorComponent,
     DoorAlarmComponent,
-    CellDownComponent
+    CellDownComponent,
+    DialogExitContentComponent,
+    DialogCommentContentComponent
   ],
   imports: [
     BrowserModule,
@@ -125,7 +130,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     MatMenuModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    MatSlideToggleModule
   ],
   providers: [ AuthGuard, DatePipe,
     {

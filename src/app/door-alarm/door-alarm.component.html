@@ -1,32 +1,117 @@
-<div style="margin: 20px;">
-    <div><button></button></div>
-    <table class="table table-bordered caption-top ">
-        <caption>Block Type without External Alarms</caption>
-        <thead>
-          <tr>
-            <th scope="col">Region</th>
-            <th scope="col">Site name</th>
-            <th scope="col">Enter time</th>
-            <th scope="col">Exit time</th>
-            <th scope="col">Responsible Engineer</th>
-            <th scope="col">Organization</th>
-            <th scope="col">Reason to Visit</th>
-            <th scope="col">Work Type</th>
-            <th scope="col">WB</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of data">
-            <th scope="row">{{item.region}}</th>
-            <td>{{item.siteName}}</td>
-            <td>{{item.enterTime}}</td>
-            <td>{{item.exitTime}}</td>
-            <td>{{item.responsibleEngineer}}</td>
-            <td>{{item.organization}}</td>
-            <td>{{item.reasonToVisit}}</td>
-            <td>{{item.workType}}</td>
-            <td>{{item.WB}}</td>
-          </tr>
-        </tbody>
+<div style="margin: 10px;">
+  <div>
+    <div>
+      <form [formGroup]="doorControlForm" >
+        <mat-form-field>
+          <mat-label>Регион</mat-label>
+          <mat-select formControlName="region" multiple>
+            <mat-option value="ANDIJAN">Андижан</mat-option>
+            <mat-option value="BUKHARA">Бухара</mat-option>
+            <mat-option value="DJIZZAK">Джизак</mat-option>
+            <mat-option value="FERGANA">Фергана</mat-option>
+            <mat-option value="SIRDARYA">Сырдарья</mat-option>
+            <mat-option value="KASHKADARYA">Кашкадарья</mat-option>
+            <mat-option value="NAMANGAN">Наманган</mat-option>
+            <mat-option value="NAVOI">Навои</mat-option>
+            <mat-option value="KARAKALPAKISTAN">Каракалпакстан</mat-option>
+            <mat-option value="SAMARKAND">Самарканд</mat-option>
+            <mat-option value="TASHKENT">г.Ташкент</mat-option>
+            <mat-option value="TASHKENTREGION">Ташкент обл.</mat-option>
+            <mat-option value="SURKHANDARYA">Сурхандарья</mat-option>
+            <mat-option value="KHOREZM">Хорезм</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Имя Сайта</mat-label>
+          <input matInput formControlName="sitename" style="height: 10px;"/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Тип Работ</mat-label>
+          <input matInput formControlName="worktype"/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Время Входа</mat-label>
+          <input matInput formControlName="entertime" />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Имя Пользователя </mat-label>
+          <input matInput formControlName="username" />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Организация</mat-label>
+          <input matInput formControlName="organization" />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Номер Телефона</mat-label>
+          <input matInput formControlName="number" />
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+
+  <div class="example-container mat-elevation-z8">
+    <div>
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 example-table" matSort
+        matSortActive="entertime" matSortDisableClear matSortDirection="desc">
+
+        <ng-container matColumnDef="sitename">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Сайт </th>
+          <td mat-cell *matCellDef="let element"> {{element.sitename}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="worktype">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Тип работ </th>
+          <td mat-cell *matCellDef="let element"> {{element.worktype}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="entertime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Время Входа </th>
+          <td mat-cell *matCellDef="let element"> {{element.entertime?.replace('T', ' ')}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="visitor__username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Имя </th>
+          <td mat-cell *matCellDef="let element"> {{element.visitor.username}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="organization">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Организация </th>
+          <td mat-cell *matCellDef="let element"> {{element.visitor.organization}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="visitor__phonenumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Номер телефона </th>
+          <td mat-cell *matCellDef="let element"> +{{element.visitor.phonenumber}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="exittime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Время Выхода </th>
+          <td mat-cell *matCellDef="let element" (click)="editExitTime(element.id)">{{element.exittime?.replace('T', ' ')}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="comment">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Коммент </th>
+          <td mat-cell *matCellDef="let element" (click)="onComment(element)">{{element.comment}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
+
+    </div>
+    <div *ngIf="isLoadingResults || isRateLimitReached" class="example-loading-shade">
+      <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+      <div *ngIf="isRateLimitReached" class="example-rate-limit-reached">
+        Идет Загрузка Подождите
+      </div>
+    </div>
+    <mat-paginator [pageSizeOptions]="pageSize" [length]="resultsLength" showFirstLastButtons
+      aria-label="Select page of users"></mat-paginator>
+  </div>
 </div>

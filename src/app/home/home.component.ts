@@ -36,10 +36,10 @@ export interface DataTable {
 export class HomeComponent implements OnInit, AfterViewInit {
 
   kpiColumns: string[] = ['name',
-    'chronicDuration', 'chronicCount','chronicCorrection', 'coreDurationA', 
-    'coreCountA', 'coreCorrectionA','coreDurationP', 'coreCountP', 
-    'coreCorrectionP' ,'hubBscDurationA', 'hubBscCountA', 'hubBscCorrectionA',
-    'hubBscDurationP', 'hubBscCountP','hubBscCorrectionP']
+    'chronicDuration', 'chronicCount', 'chronicCorrection', 'coreDurationA',
+    'coreCountA', 'coreCorrectionA', 'coreDurationP', 'coreCountP',
+    'coreCorrectionP', 'hubBscDurationA', 'hubBscCountA', 'hubBscCorrectionA',
+    'hubBscDurationP', 'hubBscCountP', 'hubBscCorrectionP']
   KPIDataSource = new MatTableDataSource<any>()
 
 
@@ -317,7 +317,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.authService.getKPI().subscribe((data: any) => {
       this.KPI = data
       console.log(this.KPI);
-      
+
 
       this.authService.getUsers().subscribe((data: any) => {
         this.USERS = data.results
@@ -329,7 +329,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     })
   }
-  
+
   nullItemReplacing(data: any[]): any[] {
     return data.map(item => ({
       ...item,
@@ -342,7 +342,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   gettingUsername(usernames: any, kpis: any) {
-    
+
     this.resultArray = usernames.map((user: any) => {
       const kpiValue = kpis.find((value: any) => value.user === user.id)
 
@@ -386,16 +386,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   logExport(name: string) {
     this.authService.getLog().subscribe((data: any) => {
-      console.log(data);
-      
       const result = data.filter((res: any) => res.user_id == name)
       const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(result);
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
       XLSX.writeFile(wb, name + '.xlsx');
-      
+
     })
-       
+
   }
 
 
@@ -505,21 +503,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.router.navigate(['home/newIdeas'])
   }
 
-  selectedCase (row: any) {
+  selectedCase(row: any) {
     this.snackBar.open('Saved', '', { duration: 10000 })
     console.log(row);
     let body = {
-      'alarmreport' : row.id,
+      'alarmreport': row.id,
       'comment': ''
     }
     console.log(body);
-    
-    this.authService.PostSelectedCase(body).subscribe((res)=> {
+
+    this.authService.PostSelectedCase(body).subscribe((res) => {
       console.log(res);
-      
+
     })
   }
-  
 
   getSelectedCases() {
     this.router.navigate(['home/selectedCases'])
@@ -551,42 +548,65 @@ export class HomeComponent implements OnInit, AfterViewInit {
   imports: [MatDialogModule, MatButtonModule, FormsModule],
 })
 export class exportExcel {
+  data: any[] = [];
+  limit: any = 1000
+  pageNumber: any
   posttest: any
-  constructor(
-    private authService: AuthService,
-  ) { }
-  onSubmit(form: NgForm) {
+  startTime: any
+  endTime: any
+  constructor(private authService: AuthService) { }
 
-    this.authService.exportExcel(form.value.starttime, form.value.endtime)
-      .subscribe(res => {
-        
-        this.posttest = res
-        this.convertToXLSX(this.posttest.results, 'data')
+  onSubmit(form: NgForm) {
+    this.startTime = form.value.starttime
+    this.endTime = form.value.endtime
+
+
+    this.authService.exportExcel(this.startTime, this.endTime, 1, this.limit)
+      .subscribe((res: any) => {
+        this.pageNumber = Math.ceil(res.count / res.results.length)
+
+        const promises = [];
+        for (let i = 1; i <= this.pageNumber; i++) {
+          promises.push(this.authService.exportExcel(this.startTime, this.endTime, i, this.limit).toPromise());
+        }
+
+        Promise.all(promises).then(results => {
+          results.forEach((res: any) => this.data = this.data.concat(res.results));
+          this.convertToExcel(this.data)
+        });
       })
   }
 
+  convertToExcel(data: any[]) {
+    console.log('executing');
 
-  convertToXLSX(data: any, filename: string): void {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+
+    // Generate Excel file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const url = e.target.result;
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+    reader.readAsDataURL(blob);
+
     
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    this.saveAsExcelFile(excelBuffer, filename);
   }
 
-  saveAsExcelFile(buffer: any, filename: string): void {
-    const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url: string = window.URL.createObjectURL(data);
-    const link: HTMLAnchorElement = document.createElement('a');
-    link.href = url;
-    link.download = filename + '.xlsx';
-    link.click();
-    setTimeout(() => {
-      window.URL.revokeObjectURL(url);
-      link.remove();
-    }, 100);
-  }
 }
 
 @Component({
