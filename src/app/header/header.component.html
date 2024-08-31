@@ -1,7 +1,7 @@
 <mat-toolbar class="header-style">
     <a routerLink="/home" style="text-decoration: none; color: #fbebff; font-family: system-ui; font-size: 30px;"><span>Ucell</span></a>
     <span class="example-spacer"></span>
-    <span style="color: #fbebff;">V-08.08.24.5.08</span>
+    <span style="color: #fbebff;">V-31.08.24.21.08</span>
     <span class="example-spacer"></span>
     <button mat-button *ngIf="storageService.isAuthenticatedUser()" [matMenuTriggerFor]="authUser" class="button-style">{{storageService.getUserName()}}</button>
     <mat-menu #authUser="matMenu" xPosition="before">
