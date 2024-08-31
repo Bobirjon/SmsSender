@@ -27,4 +27,8 @@ export class MainHomeComponent {
     this.router.navigate(['cellDown'])
   }
 
+  report() {
+    this.router.navigate(['report'])
+  }
+
 }

@@ -66,6 +66,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { DialogExitContentComponent } from './door-alarm/dialogExit';
 import { DialogCommentContentComponent } from './door-alarm/dialogComment';
+import { ReportComponent } from './report/report.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { DialogCommentContentComponent } from './door-alarm/dialogComment';
     DoorAlarmComponent,
     CellDownComponent,
     DialogExitContentComponent,
-    DialogCommentContentComponent
+    DialogCommentContentComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,

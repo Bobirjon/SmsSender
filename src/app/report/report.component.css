@@ -1,0 +1,7 @@
+td, th {
+    border-left: 1px solid #ccc; 
+  }
+
+tr {
+    height: 30px !important;
+}

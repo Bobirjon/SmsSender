@@ -247,4 +247,8 @@ export class AuthService {
     return this.http.patch(requestUrl ,body)
   }
 
+  rtmcReport(){
+    return this.http.get('http://10.7.119.12/api2/umbrella/sitedownbyregion/')
+  }
+
 }
