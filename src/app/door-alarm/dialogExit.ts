@@ -37,7 +37,8 @@ export class DialogExitContentComponent {
         const body = {
             exittime: this.userdata
         }
-        this.authservice.updateExitDoorOpen(this.data, body).subscribe(() => {})
+        this.authservice.updateExitDoorOpen(this.data, body).subscribe((res: any) => {console.log(res);
+        })
     
         this.dialogRef.close(formData.value);
     }

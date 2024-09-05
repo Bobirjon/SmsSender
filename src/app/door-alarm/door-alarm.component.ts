@@ -102,10 +102,10 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
     })
 
     dialogRef.afterClosed().subscribe((result: any) => {
-      console.log(result.userdata);
+      console.log(result);
       
       if(result.userdata !== undefined ) {
-        window.location.reload()
+        // window.location.reload()
       }
     })
   }
@@ -117,8 +117,11 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
     })
     
     dialogRef.afterClosed().subscribe((result: any) => {
+      console.log(result);
       if(result.userdata !== undefined) {
-        window.location.reload()
+        // window.location.reload()
+        
+        
       }
     })
   }
