@@ -125,10 +125,5 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
 
   ngOnInit(): void {
 
-    // this.authService.getDoorOpen().subscribe((res: any) => {
-    //   this.dataSource = res
-      
-    // })
   }
-
 }

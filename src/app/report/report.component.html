@@ -1,6 +1,7 @@
-<div style="margin: 15px">
+<div style="margin: 15px" >
     <h2 style="margin: 20px 0px 20px 10px;">Отправляем сводную информацию о состоянии сети Ucell на момент {{currentTime}}</h2>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <br>
+    <table #table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="width: 100%;">
 
         <!-- Position Column -->
         <ng-container matColumnDef="xududlar">

@@ -38,7 +38,7 @@ export class DialogExitContentComponent {
             exittime: this.userdata
         }
         this.authservice.updateExitDoorOpen(this.data, body).subscribe(() => {})
-        
+    
         this.dialogRef.close(formData.value);
     }
 }

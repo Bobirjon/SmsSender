@@ -67,6 +67,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { DialogExitContentComponent } from './door-alarm/dialogExit';
 import { DialogCommentContentComponent } from './door-alarm/dialogComment';
 import { ReportComponent } from './report/report.component';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
@@ -133,7 +134,8 @@ import { ReportComponent } from './report/report.component';
     MatCheckboxModule,
     MatProgressSpinnerModule,
     NgxPaginationModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    ClipboardModule,
   ],
   providers: [ AuthGuard, DatePipe,
     {
