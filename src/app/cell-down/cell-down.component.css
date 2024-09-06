@@ -47,7 +47,7 @@ tr {
 }
 
 table {
-  width: 1800px;
+  width: 2000px;
 }
 
 td, th {
@@ -66,7 +66,7 @@ tr {
 .mat-column-battery,
 .mat-column-dg,
 .mat-column-power {
-  max-width: 150px
+  width: 150px
 }
 
 .mat-column-site {
