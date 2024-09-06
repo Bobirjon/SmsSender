@@ -42,14 +42,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     'hubBscDurationP', 'hubBscCountP', 'hubBscCorrectionP']
   KPIDataSource = new MatTableDataSource<any>()
 
-
-
-
   dataTable = new MatTableDataSource<DataTable>()
   Data = new MatTableDataSource<DataTable>()
   TemplateData = new MatTableDataSource<DataTable>()
   userName: any
-  pageViewSize = [10, 25, 50];
+  pageViewSize = [15, 30, 50, 150 , 300, 500, 1500, 15000];
   filterInput: string
   selectedLevel: string
   selectedType: string
@@ -284,6 +281,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe(data => {
+        console.log(data);
+        
         this.dataTable.data = data.results
         this.webSocketService.receiveMessage().subscribe((data) => {
           const exist = this.dataTable.data.findIndex(
@@ -526,6 +525,39 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.router.navigate(['home/correctionList'])
   }
 
+  onExportVisible() {
+    this.convertToExcel(this.dataTable.data)
+    
+  }
+
+  convertToExcel(data: any[]) {
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+
+    // Generate Excel file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const url = e.target.result;
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+    reader.readAsDataURL(blob);
+
+    
+  }
+
 
   onDelete(id: number) {
     const dialogRef = this.dialog.open(areYouSure);
@@ -578,7 +610,6 @@ export class exportExcel {
   }
 
   convertToExcel(data: any[]) {
-    console.log('executing');
 
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -589,7 +620,6 @@ export class exportExcel {
       bookType: 'xlsx',
       type: 'array',
     });
-
 
     const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
     const reader = new FileReader();
