@@ -113,7 +113,7 @@ export class CellDownComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.socketSubscription = this.websocket.getDataStream().subscribe((message: any) => {
-      this.cellDownTable.data = [...this.cellDownTable.data, ...message]
+      this.cellDownTable.data = [...message]
       this.isLoading = false
       this.applyFilter()
       this.cellDownTable.paginator = this.paginator
