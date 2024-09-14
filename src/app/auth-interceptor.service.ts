@@ -7,7 +7,7 @@ export class AuthInterceptorService implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler) {
 
         let apiKey = localStorage.getItem("token")
-        
+
         if(apiKey == null) {
             const modRequest = req.clone({
                 setHeaders: {

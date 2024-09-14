@@ -251,4 +251,16 @@ export class AuthService {
     return this.http.get('http://10.7.119.12/api2/umbrella/sitedownbyregion/')
   }
 
+  create_request_door_control(form: any){
+    let body = {
+      'phonenumber' : form.phonenumber,
+      'sitename': form.sitename,
+      'worktype' : form.worktype,
+      'entertime': form.starttime,
+      'exittime': form.exittime == '' ? null : form.exittime,
+      'comment': form.comment
+    } 
+    return this.http.post('http://10.7.119.12/api2/doorcontrol/sitevisitadd/', body)
+  }
+  
 }

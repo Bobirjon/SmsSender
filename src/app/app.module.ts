@@ -68,6 +68,7 @@ import { DialogExitContentComponent } from './door-alarm/dialogExit';
 import { DialogCommentContentComponent } from './door-alarm/dialogComment';
 import { ReportComponent } from './report/report.component';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import { AddNewElementComponent } from './door-alarm/add-new-element/add-new-element.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     CellDownComponent,
     DialogExitContentComponent,
     DialogCommentContentComponent,
-    ReportComponent
+    ReportComponent,
+    AddNewElementComponent,
   ],
   imports: [
     BrowserModule,

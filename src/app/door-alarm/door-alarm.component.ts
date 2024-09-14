@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogCommentContentComponent } from './dialogComment';
+import { AddNewElementComponent } from './add-new-element/add-new-element.component';
 
 @Component({
   selector: 'app-door-alarm',
@@ -105,7 +106,7 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
       console.log(result);
       
       if(result.userdata !== undefined ) {
-        // window.location.reload()
+        window.location.reload()
       }
     })
   }
@@ -119,10 +120,19 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log(result);
       if(result.userdata !== undefined) {
-        // window.location.reload()
-        
-        
+        window.location.reload()
       }
+    })
+  }
+
+  onCreate() {
+    const dialogRef = this.dialog.open(AddNewElementComponent, {
+      width: '800px'
+    })
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log(result);
+      
     })
   }
 
