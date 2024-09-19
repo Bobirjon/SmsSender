@@ -229,6 +229,10 @@ export class AuthService {
     return this.http.get(requestUrl)
   }
 
+  getDoorOpenExport (page: number, pageSize: any) {
+    return this.http.get(`http://10.7.119.12/api2/doorcontrol/sitevisit/?page=${page}&page_size=${pageSize}`)
+  }
+
 
   updateExitDoorOpen(id: any, body: any) {
     const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/'
@@ -261,6 +265,18 @@ export class AuthService {
       'comment': form.comment
     } 
     return this.http.post('http://10.7.119.12/api2/doorcontrol/sitevisitadd/', body)
+  }
+
+
+  create_user_door_control(form: any) {
+    let body = {
+      'username' : form.username,
+      'phonenumber' : form.phonenumber,
+      'organization' : form.organization,
+      'position' : form.position
+    }
+
+    return this.http.post('http://10.7.119.12/api2/doorcontrol/user/', body)
   }
   
 }

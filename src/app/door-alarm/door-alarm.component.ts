@@ -11,6 +11,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogCommentContentComponent } from './dialogComment';
 import { AddNewElementComponent } from './add-new-element/add-new-element.component';
+import { UserCreateComponent } from './user-create/user-create.component';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-door-alarm',
@@ -31,6 +33,9 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
   isLoadingResults = true;
   isRateLimitReached = false;
   pageSize = [15, 30, 50, 100]
+  pageNumber: any
+  limit: any = 1000
+  dataToExport: any[] = [];
 
   doorControlForm: FormGroup
 
@@ -135,6 +140,83 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
       
     })
   }
+
+  onCreateUser() {
+    const dialogRef = this.dialog.open(UserCreateComponent, {
+      width: '800px'
+    })
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log(result);
+      
+    })
+  }
+
+
+
+  onExport() {
+    this.exampleDatabase.getDoorOpenExport(1, this.limit)
+    .subscribe((res: any) => {
+      this.pageNumber = Math.ceil(res.count / res.results.length)
+
+      const promises = [];
+      for (let i = 1; i <= this.pageNumber; i++) {
+        promises.push(this.exampleDatabase.getDoorOpenExport( i, this.limit).toPromise());
+      }
+
+      Promise.all(promises).then(results => {
+        console.log(results);
+        results.forEach((res: any) => {
+          this.dataToExport = this.dataToExport.concat(res.results)
+          console.log(this.dataToExport);
+          
+          
+        });
+        const transformedData = this.dataToExport.map((item: any) => ({
+          sitename: item.sitename,
+          worktype: item.worktype,
+          visitorName: item.visitor.username,
+          visitorNumber: item.visitor.phonenumber,
+          visitorOrganization:item.visitor.organization,
+          region: item.region,
+          entertime: item.entertime,
+          exittime: item.exittime
+        }))
+        
+        this.convertToExcel(transformedData)
+      });
+    })
+  }
+
+
+  convertToExcel(data: any[]) {
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+
+    // Generate Excel file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const url = e.target.result;
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+    reader.readAsDataURL(blob);
+
+    
+  }
+
 
   ngOnInit(): void {
 

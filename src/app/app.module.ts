@@ -69,6 +69,7 @@ import { DialogCommentContentComponent } from './door-alarm/dialogComment';
 import { ReportComponent } from './report/report.component';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { AddNewElementComponent } from './door-alarm/add-new-element/add-new-element.component';
+import { UserCreateComponent } from './door-alarm/user-create/user-create.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { AddNewElementComponent } from './door-alarm/add-new-element/add-new-ele
     DialogCommentContentComponent,
     ReportComponent,
     AddNewElementComponent,
+    UserCreateComponent
   ],
   imports: [
     BrowserModule,
