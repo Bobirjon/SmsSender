@@ -14,8 +14,8 @@ import { AuthService } from '../auth.service';
         </div>
         </div>
         <div mat-dialog-actions>
-            <button mat-button (click)="onCancel()">Cancel</button>
-            <button mat-button type="submit">Save</button>
+            <button mat-button (click)="onCancel()">Отменить</button>
+            <button mat-button type="submit">Сохранить</button>
         </div>
     </form>
   `,

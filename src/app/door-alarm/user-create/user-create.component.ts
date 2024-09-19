@@ -35,7 +35,7 @@ export class UserCreateComponent implements OnInit{
   
 
   onCancel() {
-
+    this.dialogRef.close();
   }
 
 }
