@@ -241,7 +241,7 @@ export class AuthService {
   }
 
   updateCommentDoorOpen(id: any, body: any) {
-    
+
     const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/'
     const requestUrl = `${url}${id.rowData['id']}/`    
     return this.http.patch(requestUrl ,body)
@@ -282,8 +282,11 @@ export class AuthService {
     sort: string, order: SortDirection, page: number, pageSize: any
   ) {
     const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/'
-    const requestUrl = `${url}?ordering=${order}${sort}&page=${page}&page_size=${pageSize}&visitor__username__icontains=''
-    &visitor__phonenumber__icontains=${number}&sitename__icontains=${sitename}&worktype__icontains=${worktype}&entertime__gte=${entertime}&region__in=${regions}`
+    const requestUrl = `${url}?ordering=${order}${sort}&page=${page}&page_size=${pageSize}
+    &visitor__username__icontains=${username}&visitor__phonenumber__icontains=${number}
+    &sitename__icontains=${sitename}&worktype__icontains=${worktype}&entertime__gte=${entertime}
+    &region__in=${regions}&info__icontains=Нет данных`
+    console.log(requestUrl);
     
     return this.http.get(requestUrl)
   }
