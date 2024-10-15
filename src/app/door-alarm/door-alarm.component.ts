@@ -188,19 +188,17 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
         ;
         results.forEach((res: any) => {
           this.dataToExport = this.dataToExport.concat(res.results)
-
-          
-          
         });
         const transformedData = this.dataToExport.map((item: any) => ({
           sitename: item.sitename,
           worktype: item.worktype,
-          visitorName: item.visitor.username,
-          visitorNumber: item.visitor.phonenumber,
-          visitorOrganization:item.visitor.organization,
+          visitorName: item.visitor == null ? '' : item.visitor.username,
+          visitorNumber:  item.visitor == null ? '' : item.visitor.phonenumber,
+          visitorOrganization:  item.visitor == null ? '' : item.visitor.organization,
           region: item.region,
           entertime: item.entertime,
-          exittime: item.exittime
+          exittime: item.exittime,
+          info: item.info
         }))
         
         this.convertToExcel(transformedData)
