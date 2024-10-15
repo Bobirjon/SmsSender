@@ -1,7 +1,7 @@
 <div style="margin: 10px;">
   <div>
     <div>
-      <form [formGroup]="doorControlForm" >
+      <form [formGroup]="doorControlForm">
         <mat-form-field>
           <mat-label>Регион</mat-label>
           <mat-select formControlName="region" multiple>
@@ -24,12 +24,12 @@
 
         <mat-form-field>
           <mat-label>Имя Сайта</mat-label>
-          <input matInput formControlName="sitename" style="height: 10px;"/>
+          <input matInput formControlName="sitename" style="height: 10px;" />
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Тип Работ</mat-label>
-          <input matInput formControlName="worktype"/>
+          <input matInput formControlName="worktype" />
         </mat-form-field>
 
         <mat-form-field>
@@ -55,66 +55,86 @@
       <button mat-raised-button (click)="onCreate()">Запись в журнал</button>
       <button mat-raised-button (click)="onCreateUser()">Создать Пользователя</button>
       <button mat-raised-button (click)="onExport()">Экспорт</button>
+      <button mat-raised-button (click)="onNoData()">Таблица не данных</button>
     </div>
   </div>
-  
-  <div class="example-container mat-elevation-z8">
-    <div>
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 example-table" matSort
-        matSortActive="entertime" matSortDisableClear matSortDirection="desc">
 
-        <ng-container matColumnDef="sitename">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Сайт </th>
-          <td mat-cell *matCellDef="let element"> {{element.sitename}} </td>
-        </ng-container>
+  <div >
+    <h2 *ngIf="isNoDataTable">Таблица Нет Данных</h2>
+    <h2 *ngIf="!isNoDataTable">Общая таблица</h2>
+    <div class="table-container mat-elevation-z8">
+      <div>
+        <table mat-table [dataSource]="AllDataMatTable" class="mat-elevation-z8" matSort matSortActive="entertime"
+          matSortDisableClear matSortDirection="desc">
 
-        <ng-container matColumnDef="worktype">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Тип работ </th>
-          <td mat-cell *matCellDef="let element"> {{element.worktype}} </td>
-        </ng-container>
+          <ng-container matColumnDef="sitename">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Сайт </th>
+            <td mat-cell *matCellDef="let element"> {{element.sitename}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="entertime">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Время Входа </th>
-          <td mat-cell *matCellDef="let element"> {{element.entertime?.replace('T', ' ')}} </td>
-        </ng-container>
+          <ng-container matColumnDef="worktype">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Тип работ </th>
+            <td mat-cell *matCellDef="let element" (click)="onUpdateData('worktype', element)"> {{element.worktype}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="visitor__username">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Имя </th>
-          <td mat-cell *matCellDef="let element"> {{element.visitor.username}} </td>
-        </ng-container>
+          <ng-container matColumnDef="visitor__username">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Имя </th>
+            <td mat-cell *matCellDef="let element"> {{element.visitor == null ? '' : element.visitor.username}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="organization">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Организация </th>
-          <td mat-cell *matCellDef="let element"> {{element.visitor.organization}} </td>
-        </ng-container>
+          <ng-container matColumnDef="organization">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Организация </th>
+            <td mat-cell *matCellDef="let element"> {{element.visitor == null ? '' : element.visitor.organization}}
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="visitor__phonenumber">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Номер телефона </th>
-          <td mat-cell *matCellDef="let element"> +{{element.visitor.phonenumber}} </td>
-        </ng-container>
+          <ng-container matColumnDef="visitor__phonenumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Номер телефона </th>
+            <td mat-cell *matCellDef="let element" (click)="onUpdateData('phonenumber', element)"> {{element.visitor == null ? '' : '+' + element.visitor.phonenumber}}
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="exittime">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Время Выхода </th>
-          <td mat-cell *matCellDef="let element" (click)="editExitTime(element.id)">{{element.exittime?.replace('T', ' ')}}</td>
-        </ng-container>
+          <ng-container matColumnDef="entertime">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Время Входа </th>
+            <td mat-cell *matCellDef="let element"> {{element.entertime?.replace('T', ' ').substring(0, 16)}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="comment">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Коммент </th>
-          <td mat-cell *matCellDef="let element" (click)="onComment(element)">{{element.comment}}</td>
-        </ng-container>
+          <ng-container matColumnDef="exittime">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Время Выхода </th>
+            <td mat-cell *matCellDef="let element" (click)="editExitTime(element.id)">{{element.exittime?.replace('T', '
+              ').substring(0, 16)}}</td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+          <ng-container matColumnDef="comment">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Коммент </th>
+            <td mat-cell *matCellDef="let element" (click)="onUpdateData('comment', element)">{{element.comment}}</td>
+          </ng-container>
 
-    </div>
-    <div *ngIf="isLoadingResults || isRateLimitReached" class="example-loading-shade">
-      <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-      <div *ngIf="isRateLimitReached" class="example-rate-limit-reached">
-        Идет Загрузка Подождите
+          <ng-container matColumnDef="alarmid">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Аларм ИН </th>
+            <td mat-cell *matCellDef="let element"> {{element.alarmid }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="info">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Инфо </th>
+            <td mat-cell *matCellDef="let element"> {{element.info}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
       </div>
+      <div *ngIf="isLoadingResults || isRateLimitReached" class="loading-shade">
+        <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+        <div *ngIf="isRateLimitReached" class="rate-limit-reached">
+          Идет Загрузка Подождите
+        </div>
+      </div>
+      <mat-paginator [pageSizeOptions]="pageSize" [length]="resultsLength" showFirstLastButtons
+        aria-label="Select page of users"></mat-paginator>
     </div>
-    <mat-paginator [pageSizeOptions]="pageSize" [length]="resultsLength" showFirstLastButtons
-      aria-label="Select page of users"></mat-paginator>
   </div>
+
+
 </div>

@@ -65,7 +65,7 @@ import { CellDownComponent } from './cell-down/cell-down.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { DialogExitContentComponent } from './door-alarm/dialogExit';
-import { DialogCommentContentComponent } from './door-alarm/dialogComment';
+import { DialogUpdateContentComponent } from './door-alarm/dialogData';
 import { ReportComponent } from './report/report.component';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { AddNewElementComponent } from './door-alarm/add-new-element/add-new-element.component';
@@ -100,7 +100,7 @@ import { UserCreateComponent } from './door-alarm/user-create/user-create.compon
     DoorAlarmComponent,
     CellDownComponent,
     DialogExitContentComponent,
-    DialogCommentContentComponent,
+    DialogUpdateContentComponent,
     ReportComponent,
     AddNewElementComponent,
     UserCreateComponent

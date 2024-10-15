@@ -12,7 +12,25 @@
         <mat-form-field appearance="fill">
             <mat-label>Организация</mat-label>
             <input matInput name="organization" [(ngModel)]="formData.organization" />
-         
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Регион</mat-label>
+            <mat-select name="region" [(ngModel)]="formData.region" >
+                <mat-option value="ANDIJAN">Андижан</mat-option>
+                <mat-option value="BUKHARA">Бухара</mat-option>
+                <mat-option value="FERGANA">Фергана</mat-option>
+                <mat-option value="KARAKALPAKISTAN">Каракалпакстан</mat-option>
+                <mat-option value="KASHKADARYA">Кашкадарья</mat-option>
+                <mat-option value="KHOREZM">Хорезм</mat-option>
+                <mat-option value="NAMANGAN">Наманган</mat-option>
+                <mat-option value="NAVOI">Навои</mat-option>
+                <mat-option value="SAMARKAND">Самарканд</mat-option>
+                <mat-option value="SIRDARYA">Сырдарья</mat-option>
+                <mat-option value="SURKHANDARYA">Сурхандарья</mat-option>
+                <mat-option value="TASHKENT">город Ташкент</mat-option>
+                <mat-option value="TASHKENTREGION">Ташкентская область</mat-option>
+              </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="fill">  

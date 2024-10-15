@@ -264,6 +264,11 @@
               routerLink="/home/{{row.type}}/{{row.id}}">{{row.type}}</a></td>
         </ng-container>
 
+        <ng-container matColumnDef="chronic_hours">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Время</th>
+          <td mat-cell *matCellDef="let element">{{element.chronic_hours ? element.chronic_hours + ' часов' : ' ---'}}</td>
+        </ng-container>
+
         <ng-container matColumnDef="created_at">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Создания</th>
           <td mat-cell *matCellDef="let element">{{element.created_at.replace('T', ' ').substring('0','16')}}</td>

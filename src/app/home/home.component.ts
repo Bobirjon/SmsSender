@@ -75,6 +75,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   displayedColumnsNew: string[] = [
     'type',
     'level',
+    'chronic_hours',
     'created_at',
     'start_time',
     'problem',
@@ -158,7 +159,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // Open Cases table
     this.authService.getFilteredData()
       .subscribe((data: any) => {
-
+        
         this.Data.data = data.results
         this.Data.sort = this.sort;
 
@@ -281,7 +282,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe(data => {
-        console.log(data);
         
         this.dataTable.data = data.results
         this.webSocketService.receiveMessage().subscribe((data) => {
@@ -315,8 +315,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.authService.getKPI().subscribe((data: any) => {
       this.KPI = data
-      console.log(this.KPI);
-
 
       this.authService.getUsers().subscribe((data: any) => {
         this.USERS = data.results
@@ -504,13 +502,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   selectedCase(row: any) {
     this.snackBar.open('Saved', '', { duration: 10000 })
-    console.log(row);
     let body = {
       'alarmreport': row.id,
       'comment': ''
     }
-    console.log(body);
-
     this.authService.PostSelectedCase(body).subscribe((res) => {
       console.log(res);
 

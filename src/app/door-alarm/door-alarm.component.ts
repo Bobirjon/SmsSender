@@ -2,14 +2,14 @@ import {HttpClient} from '@angular/common/http';
 import {Component, ViewChild, AfterViewInit, inject, OnInit} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {merge, Observable, of as observableOf} from 'rxjs';
-import {catchError, elementAt, map, startWith, switchMap} from 'rxjs/operators';
+import {merge, BehaviorSubject, of as observableOf} from 'rxjs';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import { DialogExitContentComponent } from './dialogExit'
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { DialogCommentContentComponent } from './dialogComment';
+import { DialogUpdateContentComponent } from './dialogData';
 import { AddNewElementComponent } from './add-new-element/add-new-element.component';
 import { UserCreateComponent } from './user-create/user-create.component';
 import * as XLSX from 'xlsx';
@@ -20,29 +20,36 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./door-alarm.component.css']
 })
 export class DoorAlarmComponent implements OnInit , AfterViewInit  {
-  private httpClient = inject(HttpClient)
 
+  isNoDataTable: boolean = false
+  isNoDataTableChange = new BehaviorSubject<boolean>(this.isNoDataTable);
+
+  // http request
+  private HttpRequests = inject(HttpClient)
+  HttpRequest: AuthService | null
+
+  // Alldata table
   displayedColumns: string[] = [
-    'sitename', 'worktype', 'entertime', 'visitor__username', 
-    'organization', 'visitor__phonenumber', 'exittime', 'comment'];
-  exampleDatabase: AuthService | null
-  dataSource = new MatTableDataSource<any>
-  allData: any
+    'sitename', 'worktype', 'visitor__username', 'organization', 
+    'visitor__phonenumber','entertime', 'exittime', 'comment', 'alarmid', 'info' ];
+  AllDataMatTable = new MatTableDataSource<any>
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
+  // paginator
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
   pageSize = [15, 30, 50, 100]
+
+  // Export button
+  dataToExport: any[] = [];
+  doorControlForm: FormGroup
   pageNumber: any
   limit: any = 1000
-  dataToExport: any[] = [];
-
-  doorControlForm: FormGroup
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private fb: FormBuilder, public dialog: MatDialog) {
+    
     this.doorControlForm = this.fb.group({
       region: [''],
       sitename: [''],
@@ -55,14 +62,15 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
   }
 
   ngAfterViewInit(): void {
-    this.exampleDatabase = new AuthService(this.httpClient)
+    this.HttpRequest = new AuthService(this.HttpRequests)
 
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0)
 
     merge(
       this.doorControlForm.valueChanges,
       this.sort.sortChange, 
-      this.paginator.page)
+      this.paginator.page,
+      this.isNoDataTableChange)
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -76,14 +84,18 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
           var organization = this.doorControlForm.value.organization == null ? '' : this.doorControlForm.value.organization
           var number = this.doorControlForm.value.number == null ? '' : this.doorControlForm.value.number
           var regions = this.doorControlForm.value.region
-          console.log(this.doorControlForm.value.region);
+      
           
-          
-          return this.exampleDatabase!.getDoorOpen(
+          let tableReturn = !this.isNoDataTable ?  this.HttpRequest!.getDoorOpen(
             sitename, worktype, entertime, username, organization,
             number, regions, this.sort.active, sortDirection,
             this.paginator.pageIndex + 1, this.paginator.pageSize
-          ).pipe(catchError(() => observableOf(null)))
+          ) :  this.HttpRequest!.getNoDataTable(
+            sitename, worktype, entertime, username, organization,
+            number, regions, this.sort.active, sortDirection,
+            this.paginator.pageIndex + 1, this.paginator.pageSize
+          )
+          return tableReturn.pipe(catchError(() => observableOf(null)))
         }),
         map((data: any) => {
           this.isLoadingResults = false
@@ -97,7 +109,12 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
           return data.results
         })
       )
-      .subscribe((data: any) => (this.dataSource = data))
+      .subscribe((data: any) => (this.AllDataMatTable = data))
+  }
+
+  updateTableDataBasedOnCondition(newValue: boolean) {
+    this.isNoDataTable = newValue;
+    this.isNoDataTableChange.next(this.isNoDataTable);
   }
 
   editExitTime(element: any) {
@@ -116,16 +133,21 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
     })
   }
 
-  onComment(element: any) {
-    const dialogRef = this.dialog.open(DialogCommentContentComponent, {
+  onUpdateData(column: string, element: any) {
+    console.log(element);
+    
+    const dialogRef = this.dialog.open(DialogUpdateContentComponent, {
       width: '300px',
-      data : element
+      data : {
+        columnName: column,
+        rowData: element
+      }
     })
     
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log(result);
       if(result && result.userdata !== undefined) {
-        window.location.reload()
+        // window.location.reload()
       }
     })
   }
@@ -152,23 +174,21 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
     })
   }
 
-
-
   onExport() {
-    this.exampleDatabase.getDoorOpenExport(1, this.limit)
+    this.HttpRequest.getDoorOpenExport(1, this.limit)
     .subscribe((res: any) => {
       this.pageNumber = Math.ceil(res.count / res.results.length)
 
       const promises = [];
       for (let i = 1; i <= this.pageNumber; i++) {
-        promises.push(this.exampleDatabase.getDoorOpenExport( i, this.limit).toPromise());
+        promises.push(this.HttpRequest.getDoorOpenExport( i, this.limit).toPromise());
       }
 
       Promise.all(promises).then(results => {
-        console.log(results);
+        ;
         results.forEach((res: any) => {
           this.dataToExport = this.dataToExport.concat(res.results)
-          console.log(this.dataToExport);
+
           
           
         });
@@ -217,6 +237,11 @@ export class DoorAlarmComponent implements OnInit , AfterViewInit  {
     
   }
 
+
+  onNoData() {
+    this.isNoDataTable = !this.isNoDataTable
+    this.isNoDataTableChange.next(this.isNoDataTable);
+  }
 
   ngOnInit(): void {
 

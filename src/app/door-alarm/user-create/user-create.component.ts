@@ -11,6 +11,7 @@ export class UserCreateComponent implements OnInit{
   formData = {
     username: '',
     phonenumber: '',
+    region: '',
     organization: '',
     position: '',
   };
@@ -19,6 +20,7 @@ export class UserCreateComponent implements OnInit{
 ) {}
 
   ngOnInit(): void {
+    
   }
 
   onSubmit(formData: any) {

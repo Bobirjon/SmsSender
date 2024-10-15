@@ -54,7 +54,6 @@ export class AuthService {
       &level__icontains=${level}&type__icontains=${type}&description__icontains=${description}&reason__icontains=${reason}
       &problem__icontains=${problem}&createdat_in=${createdAt}&starttime_in=${startTime}&endtime_in=${endTime}
       &region__icontains=${region}&informed__icontains=${informed}&id=${id}`
-    console.log(url);
     
     return this.http.get(url)
   }
@@ -223,8 +222,9 @@ export class AuthService {
     sort: string, order: SortDirection, page: number, pageSize: any
   ) {
     const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/'
-    const requestUrl = `${url}?ordering=${order}${sort}&page=${page}&page_size=${pageSize}&visitor__username__icontains=${username}&visitor__phonenumber__icontains=${number}&sitename__icontains=${sitename}&worktype__icontains=${worktype}&entertime__gte=${entertime}&region__in=${regions}`
-    console.log(requestUrl);
+    const requestUrl = `${url}?ordering=${order}${sort}&page=${page}&page_size=${pageSize}
+    &visitor__username__icontains=${username}&visitor__phonenumber__icontains=${number}
+    &sitename__icontains=${sitename}&worktype__icontains=${worktype}&entertime__gte=${entertime}&region__in=${regions}`
     
     return this.http.get(requestUrl)
   }
@@ -241,13 +241,9 @@ export class AuthService {
   }
 
   updateCommentDoorOpen(id: any, body: any) {
-    console.log(id);
-    console.log(body);
     
     const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/'
-    const requestUrl = `${url}${id.id}/`
-    console.log(requestUrl);
-    
+    const requestUrl = `${url}${id.rowData['id']}/`    
     return this.http.patch(requestUrl ,body)
   }
 
@@ -272,11 +268,24 @@ export class AuthService {
     let body = {
       'username' : form.username,
       'phonenumber' : form.phonenumber,
+      'region': form.region,
       'organization' : form.organization,
       'position' : form.position
     }
 
     return this.http.post('http://10.7.119.12/api2/doorcontrol/user/', body)
+  }
+
+  getNoDataTable(
+    sitename: string, worktype: string, entertime: string, 
+    username: string, organization : string, number: string, regions: any,
+    sort: string, order: SortDirection, page: number, pageSize: any
+  ) {
+    const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/'
+    const requestUrl = `${url}?ordering=${order}${sort}&page=${page}&page_size=${pageSize}&visitor__username__icontains=''
+    &visitor__phonenumber__icontains=${number}&sitename__icontains=${sitename}&worktype__icontains=${worktype}&entertime__gte=${entertime}&region__in=${regions}`
+    
+    return this.http.get(requestUrl)
   }
   
 }

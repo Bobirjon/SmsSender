@@ -14,17 +14,17 @@ import { AuthService } from '../auth.service';
         </div>
         </div>
         <div mat-dialog-actions>
-            <button mat-button type="button" (click)="onCancel()">Отменить</button>
-            <button mat-button type="submit">Сохранить</button>
+            <button mat-raised-button type="button" (click)="onCancel()">Отменить</button>
+            <button mat-raised-button type="submit">Сохранить</button>
         </div>
     </form>
   `,
 })
-export class DialogCommentContentComponent {
+export class DialogUpdateContentComponent {
     userdata: any
     constructor(
         private authservice: AuthService,
-        public dialogRef: MatDialogRef<DialogCommentContentComponent>,
+        public dialogRef: MatDialogRef<DialogUpdateContentComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
 
@@ -34,8 +34,10 @@ export class DialogCommentContentComponent {
  
     onSubmit(formData: any): void {
         this.userdata = formData.value.userdata
+        console.log(this.data['columnName']);
+        
         const body = {
-            comment: this.userdata
+            [this.data['columnName']]: this.userdata
         }
         this.authservice.updateCommentDoorOpen(this.data, body).subscribe(() => {})
         
