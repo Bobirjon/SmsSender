@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { FormControl, FormsModule, NgForm } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
 import { Subscription, catchError, map, of, merge, startWith, switchMap } from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
 import * as XLSX from 'xlsx';
@@ -26,6 +26,19 @@ export interface DataTable {
   reason: string,
   problem: string
   id: string
+}
+
+interface FilteredValues {
+  type: string;
+  level: string;
+  created_at: string;
+  start_time: string;
+  end_time: string;
+  problem: string;
+  reason: string;
+  description: string;
+  region: string[]; // Explicitly define 'region' as an array of strings
+  informed: string;
 }
 
 @Component({
@@ -118,7 +131,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('table2paginator') public table2paginator: MatPaginator
   @ViewChild('table2sort') public table2sort: MatSort;
 
-  filteredValuesForOpenCases = {
+  filteredValuesForOpenCases: FilteredValues = {
     type: '',
     level: '',
     created_at: '',
@@ -127,8 +140,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     problem: '',
     reason: '',
     description: '',
-    region: '',
-    informed: ''
+    region: [],
+    informed: '',
   }
 
   level = new FormControl()
@@ -144,13 +157,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
   username = new FormControl()
   id = new FormControl()
 
+  form: FormGroup;
+  filteredDataRegion: any[] = [];
+  regionTemplateData: any = { data: [] };
+
+
+  selectedRegion: string[] = []
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog,) { }
+    public dialog: MatDialog,
+    private fb: FormBuilder,) { 
+
+      this.form = this.fb.group({
+        region: []  // Initialize the form control with an empty array for multi-select
+      });
+    }
 
   // All Cases table with backend pagination
 
@@ -187,35 +212,61 @@ export class HomeComponent implements OnInit, AfterViewInit {
             } else if (data.is_complete == false && data.is_send_sms == true) {
               this.Data.data = [...this.Data.data, data]
             }
+
           })
+
+          
       }),
 
       // Template table
       this.authService.getTemplateSMS()
         .subscribe((data: any) => {
-          this.TemplateData.data = data.results
+          this.regionTemplateData.data = data.results
+
+          this.filteredDataRegion = [...this.regionTemplateData.data];
+          this.TemplateData.data = this.filteredDataRegion
+   
 
           this.webSocketService.receiveMessage().subscribe((data) => {
 
-            const exist = this.TemplateData.data.findIndex(
+            const exist = this.regionTemplateData.data.findIndex(
               (item: any) => item.id === data.id
             )
 
+            // if (exist !== -1) {
+            //   if (data.action == 'delete') {
+            //     this.TemplateData.data.splice(exist, 1)
+            //     this.TemplateData.data = this.TemplateData.data
+            //   } else if (data.is_send_sms == true) {
+            //     this.TemplateData.data.splice(exist, 1)
+            //     this.TemplateData.data = this.TemplateData.data
+            //   } else {
+            //     this.TemplateData.data[exist] = data
+            //     this.TemplateData.data = this.TemplateData.data
+            //   }
+            // } else if (data.is_send_sms == false) {
+            //   this.TemplateData.data = [...this.TemplateData.data, data]
+            // }          
+            
             if (exist !== -1) {
-              if (data.action == 'delete') {
-                this.TemplateData.data.splice(exist, 1)
-                this.TemplateData.data = this.TemplateData.data
-              } else if (data.is_send_sms == true) {
-                this.TemplateData.data.splice(exist, 1)
-                this.TemplateData.data = this.TemplateData.data
+              if (data.action == 'delete' || data.is_send_sms == true) {
+                this.regionTemplateData.data.splice(exist, 1);
               } else {
-                this.TemplateData.data[exist] = data
-                this.TemplateData.data = this.TemplateData.data
+                this.regionTemplateData.data[exist] = data;
               }
             } else if (data.is_send_sms == false) {
-              this.TemplateData.data = [...this.TemplateData.data, data]
+              this.regionTemplateData.data.push(data);
             }
+
+            this.filterTableByRegion();
+
           })
+
+          this.form.get('region').valueChanges.subscribe(selectedRegions => {
+            console.log(selectedRegions);
+            
+            this.filterTableByRegion();
+          });
         })
 
 
@@ -304,6 +355,27 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
         })
       });
+  }
+
+  filterTableByRegion() {
+    const selectedRegions = this.form.get('region').value;
+    console.log('it works');
+
+
+    
+    // If no regions are selected, show all data
+    if (!selectedRegions || selectedRegions.length === 0) {
+      this.filteredDataRegion = [...this.regionTemplateData.data];
+    } else {
+      // Filter data based on selected regions
+      this.filteredDataRegion = this.regionTemplateData.data.filter((item: any) =>
+        
+        selectedRegions.includes(item.region)
+      );
+    }
+
+    this.TemplateData.data = this.filteredDataRegion;
+    
   }
 
   ngOnInit(): void {
@@ -408,6 +480,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.filteredValuesForOpenCases['type'] = this.selectedType
     this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases)
   }
+  
+  onRegionType() {
+    this.filteredValuesForOpenCases.region = this.selectedRegion; // Assign the selected regions
+    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases);
+  }
+
 
   customFilterPredicate() {
     const myFilterPredicate = (
@@ -415,10 +493,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       filter: string
     ): boolean => {
       var globalMatch = !this.globalFilter;
-
+      
       if (this.globalFilter) {
         // search all text fields
-
+        
         globalMatch =
           data.reason
             .toString()
@@ -431,11 +509,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
           data.description
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.region
             .toString()
             .trim()
             .toLowerCase()
@@ -463,13 +536,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
 
       let searchString = JSON.parse(filter);
+      
+      console.log(data);
+      
+
+      
       return (
         data.level.toString().trim().indexOf(searchString.level) !== -1 &&
         data.type
           .toString()
           .trim()
           .toLowerCase()
-          .indexOf(searchString.type.toLowerCase()) !== -1
+          .indexOf(searchString.type.toLowerCase()) !== -1  &&
+          (searchString.region.length === 0 || searchString.region.includes(data.region))
       );
     };
     return myFilterPredicate;

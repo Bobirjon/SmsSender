@@ -150,6 +150,8 @@ export class HubComponent implements OnInit {
     'Уровень сигнала стабилизировалась. Сайты работают в штатном режиме ',
   ];
 
+  isPanelOpen = true
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -312,7 +314,7 @@ export class HubComponent implements OnInit {
       }
 
       this.authService.getSms(this.route.snapshot.params.id)
-        .subscribe((result) => {
+        .subscribe((result: any) => {
 
           const selectedOptionReg = this.region.find(region => region.value === result['region'])
           this.selectedRegion = selectedOptionReg ? selectedOptionReg.display : ''
@@ -530,7 +532,7 @@ export class HubComponent implements OnInit {
     }
 
     if (this.requestType == 'Проблема') {
-      if (this.hubForm.value.AddOrCor == (undefined || null)) {
+      if (this.hubForm.value.AddOrCor == null || this.hubForm.value.AddOrCor == undefined) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
@@ -560,7 +562,7 @@ export class HubComponent implements OnInit {
       }
 
     } else {
-      if (this.hubForm.value.AddOrCor == (null || undefined)) {
+      if (this.hubForm.value.AddOrCor == null || this.hubForm.value.AddOrCor == undefined) {
         this.SmsTextBody =
           this.hubForm.value.level.replace('P', 'П') + ' ' + this.requestType + ' на узловом сайте' + '\n' +
           twoG + threeG + fourG + fiveG + ' сайтов ' + this.hubForm.value.periodicity + ' не работают в регионе ' +
