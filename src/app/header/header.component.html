@@ -1,10 +1,26 @@
 <mat-toolbar class="header-style">
-    <a routerLink="/home" style="text-decoration: none; color: #fbebff; font-family: system-ui; font-size: 30px;"><span>Ucell</span></a>
-    <span class="example-spacer"></span>
-    <span style="color: #fbebff;">V-16.10.24.16.30</span>
-    <span class="example-spacer"></span>
-    <button mat-button *ngIf="storageService.isAuthenticatedUser()" [matMenuTriggerFor]="authUser" class="button-style">{{storageService.getUserName()}}</button>
-    <mat-menu #authUser="matMenu" xPosition="before">
-        <button  (click)="logout()" mat-menu-item>Выход</button>
-    </mat-menu>
+  <a
+    routerLink="/home"
+    style="
+      text-decoration: none;
+      color: #fbebff;
+      font-family: system-ui;
+      font-size: 30px;
+    "
+    ><span>Ucell</span></a
+  >
+  <span class="example-spacer"></span>
+  <span style="color: #fbebff">V-30.10.24.23.00</span>
+  <span class="example-spacer"></span>
+  <button
+    mat-button
+    *ngIf="storageService.isAuthenticatedUser()"
+    [matMenuTriggerFor]="authUser"
+    class="button-style"
+  >
+    {{ storageService.getUserName() }}
+  </button>
+  <mat-menu #authUser="matMenu" xPosition="before">
+    <button (click)="logout()" mat-menu-item>Выход</button>
+  </mat-menu>
 </mat-toolbar>
