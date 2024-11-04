@@ -1,27 +1,30 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from '../auth.service';
 import { catchError, map, merge, startWith, switchMap } from 'rxjs';
 
-
 @Component({
   selector: 'app-add-phone-numbers',
   templateUrl: './add-phone-numbers.component.html',
-  styleUrls: ['./add-phone-numbers.component.css']
+  styleUrls: ['./add-phone-numbers.component.css'],
 })
 export class AddPhoneNumbersComponent implements OnInit {
-
-  ActivePhoneNumberList: MatTableDataSource<any>
-  dataSend: any
-  data: any
-  AddPhoneNumber: FormGroup
+  ActivePhoneNumberList: MatTableDataSource<any>;
+  dataSend: any;
+  data: any;
+  AddPhoneNumber: FormGroup;
   pageSizes = [10, 25, 50];
   resultsLength = 0;
   isLoadingResults = true;
-  isRateLimitReached = false
+  isRateLimitReached = false;
   @ViewChild('table2sort') public table2sort: MatSort;
 
   filteredValues = {
@@ -33,12 +36,12 @@ export class AddPhoneNumbersComponent implements OnInit {
     regionFilter: '',
   };
 
-  nameFilter = new FormControl()
-  numberFilter = new FormControl()
-  networkFilter = new FormControl()
-  criteriaFilter = new FormControl()
-  notificationFilter = new FormControl()
-  regionFilter = new FormControl()
+  nameFilter = new FormControl();
+  numberFilter = new FormControl();
+  networkFilter = new FormControl();
+  criteriaFilter = new FormControl();
+  notificationFilter = new FormControl();
+  regionFilter = new FormControl();
 
   displayedColumns: string[] = [
     'name',
@@ -47,7 +50,7 @@ export class AddPhoneNumbersComponent implements OnInit {
     'criteria',
     'region',
     'network',
-    'actions'
+    'actions',
   ];
 
   network: { value: string; viewValue: string }[] = [
@@ -95,68 +98,66 @@ export class AddPhoneNumbersComponent implements OnInit {
 
   createForm() {
     this.AddPhoneNumber = this.formBuilder.group({
-      'name': [null, Validators.required],
-      'number': ['99893', Validators.required],
-      'network': [null, Validators.required],
-      'criteria': [null, Validators.required],
-      'notification': [null, Validators.required],
-      'region': [null, Validators.required],
-    })
+      name: [null, Validators.required],
+      number: ['99893', Validators.required],
+      network: [null, Validators.required],
+      criteria: [null, Validators.required],
+      notification: [null, Validators.required],
+      region: [null, Validators.required],
+    });
   }
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService) {
-    this.createForm()
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {
+    this.createForm();
   }
 
   onSubmit() {
-
     this.dataSend = {
-      'name': this.AddPhoneNumber.value.name,
-      'tel_number': this.AddPhoneNumber.value.number,
-      'network': this.AddPhoneNumber.value.network,
-      'criteria': this.AddPhoneNumber.value.criteria,
-      'notification': this.AddPhoneNumber.value.notification,
-    }
+      name: this.AddPhoneNumber.value.name,
+      tel_number: this.AddPhoneNumber.value.number,
+      network: this.AddPhoneNumber.value.network,
+      criteria: this.AddPhoneNumber.value.criteria,
+      notification: this.AddPhoneNumber.value.notification,
+    };
 
     console.log(this.dataSend);
-    
 
-    if(this.AddPhoneNumber.value.region != null || this.AddPhoneNumber.value.region != undefined) {
-      this.dataSend.region = this.AddPhoneNumber.value.region
+    if (
+      this.AddPhoneNumber.value.region != null ||
+      this.AddPhoneNumber.value.region != undefined
+    ) {
+      this.dataSend.region = this.AddPhoneNumber.value.region;
     }
 
-    this.authService.postReceiverData(this.dataSend)
-      .subscribe(res => {
-        console.log(res);
-        window.location.reload()
-      })
-
+    this.authService.postReceiverData(this.dataSend).subscribe((res) => {
+      console.log(res);
+      window.location.reload();
+    });
   }
 
   ngOnInit(): void {
+    this.authService.getreceiverData().subscribe((res) => {
+      this.data = res;
 
-    this.authService.getreceiverData()
-      .subscribe(res => {
-        this.data = res
+      this.ActivePhoneNumberList = new MatTableDataSource(this.data.results);
 
-        this.ActivePhoneNumberList = new MatTableDataSource(this.data.results)
-        
-        this.ActivePhoneNumberList.paginator = this.paginator;
-        this.ActivePhoneNumberList.sort = this.sort;
-        this.filterForAllCase()
-      })
+      this.ActivePhoneNumberList.paginator = this.paginator;
+      this.ActivePhoneNumberList.sort = this.sort;
+      this.filterForAllCase();
+    });
   }
 
   onDelete(event: any) {
-   this.authService.deleteReceiver(event)
-    .subscribe(res => {
+    this.authService.deleteReceiver(event).subscribe((res) => {
       console.log(res);
-      window.location.reload()
-    })
+      window.location.reload();
+    });
   }
 
   ngAfterViewInit() {
-
     // If the user changes the sort order, reset back to the first page.
     this.table2sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
@@ -167,27 +168,40 @@ export class AddPhoneNumbersComponent implements OnInit {
       this.criteriaFilter.valueChanges,
       this.notificationFilter.valueChanges,
       this.regionFilter.valueChanges,
-      this.paginator.page)
+      this.paginator.page
+    )
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          var dir: string
-          var nameFilter = this.nameFilter.value == null ? '' : this.nameFilter.value;
-          var numberFilter = this.numberFilter.value == null ? '' : this.numberFilter.value;
-          var networkFilter = this.networkFilter.value == null ? '' : this.networkFilter.value;
-          var criteriaFilter = this.criteriaFilter.value == null ? '' : this.criteriaFilter.value;
-          var notificationFilter = this.notificationFilter.value == null ? '' : this.notificationFilter.value;
-          var regionFilter = this.regionFilter.value == null ? '' : this.regionFilter.value;
+          var dir: string;
+          var nameFilter =
+            this.nameFilter.value == null ? '' : this.nameFilter.value;
+          var numberFilter =
+            this.numberFilter.value == null ? '' : this.numberFilter.value;
+          var networkFilter =
+            this.networkFilter.value == null ? '' : this.networkFilter.value;
+          var criteriaFilter =
+            this.criteriaFilter.value == null ? '' : this.criteriaFilter.value;
+          var notificationFilter =
+            this.notificationFilter.value == null
+              ? ''
+              : this.notificationFilter.value;
+          var regionFilter =
+            this.regionFilter.value == null ? '' : this.regionFilter.value;
           if (this.table2sort.direction == 'desc') {
-            dir = '-'
+            dir = '-';
           } else {
-            dir = ''
+            dir = '';
           }
 
           return this.authService
             .getRecievers(
-              nameFilter, numberFilter, networkFilter, criteriaFilter, notificationFilter,
+              nameFilter,
+              numberFilter,
+              networkFilter,
+              criteriaFilter,
+              notificationFilter,
               regionFilter,
               this.table2sort.active,
               dir,
@@ -214,66 +228,110 @@ export class AddPhoneNumbersComponent implements OnInit {
         })
       )
       .subscribe((data) => {
-        this.ActivePhoneNumberList = new MatTableDataSource(data.results)
+        this.ActivePhoneNumberList = new MatTableDataSource(data.results);
         console.log(data);
-
       });
   }
 
   filterForAllCase() {
     this.nameFilter.valueChanges.subscribe((nameFilters) => {
       this.filteredValues['nameFilter'] = nameFilters;
-      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues)
-    })
+      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues);
+    });
 
     this.numberFilter.valueChanges.subscribe((numberFilter) => {
       this.filteredValues['numberFilter'] = numberFilter;
-      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues)
-    })
+      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues);
+    });
 
     this.networkFilter.valueChanges.subscribe((networkFilters) => {
-      this.filteredValues['networkFilters'] = networkFilters;
-      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues)
-    })
+      this.filteredValues['networkFilter'] = networkFilters;
+      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues);
+    });
 
     this.criteriaFilter.valueChanges.subscribe((criteriaFilters) => {
       this.filteredValues['criteriaFilter'] = criteriaFilters;
-      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues)
-    })
+      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues);
+    });
 
     this.notificationFilter.valueChanges.subscribe((notificationFilters) => {
       this.filteredValues['notificationFilter'] = notificationFilters;
-      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues)
-    })
+      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues);
+    });
 
     this.regionFilter.valueChanges.subscribe((regionFilters) => {
       this.filteredValues['regionFilter'] = regionFilters;
-      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues)
-    })
+      this.ActivePhoneNumberList.filter = JSON.stringify(this.filteredValues);
+    });
 
-    this.ActivePhoneNumberList.filterPredicate = function (data, filter): boolean {
+    this.ActivePhoneNumberList.filterPredicate = function (
+      data,
+      filter
+    ): boolean {
       let searchString = JSON.parse(filter);
-      let nameFound = data.name.toString().trim().toLowerCase().indexOf(searchString.nameFilter.toLowerCase()) !== -1
-      let numberFound = data.tel_number.toString().trim().toLowerCase().indexOf(searchString.numberFilter.toLowerCase()) !== -1
-      let networkFound = data.network.toString().trim().toLowerCase().indexOf(searchString.networkFilter.toLowerCase()) !== -1
+      let nameFound =
+        data.name
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.nameFilter.toLowerCase()) !== -1;
+      let numberFound =
+        data.tel_number
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.numberFilter.toLowerCase()) !== -1;
+      let networkFound =
+        data.network
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.networkFilter.toLowerCase()) !== -1;
 
-      let criteriaFound = data.criteria.toString().trim().toLowerCase().indexOf(searchString.criteriaFilter.toLowerCase()) !== -1
-      let notificationFound = data.notification.toString().trim().toLowerCase().indexOf(searchString.notificationFilter.toLowerCase()) !== -1
-      let regionFound = data.region.toString().trim().toLowerCase().indexOf(searchString.regionFilter.toLowerCase()) !== -1
+      let criteriaFound =
+        data.criteria
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.criteriaFilter.toLowerCase()) !== -1;
+      let notificationFound =
+        data.notification
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.notificationFilter.toLowerCase()) !== -1;
+      let regionFound =
+        data.region
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.regionFilter.toLowerCase()) !== -1;
 
       if (searchString.topFilter) {
         console.log(networkFound);
 
-        return nameFound || numberFound || networkFound || criteriaFound || notificationFound || regionFound
+        return (
+          nameFound ||
+          numberFound ||
+          networkFound ||
+          criteriaFound ||
+          notificationFound ||
+          regionFound
+        );
       } else {
         console.log(networkFound);
-        return nameFound && numberFound && networkFound && criteriaFound && notificationFound && regionFound
+        return (
+          nameFound &&
+          numberFound &&
+          networkFound &&
+          criteriaFound &&
+          notificationFound &&
+          regionFound
+        );
       }
-    }
+    };
   }
-
 }
 function observableOf(arg0: null): any {
   throw new Error('Function not implemented.');
 }
-

@@ -4,7 +4,6 @@
   "compilerOptions": {
     "baseUrl": "./",
     "ignoreDeprecations": "5.0",
-    "suppressImplicitAnyIndexErrors": true,
     "strictNullChecks": false,
     "noPropertyAccessFromIndexSignature": false,
     "outDir": "./dist/out-tsc",
