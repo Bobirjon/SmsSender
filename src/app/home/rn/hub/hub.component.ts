@@ -38,7 +38,7 @@ export class HubComponent implements OnInit {
   smsBody: any;
   word: string = ' Узловой сайт ';
   selectedRegion: string = '';
-  selectedDistrict: string = '';
+  // selectedDistrict: string = '';
   filteredOptionsReason: Observable<string[]>;
   filteredOptionsDesc: Observable<string[]>;
 
@@ -98,29 +98,29 @@ export class HubComponent implements OnInit {
     { value: 'Хорезм', display: 'Хорезме' },
   ];
 
-  district = [
-    { value: '', display: '' },
-    { value: 'Аккурган', display: 'Аккурганском районе' },
-    { value: 'Ахангаран', display: 'Ахангаранском районе' },
-    { value: 'Бекабад', display: 'Бекабадском районе' },
-    { value: 'Бустонлик', display: 'Бустанликском районе' },
-    { value: 'Бука', display: 'Букинском районе' },
-    { value: 'Зангиота', display: 'Зангиотинском районе' },
-    { value: 'Кибрай', display: 'Кибрайском районе' },
-    { value: 'Куйичирчик', display: 'Куйичирчикском районе' },
-    { value: 'Паркент', display: 'Паркентском районе' },
-    { value: 'Пскент', display: 'Пскентском районе' },
-    { value: 'Ташкент', display: 'Ташкентском районе' },
-    { value: 'Уртачирчик', display: 'Уртачирчикском районе' },
-    { value: 'Чиназ', display: 'Чиназском районе' },
-    { value: 'Юкоричирчик', display: 'Юкоричирчикском районе' },
-    { value: 'Янгиюль', display: 'Янгиюльском районе' },
-    { value: 'Алмалык', display: 'Алмалыкском районе' },
-    { value: 'Чирчик', display: 'город Чирчик' },
-    { value: 'Ангрен', display: 'Ангренском районе' },
-    { value: 'Нурафшон', display: 'город Нурафшон' },
-    { value: 'Чимбай', display: 'Чимбайском районе' },
-  ];
+  // district = [
+  //   { value: '', display: '' },
+  //   { value: 'Аккурган', display: 'Аккурганском районе' },
+  //   { value: 'Ахангаран', display: 'Ахангаранском районе' },
+  //   { value: 'Бекабад', display: 'Бекабадском районе' },
+  //   { value: 'Бустонлик', display: 'Бустанликском районе' },
+  //   { value: 'Бука', display: 'Букинском районе' },
+  //   { value: 'Зангиота', display: 'Зангиотинском районе' },
+  //   { value: 'Кибрай', display: 'Кибрайском районе' },
+  //   { value: 'Куйичирчик', display: 'Куйичирчикском районе' },
+  //   { value: 'Паркент', display: 'Паркентском районе' },
+  //   { value: 'Пскент', display: 'Пскентском районе' },
+  //   { value: 'Ташкент', display: 'Ташкентском районе' },
+  //   { value: 'Уртачирчик', display: 'Уртачирчикском районе' },
+  //   { value: 'Чиназ', display: 'Чиназском районе' },
+  //   { value: 'Юкоричирчик', display: 'Юкоричирчикском районе' },
+  //   { value: 'Янгиюль', display: 'Янгиюльском районе' },
+  //   { value: 'Алмалык', display: 'Алмалыкском районе' },
+  //   { value: 'Чирчик', display: 'город Чирчик' },
+  //   { value: 'Ангрен', display: 'Ангренском районе' },
+  //   { value: 'Нурафшон', display: 'город Нурафшон' },
+  //   { value: 'Чимбай', display: 'Чимбайском районе' },
+  // ];
 
   category: { value: string; viewValue: string }[] = [
     { value: 'AC/DC breaker', viewValue: 'AC/DC breaker' },
@@ -193,7 +193,8 @@ export class HubComponent implements OnInit {
       battery_life_time: [''],
       lowBatteryTime: [''],
       dg_start_time: [''],
-      district: [this.district[0]],
+      // district: [this.district[0]],
+      district: [''],
       twoG: [''],
       threeG: [''],
       fourG: [''],
@@ -337,12 +338,12 @@ export class HubComponent implements OnInit {
             ? selectedOptionReg.display
             : '';
 
-          const selectedOptionDis = this.district.find(
-            (dis) => dis.value === result['district']
-          );
-          this.selectedDistrict = selectedOptionDis
-            ? selectedOptionDis.display
-            : '';
+          // const selectedOptionDis = this.district.find(
+          //   (dis) => dis.value === result['district']
+          // );
+          // this.selectedDistrict = selectedOptionDis
+          //   ? selectedOptionDis.display
+          //   : '';
 
           if (result['end_time'] == null || this.asNew == true) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '');
@@ -479,7 +480,8 @@ export class HubComponent implements OnInit {
         ' не работают в регионе ' +
         this.selectedRegion +
         ' ' +
-        this.selectedDistrict,
+        // this.selectedDistrict,
+        this.hubForm.value.district,
       reason:
         this.hubForm.value.reason +
         ' ' +
@@ -556,6 +558,9 @@ export class HubComponent implements OnInit {
   }
 
   smsSendBody(id?: number) {
+    console.log(this.selectedRegion);
+    console.log(this.hubForm.value.region);
+
     let twoG = '',
       threeG = '',
       fourG = '',
@@ -617,8 +622,9 @@ export class HubComponent implements OnInit {
           ' не работают в регионе ' +
           this.selectedRegion +
           ' ' +
-          this.selectedDistrict +
-          '\n' +
+          // this.selectedDistrict +
+          this.hubForm.value.district +
+          ' \n' +
           'Эффект: Потеря покрытия и качество связи в ' +
           this.selectedRegion +
           '\n' +
@@ -664,7 +670,8 @@ export class HubComponent implements OnInit {
           ' не работают в регионе ' +
           this.selectedRegion +
           ' ' +
-          this.selectedDistrict +
+          // this.selectedDistrict +
+          this.hubForm.value.district +
           '\n' +
           'Эффект: Потеря покрытия и качество связи в ' +
           this.selectedRegion +
@@ -713,8 +720,9 @@ export class HubComponent implements OnInit {
           ' не работают в регионе ' +
           this.selectedRegion +
           ' ' +
-          this.selectedDistrict +
-          '\n' +
+          // this.selectedDistrict +
+          this.hubForm.value.district +
+          ' \n' +
           'Причина: ' +
           this.hubForm.value.reason +
           this.word +
@@ -763,7 +771,8 @@ export class HubComponent implements OnInit {
           ' не работают в регионе ' +
           this.selectedRegion +
           ' ' +
-          this.selectedDistrict +
+          // this.selectedDistrict +
+          this.hubForm.value.district +
           '\n' +
           'Причина: ' +
           this.hubForm.value.reason +
@@ -861,19 +870,14 @@ export class HubComponent implements OnInit {
       (region) => region.value === event.value
     );
     this.selectedRegion = selectedOption ? selectedOption.display : '';
-    if (this.hubForm.value.region !== 'Ташкент.обл') {
-      this.hubForm.get('district').disable();
-    } else {
-      this.hubForm.get('district').enable();
-    }
   }
 
-  districtSelect(event: any) {
-    const selectedOption = this.district.find(
-      (dis) => dis.value === event.value
-    );
-    this.selectedDistrict = selectedOption ? selectedOption.display : '';
-  }
+  // districtSelect(event: any) {
+  //   const selectedOption = this.district.find(
+  //     (dis) => dis.value === event.value
+  //   );
+  //   this.selectedDistrict = selectedOption ? selectedOption.display : '';
+  // }
 
   sendButton() {
     this.authService.sendSms(this.smsBody).subscribe(
