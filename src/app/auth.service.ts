@@ -283,7 +283,7 @@ export class AuthService {
 
   updateCommentDoorOpen(id: any, body: any) {
     const url = 'http://10.7.119.12/api2/doorcontrol/sitevisit/';
-    const requestUrl = `${url}${id.rowData['id']}/`;
+    const requestUrl = `${url}${id}/`;
     return this.http.patch(requestUrl, body);
   }
 
