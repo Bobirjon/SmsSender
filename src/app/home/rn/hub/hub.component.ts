@@ -477,7 +477,7 @@ export class HubComponent implements OnInit {
         five +
         ' сайтов ' +
         this.hubForm.value.periodicity +
-        ' не работают в регионе ' +
+        ' не работают в ' +
         this.selectedRegion +
         ' ' +
         // this.selectedDistrict,
@@ -619,15 +619,12 @@ export class HubComponent implements OnInit {
           fiveG +
           ' сайтов ' +
           this.hubForm.value.periodicity +
-          ' не работают в регионе ' +
+          ' не работают в ' +
           this.selectedRegion +
           ' ' +
           // this.selectedDistrict +
           this.hubForm.value.district +
           ' \n' +
-          'Эффект: Потеря покрытия и качество связи в ' +
-          this.selectedRegion +
-          '\n' +
           'Причина: ' +
           this.hubForm.value.reason +
           this.word +
@@ -667,14 +664,11 @@ export class HubComponent implements OnInit {
           fiveG +
           ' сайтов ' +
           this.hubForm.value.periodicity +
-          ' не работают в регионе ' +
+          ' не работают в ' +
           this.selectedRegion +
           ' ' +
           // this.selectedDistrict +
           this.hubForm.value.district +
-          '\n' +
-          'Эффект: Потеря покрытия и качество связи в ' +
-          this.selectedRegion +
           '\n' +
           'Причина: ' +
           this.hubForm.value.reason +
@@ -717,7 +711,7 @@ export class HubComponent implements OnInit {
           fiveG +
           ' сайтов ' +
           this.hubForm.value.periodicity +
-          ' не работают в регионе ' +
+          ' не работают в ' +
           this.selectedRegion +
           ' ' +
           // this.selectedDistrict +
@@ -768,7 +762,7 @@ export class HubComponent implements OnInit {
           fiveG +
           ' сайтов ' +
           this.hubForm.value.periodicity +
-          ' не работают в регионе ' +
+          ' не работают в ' +
           this.selectedRegion +
           ' ' +
           // this.selectedDistrict +

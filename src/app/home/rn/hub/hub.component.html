@@ -73,12 +73,6 @@
                 }}
               </p>
               <p>
-                {{
-                  "Эффект: Потеря покрытия и качества связи в " +
-                    this.selectedRegion
-                }}
-              </p>
-              <p>
                 {{ "Причина: " + hubForm.value.reason }}
                 <span *ngIf="hubForm.value.hubSite != ''">{{ word }}</span>
                 {{ hubForm.value.hubSite + hubForm.value.generator }}
