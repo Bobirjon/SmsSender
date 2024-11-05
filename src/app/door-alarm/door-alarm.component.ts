@@ -20,6 +20,7 @@ import { AddNewElementComponent } from './add-new-element/add-new-element.compon
 import { UserCreateComponent } from './user-create/user-create.component';
 import * as XLSX from 'xlsx';
 import { Router } from '@angular/router';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-door-alarm',
@@ -29,13 +30,14 @@ import { Router } from '@angular/router';
 export class DoorAlarmComponent implements OnInit, AfterViewInit {
   isNoDataTable: boolean = false;
   isNoDataTableChange = new BehaviorSubject<boolean>(this.isNoDataTable);
-
+  selection = new SelectionModel<any>(true, []);
   // http request
   private HttpRequests = inject(HttpClient);
   HttpRequest: AuthService | null;
 
   // Alldata table
   displayedColumns: string[] = [
+    'select',
     'sitename',
     'worktype',
     'visitor__username',
@@ -48,6 +50,7 @@ export class DoorAlarmComponent implements OnInit, AfterViewInit {
     'info',
   ];
   AllDataMatTable = new MatTableDataSource<any>();
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -160,6 +163,8 @@ export class DoorAlarmComponent implements OnInit, AfterViewInit {
           }
 
           this.resultsLength = data.count;
+          console.log(data);
+
           return data.results;
         })
       )
@@ -171,39 +176,17 @@ export class DoorAlarmComponent implements OnInit, AfterViewInit {
     this.isNoDataTableChange.next(this.isNoDataTable);
   }
 
-  editExitTime(element: any) {
-    console.log(element);
-    const dialogRef = this.dialog.open(DialogExitContentComponent, {
-      width: '300px',
-      data: element,
-    });
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-      console.log(result);
-
-      if (result && result.userdata !== undefined) {
-        window.location.reload();
-      }
-    });
-  }
-
-  onUpdateData(column: string, element: any) {
-    console.log(element);
-
-    const dialogRef = this.dialog.open(DialogUpdateContentComponent, {
-      width: '300px',
-      data: {
-        columnName: column,
-        rowData: element,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-      console.log(result);
-      if (result && result.userdata !== undefined) {
-        window.location.reload();
-      }
-    });
+  onUpdateData() {
+    const selectedData = this.showSelectedRows();
+    console.log(selectedData);
+    if (selectedData.length == 0) {
+      window.alert('yo did not choose');
+    } else {
+      this.dialog.open(DialogUpdateContentComponent, {
+        width: '500px',
+        data: selectedData,
+      });
+    }
   }
 
   onCreate() {
@@ -291,6 +274,31 @@ export class DoorAlarmComponent implements OnInit, AfterViewInit {
 
   userList() {
     this.router.navigate(['doorAlarm/allowedUser']);
+  }
+
+  showSelectedRows() {
+    const selectedData = this.selection.selected;
+    return selectedData;
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+
+    const numRows = this.AllDataMatTable?.data?.length || 0; // Check for undefined dataSource and data
+
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection */
+  masterToggle() {
+    if (this.AllDataMatTable?.data) {
+      this.isAllSelected()
+        ? this.selection.clear()
+        : this.AllDataMatTable.data.forEach((row) => {
+            this.selection.select(row);
+            console.log(row);
+          });
+    }
   }
 
   ngOnInit(): void {}
