@@ -21,6 +21,7 @@ import { UserCreateComponent } from './user-create/user-create.component';
 import * as XLSX from 'xlsx';
 import { Router } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-door-alarm',
@@ -69,7 +70,8 @@ export class DoorAlarmComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private snackbar: MatSnackBar
   ) {
     this.doorControlForm = this.fb.group({
       region: [''],
@@ -178,9 +180,10 @@ export class DoorAlarmComponent implements OnInit, AfterViewInit {
 
   onUpdateData() {
     const selectedData = this.showSelectedRows();
-    console.log(selectedData);
     if (selectedData.length == 0) {
-      window.alert('yo did not choose');
+      this.snackbar.open('Выберите строку', 'Отмена', {
+        panelClass: 'snack-bar',
+      });
     } else {
       this.dialog.open(DialogUpdateContentComponent, {
         width: '500px',

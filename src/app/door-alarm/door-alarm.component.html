@@ -79,15 +79,10 @@
           matSortDirection="desc"
         >
           <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-              ></mat-checkbox>
-            </th>
+            <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
               <mat-checkbox
+                color="primary"
                 (click)="$event.stopPropagation()"
                 (change)="$event ? selection.toggle(element) : null"
                 [checked]="selection.isSelected(element)"

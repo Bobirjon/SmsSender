@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '../auth.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dialog-content',
@@ -13,7 +14,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
     >
       <h1 mat-dialog-title>Обновить данные</h1>
       <div mat-dialog-content>
-        <div style="margin-bottom: 1rem;">
+        <div style="margin-bottom: 1rem;" *ngIf="data.length == 1">
           <label
             for="sitename"
             style="display: block; font-weight: bold; margin-bottom: 0.25rem;"
@@ -71,7 +72,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
           />
         </div>
 
-        <div style="margin-bottom: 1rem;">
+        <div style="margin-bottom: 1rem;" *ngIf="data.length == 1">
           <label
             for="entertime"
             style="display: block; font-weight: bold; margin-bottom: 0.25rem;"
@@ -85,7 +86,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
           />
         </div>
 
-        <div style="margin-bottom: 1rem;">
+        <div style="margin-bottom: 1rem;" *ngIf="data.length == 1">
           <label
             for="exittime"
             style="display: block; font-weight: bold; margin-bottom: 0.25rem;"
@@ -137,13 +138,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   `,
 })
 export class DialogUpdateContentComponent {
+  body: any;
   editForm: FormGroup;
   userdata: any;
   constructor(
     private authservice: AuthService,
     public dialogRef: MatDialogRef<DialogUpdateContentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar
   ) {
     this.editForm = this.formGroup(data);
   }
@@ -163,7 +166,6 @@ export class DialogUpdateContentComponent {
 
     formControlName.forEach((field) => {
       let value = '';
-      console.log(data);
 
       if (data.length == 1) {
         const entry = data[0];
@@ -185,20 +187,32 @@ export class DialogUpdateContentComponent {
   }
 
   onSubmit(): void {
-    const body = {
-      phonenumber: this.editForm.value.phonenumber,
-      sitename: this.editForm.value.sitename,
-      worktype: this.editForm.value.worktype,
-      entertime: this.editForm.value.entertime,
-      exittime: this.editForm.value.exittime,
-      comment: this.editForm.value.comment,
-      info: this.editForm.value.info,
-    };
-    console.log(this.data.id);
-    console.log(typeof this.editForm.value.phonenumber);
+    const createBody = (item: any) => ({
+      phonenumber: this.editForm.value.phonenumber || item.visitor.phonenumber,
+      sitename: this.editForm.value.sitename || item.sitename,
+      worktype: this.editForm.value.worktype || item.worktype,
+      entertime: this.editForm.value.entertime || item.entertime,
+      exittime: this.editForm.value.exittime || item.exittime,
+      comment: this.editForm.value.comment || item.comment,
+      info: this.editForm.value.info || item.info,
+    });
 
-    this.authservice
-      .updateCommentDoorOpen(this.data.id, body)
-      .subscribe(() => {});
+    if (this.data.length === 1) {
+      this.body = createBody(this.data[0]);
+      this.authservice
+        .updateCommentDoorOpen(this.data[0].id, this.body)
+        .subscribe((res: any) => {
+          window.location.reload();
+        });
+    } else {
+      this.data.forEach((item: any) => {
+        this.body = createBody(item);
+        this.authservice
+          .updateCommentDoorOpen(item.id, this.body)
+          .subscribe((res: any) => {
+            window.location.reload();
+          });
+      });
+    }
   }
 }
