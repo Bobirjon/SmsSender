@@ -360,4 +360,13 @@ export class AuthService {
     const url = 'http://10.7.119.12/api2/doorcontrol/user';
     return this.http.put(`${url}/${userid}/`, body);
   }
+
+  getDistrict(body: any) {
+    console.log(body);
+
+    return this.http.post(
+      'http://10.7.119.12/api/smssender/getdistrict/',
+      body
+    );
+  }
 }

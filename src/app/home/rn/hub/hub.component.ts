@@ -98,30 +98,6 @@ export class HubComponent implements OnInit {
     { value: 'Хорезм', display: 'Хорезме' },
   ];
 
-  // district = [
-  //   { value: '', display: '' },
-  //   { value: 'Аккурган', display: 'Аккурганском районе' },
-  //   { value: 'Ахангаран', display: 'Ахангаранском районе' },
-  //   { value: 'Бекабад', display: 'Бекабадском районе' },
-  //   { value: 'Бустонлик', display: 'Бустанликском районе' },
-  //   { value: 'Бука', display: 'Букинском районе' },
-  //   { value: 'Зангиота', display: 'Зангиотинском районе' },
-  //   { value: 'Кибрай', display: 'Кибрайском районе' },
-  //   { value: 'Куйичирчик', display: 'Куйичирчикском районе' },
-  //   { value: 'Паркент', display: 'Паркентском районе' },
-  //   { value: 'Пскент', display: 'Пскентском районе' },
-  //   { value: 'Ташкент', display: 'Ташкентском районе' },
-  //   { value: 'Уртачирчик', display: 'Уртачирчикском районе' },
-  //   { value: 'Чиназ', display: 'Чиназском районе' },
-  //   { value: 'Юкоричирчик', display: 'Юкоричирчикском районе' },
-  //   { value: 'Янгиюль', display: 'Янгиюльском районе' },
-  //   { value: 'Алмалык', display: 'Алмалыкском районе' },
-  //   { value: 'Чирчик', display: 'город Чирчик' },
-  //   { value: 'Ангрен', display: 'Ангренском районе' },
-  //   { value: 'Нурафшон', display: 'город Нурафшон' },
-  //   { value: 'Чимбай', display: 'Чимбайском районе' },
-  // ];
-
   category: { value: string; viewValue: string }[] = [
     { value: 'AC/DC breaker', viewValue: 'AC/DC breaker' },
     { value: 'Bad RX level', viewValue: 'Bad RX level' },
@@ -193,7 +169,6 @@ export class HubComponent implements OnInit {
       battery_life_time: [''],
       lowBatteryTime: [''],
       dg_start_time: [''],
-      // district: [this.district[0]],
       district: [''],
       twoG: [''],
       threeG: [''],
@@ -230,6 +205,23 @@ export class HubComponent implements OnInit {
     ) {
       this.hubForm.value.categories_report = 'ПР';
     }
+  }
+
+  setDistrict() {
+    let splited: string[] = [];
+    splited = this.hubForm.value.effectedSites.split(/\n|,/);
+    let spliteds = splited
+      .filter((element) => element.trim() !== '')
+      .map((element) => element.toUpperCase());
+
+    let body = {
+      site_lst: spliteds,
+    };
+    this.authService.getDistrict(body).subscribe((res: any) => {
+      const russianValues = res.map((item: any) => item.russian).join(', ');
+
+      this.hubForm.get('district')?.setValue(russianValues);
+    });
   }
 
   endTimeValidation(control: any) {
@@ -337,13 +329,6 @@ export class HubComponent implements OnInit {
           this.selectedRegion = selectedOptionReg
             ? selectedOptionReg.display
             : '';
-
-          // const selectedOptionDis = this.district.find(
-          //   (dis) => dis.value === result['district']
-          // );
-          // this.selectedDistrict = selectedOptionDis
-          //   ? selectedOptionDis.display
-          //   : '';
 
           if (result['end_time'] == null || this.asNew == true) {
             endTimeForUpdate = (result['end_time'], 'yyyy-MM-ddTHH:mm', '');
