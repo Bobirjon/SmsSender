@@ -801,7 +801,7 @@ export class HubComponent implements OnInit {
     }
 
     this.smsBody = {
-      source_addr: 'ncc-rn',
+      source_addr: 'rn-hub',
       network: ['RN'],
       criteria: [this.hubForm.value.level.replace('P', 'A')],
       notification: ['Hub'],

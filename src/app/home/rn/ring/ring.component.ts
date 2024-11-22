@@ -366,7 +366,7 @@ export class RingComponent implements OnInit {
     );
 
     this.smsBody = {
-      source_addr: 'ncc-rn',
+      source_addr: 'rn-ring',
       network: ['RN'],
       criteria: [this.ringForm.value.level.replace('P', 'A')],
       notification: ['Hub'],

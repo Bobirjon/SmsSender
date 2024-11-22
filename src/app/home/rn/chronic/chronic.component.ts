@@ -566,7 +566,7 @@ export class ChronicComponent implements OnInit {
     }
 
     this.smsBody = {
-      source_addr: 'ncc-rn',
+      source_addr: 'rn-chronic',
       network: ['RN'],
       criteria: [this.chronicForm.value.level.replace('P', 'A')],
       notification: ['Chronic'],

@@ -400,7 +400,7 @@ export class BscComponent implements OnInit {
     );
 
     this.smsBody = {
-      source_addr: 'ncc-rn',
+      source_addr: 'ncc-cn',
       network: ['RN'],
       criteria: [this.bscForm.value.level.replace('P', 'A')],
       notification: ['BSC/RNC'],
