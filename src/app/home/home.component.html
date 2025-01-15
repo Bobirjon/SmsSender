@@ -1,95 +1,182 @@
 <div>
-  <div> 
+  <div>
     <div class="container-style mat-elevation-z8">
       <table mat-table [dataSource]="KPIDataSource" class="kpiTable">
-
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef style="text-align: left;"> Пользователь</th>
-          <td mat-cell *matCellDef="let element" style="text-align: left;">
+          <th mat-header-cell *matHeaderCellDef style="text-align: left">
+            Пользователь
+          </th>
+          <td mat-cell *matCellDef="let element" style="text-align: left">
             <a (click)="logExport(element.id)"><mat-icon>download</mat-icon></a>
-            <span><a (click)="onRowClick('', element, '')"> {{element.username.replace('_', ' ') }} </a></span>
+            <span
+              ><a (click)="onRowClick('', element, '')">
+                {{ element.username.replace("_", " ") }}
+              </a></span
+            >
           </td>
         </ng-container>
 
         <ng-container matColumnDef="chronicDuration">
           <th mat-header-cell *matHeaderCellDef>Среднее время Chronic</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('CHRONIC', element, '')">{{ element.avg_send_duration_chronic.substring('0','8') }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('CHRONIC', element, '')"
+          >
+            {{ element.avg_send_duration_chronic.substring("0", "8") }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="chronicCount">
           <th mat-header-cell *matHeaderCellDef>Количество Chronic</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('CHRONIC', element, '')">{{ element.count_chronic }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('CHRONIC', element, '')"
+          >
+            {{ element.count_chronic }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="chronicCorrection">
-          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Chronic</th>
+          <th mat-header-cell *matHeaderCellDef class="line">
+            Коррекция Chronic
+          </th>
           <td mat-cell *matCellDef="let element" class="line">
-            {{element.count_correction_chronic}}
+            {{ element.count_correction_chronic }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="coreDurationA">
           <th mat-header-cell *matHeaderCellDef>Среднее время Core (А)</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('CORE', element, 'A')">{{ element.avg_send_duration_core_a.substring('0','8') }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('CORE', element, 'A')"
+          >
+            {{ element.avg_send_duration_core_a.substring("0", "8") }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="coreCountA">
           <th mat-header-cell *matHeaderCellDef>Количество Core (А)</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('CORE', element, 'A')">{{ element.count_core_a }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('CORE', element, 'A')"
+          >
+            {{ element.count_core_a }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="coreCorrectionA">
-          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Core (А)</th>
-          <td mat-cell *matCellDef="let element"class="line">{{ element.count_correction_core_a }}</td>
+          <th mat-header-cell *matHeaderCellDef class="line">
+            Коррекция Core (А)
+          </th>
+          <td mat-cell *matCellDef="let element" class="line">
+            {{ element.count_correction_core_a }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="coreDurationP">
           <th mat-header-cell *matHeaderCellDef>Среднее время Core (П)</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('CORE', element, 'P')">{{ element.avg_send_duration_core_p.substring('0','8') }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('CORE', element, 'P')"
+          >
+            {{ element.avg_send_duration_core_p.substring("0", "8") }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="coreCountP">
           <th mat-header-cell *matHeaderCellDef>Количество Core (П)</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('CORE', element, 'P')">{{ element.count_core_p }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('CORE', element, 'P')"
+          >
+            {{ element.count_core_p }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="coreCorrectionP">
-          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Core (П)</th>
-          <td mat-cell *matCellDef="let element" class="line">{{ element.count_correction_core_p }}</td>
+          <th mat-header-cell *matHeaderCellDef class="line">
+            Коррекция Core (П)
+          </th>
+          <td mat-cell *matCellDef="let element" class="line">
+            {{ element.count_correction_core_p }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscDurationA">
           <th mat-header-cell *matHeaderCellDef>Среднее время Hub и BSC (А)</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('HUB', element, 'A')">{{ element.avg_send_duration_hub_bscrnc_a.substring('0','8') }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('HUB', element, 'A')"
+          >
+            {{ element.avg_send_duration_hub_bscrnc_a.substring("0", "8") }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscCountA">
           <th mat-header-cell *matHeaderCellDef>Количество Hub и BSC (А)</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('HUB', element, 'A')">{{ element.count_hub_bscrnc_a }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('HUB', element, 'A')"
+          >
+            {{ element.count_hub_bscrnc_a }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscCorrectionA">
-          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Hub и BSC (А)</th>
-          <td mat-cell *matCellDef="let element" class="line">{{ element.count_correction_hub_bscrnc_a }}</td>
+          <th mat-header-cell *matHeaderCellDef class="line">
+            Коррекция Hub и BSC (А)
+          </th>
+          <td mat-cell *matCellDef="let element" class="line">
+            {{ element.count_correction_hub_bscrnc_a }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscDurationP">
           <th mat-header-cell *matHeaderCellDef>Среднее время Hub и BSC (П)</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('HUB', element, 'P')">{{ element.avg_send_duration_hub_bscrnc_p.substring('0','8') }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('HUB', element, 'P')"
+          >
+            {{ element.avg_send_duration_hub_bscrnc_p.substring("0", "8") }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscCountP">
           <th mat-header-cell *matHeaderCellDef>Количество Hub и BSC (П)</th>
-          <td mat-cell *matCellDef="let element" (click)="onRowClick('HUB', element, 'P')">{{ element.count_hub_bscrnc_p }}</td>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="onRowClick('HUB', element, 'P')"
+          >
+            {{ element.count_hub_bscrnc_p }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="hubBscCorrectionP">
-          <th mat-header-cell *matHeaderCellDef class="line">Коррекция Hub и BSC (П)</th>
-          <td mat-cell *matCellDef="let element" class="line">{{ element.count_correction_hub_bscrnc_p }}</td>
+          <th mat-header-cell *matHeaderCellDef class="line">
+            Коррекция Hub и BSC (П)
+          </th>
+          <td mat-cell *matCellDef="let element" class="line">
+            {{ element.count_correction_hub_bscrnc_p }}
+          </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="kpiColumns" class="tableHeader"></tr>
-        <tr mat-row *matRowDef="let row; columns: kpiColumns;" ></tr>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="kpiColumns"
+          class="tableHeader"
+        ></tr>
+        <tr mat-row *matRowDef="let row; columns: kpiColumns"></tr>
         <mat-divider [vertical]="true"></mat-divider>
       </table>
     </div>
@@ -97,22 +184,17 @@
 
   <div *ngIf="userName != 'Владимир Ануфриенко'">
     <mat-grid-list cols="10" rowHeight="100px">
+      <mat-grid-tile colspan="1"> </mat-grid-tile>
       <mat-grid-tile colspan="1">
+        <button mat-raised-button (click)="onCN()">Создать CN шаблон</button>
       </mat-grid-tile>
       <mat-grid-tile colspan="1">
-        <button mat-raised-button (click)="onCN()">
-          Создать CN шаблон
-        </button>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1">
-        <button mat-raised-button (click)="onRN()">
-          Создать RN шаблон
-        </button>
+        <button mat-raised-button (click)="onRN()">Создать RN шаблон</button>
       </mat-grid-tile>
       <mat-grid-tile colspan="1">
         <button mat-raised-button (click)="addNumber()">
-          Добавить получателя
-        </button><span class="tag">testing</span>
+          Добавить получателя</button
+        ><span class="tag">testing</span>
       </mat-grid-tile>
       <mat-grid-tile colspan="1">
         <button mat-raised-button (click)="exportXlsx()">
@@ -121,33 +203,44 @@
       </mat-grid-tile>
       <mat-grid-tile colspan="1">
         <button mat-raised-button (click)="dashBorad()" class="buttonStyle">
-          Новые Идеи
-        </button><span class="tag">testing</span>
+          Новые Идеи</button
+        ><span class="tag">testing</span>
       </mat-grid-tile>
       <mat-grid-tile colspan="1">
-        <button mat-raised-button (click)="getSelectedCases()" class="buttonStyle">
-          Избранные случаи
-        </button><span class="tag">testing</span>
+        <button
+          mat-raised-button
+          (click)="getSelectedCases()"
+          class="buttonStyle"
+        >
+          Избранные случаи</button
+        ><span class="tag">testing</span>
       </mat-grid-tile>
       <mat-grid-tile colspan="1">
-        <button mat-raised-button (click)="correctionList()" class="buttonStyle">
-          Коррекции
-        </button><span class="tag">testing</span>
+        <button
+          mat-raised-button
+          (click)="correctionList()"
+          class="buttonStyle"
+        >
+          Коррекции</button
+        ><span class="tag">testing</span>
       </mat-grid-tile>
       <mat-grid-tile colspan="1">
-        <button mat-raised-button (click)="onExportVisible()" class="buttonStyle"> 
-          Export visible 
+        <button
+          mat-raised-button
+          (click)="onExportVisible()"
+          class="buttonStyle"
+        >
+          Export visible
         </button>
       </mat-grid-tile>
-      <mat-grid-tile colspan="">
-
-      </mat-grid-tile>
+      <mat-grid-tile colspan=""> </mat-grid-tile>
     </mat-grid-list>
     <mat-divider></mat-divider>
 
-
-    <h1 style="margin-left: 50px; margin-top: 40px;">Шаблоны для отправки сообщения</h1>
-    <form [formGroup]="form" style="margin-left: 20px;">
+    <h1 style="margin-left: 50px; margin-top: 40px">
+      Шаблоны для отправки сообщения
+    </h1>
+    <form [formGroup]="form" style="margin-left: 20px">
       <mat-form-field>
         <mat-label>Регион</mat-label>
         <mat-select formControlName="region" multiple>
@@ -171,85 +264,109 @@
     <div>
       <div class="container-style mat-elevation-z8">
         <table mat-table [dataSource]="TemplateData">
-
           <ng-container matColumnDef="level">
             <th mat-header-cell *matHeaderCellDef>Уровень</th>
-            <td mat-cell *matCellDef="let row">{{row.level.replace('P','П')}}</td>
+            <td mat-cell *matCellDef="let row">
+              {{ row.level.replace("P", "П") }}
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef>Тип</th>
-            <td mat-cell *matCellDef="let row"><a routerLink="/home/{{row.type}}/{{row.id}}"
-                class="edit">{{row.type}}</a></td>
+            <td mat-cell *matCellDef="let row">
+              <a routerLink="/home/{{ row.type }}/{{ row.id }}" class="edit">{{
+                row.type
+              }}</a>
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="created_at">
             <th mat-header-cell *matHeaderCellDef>Дата Создания</th>
-            <td mat-cell *matCellDef="let element">{{element.created_at.replace('T', ' ').substring('0','16')}}</td>
+            <td mat-cell *matCellDef="let element">
+              {{ element.created_at.replace("T", " ").substring("0", "16") }}
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="start_time">
             <th mat-header-cell *matHeaderCellDef>Дата Начало</th>
-            <td mat-cell *matCellDef="let element">{{element.start_time.replace('T', ' ').substring('0','16')}}</td>
+            <td mat-cell *matCellDef="let element">
+              {{ element.start_time.replace("T", " ").substring("0", "16") }}
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="problem">
             <th mat-header-cell *matHeaderCellDef>Проблема</th>
-            <td mat-cell *matCellDef="let row">{{row.problem}}</td>
+            <td mat-cell *matCellDef="let row">{{ row.problem }}</td>
           </ng-container>
 
           <ng-container matColumnDef="reason">
             <th mat-header-cell *matHeaderCellDef>Причина</th>
-            <td mat-cell *matCellDef="let row">{{row.reason}}</td>
+            <td mat-cell *matCellDef="let row">{{ row.reason }}</td>
           </ng-container>
 
           <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>Описания</th>
-            <td mat-cell *matCellDef="let row">{{row.description}}</td>
+            <td mat-cell *matCellDef="let row">{{ row.description }}</td>
           </ng-container>
 
           <ng-container matColumnDef="region">
             <th mat-header-cell *matHeaderCellDef>Регион</th>
-            <td mat-cell *matCellDef="let element">{{element.region}} </td>
+            <td mat-cell *matCellDef="let element">{{ element.region }}</td>
           </ng-container>
 
           <ng-container matColumnDef="informed">
             <th mat-header-cell *matHeaderCellDef>Информирован</th>
-            <td mat-cell *matCellDef="let element">{{element.informed}} </td>
+            <td mat-cell *matCellDef="let element">{{ element.informed }}</td>
           </ng-container>
 
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef>Действие</th>
             <td mat-cell *matCellDef="let element; let i = index">
-              <a (click)="onDelete(element.id)" style="text-decoration: none; cursor: pointer;">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="delete"></mat-icon>
+              <a
+                (click)="onDelete(element.id)"
+                style="text-decoration: none; cursor: pointer"
+              >
+                <mat-icon
+                  aria-hidden="false"
+                  aria-label="Example home icon"
+                  fontIcon="delete"
+                ></mat-icon>
               </a>
             </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsTemplate" class="tableHeader"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsTemplate"
-            [ngClass]="((row.chronic_hours >= '48') ? 'chronicHours' : 'fail')"></tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumnsTemplate"
+            class="tableHeader"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumnsTemplate"
+            [ngClass]="row.chronic_hours >= '48' ? 'chronicHours' : 'fail'"
+          ></tr>
         </table>
       </div>
-
     </div>
 
     <mat-divider></mat-divider>
   </div>
 
+  <h1 style="margin-left: 50px; margin-top: 40px">Открытые Инциденты</h1>
 
-  <h1 style="margin-left: 50px; margin-top: 40px;">Открытые Инциденты</h1>
-
-  <mat-form-field style="margin-left: 20px; width: 500px;">
+  <mat-form-field style="margin-left: 20px; width: 500px">
     <mat-label>Поиск по открытым инцидентам</mat-label>
-    <input matInput [ngModel]="filterInput" (ngModelChange)="applyFilter($event)">
+    <input
+      matInput
+      [ngModel]="filterInput"
+      (ngModelChange)="applyFilter($event)"
+    />
   </mat-form-field>
 
-  <mat-form-field style="margin-left: 20px;">
+  <mat-form-field style="margin-left: 20px">
     <mat-label>Уровень</mat-label>
     <mat-select [(ngModel)]="selectedLevel" (ngModelChange)="onSelectLevel()">
-      <mat-option value=''>All</mat-option>
+      <mat-option value="">All</mat-option>
       <mat-option value="A1">A1</mat-option>
       <mat-option value="A2">A2</mat-option>
       <mat-option value="A3">A3</mat-option>
@@ -258,10 +375,10 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field style="margin-left: 20px;">
+  <mat-form-field style="margin-left: 20px">
     <mat-label>Тип</mat-label>
     <mat-select [(ngModel)]="selectedType" (ngModelChange)="onSelectType()">
-      <mat-option value=''>All</mat-option>
+      <mat-option value="">All</mat-option>
       <mat-option value="CORE">CORE</mat-option>
       <mat-option value="CHRONIC">CHRONIC</mat-option>
       <mat-option value="BSC">BSC</mat-option>
@@ -269,209 +386,367 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field style="margin-left: 20px;">
-      <mat-label>Регион</mat-label>
-      <mat-select [(ngModel)]="selectedRegion"  (ngModelChange)="onRegionType()" multiple>
-        <mat-option value="Андижан">Андижан</mat-option>
-        <mat-option value="Бухара">Бухара</mat-option>
-        <mat-option value="Джизак">Джизак</mat-option>
-        <mat-option value="Фергана">Фергана</mat-option>
-        <mat-option value="Сырдарья">Сырдарья</mat-option>
-        <mat-option value="Кашкадарья">Кашкадарья</mat-option>
-        <mat-option value="Наманган">Наманган</mat-option>
-        <mat-option value="Навои">Навои</mat-option>
-        <mat-option value="Каракалпакстан">Каракалпакстан</mat-option>
-        <mat-option value="Самарканд">Самарканд</mat-option>
-        <mat-option value="г.Ташкент">г.Ташкент</mat-option>
-        <mat-option value="Ташкент.обл">Ташкент обл.</mat-option>
-        <mat-option value="Сурхандарья">Сурхандарья</mat-option>
-        <mat-option value="Хорезм">Хорезм</mat-option>
-      </mat-select>
+  <mat-form-field style="margin-left: 20px">
+    <mat-label>Регион</mat-label>
+    <mat-select
+      [(ngModel)]="selectedRegion"
+      (ngModelChange)="onRegionType()"
+      multiple
+    >
+      <mat-option value="Андижан">Андижан</mat-option>
+      <mat-option value="Бухара">Бухара</mat-option>
+      <mat-option value="Джизак">Джизак</mat-option>
+      <mat-option value="Фергана">Фергана</mat-option>
+      <mat-option value="Сырдарья">Сырдарья</mat-option>
+      <mat-option value="Кашкадарья">Кашкадарья</mat-option>
+      <mat-option value="Наманган">Наманган</mat-option>
+      <mat-option value="Навои">Навои</mat-option>
+      <mat-option value="Каракалпакстан">Каракалпакстан</mat-option>
+      <mat-option value="Самарканд">Самарканд</mat-option>
+      <mat-option value="г.Ташкент">г.Ташкент</mat-option>
+      <mat-option value="Ташкент.обл">Ташкент обл.</mat-option>
+      <mat-option value="Сурхандарья">Сурхандарья</mat-option>
+      <mat-option value="Хорезм">Хорезм</mat-option>
+    </mat-select>
   </mat-form-field>
 
   <div>
     <div class="container-style mat-elevation-z8">
       <table mat-table [dataSource]="Data" matSort>
-
         <ng-container matColumnDef="level">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Уровень</th>
-          <td mat-cell *matCellDef="let row">{{row.level.replace('P','П')}}</td>
+          <td mat-cell *matCellDef="let row">
+            {{ row.level.replace("P", "П") }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="type">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Тип</th>
-          <td mat-cell *matCellDef="let row"> <a class="edit"
-              routerLink="/home/{{row.type}}/{{row.id}}">{{row.type}}</a></td>
+          <td mat-cell *matCellDef="let row">
+            <a class="edit" routerLink="/home/{{ row.type }}/{{ row.id }}">{{
+              row.type
+            }}</a>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="chronic_hours">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Время</th>
-          <td mat-cell *matCellDef="let element">{{element.chronic_hours ? element.chronic_hours + ' часов' : ' ---'}}</td>
+          <td mat-cell *matCellDef="let element">
+            {{
+              element.chronic_hours ? element.chronic_hours + " часов" : " ---"
+            }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="created_at">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Создания</th>
-          <td mat-cell *matCellDef="let element">{{element.created_at.replace('T', ' ').substring('0','16')}}</td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Дата Создания
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.created_at.replace("T", " ").substring("0", "16") }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="start_time">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Начало</th>
-          <td mat-cell *matCellDef="let element">{{element.start_time.replace('T', ' ').substring('0','16')}}</td>
+          <td mat-cell *matCellDef="let element">
+            {{ element.start_time.replace("T", " ").substring("0", "16") }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="problem">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Проблема</th>
-          <td mat-cell *matCellDef="let row">{{row.problem}}</td>
+          <td mat-cell *matCellDef="let row">{{ row.problem }}</td>
         </ng-container>
 
         <ng-container matColumnDef="reason">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Причина</th>
-          <td mat-cell *matCellDef="let row">{{row.reason}}</td>
+          <td mat-cell *matCellDef="let row">{{ row.reason }}</td>
         </ng-container>
 
         <ng-container matColumnDef="description">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Описания</th>
-          <td mat-cell *matCellDef="let row">{{row.description}}</td>
+          <td mat-cell *matCellDef="let row">{{ row.description }}</td>
         </ng-container>
 
         <ng-container matColumnDef="region">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Регион</th>
-          <td mat-cell *matCellDef="let element">{{element.region}} </td>
+          <td mat-cell *matCellDef="let element">{{ element.region }}</td>
         </ng-container>
 
         <ng-container matColumnDef="informed">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Информирован</th>
-          <td mat-cell *matCellDef="let element">{{element.informed}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Информирован
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.informed }}</td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsNew" class="tableHeader"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsNew"
-          [ngClass]="((row.chronic_hours >= '48') ? 'chronicHours' : 'fail')"></tr>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumnsNew"
+          class="tableHeader"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumnsNew"
+          [ngClass]="row.chronic_hours >= '48' ? 'chronicHours' : 'fail'"
+        ></tr>
       </table>
-      <mat-paginator [pageSizeOptions]="[25, 50, 100]" [pageSize]="50" showFirstLastButtons></mat-paginator>
+      <mat-paginator
+        [pageSizeOptions]="[25, 50, 100]"
+        [pageSize]="50"
+        showFirstLastButtons
+      ></mat-paginator>
     </div>
   </div>
-  <hr>
+  <hr />
 
-  <h1 style="margin-left: 50px; margin-top: 40px;">Все Инциденты</h1>
+  <h1 style="margin-left: 50px; margin-top: 40px">Все Инциденты</h1>
 
   <div>
     <div class="container-style mat-elevation-z8">
-      <div class="example-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
+      <div
+        class="example-loading-shade"
+        *ngIf="isLoadingResults || isRateLimitReached"
+      >
         <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
         <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
-          Идет Загрузка . . . . . . . . 
+          Идет Загрузка . . . . . . . .
         </div>
       </div>
       <div>
-        <table mat-table [dataSource]="dataTable" matSort matSortActive="level" matSortDisableClear
-          matSortDirection="desc" #table2 #table2sort="matSort" class="table-style">
-
+        <table
+          mat-table
+          [dataSource]="dataTable"
+          matSort
+          matSortActive="level"
+          matSortDisableClear
+          matSortDirection="desc"
+          #table2
+          #table2sort="matSort"
+          class="table-style"
+        >
           <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Тип</th>
             <td mat-cell *matCellDef="let row">
-              <a style="cursor: pointer; text-decoration: none;" routerLink="/home/{{row.type}}/update/{{row.id}}">
-                <mat-icon style="color: #572469d5; ">library_add</mat-icon>
+              <a
+                style="cursor: pointer; text-decoration: none"
+                routerLink="/home/{{ row.type }}/update/{{ row.id }}"
+              >
+                <mat-icon style="color: #572469d5">library_add</mat-icon>
               </a>
               <span>
-                <a style="cursor: pointer; text-decoration: none;" (click)="selectedCase(row)">
-                  <mat-icon style="color: #572469d5; ">star</mat-icon>
+                <a
+                  style="cursor: pointer; text-decoration: none"
+                  (click)="selectedCase(row)"
+                >
+                  <mat-icon style="color: #572469d5">star</mat-icon>
                 </a>
-                <a class="edit" routerLink="/home/{{row.type}}/{{row.id}}">{{row.type}}</a>
+                <a
+                  class="edit"
+                  routerLink="/home/{{ row.type }}/{{ row.id }}"
+                  >{{ row.type }}</a
+                >
               </span>
             </td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Тип" search
-                [formControl]="type"></td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Тип"
+                search
+                [formControl]="type"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="level">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Уровень</th>
-            <td mat-cell *matCellDef="let row">{{row.level?.replace('P','П')}}</td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Уровень" search
-                [formControl]="level"></td>
+            <td mat-cell *matCellDef="let row">
+              {{ row.level?.replace("P", "П") }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Уровень"
+                search
+                [formControl]="level"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="created_at">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Создания</th>
-            <td mat-cell *matCellDef="let element">{{element.created_at.replace('T', ' ').substring('0','16')}}</td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Дата Создания" search
-                [formControl]="createdAt"></td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Дата Создания
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.created_at.replace("T", " ").substring("0", "16") }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Дата Создания"
+                search
+                [formControl]="createdAt"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="start_time">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Начало</th>
-            <td mat-cell *matCellDef="let element">{{element.start_time.replace('T', ' ').substring('0','16')}}</td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Дата Начало" search
-                [formControl]="startTime"></td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Дата Начало
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.start_time.replace("T", " ").substring("0", "16") }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Дата Начало"
+                search
+                [formControl]="startTime"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="end_time">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата Окончания</th>
-            <td mat-cell *matCellDef="let element">{{element.end_time?.replace('T', ' ').substring('0','16')}}</td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Дата Окончания" search
-                [formControl]="endTime"></td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Дата Окончания
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.end_time?.replace("T", " ").substring("0", "16") }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Дата Окончания"
+                search
+                [formControl]="endTime"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="problem">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Проблема</th>
-            <td mat-cell *matCellDef="let row">{{row.problem}}</td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Проблема" search
-                [formControl]="problem"></td>
+            <td mat-cell *matCellDef="let row">{{ row.problem }}</td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Проблема"
+                search
+                [formControl]="problem"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="reason">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Причина</th>
-            <td mat-cell *matCellDef="let row">{{row?.reason}}</td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Причина" search
-                [formControl]="reason"></td>
+            <td mat-cell *matCellDef="let row">{{ row?.reason }}</td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Причина"
+                search
+                [formControl]="reason"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Описания</th>
-            <td mat-cell *matCellDef="let row">{{row.description}}</td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Описания" search
-                [formControl]="description"></td>
+            <td mat-cell *matCellDef="let row">{{ row.description }}</td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Описания"
+                search
+                [formControl]="description"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="region">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Регион</th>
-            <td mat-cell *matCellDef="let element">{{element.region}} </td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Регион" search
-                [formControl]="region"></td>
+            <td mat-cell *matCellDef="let element">{{ element.region }}</td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Регион"
+                search
+                [formControl]="region"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="informed">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Информирован</th>
-            <td mat-cell *matCellDef="let element">{{element.informed}} </td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="Информирован" search
-                [formControl]="informed"></td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Информирован
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.informed }}</td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="Информирован"
+                search
+                [formControl]="informed"
+              />
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>ИН</th>
-            <td mat-cell *matCellDef="let element">{{element.id}} </td>
-            <td mat-footer-cell *matFooterCellDef><input class="filter" matInput placeholder="ИН" search
-                [formControl]="id"></td>
+            <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+            <td mat-footer-cell *matFooterCellDef>
+              <input
+                class="filter"
+                matInput
+                placeholder="ИН"
+                search
+                [formControl]="id"
+              />
+            </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsForAllCases" class="tableHeader"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsForAllCases"
-            [ngClass]="((row.reason?.includes('Выясняется')) ? 'reason' : 'fail')">
-          </tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumnsForAllCases"
+            class="tableHeader"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumnsForAllCases"
+            [ngClass]="row.reason?.includes('Выясняется') ? 'reason' : 'fail'"
+          ></tr>
 
-          <tr mat-footer-row *matFooterRowDef="displayedColumnsForAllCases" class="example-first-footer-row"></tr>
+          <tr
+            mat-footer-row
+            *matFooterRowDef="displayedColumnsForAllCases"
+            class="example-first-footer-row"
+          ></tr>
           <tr *matNoDataRow>
-            <td class="mat-cell" colspan="4">The filter does not match any item in the data for this text</td>
+            <td class="mat-cell" colspan="4">
+              The filter does not match any item in the data for this text
+            </td>
           </tr>
         </table>
       </div>
     </div>
   </div>
-  <mat-paginator #table2paginator [pageSizeOptions]="pageViewSize" [length]="resultsLength"
-    showFirstLastButtons></mat-paginator>
-  <hr>
-
-
-
+  <mat-paginator
+    #table2paginator
+    [pageSizeOptions]="pageViewSize"
+    [length]="resultsLength"
+    showFirstLastButtons
+  ></mat-paginator>
+  <hr />
 </div>
 <router-outlet></router-outlet>

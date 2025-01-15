@@ -1,31 +1,55 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  Inject,
+} from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { FormBuilder, FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
-import { Subscription, catchError, map, of, merge, startWith, switchMap } from 'rxjs';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  NgForm,
+} from '@angular/forms';
+import {
+  Subscription,
+  catchError,
+  map,
+  of,
+  merge,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { WebSocketService } from 'src/web-socket.service';
 import * as XLSX from 'xlsx';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { KpiLogsComponent } from './kpi-logs/kpi-logs.component';
 
 export interface DataTable {
-  informed: string,
-  region: string
-  username: string
-  start_time: any
-  end_time: any
+  informed: string;
+  region: string;
+  username: string;
+  start_time: any;
+  end_time: any;
   created_at: any;
-  level: string,
-  type: string,
-  description: string,
-  reason: string,
-  problem: string
-  id: string
+  level: string;
+  type: string;
+  description: string;
+  reason: string;
+  problem: string;
+  id: string;
 }
 
 interface FilteredValues {
@@ -47,30 +71,42 @@ interface FilteredValues {
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+  kpiColumns: string[] = [
+    'name',
+    'chronicDuration',
+    'chronicCount',
+    'chronicCorrection',
+    'coreDurationA',
+    'coreCountA',
+    'coreCorrectionA',
+    'coreDurationP',
+    'coreCountP',
+    'coreCorrectionP',
+    'hubBscDurationA',
+    'hubBscCountA',
+    'hubBscCorrectionA',
+    'hubBscDurationP',
+    'hubBscCountP',
+    'hubBscCorrectionP',
+  ];
+  KPIDataSource = new MatTableDataSource<any>();
 
-  kpiColumns: string[] = ['name',
-    'chronicDuration', 'chronicCount', 'chronicCorrection', 'coreDurationA',
-    'coreCountA', 'coreCorrectionA', 'coreDurationP', 'coreCountP',
-    'coreCorrectionP', 'hubBscDurationA', 'hubBscCountA', 'hubBscCorrectionA',
-    'hubBscDurationP', 'hubBscCountP', 'hubBscCorrectionP']
-  KPIDataSource = new MatTableDataSource<any>()
-
-  dataTable = new MatTableDataSource<DataTable>()
-  Data = new MatTableDataSource<DataTable>()
-  TemplateData = new MatTableDataSource<DataTable>()
-  userName: any
-  pageViewSize = [15, 30, 50, 150 , 300, 500, 1500, 15000];
-  filterInput: string
-  selectedLevel: string
-  selectedType: string
+  dataTable = new MatTableDataSource<DataTable>();
+  Data = new MatTableDataSource<DataTable>();
+  TemplateData = new MatTableDataSource<DataTable>();
+  userName: any;
+  pageViewSize = [15, 30, 50, 150, 300, 500, 1500, 15000];
+  filterInput: string;
+  selectedLevel: string;
+  selectedType: string;
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
   globalFilter = '';
-  KPI: any
-  LOG: any
-  USERS: any
-  resultArray: any
+  KPI: any;
+  LOG: any;
+  USERS: any;
+  resultArray: any;
 
   displayedColumnsTemplate: string[] = [
     'type',
@@ -82,8 +118,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     'description',
     'region',
     'informed',
-    'action'
-  ]
+    'action',
+  ];
 
   displayedColumnsNew: string[] = [
     'type',
@@ -96,7 +132,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     'description',
     'region',
     'informed',
-  ]
+  ];
 
   displayedColumnsForAllCases: string[] = [
     'type',
@@ -109,8 +145,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     'description',
     'region',
     'informed',
-    'id'
-  ]
+    'id',
+  ];
 
   displayedColumnsKpiUsers: string[] = [
     'type',
@@ -122,13 +158,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     'description',
     'region',
     'informed',
-    'action'
-  ]
+    'action',
+  ];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   //@ViewChild('table1sort') public table1sort: MatSort;
-  @ViewChild('table2paginator') public table2paginator: MatPaginator
+  @ViewChild('table2paginator') public table2paginator: MatPaginator;
   @ViewChild('table2sort') public table2sort: MatSort;
 
   filteredValuesForOpenCases: FilteredValues = {
@@ -142,27 +178,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
     description: '',
     region: [],
     informed: '',
-  }
+  };
 
-  level = new FormControl()
-  type = new FormControl()
-  description = new FormControl()
-  reason = new FormControl()
-  problem = new FormControl()
-  createdAt = new FormControl()
-  startTime = new FormControl()
-  endTime = new FormControl()
-  region = new FormControl()
-  informed = new FormControl()
-  username = new FormControl()
-  id = new FormControl()
+  level = new FormControl();
+  type = new FormControl();
+  description = new FormControl();
+  reason = new FormControl();
+  problem = new FormControl();
+  createdAt = new FormControl();
+  startTime = new FormControl();
+  endTime = new FormControl();
+  region = new FormControl();
+  informed = new FormControl();
+  username = new FormControl();
+  id = new FormControl();
 
   form: FormGroup;
   filteredDataRegion: any[] = [];
   regionTemplateData: any = { data: [] };
 
-
-  selectedRegion: string[] = []
+  selectedRegion: string[] = [];
 
   constructor(
     private authService: AuthService,
@@ -170,107 +205,96 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private webSocketService: WebSocketService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private fb: FormBuilder,) { 
-
-      this.form = this.fb.group({
-        region: []  // Initialize the form control with an empty array for multi-select
-      });
-    }
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      region: [], // Initialize the form control with an empty array for multi-select
+    });
+  }
 
   // All Cases table with backend pagination
 
   ngAfterViewInit() {
-
     // Open Cases table
-    this.authService.getFilteredData()
-      .subscribe((data: any) => {
-        
-        this.Data.data = data.results
-        this.Data.sort = this.sort;
+    this.authService.getFilteredData().subscribe((data: any) => {
+      this.Data.data = data.results;
+      this.Data.sort = this.sort;
 
-        this.Data.paginator = this.paginator
+      this.Data.paginator = this.paginator;
 
-        // Open cases filter
-        this.Data.filterPredicate = this.customFilterPredicate();
+      // Open cases filter
+      this.Data.filterPredicate = this.customFilterPredicate();
 
-        this.webSocketService.receiveMessage().subscribe(
-          (data) => {
-            const exist = this.Data.data.findIndex(
-              (item: any) => item.id === data.id
-            )
-            if (exist !== -1) {
-              if (data.action == 'delete') {
-                this.Data.data.splice(exist, 1)
-                this.Data.data = this.Data.data
-              } else if (data.is_complete == true) {
-                this.Data.data.splice(exist, 1)
-                this.Data.data = this.Data.data
-              } else {
-                this.Data.data[exist] = data
-                this.Data.data = this.Data.data
-              }
-            } else if (data.is_complete == false && data.is_send_sms == true) {
-              this.Data.data = [...this.Data.data, data]
-            }
-
-          })
-
-          
-      }),
-
+      this.webSocketService.receiveMessage().subscribe((data) => {
+        const exist = this.Data.data.findIndex(
+          (item: any) => item.id === data.id
+        );
+        if (exist !== -1) {
+          if (data.action == 'delete') {
+            this.Data.data.splice(exist, 1);
+            this.Data.data = this.Data.data;
+          } else if (data.is_complete == true) {
+            this.Data.data.splice(exist, 1);
+            this.Data.data = this.Data.data;
+          } else {
+            this.Data.data[exist] = data;
+            this.Data.data = this.Data.data;
+          }
+        } else if (data.is_complete == false && data.is_send_sms == true) {
+          this.Data.data = [...this.Data.data, data];
+        }
+      });
+    }),
       // Template table
-      this.authService.getTemplateSMS()
-        .subscribe((data: any) => {
-          this.regionTemplateData.data = data.results
+      this.authService.getTemplateSMS().subscribe((data: any) => {
+        this.regionTemplateData.data = data.results;
 
-          this.filteredDataRegion = [...this.regionTemplateData.data];
-          this.TemplateData.data = this.filteredDataRegion
-   
+        this.filteredDataRegion = [...this.regionTemplateData.data];
+        this.TemplateData.data = this.filteredDataRegion;
 
-          this.webSocketService.receiveMessage().subscribe((data) => {
+        this.webSocketService.receiveMessage().subscribe((data) => {
+          const exist = this.regionTemplateData.data.findIndex(
+            (item: any) => item.id === data.id
+          );
 
-            const exist = this.regionTemplateData.data.findIndex(
-              (item: any) => item.id === data.id
-            )
+          // if (exist !== -1) {
+          //   if (data.action == 'delete') {
+          //     this.TemplateData.data.splice(exist, 1)
+          //     this.TemplateData.data = this.TemplateData.data
+          //   } else if (data.is_send_sms == true) {
+          //     this.TemplateData.data.splice(exist, 1)
+          //     this.TemplateData.data = this.TemplateData.data
+          //   } else {
+          //     this.TemplateData.data[exist] = data
+          //     this.TemplateData.data = this.TemplateData.data
+          //   }
+          // } else if (data.is_send_sms == false) {
+          //   this.TemplateData.data = [...this.TemplateData.data, data]
+          // }
 
-            // if (exist !== -1) {
-            //   if (data.action == 'delete') {
-            //     this.TemplateData.data.splice(exist, 1)
-            //     this.TemplateData.data = this.TemplateData.data
-            //   } else if (data.is_send_sms == true) {
-            //     this.TemplateData.data.splice(exist, 1)
-            //     this.TemplateData.data = this.TemplateData.data
-            //   } else {
-            //     this.TemplateData.data[exist] = data
-            //     this.TemplateData.data = this.TemplateData.data
-            //   }
-            // } else if (data.is_send_sms == false) {
-            //   this.TemplateData.data = [...this.TemplateData.data, data]
-            // }          
-            
-            if (exist !== -1) {
-              if (data.action == 'delete' || data.is_send_sms == true) {
-                this.regionTemplateData.data.splice(exist, 1);
-              } else {
-                this.regionTemplateData.data[exist] = data;
-              }
-            } else if (data.is_send_sms == false) {
-              this.regionTemplateData.data.push(data);
+          if (exist !== -1) {
+            if (data.action == 'delete' || data.is_send_sms == true) {
+              this.regionTemplateData.data.splice(exist, 1);
+            } else {
+              this.regionTemplateData.data[exist] = data;
             }
+          } else if (data.is_send_sms == false) {
+            this.regionTemplateData.data.push(data);
+          }
 
-            this.filterTableByRegion();
+          this.filterTableByRegion();
+        });
 
-          })
+        this.form.get('region').valueChanges.subscribe((selectedRegions) => {
+          console.log(selectedRegions);
 
-          this.form.get('region').valueChanges.subscribe(selectedRegions => {
-            console.log(selectedRegions);
-            
-            this.filterTableByRegion();
-          });
-        })
+          this.filterTableByRegion();
+        });
+      });
 
-
-    this.table2sort.sortChange.subscribe(() => (this.table2paginator.pageIndex = 0));
+    this.table2sort.sortChange.subscribe(
+      () => (this.table2paginator.pageIndex = 0)
+    );
 
     merge(
       this.level.valueChanges,
@@ -285,34 +309,47 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.informed.valueChanges,
       this.id.valueChanges,
       this.table2sort.sortChange,
-      this.table2paginator.page)
+      this.table2paginator.page
+    )
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          var dir: string
+          var dir: string;
           var level = this.level.value == null ? '' : this.level.value;
           var type = this.type.value == null ? '' : this.type.value;
-          var description = this.description.value == null ? '' : this.description.value;
+          var description =
+            this.description.value == null ? '' : this.description.value;
           var reason = this.reason.value == null ? '' : this.reason.value;
           var problem = this.problem.value == null ? '' : this.problem.value;
-          var createdAt = this.createdAt.value == null ? '' : this.createdAt.value;
-          var startTime = this.startTime.value == null ? '' : this.startTime.value;
+          var createdAt =
+            this.createdAt.value == null ? '' : this.createdAt.value;
+          var startTime =
+            this.startTime.value == null ? '' : this.startTime.value;
           var endTime = this.endTime.value == null ? '' : this.endTime.value;
           var region = this.region.value == null ? '' : this.region.value;
           var informed = this.informed.value == null ? '' : this.informed.value;
           var id = this.id.value == null ? '' : this.id.value;
           if (this.table2sort.direction == 'desc') {
-            dir = '-'
+            dir = '-';
           } else {
-            dir = ''
+            dir = '';
           }
-
 
           return this.authService
             .getDataTest(
-              level, type, description, reason, problem, createdAt,
-              startTime, endTime, region, informed, id, dir,
+              level,
+              type,
+              description,
+              reason,
+              problem,
+              createdAt,
+              startTime,
+              endTime,
+              region,
+              informed,
+              id,
+              dir,
               this.table2sort.active,
               this.table2paginator.pageIndex + 1,
               this.table2paginator.pageSize
@@ -332,28 +369,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
           return data;
         })
       )
-      .subscribe(data => {
-        
-        this.dataTable.data = data.results
+      .subscribe((data) => {
+        this.dataTable.data = data.results;
         this.webSocketService.receiveMessage().subscribe((data) => {
           const exist = this.dataTable.data.findIndex(
             (item: any) => item.id === data.id
-          )
+          );
 
           if (exist !== -1) {
-
             if (data.action == 'delete') {
-              this.dataTable.data.splice(exist, 1)
-              this.dataTable.data = this.dataTable.data
+              this.dataTable.data.splice(exist, 1);
+              this.dataTable.data = this.dataTable.data;
             } else {
-              this.dataTable.data[exist] = data
-              this.dataTable.data = this.dataTable.data
+              this.dataTable.data[exist] = data;
+              this.dataTable.data = this.dataTable.data;
             }
           } else {
-            this.dataTable.data = [...this.dataTable.data, data]
+            this.dataTable.data = [...this.dataTable.data, data];
           }
-
-        })
+        });
       });
   }
 
@@ -361,83 +395,94 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const selectedRegions = this.form.get('region').value;
     console.log('it works');
 
-
-    
     // If no regions are selected, show all data
     if (!selectedRegions || selectedRegions.length === 0) {
       this.filteredDataRegion = [...this.regionTemplateData.data];
     } else {
       // Filter data based on selected regions
-      this.filteredDataRegion = this.regionTemplateData.data.filter((item: any) =>
-        
-        selectedRegions.includes(item.region)
+      this.filteredDataRegion = this.regionTemplateData.data.filter(
+        (item: any) => selectedRegions.includes(item.region)
       );
     }
 
     this.TemplateData.data = this.filteredDataRegion;
-    
   }
 
   ngOnInit(): void {
-
     this.authService.getUser().subscribe((data: any) => {
-      this.userName = data.first_name + ' ' + data.last_name
-    })
-
+      this.userName = data.first_name + ' ' + data.last_name;
+    });
 
     this.authService.getKPI().subscribe((data: any) => {
-      this.KPI = data
+      this.KPI = data;
 
       this.authService.getUsers().subscribe((data: any) => {
-        this.USERS = data.results
+        this.USERS = data.results;
 
-        this.gettingUsername(this.USERS, this.KPI)
-        this.KPIDataSource.data = this.nullItemReplacing(this.resultArray)
-
-      })
-
-    })
+        this.gettingUsername(this.USERS, this.KPI);
+        this.KPIDataSource.data = this.nullItemReplacing(this.resultArray);
+      });
+    });
   }
 
   nullItemReplacing(data: any[]): any[] {
-    return data.map(item => ({
+    return data.map((item) => ({
       ...item,
-      avg_send_duration_chronic: item.avg_send_duration_chronic !== null ? item.avg_send_duration_chronic : '--:--:--',
-      avg_send_duration_core_a: item.avg_send_duration_core_a !== null ? item.avg_send_duration_core_a : '--:--:--',
-      avg_send_duration_core_p: item.avg_send_duration_core_p !== null ? item.avg_send_duration_core_p : '--:--:--',
-      avg_send_duration_hub_bscrnc_a: item.avg_send_duration_hub_bscrnc_a !== null ? item.avg_send_duration_hub_bscrnc_a : '--:--:--',
-      avg_send_duration_hub_bscrnc_p: item.avg_send_duration_hub_bscrnc_p !== null ? item.avg_send_duration_hub_bscrnc_p : '--:--:--',
-    }))
+      avg_send_duration_chronic:
+        item.avg_send_duration_chronic !== null
+          ? item.avg_send_duration_chronic
+          : '--:--:--',
+      avg_send_duration_core_a:
+        item.avg_send_duration_core_a !== null
+          ? item.avg_send_duration_core_a
+          : '--:--:--',
+      avg_send_duration_core_p:
+        item.avg_send_duration_core_p !== null
+          ? item.avg_send_duration_core_p
+          : '--:--:--',
+      avg_send_duration_hub_bscrnc_a:
+        item.avg_send_duration_hub_bscrnc_a !== null
+          ? item.avg_send_duration_hub_bscrnc_a
+          : '--:--:--',
+      avg_send_duration_hub_bscrnc_p:
+        item.avg_send_duration_hub_bscrnc_p !== null
+          ? item.avg_send_duration_hub_bscrnc_p
+          : '--:--:--',
+    }));
   }
 
   gettingUsername(usernames: any, kpis: any) {
+    this.resultArray = usernames
+      .map((user: any) => {
+        const kpiValue = kpis.find((value: any) => value.user === user.id);
 
-    this.resultArray = usernames.map((user: any) => {
-      const kpiValue = kpis.find((value: any) => value.user === user.id)
-
-      if (kpiValue) {
-        return {
-          id: user.id,
-          username: user.username,
-          avg_send_duration_chronic: kpiValue.avg_send_duration_chronic,
-          avg_send_duration_core_a: kpiValue.avg_send_duration_core_a,
-          avg_send_duration_core_p: kpiValue.avg_send_duration_core_p,
-          avg_send_duration_hub_bscrnc_a: kpiValue.avg_send_duration_hub_bscrnc_a,
-          avg_send_duration_hub_bscrnc_p: kpiValue.avg_send_duration_hub_bscrnc_p,
-          count_chronic: kpiValue.count_chronic,
-          count_core_a: kpiValue.count_core_a,
-          count_core_p: kpiValue.count_core_p,
-          count_hub_bscrnc_a: kpiValue.count_hub_bscrnc_a,
-          count_hub_bscrnc_p: kpiValue.count_hub_bscrnc_p,
-          count_correction_chronic: kpiValue.count_correction_chronic,
-          count_correction_core_a: kpiValue.count_correction_core_a,
-          count_correction_core_p: kpiValue.count_correction_core_p,
-          count_correction_hub_bscrnc_a: kpiValue.count_correction_hub_bscrnc_a,
-          count_correction_hub_bscrnc_p: kpiValue.count_correction_hub_bscrnc_p
+        if (kpiValue) {
+          return {
+            id: user.id,
+            username: user.username,
+            avg_send_duration_chronic: kpiValue.avg_send_duration_chronic,
+            avg_send_duration_core_a: kpiValue.avg_send_duration_core_a,
+            avg_send_duration_core_p: kpiValue.avg_send_duration_core_p,
+            avg_send_duration_hub_bscrnc_a:
+              kpiValue.avg_send_duration_hub_bscrnc_a,
+            avg_send_duration_hub_bscrnc_p:
+              kpiValue.avg_send_duration_hub_bscrnc_p,
+            count_chronic: kpiValue.count_chronic,
+            count_core_a: kpiValue.count_core_a,
+            count_core_p: kpiValue.count_core_p,
+            count_hub_bscrnc_a: kpiValue.count_hub_bscrnc_a,
+            count_hub_bscrnc_p: kpiValue.count_hub_bscrnc_p,
+            count_correction_chronic: kpiValue.count_correction_chronic,
+            count_correction_core_a: kpiValue.count_correction_core_a,
+            count_correction_core_p: kpiValue.count_correction_core_p,
+            count_correction_hub_bscrnc_a:
+              kpiValue.count_correction_hub_bscrnc_a,
+            count_correction_hub_bscrnc_p:
+              kpiValue.count_correction_hub_bscrnc_p,
+          };
         }
-      }
-    }).filter(Boolean)
-
+      })
+      .filter(Boolean);
   }
 
   onRowClick(type: string, user: string, level: string) {
@@ -448,55 +493,47 @@ export class HomeComponent implements OnInit, AfterViewInit {
         type: type,
         userInfo: user,
         level: level,
-      }
-    })
+      },
+    });
   }
-
 
   logExport(name: string) {
     this.authService.getLog().subscribe((data: any) => {
-      const result = data.filter((res: any) => res.user_id == name)
+      const result = data.filter((res: any) => res.user_id == name);
       const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(result);
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
       XLSX.writeFile(wb, name + '.xlsx');
-
-    })
-
+    });
   }
-
 
   applyFilter(filter: string) {
     this.globalFilter = filter;
-    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases)
+    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases);
   }
 
   onSelectLevel() {
-    this.filteredValuesForOpenCases['level'] = this.selectedLevel
-    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases)
+    this.filteredValuesForOpenCases['level'] = this.selectedLevel;
+    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases);
   }
 
   onSelectType() {
-    this.filteredValuesForOpenCases['type'] = this.selectedType
-    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases)
+    this.filteredValuesForOpenCases['type'] = this.selectedType;
+    this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases);
   }
-  
+
   onRegionType() {
     this.filteredValuesForOpenCases.region = this.selectedRegion; // Assign the selected regions
     this.Data.filter = JSON.stringify(this.filteredValuesForOpenCases);
   }
 
-
   customFilterPredicate() {
-    const myFilterPredicate = (
-      data: any,
-      filter: string
-    ): boolean => {
+    const myFilterPredicate = (data: any, filter: string): boolean => {
       var globalMatch = !this.globalFilter;
-      
+
       if (this.globalFilter) {
         // search all text fields
-        
+
         globalMatch =
           data.reason
             .toString()
@@ -527,8 +564,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             .toString()
             .trim()
             .toLowerCase()
-            .indexOf(this.globalFilter.toLowerCase()) !== -1
-
+            .indexOf(this.globalFilter.toLowerCase()) !== -1;
       }
 
       if (!globalMatch) {
@@ -536,76 +572,71 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
 
       let searchString = JSON.parse(filter);
-      
-      console.log(data);
-      
 
-      
+      console.log(data);
+
       return (
         data.level.toString().trim().indexOf(searchString.level) !== -1 &&
         data.type
           .toString()
           .trim()
           .toLowerCase()
-          .indexOf(searchString.type.toLowerCase()) !== -1  &&
-          (searchString.region.length === 0 || searchString.region.includes(data.region))
+          .indexOf(searchString.type.toLowerCase()) !== -1 &&
+        (searchString.region.length === 0 ||
+          searchString.region.includes(data.region))
       );
     };
     return myFilterPredicate;
   }
 
   onRN() {
-    this.router.navigate(['home/rn'])
+    this.router.navigate(['home/rn']);
   }
 
   onCN() {
-    this.router.navigate(['home/cn'])
+    this.router.navigate(['home/cn']);
   }
 
   addNumber() {
-    this.router.navigate(['/add'])
+    this.router.navigate(['/add']);
   }
 
   exportXlsx() {
     const dialogRef = this.dialog.open(exportExcel);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
-
-    })
+    });
   }
 
   dashBorad() {
-    this.router.navigate(['home/newIdeas'])
+    this.router.navigate(['home/newIdeas']);
   }
 
   selectedCase(row: any) {
-    this.snackBar.open('Saved', '', { duration: 10000 })
+    this.snackBar.open('Saved', '', { duration: 10000 });
     let body = {
-      'alarmreport': row.id,
-      'comment': ''
-    }
+      alarmreport: row.id,
+      comment: '',
+    };
     this.authService.PostSelectedCase(body).subscribe((res) => {
       console.log(res);
-
-    })
+    });
   }
 
   getSelectedCases() {
-    this.router.navigate(['home/selectedCases'])
+    this.router.navigate(['home/selectedCases']);
   }
 
   correctionList() {
-    this.router.navigate(['home/correctionList'])
+    this.router.navigate(['home/correctionList']);
   }
 
   onExportVisible() {
-    this.convertToExcel(this.dataTable.data)
-    
+    this.convertToExcel(this.dataTable.data);
   }
 
   convertToExcel(data: any[]) {
-
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
@@ -628,22 +659,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
       document.body.removeChild(a);
     };
     reader.readAsDataURL(blob);
-
-    
   }
-
 
   onDelete(id: number) {
     const dialogRef = this.dialog.open(areYouSure);
 
-    dialogRef.afterClosed().subscribe(res => {
+    dialogRef.afterClosed().subscribe((res) => {
       if (res == true) {
-        this.authService.deleteData(id).subscribe(res => {
-          this.snackBar.open('Удалено', '', { duration: 10000 })
-        })
+        this.authService.deleteData(id).subscribe((res) => {
+          this.snackBar.open('Удалено', '', { duration: 10000 });
+        });
       }
-    })
-
+    });
   }
 }
 
@@ -655,36 +682,41 @@ export class HomeComponent implements OnInit, AfterViewInit {
 })
 export class exportExcel {
   data: any[] = [];
-  limit: any = 1000
-  pageNumber: any
-  posttest: any
-  startTime: any
-  endTime: any
-  constructor(private authService: AuthService) { }
+  limit: any = 1000;
+  pageNumber: any;
+  posttest: any;
+  startTime: any;
+  endTime: any;
+  constructor(private authService: AuthService) {}
 
   onSubmit(form: NgForm) {
-    this.startTime = form.value.starttime
-    this.endTime = form.value.endtime
+    this.startTime = form.value.starttime;
+    this.endTime = form.value.endtime;
 
-
-    this.authService.exportExcel(this.startTime, this.endTime, 1, this.limit)
+    this.authService
+      .exportExcel(this.startTime, this.endTime, 1, this.limit)
       .subscribe((res: any) => {
-        this.pageNumber = Math.ceil(res.count / res.results.length)
+        this.pageNumber = Math.ceil(res.count / res.results.length);
 
         const promises = [];
         for (let i = 1; i <= this.pageNumber; i++) {
-          promises.push(this.authService.exportExcel(this.startTime, this.endTime, i, this.limit).toPromise());
+          promises.push(
+            this.authService
+              .exportExcel(this.startTime, this.endTime, i, this.limit)
+              .toPromise()
+          );
         }
 
-        Promise.all(promises).then(results => {
-          results.forEach((res: any) => this.data = this.data.concat(res.results));
-          this.convertToExcel(this.data)
+        Promise.all(promises).then((results) => {
+          results.forEach(
+            (res: any) => (this.data = this.data.concat(res.results))
+          );
+          this.convertToExcel(this.data);
         });
-      })
+      });
   }
 
   convertToExcel(data: any[]) {
-
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
@@ -707,10 +739,7 @@ export class exportExcel {
       document.body.removeChild(a);
     };
     reader.readAsDataURL(blob);
-
-    
   }
-
 }
 
 @Component({
@@ -719,7 +748,4 @@ export class exportExcel {
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
 })
-export class areYouSure { }
-
-
-
+export class areYouSure {}

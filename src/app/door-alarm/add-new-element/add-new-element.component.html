@@ -1,52 +1,91 @@
 <h1 mat-dialog-title>Создание запроса</h1>
 <div mat-dialog-content>
-    <form #form="ngForm" (ngSubmit)="onSubmit(form)" class="form-container">
-        <mat-form-field appearance="fill">
-            <mat-label>Сайт</mat-label>
-            <input matInput name="sitename" [(ngModel)]="formData.sitename" />
-            <!-- <mat-error *ngIf="form.submitted && !form.controls.firstName?.valid">
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)" class="form-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Сайт</mat-label>
+      <input matInput name="sitename" [(ngModel)]="formData.sitename" />
+      <!-- <mat-error *ngIf="form.submitted && !form.controls.firstName?.valid">
                 First name is <strong>required</strong>
             </mat-error> -->
-        </mat-form-field>
+    </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Тип работ</mat-label>
-            <mat-select name="worktype" [(ngModel)]="formData.worktype" >
-                <mat-option value="Установка/заправка генератора">Установка/заправка генератора</mat-option>
-                <mat-option value="BTS Swap">BTS Swap</mat-option>
-                <mat-option value="Link swap">Link swap</mat-option>
-                <mat-option value="PSU swap">PSU swap</mat-option>
-                <mat-option value="Проверка/Испытание сайта">Проверка/Испытание сайта</mat-option>
-                <mat-option value="Монтаж нового обор-я">Монтаж нового обор-я</mat-option>
-                <mat-option value="PM">PM</mat-option>
-                <mat-option value="Устранение аварий">Устранение аварий</mat-option>
-                <mat-option value="Clean Up">Clean Up</mat-option>
-                <mat-option value="Демонтаж обор-я">Демонтаж обор-я</mat-option>
-                <mat-option value="Установка/замена АКБ">Установка/замена АКБ</mat-option>
-                <mat-option value="Прочее">Прочее</mat-option>
-              </mat-select>
-        </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Тип работ</mat-label>
+      <mat-select name="worktype" [(ngModel)]="formData.worktype">
+        <mat-option value="Установка/заправка генератора"
+          >Установка/заправка генератора</mat-option
+        >
+        <mat-option value="BTS Swap">BTS Swap</mat-option>
+        <mat-option value="Link swap">Link swap</mat-option>
+        <mat-option value="PSU swap">PSU swap</mat-option>
+        <mat-option value="Проверка/Испытание сайта"
+          >Проверка/Испытание сайта</mat-option
+        >
+        <mat-option value="Монтаж нового обор-я"
+          >Монтаж нового обор-я</mat-option
+        >
+        <mat-option value="PM">PM</mat-option>
+        <mat-option value="Устранение аварий">Устранение аварий</mat-option>
+        <mat-option value="Clean Up">Clean Up</mat-option>
+        <mat-option value="Демонтаж обор-я">Демонтаж обор-я</mat-option>
+        <mat-option value="Установка/замена АКБ"
+          >Установка/замена АКБ</mat-option
+        >
+        <mat-option value="Прочее">Прочее</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Номер телефона</mat-label>
-            <input matInput name="phonenumber" [(ngModel)]="formData.phonenumber"  />
-           
-        </mat-form-field>
+    <mat-form-field>
+      <mat-label>Пользователи</mat-label>
+      <input
+        matInput
+        [(ngModel)]="username"
+        name="username"
+        [matAutocomplete]="auto"
+        (ngModelChange)="onUsernameChange($event)"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="onUserSelected($event)"
+      >
+        <mat-option
+          class="autocomplete-option"
+          *ngFor="let user of filteredUsers"
+          [value]="user.username"
+        >
+          {{ user.username }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Коммент</mat-label>
-            <input matInput name="comment" [(ngModel)]="formData.comment" />
-         
-        </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Номер телефона</mat-label>
+      <input matInput name="phonenumber" [(ngModel)]="formData.phonenumber" />
+    </mat-form-field>
 
-        <div>
-            <input type="datetime-local" [(ngModel)]="formData.starttime" name="starttime" class="dateTime">
-            <input type="datetime-local" [(ngModel)]="formData.exittime" name="exittime" class="dateTime">
-        </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Коммент</mat-label>
+      <input matInput name="comment" [(ngModel)]="formData.comment" />
+    </mat-form-field>
 
-        <div class="button-group">
-            <button mat-button type="button" (click)="onCancel()">Отменить</button>
-            <button mat-raised-button color="primary" type="submit">Сохранить</button>
-        </div>
-    </form>
+    <div>
+      <input
+        type="datetime-local"
+        [(ngModel)]="formData.starttime"
+        name="starttime"
+        class="dateTime"
+      />
+      <input
+        type="datetime-local"
+        [(ngModel)]="formData.exittime"
+        name="exittime"
+        class="dateTime"
+      />
+    </div>
+
+    <div class="button-group">
+      <button mat-button type="button" (click)="onCancel()">Отменить</button>
+      <button mat-raised-button color="primary" type="submit">Сохранить</button>
+    </div>
+  </form>
 </div>
