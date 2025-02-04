@@ -151,10 +151,7 @@ const routes: Routes = [
   {
     path: 'add',
     component: AddPhoneNumbersComponent,
-    canActivate: [AuthGuard, RoleGuardGuard],
-    data: {
-      expectedRoles: ['admin'],
-    },
+    canActivate: [AuthGuard],
   },
 ];
 
