@@ -1,218 +1,314 @@
 <div>
-    <form [formGroup]="chronicForm" class="form-container">
-        <mat-grid-list cols="24" rowHeight="85px">
-            <!-- level -->
-            <mat-grid-tile colspan="4">
-                <mat-form-field class="margin-container">
-                    <mat-label>Уровень</mat-label>
-                    <mat-select formControlName="level" (ngModelChange)="setDefault()">
-                        <mat-option *ngFor="let lev of level" [value]="lev.value">
-                            {{lev.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- categories report -->
-            <mat-grid-tile colspan="4">
-                <mat-form-field class="margin-container">
-                    <mat-label>Категория для отчета</mat-label>
-                    <mat-select formControlName="categories_report">
-                        <mat-option *ngFor="let cat_rep of categories_report" [value]="cat_rep.value">
-                            {{cat_rep.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- responsible area -->
-            <mat-grid-tile colspan="4">
-                <mat-form-field class="margin-container">
-                    <mat-label>Ответственная Зона</mat-label>
-                    <mat-select formControlName="responsible_report">
-                        <mat-option *ngFor="let res_rep of responsible_report" [value]="res_rep.value">
-                            {{res_rep.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- preview problem -->
-            <mat-grid-tile colspan="6" rowspan="5">
-                <div class="grid-container">
-                    <mat-card class="preview">
-                        <mat-card-header>
-                            <mat-card-title>{{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт ' + '
-                                Проблема: '}}</mat-card-title>
-                            <mat-card-title
-                                *ngIf="chronicForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
-                            <mat-card-title
-                                *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <p>{{chronicForm.value.siteName + ' - сайт не работает в ' +
-                                regions[chronicForm.value.region] + ' ' +
-                                dist[chronicForm.value.district] + ' более ' +
-                                chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T', ' ')}}
-                            </p>
-                            <p>{{'Причина: ' + chronicForm.value.reason }} <span
-                                    *ngIf="chronicForm.value.hubSite != ''">{{word}}</span> {{
-                                chronicForm.value.hubSite}}</p>
-                            <p>{{'Оповещен: ' + chronicForm.value.informed}}</p>
-                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
-                        </mat-card-content>
-                        <mat-card-actions>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Проблема')" type="submit"
-                                [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
-                                Отправить Сообщения
-                            </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting('Проблема')" type="submit"
-                                [disabled]="chronicForm.invalid || chronicForm.value.endTime !==''">
-                                TEST SMS
-                            </button>
-                        </mat-card-actions>
-                    </mat-card>
-                </div>
-            </mat-grid-tile>
-            <!-- preview resheniya-->
-            <mat-grid-tile colspan="6" rowspan="5">
-                <div class="grid-container">
-                    <mat-card class="preview">
-                        <mat-card-header>
-                            <mat-card-title>
-                                {{chronicForm.value.level.replace('P', 'П') + ' Хронический сайт Решение:'}}
-                            </mat-card-title>
-                            <mat-card-title
-                                *ngIf="chronicForm.value.AddOrCor == 'Дополнение'">(Дополнение)</mat-card-title>
-                            <mat-card-title
-                                *ngIf="chronicForm.value.AddOrCor == 'Коррекция'">(Коррекция)</mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <p>{{chronicForm.value.siteName + ' - сайт не работал в ' +
-                                regions[chronicForm.value.region] + ' ' +
-                                dist[chronicForm.value.district] + ' более ' +
-                                chronicForm.value.time + ' часов с ' + chronicForm.value.startTime.replace('T',' ') + '
-                                по ' +
-                                chronicForm.value.endTime.replace('T', ' ')}}</p>
-                            <p>{{'Причина: ' + chronicForm.value.reason }} <span
-                                    *ngIf="chronicForm.value.hubSite != ''">{{word}}</span> {{
-                                chronicForm.value.hubSite}}</p>
-                            <p>{{'Описание: ' + chronicForm.value.desc}}</p>
-                            <p>{{'Оповещен: ' + chronicForm.value.informed}}</p>
-                            <p>{{'Отправил: ' + this.user?.first_name + ' ' + this.user?.last_name}}</p>
-                        </mat-card-content>
-                        <mat-card-actions>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="onSubmitButtonProblem('Решение')" type="submit"
-                                [disabled]=" chronicForm.value.endTime =='' ">
-                                Отправить Сообщения
-                            </button>
-                            <button class="form-button" mat-raised-button color="primary"
-                                (click)="forSmsTesting('Решение')" type="submit"
-                                [disabled]=" chronicForm.value.endTime ==''">
-                                TEST SMS
-                            </button>
-                        </mat-card-actions>
-                    </mat-card>
-                </div>
-            </mat-grid-tile>
-            <!-- Description -->
-            <mat-grid-tile colspan="6">
-                <mat-form-field class="margin-container">
-                    <mat-label>Описание</mat-label>
-                    <textarea matInput type="text" formControlName="desc" spellcheck="true"
-                        [matAutocomplete]="autoDesc"></textarea>
-                    <mat-autocomplete #autoDesc="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptionsDesc | async" [value]="option">
-                            {{option}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </mat-grid-tile>
+  <form [formGroup]="chronicForm" class="form-container">
+    <mat-grid-list cols="24" rowHeight="85px">
+      <!-- level -->
+      <mat-grid-tile colspan="4">
+        <mat-form-field class="margin-container">
+          <mat-label>Уровень</mat-label>
+          <mat-select formControlName="level" (ngModelChange)="setDefault()">
+            <mat-option *ngFor="let lev of level" [value]="lev.value">
+              {{ lev.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- categories report -->
+      <mat-grid-tile colspan="4">
+        <mat-form-field class="margin-container">
+          <mat-label>Категория для отчета</mat-label>
+          <mat-select formControlName="categories_report">
+            <mat-option
+              *ngFor="let cat_rep of categories_report"
+              [value]="cat_rep.value"
+            >
+              {{ cat_rep.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- responsible area -->
+      <mat-grid-tile colspan="4">
+        <mat-form-field class="margin-container">
+          <mat-label>Ответственная Зона</mat-label>
+          <mat-select formControlName="responsible_report">
+            <mat-option
+              *ngFor="let res_rep of responsible_report"
+              [value]="res_rep.value"
+            >
+              {{ res_rep.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- preview problem -->
+      <mat-grid-tile colspan="6" rowspan="5">
+        <div class="grid-container">
+          <mat-card class="preview">
+            <mat-card-header>
+              <mat-card-title>{{
+                chronicForm.value.level.replace("P", "П") +
+                  " Хронический сайт " +
+                  "
+                                Проблема: "
+              }}</mat-card-title>
+              <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Дополнение'"
+                >(Дополнение)</mat-card-title
+              >
+              <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'"
+                >(Коррекция)</mat-card-title
+              >
+            </mat-card-header>
+            <mat-card-content>
+              <p>
+                {{
+                  chronicForm.value.siteName +
+                    " - сайт не работает в " +
+                    regions[chronicForm.value.region] +
+                    " " +
+                    dist[chronicForm.value.district] +
+                    " более " +
+                    chronicForm.value.time +
+                    " часов с " +
+                    chronicForm.value.startTime.replace("T", " ")
+                }}
+              </p>
+              <p>
+                {{ "Причина: " + chronicForm.value.reason }}
+                <span *ngIf="chronicForm.value.hubSite != ''">{{ word }}</span>
+                {{ chronicForm.value.hubSite }}
+              </p>
+              <p>{{ "Оповещен: " + chronicForm.value.informed }}</p>
+              <p>
+                {{
+                  "Отправил: " +
+                    this.user?.first_name +
+                    " " +
+                    this.user?.last_name
+                }}
+              </p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button
+                class="form-button"
+                mat-raised-button
+                color="primary"
+                (click)="onSubmitButtonProblem('Проблема')"
+                type="submit"
+                [disabled]="
+                  chronicForm.invalid || chronicForm.value.endTime !== ''
+                "
+              >
+                Отправить Сообщения
+              </button>
+              <button
+                class="form-button"
+                mat-raised-button
+                color="primary"
+                (click)="forSmsTesting('Проблема')"
+                type="submit"
+                [disabled]="
+                  chronicForm.invalid || chronicForm.value.endTime !== ''
+                "
+              >
+                TEST SMS
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </mat-grid-tile>
+      <!-- preview resheniya-->
+      <mat-grid-tile colspan="6" rowspan="5">
+        <div class="grid-container">
+          <mat-card class="preview">
+            <mat-card-header>
+              <mat-card-title>
+                {{
+                  chronicForm.value.level.replace("P", "П") +
+                    " Хронический сайт Решение:"
+                }}
+              </mat-card-title>
+              <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Дополнение'"
+                >(Дополнение)</mat-card-title
+              >
+              <mat-card-title *ngIf="chronicForm.value.AddOrCor == 'Коррекция'"
+                >(Коррекция)</mat-card-title
+              >
+            </mat-card-header>
+            <mat-card-content>
+              <p>
+                {{
+                  chronicForm.value.siteName +
+                    " - сайт не работал в " +
+                    regions[chronicForm.value.region] +
+                    " " +
+                    dist[chronicForm.value.district] +
+                    " более " +
+                    chronicForm.value.time +
+                    " часов с " +
+                    chronicForm.value.startTime.replace("T", " ") +
+                    "
+                                по " +
+                    chronicForm.value.endTime.replace("T", " ")
+                }}
+              </p>
+              <p>
+                {{ "Причина: " + chronicForm.value.reason }}
+                <span *ngIf="chronicForm.value.hubSite != ''">{{ word }}</span>
+                {{ chronicForm.value.hubSite }}
+              </p>
+              <p>{{ "Описание: " + chronicForm.value.desc }}</p>
+              <p>{{ "Оповещен: " + chronicForm.value.informed }}</p>
+              <p>
+                {{
+                  "Отправил: " +
+                    this.user?.first_name +
+                    " " +
+                    this.user?.last_name
+                }}
+              </p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button
+                class="form-button"
+                mat-raised-button
+                color="primary"
+                (click)="onSubmitButtonProblem('Решение')"
+                type="submit"
+                [disabled]="chronicForm.value.endTime == ''"
+              >
+                Отправить Сообщения
+              </button>
+              <button
+                class="form-button"
+                mat-raised-button
+                color="primary"
+                (click)="forSmsTesting('Решение')"
+                type="submit"
+                [disabled]="chronicForm.value.endTime == ''"
+              >
+                TEST SMS
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </mat-grid-tile>
+      <!-- Description -->
+      <mat-grid-tile colspan="6">
+        <mat-form-field class="margin-container">
+          <mat-label>Описание</mat-label>
+          <textarea
+            matInput
+            type="text"
+            formControlName="desc"
+            spellcheck="true"
+            [matAutocomplete]="autoDesc"
+          ></textarea>
+          <mat-autocomplete #autoDesc="matAutocomplete">
+            <mat-option
+              *ngFor="let option of filteredOptionsDesc | async"
+              [value]="option"
+            >
+              {{ option }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </mat-grid-tile>
 
-            <!-- reason -->
-            <mat-grid-tile colspan="6">
-                <mat-form-field class="margin-container">
-                    <mat-label>Причина</mat-label>
-                    <textarea matInput type="text" formControlName="reason" spellcheck="true"
-                        [matAutocomplete]="autoReason">
-                    </textarea>
-                    <mat-autocomplete #autoReason="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptionsReason | async" [value]="option">
-                            {{option}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- Site name -->
-            <mat-grid-tile colspan="4">
-                <mat-form-field class="margin-container">
-                    <mat-label>Название сайта</mat-label>
-                    <input matInput type="text" formControlName="siteName" />
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- Hub site -->
-            <mat-grid-tile colspan="4">
-                <mat-form-field class="margin-container">
-                    <mat-label>Название хаб-сайта</mat-label>
-                    <input matInput type="text" formControlName="hubSite" />
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- category -->
-            <mat-grid-tile colspan="4">
-                <mat-form-field class="margin-container">
-                    <mat-label>Категория</mat-label>
-                    <mat-select formControlName="category">
-                        <mat-option *ngFor="let cat of category" [value]="cat.value">
-                            {{cat.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- time -->
-            <mat-grid-tile colspan="2">
-                <mat-form-field class="margin-container">
-                    <mat-label>Время Простоя</mat-label>
-                    <mat-select formControlName="time">
-                        <mat-option *ngFor="let hours of chronicHours" [value]="hours">
-                            {{hours}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- informed -->
-            <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>Оповещен</mat-label>
-                    <input matInput type="text" formControlName="informed" />
-                </mat-form-field>
-            </mat-grid-tile>
+      <!-- reason -->
+      <mat-grid-tile colspan="6">
+        <mat-form-field class="margin-container">
+          <mat-label>Причина</mat-label>
+          <textarea
+            matInput
+            type="text"
+            formControlName="reason"
+            spellcheck="true"
+            [matAutocomplete]="autoReason"
+          >
+          </textarea>
+          <mat-autocomplete #autoReason="matAutocomplete">
+            <mat-option
+              *ngFor="let option of filteredOptionsReason | async"
+              [value]="option"
+            >
+              {{ option }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- Site name -->
+      <mat-grid-tile colspan="4">
+        <mat-form-field class="margin-container">
+          <mat-label>Название сайта</mat-label>
+          <input matInput type="text" formControlName="siteName" />
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- Hub site -->
+      <mat-grid-tile colspan="4">
+        <mat-form-field class="margin-container">
+          <mat-label>Название хаб-сайта</mat-label>
+          <input matInput type="text" formControlName="hubSite" />
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- category -->
+      <mat-grid-tile colspan="4">
+        <mat-form-field class="margin-container">
+          <mat-label>Категория</mat-label>
+          <mat-select formControlName="category">
+            <mat-option *ngFor="let cat of category" [value]="cat.value">
+              {{ cat.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- time -->
+      <mat-grid-tile colspan="2">
+        <mat-form-field class="margin-container">
+          <mat-label>Время Простоя</mat-label>
+          <mat-select formControlName="time">
+            <mat-option *ngFor="let hours of chronicHours" [value]="hours">
+              {{ hours }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- informed -->
+      <mat-grid-tile colspan="3">
+        <mat-form-field class="margin-container">
+          <mat-label>Оповещен</mat-label>
+          <input matInput type="text" formControlName="informed" />
+        </mat-form-field>
+      </mat-grid-tile>
 
-            <!-- region -->
-            <mat-grid-tile colspan="3">
-                <mat-form-field class="margin-container">
-                    <mat-label>Регион</mat-label>
-                    <mat-select formControlName="region" (ngModelChange)="districtDisabling()">
-                        <mat-option *ngFor="let reg of region" [value]="reg.value">
-                            {{reg.value}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- district -->
-            <mat-grid-tile colspan="4">
-                <mat-form-field class="margin-container">
-                    <mat-label>Район</mat-label>
-                    <mat-select formControlName="district" [disabled]="disableDistrict">
-                        <mat-option *ngFor="let dis of district" [value]="dis.value">
-                            {{dis.value}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
-            <!-- start Time -->
-            <mat-grid-tile colspan="6">
-                <div class="margin-container">
-                    <!-- <p>Начало 
+      <!-- region -->
+      <mat-grid-tile colspan="3">
+        <mat-form-field class="margin-container">
+          <mat-label>Регион</mat-label>
+          <mat-select
+            formControlName="region"
+            (ngModelChange)="districtDisabling()"
+          >
+            <mat-option *ngFor="let reg of region" [value]="reg.value">
+              {{ reg.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- district -->
+      <mat-grid-tile colspan="4">
+        <mat-form-field class="margin-container">
+          <mat-label>Район</mat-label>
+          <mat-select formControlName="district" [disabled]="disableDistrict">
+            <mat-option *ngFor="let dis of district" [value]="dis.value">
+              {{ dis.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <!-- start Time -->
+      <mat-grid-tile colspan="6">
+        <div class="margin-container">
+          <!-- <p>Начало 
                         <span *ngIf="this.newForm == true ? chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched :
                             chronicForm.get('startTime').hasError('invalidDatetime')" 
                             class="timeNotValid"> 
@@ -221,39 +317,78 @@
                     <input type="datetime-local" class="dateTime" formControlName="startTime"
                          [max]="time | date: 'yyyy-MM-ddTHH:mm'"
                         [class.timeNotValid]="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched"> -->
-                    <p>Начало
-                        <span
-                            *ngIf="chronicForm.get('startTime').hasError('invalidDatetime') && chronicForm.get('startTime').touched"
-                            class="timeNotValid">
-                            *Время простоя не соответствует Началу времени*</span>
-                    </p>
-                    <input type="datetime-local" class="dateTime" formControlName="startTime"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
-                </div>
-            </mat-grid-tile>
-            <!-- end Time -->
-            <mat-grid-tile colspan="6">
-                <div class="margin-container">
-                    <p>Конец<span
-                            *ngIf="chronicForm.get('endTime').hasError('timeValid') && chronicForm.get('startTime').touched"
-                            class="timeNotValid"> *Начало больше чем Конец времени</span></p>
-                    <input type="datetime-local" class="dateTime" formControlName="endTime" min="2023-01-01T00:00"
-                        [max]="time | date: 'yyyy-MM-ddTHH:mm'">
-                </div>
-            </mat-grid-tile>
-            <!-- button -->
-            <mat-grid-tile colspan="2">
-                <button class="form-button" mat-raised-button color="primary" type="button"
-                    *ngIf="newForm == false && asNew == false" (click)="updateData()">Обновить</button>
-                <button class="form-button" mat-raised-button color="primary" type="button"
-                    *ngIf="newForm == true || asNew == true" (click)="createData()">Создать</button>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="6">
-                <mat-chip-listbox formControlName="AddOrCor">
-                    <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
-                    <mat-chip-option value="Дополнение">Дополнение</mat-chip-option>
-                </mat-chip-listbox>
-            </mat-grid-tile>
-        </mat-grid-list>
-    </form>
+          <p>
+            Начало
+            <span
+              *ngIf="
+                chronicForm.get('startTime').hasError('invalidDatetime') &&
+                chronicForm.get('startTime').touched
+              "
+              class="timeNotValid"
+            >
+              *Время простоя не соответствует Началу времени*</span
+            >
+          </p>
+          <input
+            type="datetime-local"
+            class="dateTime"
+            formControlName="startTime"
+            [max]="time | date : 'yyyy-MM-ddTHH:mm'"
+          />
+        </div>
+      </mat-grid-tile>
+      <!-- end Time -->
+      <mat-grid-tile colspan="6">
+        <div class="margin-container">
+          <p>
+            Конец<span
+              *ngIf="
+                chronicForm.get('endTime').hasError('timeValid') &&
+                chronicForm.get('startTime').touched
+              "
+              class="timeNotValid"
+            >
+              *Начало больше чем Конец времени</span
+            >
+          </p>
+          <input
+            type="datetime-local"
+            class="dateTime"
+            formControlName="endTime"
+            min="2023-01-01T00:00"
+            [max]="time | date : 'yyyy-MM-ddTHH:mm'"
+          />
+        </div>
+      </mat-grid-tile>
+      <!-- button -->
+      <mat-grid-tile colspan="2">
+        <button
+          class="form-button"
+          mat-raised-button
+          color="primary"
+          type="button"
+          *ngIf="newForm == false && asNew == false"
+          (click)="updateData()"
+        >
+          Обновить
+        </button>
+        <button
+          class="form-button"
+          mat-raised-button
+          color="primary"
+          type="button"
+          *ngIf="newForm == true || asNew == true"
+          (click)="createData()"
+        >
+          Создать
+        </button>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="6">
+        <mat-chip-listbox formControlName="AddOrCor">
+          <mat-chip-option value="Коррекция">Коррекция</mat-chip-option>
+          <mat-chip-option value="Дополнение">Дополнение</mat-chip-option>
+        </mat-chip-listbox>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </form>
 </div>

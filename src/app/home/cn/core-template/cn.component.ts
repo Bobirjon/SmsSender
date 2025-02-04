@@ -81,6 +81,7 @@ export class CnComponent implements OnInit {
   ];
 
   region: { value: string; viewValue: string }[] = [
+    { value: '', viewValue: '--' },
     { value: 'Андижан', viewValue: 'Андижан' },
     { value: 'Бухара', viewValue: 'Бухара' },
     { value: 'Джизак', viewValue: 'Джизак' },
@@ -237,16 +238,17 @@ export class CnComponent implements OnInit {
       informed: this.cnForm.value.informed,
       influence: this.cnForm.value.effect,
       sender: this.user?.first_name + ' ' + this.user?.last_name,
+      region: this.cnForm.value.region == '' ? '' : this.cnForm.value.region,
     };
 
-    if (
-      this.cnForm.value.category == 'Power' ||
-      this.cnForm.value.category == 'High Temp'
-    ) {
-      this.tableBody.region = this.cnForm.value.region;
-    } else {
-      this.tableBody.region = '';
-    }
+    // if (
+    //   this.cnForm.value.category == 'Power' ||
+    //   this.cnForm.value.category == 'High Temp'
+    // ) {
+    //   this.tableBody.region = this.cnForm.value.region;
+    // } else {
+    //   this.tableBody.region = '';
+    // }
 
     if (this.cnForm.value.endTime !== '') {
       this.tableBody.end_time = this.cnForm.value.endTime;
