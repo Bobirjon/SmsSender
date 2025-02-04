@@ -43,10 +43,7 @@
           <div class="second2-row">
             <mat-form-field class="grid-form-item">
               <mat-label>Категория</mat-label>
-              <mat-select
-                formControlName="category"
-                (ngModelChange)="regionDisabled()"
-              >
+              <mat-select formControlName="category">
                 <mat-option *ngFor="let cat of category" [value]="cat.value">
                   {{ cat.viewValue }}
                 </mat-option>

@@ -472,15 +472,15 @@ export class CnComponent implements OnInit {
     this.storageService.sendSms(this.smsBody);
   }
 
-  regionDisabled() {
-    const cases = ['Power', 'High Temp'];
+  // regionDisabled() {
+  //   const cases = ['Power', 'High Temp'];
 
-    if (cases.includes(this.cnForm.value.category)) {
-      this.cnForm.get('region').enable();
-    } else {
-      this.cnForm.get('region').disable();
-    }
-  }
+  //   if (cases.includes(this.cnForm.value.category)) {
+  //     this.cnForm.get('region').enable();
+  //   } else {
+  //     this.cnForm.get('region').disable();
+  //   }
+  // }
 
   onSelectRegion() {
     this.optionsProblem.unshift(
