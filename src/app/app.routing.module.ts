@@ -28,12 +28,20 @@ import { AllowedUsersComponent } from './door-alarm/allowed-users/allowed-users.
 const routes: Routes = [
   // { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: MainHomeComponent, canActivate: [AuthGuard] },
-  { path: 'senderHome', component: HomeComponent, canActivate: [AuthGuard] },
+  {
+    path: 'home',
+    component: MainHomeComponent,
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: 'senderHome',
+    component: HomeComponent,
+    //  canActivate: [AuthGuard]
+  },
   {
     path: 'alarmMonitor',
     component: AlarmMonitorComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard]
   },
 
   {
