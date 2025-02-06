@@ -24,6 +24,7 @@ import { DoorAlarmComponent } from './door-alarm/door-alarm.component';
 import { CellDownComponent } from './cell-down/cell-down.component';
 import { ReportComponent } from './report/report.component';
 import { AllowedUsersComponent } from './door-alarm/allowed-users/allowed-users.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
   // { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -31,17 +32,17 @@ const routes: Routes = [
   {
     path: 'home',
     component: MainHomeComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'senderHome',
     component: HomeComponent,
-    //  canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'alarmMonitor',
     component: AlarmMonitorComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
 
   {
@@ -161,6 +162,8 @@ const routes: Routes = [
     component: AddPhoneNumbersComponent,
     canActivate: [AuthGuard],
   },
+
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

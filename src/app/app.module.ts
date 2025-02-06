@@ -71,6 +71,7 @@ import { AddNewElementComponent } from './door-alarm/add-new-element/add-new-ele
 import { UserCreateComponent } from './door-alarm/user-create/user-create.component';
 import { AllowedUsersComponent } from './door-alarm/allowed-users/allowed-users.component';
 import { UserInfoUpdateComponent } from './door-alarm/allowed-users/userInfoUpdate';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +108,7 @@ import { UserInfoUpdateComponent } from './door-alarm/allowed-users/userInfoUpda
     UserCreateComponent,
     AllowedUsersComponent,
     UserInfoUpdateComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
