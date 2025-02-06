@@ -26,7 +26,7 @@ import { ReportComponent } from './report/report.component';
 import { AllowedUsersComponent } from './door-alarm/allowed-users/allowed-users.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  // { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: MainHomeComponent, canActivate: [AuthGuard] },
   { path: 'senderHome', component: HomeComponent, canActivate: [AuthGuard] },
