@@ -162,8 +162,6 @@ const routes: Routes = [
     component: AddPhoneNumbersComponent,
     canActivate: [AuthGuard],
   },
-
-  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
